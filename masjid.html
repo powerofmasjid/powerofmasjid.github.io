@@ -341,9 +341,8 @@ function cacheClear(id_masjid) {
 // HELPER
 // ============================================
 function getSlug() {
-  var path = window.location.pathname.replace('/','').trim();
   var params = new URLSearchParams(window.location.search);
-  return path || params.get('masjid') || 'annuriyah-tanjungbarat';
+  return params.get('masjid') || 'annuriyah-tanjungbarat';
 }
 
 function rupiah(n) { return 'Rp ' + Number(n).toLocaleString('id-ID'); }
