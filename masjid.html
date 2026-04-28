@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Power of Masjid</title>
 <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/adhan/4.4.3/adhan.min.js"></script>
+<script src="https://unpkg.com/adhan@4.4.3/lib/bundle/adhan.iife.min.js"></script>
 <style>
 :root{--primary:#1B6B3A;--primary-dark:#0F4228;--primary-light:#E8F5EE;--accent:#C9A84C;--accent-light:#FBF3E0;--bg:#F7F7F5;--white:#FFFFFF;--text:#1A1A1A;--muted:#6B7280;--border:#E5E7EB;--masuk:#1B6B3A;--keluar:#DC2626;}
 .tema-safir{--primary:#1B3A6B;--primary-dark:#0F2240;--primary-light:#E8EEF5;--accent:#4C7AC9;}
@@ -569,32 +569,45 @@ async function loadGaleri() {
 // ============================================
 function loadJadwalSholat(lat, lon) {
   try {
-    if (!lat || !lon) return;
-    var coordinates = new adhan.Coordinates(parseFloat(lat), parseFloat(lon));
-    var params = adhan.CalculationMethod.MoonsightingCommittee();
-    params.madhab = adhan.Madhab.Shafi;
-    var today = new Date();
-    var date = new adhan.DateComponents(today.getFullYear(), today.getMonth() + 1, today.getDate());
-    var prayerTimes = new adhan.PrayerTimes(coordinates, date, params);
+    var latNum = parseFloat(String(lat).trim());
+    var lonNum = parseFloat(String(lon).trim());
+    if (isNaN(latNum) || isNaN(lonNum)) return;
 
-    function fmt(d) {
-      var h = String(d.getHours()).padStart(2,'0');
-      var m = String(d.getMinutes()).padStart(2,'0');
-      return h + ':' + m;
+    var today = new Date();
+
+    // Hitung manual menggunakan rumus sederhana
+    // Gunakan API publik tanpa server sebagai fallback
+    var params = {
+      fajr: 20, isha: 18 // sudut untuk metode Indonesia
+    };
+
+    // Konversi ke jam berdasarkan koordinat Jakarta
+    // Offset WIB = UTC+7
+    var utcOffset = 7;
+
+    // Waktu sholat perkiraan untuk Jakarta berdasarkan koordinat
+    var subuh   = hitungWaktu(latNum, lonNum, today, 'fajr', utcOffset);
+    var dzuhur  = hitungWaktu(latNum, lonNum, today, 'dhuhr', utcOffset);
+    var ashar   = hitungWaktu(latNum, lonNum, today, 'asr', utcOffset);
+    var maghrib = hitungWaktu(latNum, lonNum, today, 'maghrib', utcOffset);
+    var isya    = hitungWaktu(latNum, lonNum, today, 'isha', utcOffset);
+
+    function fmt(jam, menit) {
+      return String(Math.floor(jam)).padStart(2,'0') + ':' + String(Math.round(menit)).padStart(2,'0');
     }
+
+    var sholat = [
+      {name:'Subuh',   time: subuh},
+      {name:'Dzuhur',  time: dzuhur},
+      {name:'Ashar',   time: ashar},
+      {name:'Maghrib', time: maghrib},
+      {name:'Isya',    time: isya}
+    ];
 
     function toMenit(str) {
       var p = str.split(':');
       return parseInt(p[0]) * 60 + parseInt(p[1]);
     }
-
-    var sholat = [
-      {name:'Subuh', time: fmt(prayerTimes.fajr)},
-      {name:'Dzuhur', time: fmt(prayerTimes.dhuhr)},
-      {name:'Ashar', time: fmt(prayerTimes.asr)},
-      {name:'Maghrib', time: fmt(prayerTimes.maghrib)},
-      {name:'Isya', time: fmt(prayerTimes.isha)}
-    ];
 
     var jamSekarang = today.getHours() * 60 + today.getMinutes();
     var aktifIdx = 0;
@@ -610,6 +623,68 @@ function loadJadwalSholat(lat, lon) {
   } catch(e) {
     console.error('Jadwal sholat error:', e);
   }
+}
+
+function hitungWaktu(lat, lon, date, waktu, utcOffset) {
+  var D2R = Math.PI / 180;
+  var R2D = 180 / Math.PI;
+
+  var JD = Math.floor(365.25 * (date.getFullYear() + 4716)) +
+           Math.floor(30.6001 * (date.getMonth() + 2)) +
+           date.getDate() - 1524.5;
+
+  var T = (JD - 2451545) / 36525;
+  var L0 = 280.46646 + 36000.76983 * T;
+  var M = 357.52911 + 35999.05029 * T;
+  var C = (1.914602 - 0.004817 * T) * Math.sin(M * D2R) + 0.019993 * Math.sin(2 * M * D2R);
+  var sunLon = L0 + C;
+  var obliq = 23.439291111 - 0.013004167 * T;
+  var RA = R2D * Math.atan2(Math.cos(obliq * D2R) * Math.sin(sunLon * D2R), Math.cos(sunLon * D2R)) / 15;
+  var decl = R2D * Math.asin(Math.sin(obliq * D2R) * Math.sin(sunLon * D2R));
+  var EqT = (L0 - 0.0057183 - RA + 360) % 360;
+  var transit = 12 + utcOffset - lon / 15 - EqT / 15;
+
+  function hourAngle(angle) {
+    var cosHA = (Math.sin(angle * D2R) - Math.sin(lat * D2R) * Math.sin(decl * D2R)) /
+                (Math.cos(lat * D2R) * Math.cos(decl * D2R));
+    if (cosHA < -1 || cosHA > 1) return null;
+    return R2D * Math.acos(cosHA) / 15;
+  }
+
+  var ha, jam, menit;
+
+  if (waktu === 'dhuhr') {
+    jam = Math.floor(transit);
+    menit = (transit - jam) * 60;
+    return String(jam).padStart(2,'0') + ':' + String(Math.round(menit)).padStart(2,'0');
+  }
+  if (waktu === 'fajr') {
+    ha = hourAngle(-20);
+    var t = ha ? transit - ha : transit - 1.5;
+    jam = Math.floor(t); menit = (t - jam) * 60;
+    return String(jam).padStart(2,'0') + ':' + String(Math.round(menit)).padStart(2,'0');
+  }
+  if (waktu === 'maghrib') {
+    ha = hourAngle(-0.833);
+    var t = ha ? transit + ha : transit + 0.25;
+    jam = Math.floor(t); menit = (t - jam) * 60;
+    return String(jam).padStart(2,'0') + ':' + String(Math.round(menit)).padStart(2,'0');
+  }
+  if (waktu === 'isha') {
+    ha = hourAngle(-18);
+    var t = ha ? transit + ha : transit + 1.25;
+    jam = Math.floor(t); menit = (t - jam) * 60;
+    return String(jam).padStart(2,'0') + ':' + String(Math.round(menit)).padStart(2,'0');
+  }
+  if (waktu === 'asr') {
+    var shadow = 1 / Math.tan(D2R * (R2D * Math.atan(1 / (1 + Math.tan(D2R * Math.abs(lat - decl)))) + 0));
+    var cosHA = (Math.sin(Math.atan(1/(shadow + Math.tan(D2R*Math.abs(lat-decl))))) - Math.sin(lat*D2R)*Math.sin(decl*D2R)) / (Math.cos(lat*D2R)*Math.cos(decl*D2R));
+    ha = cosHA >= -1 && cosHA <= 1 ? R2D * Math.acos(cosHA) / 15 : 0.25;
+    var t = transit + ha;
+    jam = Math.floor(t); menit = (t - jam) * 60;
+    return String(jam).padStart(2,'0') + ':' + String(Math.round(menit)).padStart(2,'0');
+  }
+  return '00:00';
 }
 
 // ============================================
