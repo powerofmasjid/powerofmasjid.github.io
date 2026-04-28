@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Power of Masjid</title>
 <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/adhan/4.4.3/adhan.min.js"></script>
 <style>
 :root{--primary:#1B6B3A;--primary-dark:#0F4228;--primary-light:#E8F5EE;--accent:#C9A84C;--accent-light:#FBF3E0;--bg:#F7F7F5;--white:#FFFFFF;--text:#1A1A1A;--muted:#6B7280;--border:#E5E7EB;--masuk:#1B6B3A;--keluar:#DC2626;}
 .tema-safir{--primary:#1B3A6B;--primary-dark:#0F2240;--primary-light:#E8EEF5;--accent:#4C7AC9;}
@@ -448,6 +449,11 @@ async function loadMasjid(slug) {
     document.getElementById('qris-img').src = d.qris_url;
   }
 
+  // Hitung jadwal sholat langsung setelah data masjid didapat
+  if (d.latitude && d.longitude) {
+    loadJadwalSholat(d.latitude, d.longitude);
+  }
+
   return d.id_masjid;
 }
 
@@ -561,38 +567,49 @@ async function loadGaleri() {
 // ============================================
 // LOAD JADWAL SHOLAT
 // ============================================
-async function loadJadwalSholat() {
-  var today = new Date();
-  var cacheKey = 'sholat_' + ID_MASJID + '_' + today.toDateString();
-  var json = await apiFetch('getJadwalSholat', {id_masjid: ID_MASJID}, cacheKey);
-  if (json.status !== 'ok') return;
+function loadJadwalSholat(lat, lon) {
+  try {
+    if (!lat || !lon) return;
+    var coordinates = new adhan.Coordinates(parseFloat(lat), parseFloat(lon));
+    var params = adhan.CalculationMethod.MoonsightingCommittee();
+    params.madhab = adhan.Madhab.Shafi;
+    var today = new Date();
+    var date = new adhan.DateComponents(today.getFullYear(), today.getMonth() + 1, today.getDate());
+    var prayerTimes = new adhan.PrayerTimes(coordinates, date, params);
 
-  var d = json.data;
-  var jamSekarang = today.getHours() * 60 + today.getMinutes();
+    function fmt(d) {
+      var h = String(d.getHours()).padStart(2,'0');
+      var m = String(d.getMinutes()).padStart(2,'0');
+      return h + ':' + m;
+    }
 
-  var sholat = [
-    {name: 'Subuh', time: d.subuh},
-    {name: 'Dzuhur', time: d.dzuhur},
-    {name: 'Ashar', time: d.ashar},
-    {name: 'Maghrib', time: d.maghrib},
-    {name: 'Isya', time: d.isya}
-  ];
+    function toMenit(str) {
+      var p = str.split(':');
+      return parseInt(p[0]) * 60 + parseInt(p[1]);
+    }
 
-  function toMenit(str) {
-    var parts = str.split(':');
-    return parseInt(parts[0]) * 60 + parseInt(parts[1]);
+    var sholat = [
+      {name:'Subuh', time: fmt(prayerTimes.fajr)},
+      {name:'Dzuhur', time: fmt(prayerTimes.dhuhr)},
+      {name:'Ashar', time: fmt(prayerTimes.asr)},
+      {name:'Maghrib', time: fmt(prayerTimes.maghrib)},
+      {name:'Isya', time: fmt(prayerTimes.isha)}
+    ];
+
+    var jamSekarang = today.getHours() * 60 + today.getMinutes();
+    var aktifIdx = 0;
+    for (var i = 0; i < sholat.length; i++) {
+      if (jamSekarang >= toMenit(sholat[i].time)) aktifIdx = i;
+    }
+
+    document.getElementById('sholat-card').style.display = 'block';
+    document.getElementById('sholat-date').textContent = namaHari(today.getDay()) + ', ' + today.toLocaleDateString('id-ID', {day:'numeric', month:'long', year:'numeric'});
+    document.getElementById('sholat-grid').innerHTML = sholat.map(function(s, idx){
+      return '<div class="sholat-item' + (idx === aktifIdx ? ' aktif' : '') + '"><div class="sholat-name">' + s.name + '</div><div class="sholat-time">' + s.time + '</div></div>';
+    }).join('');
+  } catch(e) {
+    console.error('Jadwal sholat error:', e);
   }
-
-  var aktifIdx = 0;
-  for (var i = 0; i < sholat.length; i++) {
-    if (jamSekarang >= toMenit(sholat[i].time)) aktifIdx = i;
-  }
-
-  document.getElementById('sholat-card').style.display = 'block';
-  document.getElementById('sholat-date').textContent = namaHari(today.getDay()) + ', ' + today.toLocaleDateString('id-ID', {day:'numeric', month:'long', year:'numeric'});
-  document.getElementById('sholat-grid').innerHTML = sholat.map(function(s, idx){
-    return '<div class="sholat-item' + (idx === aktifIdx ? ' aktif' : '') + '"><div class="sholat-name">' + s.name + '</div><div class="sholat-time">' + s.time + '</div></div>';
-  }).join('');
 }
 
 // ============================================
@@ -618,13 +635,13 @@ async function init() {
   try {
     var id = await loadMasjid(slug);
     if (!id) return;
+
     await Promise.all([
       loadSaldo(),
       loadTransaksi(),
       loadJadwal(),
       loadPengumuman(),
-      loadGaleri(),
-      loadJadwalSholat()
+      loadGaleri()
     ]);
   } catch(e) {
     console.error(e);
