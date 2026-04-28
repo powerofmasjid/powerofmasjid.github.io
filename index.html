@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Power of Masjid — Platform Digital Masjid Indonesia</title>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:#F7F7F5;color:#1A1A1A;}
+
+/* HERO */
+.hero{background:linear-gradient(160deg,#0F4228 0%,#1B6B3A 100%);padding:2.5rem 1.25rem 3rem;text-align:center;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;top:-60px;right:-60px;width:200px;height:200px;border-radius:50%;border:1px solid rgba(201,168,76,0.15);}
+.hero::after{content:'';position:absolute;bottom:-80px;left:-40px;width:240px;height:240px;border-radius:50%;border:1px solid rgba(255,255,255,0.05);}
+.hero-logo{font-family:'Amiri',serif;font-size:52px;color:#C9A84C;margin-bottom:0.5rem;position:relative;z-index:1;}
+.hero-badge{display:inline-flex;align-items:center;gap:4px;background:rgba(201,168,76,0.15);border:1px solid rgba(201,168,76,0.3);color:#C9A84C;font-size:11px;padding:4px 12px;border-radius:20px;margin-bottom:1rem;position:relative;z-index:1;}
+.hero h1{font-family:'Amiri',serif;font-size:26px;color:white;font-weight:700;line-height:1.3;margin-bottom:8px;position:relative;z-index:1;}
+.hero p{font-size:13px;color:rgba(255,255,255,0.75);line-height:1.7;margin-bottom:1.5rem;position:relative;z-index:1;}
+.hero-btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;position:relative;z-index:1;}
+.btn-gold{background:#C9A84C;color:#0F4228;border:none;padding:11px 24px;border-radius:24px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;text-decoration:none;display:inline-block;}
+.btn-outline{background:rgba(255,255,255,0.1);color:white;border:1px solid rgba(255,255,255,0.3);padding:11px 24px;border-radius:24px;font-size:14px;cursor:pointer;font-family:inherit;text-decoration:none;display:inline-block;}
+
+/* STATS */
+.stats{background:#0F4228;padding:1.25rem;display:grid;grid-template-columns:1fr 1fr 1fr;text-align:center;gap:0;}
+.stat-item{padding:0.5rem;}
+.stat-item:not(:last-child){border-right:1px solid rgba(255,255,255,0.1);}
+.stat-num{font-family:'Amiri',serif;font-size:22px;color:#C9A84C;font-weight:700;}
+.stat-lbl{font-size:10px;color:rgba(255,255,255,0.6);margin-top:3px;line-height:1.3;}
+
+/* SECTION */
+.section{padding:1.5rem 1.25rem;}
+.section-badge{display:inline-block;background:#E8F5EE;color:#1B6B3A;font-size:10px;font-weight:600;padding:3px 10px;border-radius:20px;letter-spacing:0.05em;text-transform:uppercase;margin-bottom:0.75rem;}
+.section-title{font-family:'Amiri',serif;font-size:20px;color:#1A1A1A;font-weight:700;margin-bottom:6px;line-height:1.3;}
+.section-sub{font-size:13px;color:#6B7280;line-height:1.6;margin-bottom:1.25rem;}
+
+/* FITUR */
+.fitur-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.fitur-card{background:white;border:1px solid #E5E7EB;border-radius:14px;padding:1rem;}
+.fitur-icon{font-size:24px;margin-bottom:8px;}
+.fitur-title{font-size:13px;font-weight:600;color:#1A1A1A;margin-bottom:3px;}
+.fitur-desc{font-size:11px;color:#6B7280;line-height:1.5;}
+
+/* MASJID LIST */
+.masjid-item{background:white;border:1px solid #E5E7EB;border-radius:12px;padding:0.875rem 1rem;display:flex;align-items:center;gap:12px;margin-bottom:8px;text-decoration:none;color:inherit;}
+.masjid-avatar{width:44px;height:44px;border-radius:10px;background:#E8F5EE;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+.masjid-info{flex:1;}
+.masjid-nama{font-size:14px;font-weight:600;color:#1A1A1A;}
+.masjid-lokasi{font-size:11px;color:#6B7280;margin-top:2px;}
+.masjid-arrow{font-size:18px;color:#C9A84C;}
+.masjid-kosong{background:white;border:1px dashed #E5E7EB;border-radius:12px;padding:1.25rem;text-align:center;font-size:12px;color:#6B7280;line-height:1.6;}
+
+/* EKSPEDISI */
+.ekspedisi-card{background:linear-gradient(135deg,#1B6B3A,#0F4228);border-radius:16px;padding:1.5rem;color:white;}
+.ekspedisi-card h3{font-family:'Amiri',serif;font-size:20px;margin-bottom:6px;}
+.ekspedisi-card p{font-size:12px;opacity:0.8;line-height:1.6;margin-bottom:1.25rem;}
+.progress-wrap{background:rgba(255,255,255,0.15);border-radius:20px;height:8px;margin-bottom:6px;overflow:hidden;}
+.progress-fill{height:100%;background:#C9A84C;border-radius:20px;}
+.progress-text{font-size:11px;opacity:0.7;display:flex;justify-content:space-between;}
+.eksp-detail{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:1rem;}
+.eksp-item{background:rgba(255,255,255,0.1);border-radius:10px;padding:0.75rem;text-align:center;}
+.eksp-num{font-size:18px;font-weight:600;color:#C9A84C;}
+.eksp-lbl{font-size:10px;opacity:0.7;margin-top:2px;}
+
+/* LAYANAN */
+.layanan-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.layanan-card{border-radius:14px;padding:1rem;text-align:center;}
+.layanan-card.umroh{background:#E8EEF5;border:1px solid rgba(27,58,107,0.15);}
+.layanan-card.kurban{background:#FEF3E8;border:1px solid rgba(180,83,9,0.15);}
+.layanan-card.properti{background:#F5EFE8;border:1px solid rgba(122,92,27,0.15);}
+.layanan-card.kafan{background:#E8F5EE;border:1px solid rgba(27,107,58,0.15);}
+.layanan-icon{font-size:28px;margin-bottom:6px;}
+.layanan-title{font-size:13px;font-weight:600;color:#1A1A1A;}
+.layanan-desc{font-size:11px;color:#6B7280;margin-top:3px;line-height:1.4;}
+.layanan-btn{display:inline-block;margin-top:8px;font-size:11px;color:#1B6B3A;font-weight:500;text-decoration:none;}
+
+/* DAFTAR */
+.daftar-section{background:linear-gradient(160deg,#0F4228,#1B6B3A);padding:2rem 1.25rem;text-align:center;}
+.daftar-section h2{font-family:'Amiri',serif;font-size:22px;color:white;margin-bottom:8px;}
+.daftar-section p{font-size:13px;color:rgba(255,255,255,0.75);margin-bottom:1.5rem;line-height:1.6;}
+.daftar-steps{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:1.5rem;}
+.step-item{background:rgba(255,255,255,0.1);border-radius:10px;padding:0.75rem 0.5rem;text-align:center;}
+.step-num{font-size:20px;color:#C9A84C;font-weight:700;}
+.step-lbl{font-size:10px;color:rgba(255,255,255,0.7);margin-top:3px;line-height:1.3;}
+.btn-daftar-wa{display:inline-flex;align-items:center;gap:8px;background:#C9A84C;color:#0F4228;border:none;padding:12px 28px;border-radius:24px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;text-decoration:none;}
+
+/* FOOTER */
+.footer{background:#0F4228;padding:1.5rem 1.25rem;text-align:center;}
+.footer-logo{font-family:'Amiri',serif;font-size:28px;color:#C9A84C;margin-bottom:4px;}
+.footer-name{font-size:13px;color:white;font-weight:500;}
+.footer-sub{font-size:11px;color:rgba(255,255,255,0.5);margin-top:3px;}
+.footer-divider{height:1px;background:rgba(255,255,255,0.1);margin:1rem 0;}
+.footer-links{display:flex;justify-content:center;gap:1rem;flex-wrap:wrap;}
+.footer-link{font-size:12px;color:rgba(255,255,255,0.6);text-decoration:none;}
+.footer-copy{font-size:11px;color:rgba(255,255,255,0.4);margin-top:1rem;}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-logo">م</div>
+  <div class="hero-badge">✦ Yayasan Nasi Jum'at</div>
+  <h1>Power of Masjid</h1>
+  <p>Platform digital gratis untuk masjid Indonesia. Transparansi keuangan, jadwal sholat otomatis, dan sistem infaq dalam satu halaman — tanpa keahlian teknis.</p>
+  <div class="hero-btns">
+    <a href="https://wa.me/628123456789" target="_blank" class="btn-gold">💬 Daftarkan Masjid</a>
+    <a href="#masjid" class="btn-outline">Lihat Masjid</a>
+  </div>
+</div>
+
+<!-- STATS -->
+<div class="stats">
+  <div class="stat-item">
+    <div class="stat-num" id="stat-masjid">1</div>
+    <div class="stat-lbl">Masjid Aktif</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num">4 Nov</div>
+    <div class="stat-lbl">Milad ke-10 YNJ</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num">100%</div>
+    <div class="stat-lbl">Gratis untuk Masjid</div>
+  </div>
+</div>
+
+<!-- FITUR -->
+<div class="section">
+  <div class="section-badge">Fitur Utama</div>
+  <div class="section-title">Semua yang Dibutuhkan Masjid</div>
+  <div class="section-sub">Dirancang khusus untuk DKM yang tidak melek teknologi. Semudah mengisi Excel.</div>
+  <div class="fitur-grid">
+    <div class="fitur-card">
+      <div class="fitur-icon">📊</div>
+      <div class="fitur-title">Kas Transparan</div>
+      <div class="fitur-desc">Jamaah pantau keuangan masjid secara real-time. Kepercayaan meningkat, infaq bertambah.</div>
+    </div>
+    <div class="fitur-card">
+      <div class="fitur-icon">🕌</div>
+      <div class="fitur-title">Jadwal Sholat</div>
+      <div class="fitur-desc">Otomatis setiap hari berdasarkan koordinat masjid. Tidak perlu update manual.</div>
+    </div>
+    <div class="fitur-card">
+      <div class="fitur-icon">📢</div>
+      <div class="fitur-title">Pengumuman</div>
+      <div class="fitur-desc">Kurban, Ramadan, Maulid — tampil otomatis sesuai tanggal yang ditentukan DKM.</div>
+    </div>
+    <div class="fitur-card">
+      <div class="fitur-icon">💳</div>
+      <div class="fitur-title">Infaq Digital</div>
+      <div class="fitur-desc">QRIS dan transfer bank langsung. Progress bar infaq memotivasi jamaah berdonasi.</div>
+    </div>
+    <div class="fitur-card">
+      <div class="fitur-icon">📸</div>
+      <div class="fitur-title">Galeri Kegiatan</div>
+      <div class="fitur-desc">Foto dan video YouTube kegiatan masjid tampil rapi di satu halaman.</div>
+    </div>
+    <div class="fitur-card">
+      <div class="fitur-icon">🐄</div>
+      <div class="fitur-title">Pendaftaran Kurban</div>
+      <div class="fitur-desc">Jamaah daftar dan bayar kurban langsung lewat website masjid.</div>
+    </div>
+  </div>
+</div>
+
+<!-- MASJID -->
+<div class="section" id="masjid" style="padding-top:0">
+  <div class="section-badge">Masjid Bergabung</div>
+  <div class="section-title">Masjid yang Sudah Terdaftar</div>
+  <div class="section-sub">Klik untuk melihat halaman masjid lengkap dengan keuangan transparan dan jadwal kegiatan.</div>
+
+  <a href="/masjid.html?masjid=annuriyah-tanjungbarat" class="masjid-item">
+    <div class="masjid-avatar">🕌</div>
+    <div class="masjid-info">
+      <div class="masjid-nama">Masjid Jami' An-Nuriyah</div>
+      <div class="masjid-lokasi">Tanjung Barat, Jagakarsa, Jakarta Selatan</div>
+    </div>
+    <div class="masjid-arrow">›</div>
+  </a>
+
+  <div class="masjid-kosong">
+    Masjidmu belum terdaftar?<br>
+    <strong>Hubungi kami — pendaftaran gratis!</strong>
+  </div>
+</div>
+
+<!-- EKSPEDISI -->
+<div class="section" style="padding-top:0">
+  <div class="section-badge">Program Unggulan</div>
+  <div class="section-title">Ekspedisi Power of Masjid</div>
+  <div class="ekspedisi-card">
+    <h3>Ekspedisi 4 November 2026</h3>
+    <p>Mengunjungi 10 masjid dari Jakarta hingga Jogokariyan. Pelatihan DKM, bantuan sistem digital, dan penguatan komunitas masjid Indonesia.</p>
+    <div class="progress-wrap"><div class="progress-fill" style="width:10%"></div></div>
+    <div class="progress-text"><span>1 dari 10 masjid siap</span><span>10%</span></div>
+    <div class="eksp-detail">
+      <div class="eksp-item"><div class="eksp-num">10</div><div class="eksp-lbl">Target Masjid</div></div>
+      <div class="eksp-item"><div class="eksp-num">Jogokariyan</div><div class="eksp-lbl">Pusat Pelatihan</div></div>
+      <div class="eksp-item"><div class="eksp-num">Kulsam</div><div class="eksp-lbl">Program Andalan</div></div>
+      <div class="eksp-item"><div class="eksp-num">4 Nov</div><div class="eksp-lbl">Milad ke-10 YNJ</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- LAYANAN BJ GRUP -->
+<div class="section" style="padding-top:0">
+  <div class="section-badge">BJ Grup</div>
+  <div class="section-title">Layanan Ekosistem</div>
+  <div class="section-sub">Layanan halal terintegrasi dari Berkah Jum'at untuk kebutuhan umat.</div>
+  <div class="layanan-grid">
+    <div class="layanan-card umroh">
+      <div class="layanan-icon">🕋</div>
+      <div class="layanan-title">BJHaramain</div>
+      <div class="layanan-desc">Umroh & ziarah bersama Nozoly. Oleh-oleh khas Haramain.</div>
+      <a href="https://wa.me/628123456789" target="_blank" class="layanan-btn">Info Umroh →</a>
+    </div>
+    <div class="layanan-card kurban">
+      <div class="layanan-icon">🐄</div>
+      <div class="layanan-title">BJFarm</div>
+      <div class="layanan-desc">Hewan kurban Idul Adha berkualitas. Kolektif sapi tersedia.</div>
+      <a href="https://wa.me/628123456789" target="_blank" class="layanan-btn">Daftar Kurban →</a>
+    </div>
+    <div class="layanan-card properti">
+      <div class="layanan-icon">🌿</div>
+      <div class="layanan-title">BJProperti</div>
+      <div class="layanan-desc">Properti syariah termasuk kavling makam Baqi Memorial Park.</div>
+      <a href="https://wa.me/628123456789" target="_blank" class="layanan-btn">Info Properti →</a>
+    </div>
+    <div class="layanan-card kafan">
+      <div class="layanan-icon">🤲</div>
+      <div class="layanan-title">Program Kafan</div>
+      <div class="layanan-desc">Stok kain kafan gratis tersedia di masjid mitra Power of Masjid.</div>
+      <a href="https://wa.me/628123456789" target="_blank" class="layanan-btn">Info Program →</a>
+    </div>
+  </div>
+</div>
+
+<!-- DAFTAR -->
+<div class="daftar-section">
+  <h2>Daftarkan Masjidmu Sekarang</h2>
+  <p>Gratis selamanya. Tidak perlu keahlian teknis. DKM cukup mengisi data seperti Excel — kami yang urus sisanya.</p>
+  <div class="daftar-steps">
+    <div class="step-item"><div class="step-num">1</div><div class="step-lbl">Hubungi kami via WhatsApp</div></div>
+    <div class="step-item"><div class="step-num">2</div><div class="step-lbl">Isi data masjid bersama tim</div></div>
+    <div class="step-item"><div class="step-num">3</div><div class="step-lbl">Website masjid langsung aktif</div></div>
+  </div>
+  <a href="https://wa.me/628123456789" target="_blank" class="btn-daftar-wa">💬 Hubungi via WhatsApp</a>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <div class="footer-logo">م</div>
+  <div class="footer-name">Power of Masjid</div>
+  <div class="footer-sub">Platform Digital Masjid Indonesia</div>
+  <div class="footer-divider"></div>
+  <div class="footer-links">
+    <a href="#" class="footer-link">Tentang Kami</a>
+    <a href="#masjid" class="footer-link">Masjid</a>
+    <a href="https://wa.me/628123456789" class="footer-link">Kontak</a>
+  </div>
+  <div class="footer-copy">© 2026 Power of Masjid — Yayasan Nasi Jum'at</div>
+</div>
+
+</body>
+</html>
