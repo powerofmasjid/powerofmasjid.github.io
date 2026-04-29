@@ -74,7 +74,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#F7F7F5;color:#1A1A1A
   <div class="login-card">
     <div class="login-logo">م</div>
     <div class="login-title">Admin Login</div>
-    <div class="login-sub">Masukkan Email & PIN 6 Digit Keamanan.</div>
+    <div class="login-sub">Masukkan Email & PIN 6 Digit.</div>
     <div class="form-group" style="text-align:left;"><label class="form-label">Email</label><input type="email" class="form-input" id="login-gmail" placeholder="nama@gmail.com"></div>
     <div class="form-group" style="text-align:left;"><label class="form-label">PIN</label><input type="password" class="form-input" id="login-pin" maxlength="6" style="text-align:center;letter-spacing:8px;font-size:20px;"></div>
     <button class="btn-submit" onclick="prosesLogin()" id="btn-login">Masuk ke Panel</button>
@@ -87,7 +87,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#F7F7F5;color:#1A1A1A
       <div class="admin-logo">م</div>
       <div>
         <div class="admin-title" id="admin-masjid-nama">Panel Admin</div>
-        <div id="admin-nama-role" style="font-size:11px;color:rgba(255,255,255,0.7);">Memuat Nama...</div>
+        <div id="admin-nama-role" style="font-size:11px;color:rgba(255,255,255,0.7);">Memuat...</div>
       </div>
     </div>
     <button class="btn-logout" onclick="logout()">Keluar</button>
@@ -107,71 +107,60 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#F7F7F5;color:#1A1A1A
         <div class="form-label">Total Saldo Kas</div>
         <div class="dash-val" id="val-saldo">Rp 0</div>
       </div>
-
-      <div class="section-title">Input Kas & Bukti Nota</div>
+      <div class="section-title">Input Transaksi & Bukti Nota</div>
       <div class="form-group"><label class="form-label">Tanggal</label><input type="date" class="form-input" id="trx-tanggal"></div>
       <div class="form-group"><label class="form-label">Jenis</label><select class="form-select" id="trx-jenis" onchange="toggleBuktiUI()"><option value="masuk">Penerimaan (+)</option><option value="keluar">Pengeluaran (-)</option></select></div>
-      <div class="form-group"><label class="form-label">Keterangan / Kategori</label><input type="text" class="form-input" id="trx-keterangan" placeholder="Infaq Jumat / Bayar Listrik"></div>
+      <div class="form-group"><label class="form-label">Keterangan</label><input type="text" class="form-input" id="trx-keterangan" placeholder="Infaq Jumat / Bayar Listrik"></div>
       <div class="form-group"><label class="form-label">Nominal (Rp)</label><input type="number" class="form-input" id="trx-jumlah"></div>
-      
       <div id="box-upload-bukti" style="display:none" class="form-group">
-        <label class="form-label">Foto Kuitansi (Otomatis Upload)</label>
+        <label class="form-label">Foto Bukti/Nota</label>
         <div style="display:flex;gap:8px;">
-          <input type="text" class="form-input" id="trx-bukti-url" placeholder="https://..." readonly style="background:#eee;">
-          <button class="btn-up" id="btn-up-bukti" onclick="document.getElementById('file-bukti').click()">Pilih Foto</button>
+          <input type="text" class="form-input" id="trx-bukti-url" readonly style="background:#eee;">
+          <button class="btn-up" id="btn-up-bukti" onclick="document.getElementById('file-bukti').click()">Upload</button>
           <input type="file" id="file-bukti" style="display:none" onchange="uploadKeImgBB(this, 'trx-bukti-url', 'btn-up-bukti')">
         </div>
       </div>
-
-      <button class="btn-submit" onclick="simpanTransaksi()">💾 Simpan & Update Saldo</button>
-      <div class="section-title" style="margin-top:2rem;">5 Transaksi Terakhir (Bisa Hapus)</div>
+      <button class="btn-submit" onclick="simpanTransaksi()">💾 Simpan Transaksi</button>
+      <div class="section-title" style="margin-top:2rem;">5 Transaksi Terakhir</div>
       <div id="list-trx-admin"></div>
     </div>
 
     <div id="tab-jadwal" style="display:none">
       <div class="section-title">Jadwal Kegiatan</div>
       <div class="form-group"><label class="form-label">Nama Kegiatan</label><input type="text" class="form-input" id="jdw-nama"></div>
-      <div class="form-group"><label class="form-label">Waktu & Hari (Fleksibel)</label><input type="text" class="form-input" id="jdw-jadwal" placeholder="Contoh: Ba'da Subuh - Setiap Ahad"></div>
+      <div class="form-group"><label class="form-label">Waktu & Hari (Bebas Ketik)</label><input type="text" class="form-input" id="jdw-jadwal" placeholder="Contoh: Ba'da Subuh - Setiap Ahad"></div>
       <button class="btn-submit" onclick="simpanJadwal()">💾 Simpan Jadwal</button>
     </div>
 
     <div id="tab-pengumuman" style="display:none">
-      <div class="section-title">Program & Kurban Kolektif</div>
+      <div class="section-title">Program & Kurban</div>
       <div class="form-group"><label class="form-label">Tipe</label>
         <select class="form-select" id="peng-tipe" onchange="toggleTipeUI()">
           <option value="UMUM">📢 Umum</option>
           <option value="KURBAN">🐄 Kurban</option>
           <option value="RAMADAN">🌙 Ramadan</option>
           <option value="PEMBANGUNAN">🏗️ Pembangunan</option>
+          <option value="LAPORAN">📊 Laporan</option>
         </select>
       </div>
       <div class="form-group"><label class="form-label">Judul</label><input type="text" class="form-input" id="peng-judul"></div>
       <div class="form-group"><label class="form-label">Isi Detail</label><textarea class="form-textarea" id="peng-isi"></textarea></div>
-      <div class="form-group"><label class="form-label">Ikon (Otomatis)</label><input type="text" class="form-input" id="peng-ikon" value="📢"></div>
-      
+      <div class="form-group"><label class="form-label">Ikon (Emoji)</label><input type="text" class="form-input" id="peng-ikon" value="📢"></div>
       <div id="box-kurban" style="display:none;background:var(--primary-light);padding:1rem;border-radius:10px;margin-bottom:1rem;">
         <div class="form-row">
           <div class="form-group"><label class="form-label">Total Slot Sapi</label><input type="number" class="form-input" id="peng-target-slot" value="0"></div>
           <div class="form-group"><label class="form-label">Slot Terisi</label><input type="number" class="form-input" id="peng-terisi-slot" value="0"></div>
         </div>
       </div>
-      
-      <div class="form-group"><label class="form-label">Target Dana (Opsional)</label><input type="number" class="form-input" id="peng-target" value="0"></div>
+      <div class="form-group"><label class="form-label">Target Dana (Rp)</label><input type="number" class="form-input" id="peng-target" value="0"></div>
       <button class="btn-submit" onclick="simpanPengumuman()">💾 Tayangkan Program</button>
     </div>
 
     <div id="tab-galeri" style="display:none">
       <div class="section-title">Media Galeri</div>
-      <div class="form-group">
-        <label class="form-label">Tipe</label>
-        <select class="form-select" id="gal-tipe" onchange="toggleGaleriUI()">
-          <option value="FOTO">📷 Foto</option>
-          <option value="VIDEO_YOUTUBE">▶️ Video YouTube</option>
-        </select>
-      </div>
+      <div class="form-group"><label class="form-label">Tipe</label><select class="form-select" id="gal-tipe" onchange="toggleGaleriUI()"><option value="FOTO">📷 Foto</option><option value="VIDEO_YOUTUBE">▶️ YouTube</option></select></div>
       <div class="form-group"><label class="form-label">Judul Media</label><input type="text" class="form-input" id="gal-judul"></div>
-      <div class="form-group">
-        <label class="form-label">Link / File</label>
+      <div class="form-group"><label class="form-label">Link/File</label>
         <div style="display:flex;gap:8px;"><input type="text" class="form-input" id="gal-url" style="margin:0;"><button class="btn-up" id="btn-up-gal" onclick="document.getElementById('file-gal').click()">Pilih Foto</button><input type="file" id="file-gal" style="display:none" onchange="uploadKeImgBB(this, 'gal-url', 'btn-up-gal')"></div>
       </div>
       <button class="btn-submit" onclick="simpanGaleri()">💾 Simpan Galeri</button>
@@ -179,7 +168,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#F7F7F5;color:#1A1A1A
 
     <div id="tab-profil" style="display:none">
       <div class="profil-section">
-        <h3>📍 Detail Masjid</h3>
+        <h3>📍 Data Masjid</h3>
         <div class="form-group"><label class="form-label">Nama Masjid</label><input type="text" class="form-input" id="prof-nama"></div>
         <div class="form-group"><label class="form-label">Alamat</label><input type="text" class="form-input" id="prof-alamat"></div>
         <div class="form-group"><label class="form-label">WA DKM</label><input type="text" class="form-input" id="prof-wa"></div>
@@ -219,7 +208,7 @@ function toggleTipeUI() {
   const t = document.getElementById('peng-tipe').value;
   const ikon = document.getElementById('peng-ikon');
   document.getElementById('box-kurban').style.display = (t === 'KURBAN') ? 'block' : 'none';
-  if(t==='KURBAN') ikon.value = '🐄'; else if(t==='RAMADAN') ikon.value = '🌙'; else ikon.value = '📢';
+  if(t==='KURBAN') ikon.value = '🐄'; else if(t==='RAMADAN') ikon.value = '🌙'; else if(t==='PEMBANGUNAN') ikon.value = '🏗️'; else ikon.value = '📢';
 }
 
 function toggleGaleriUI() {
@@ -233,8 +222,8 @@ function uploadKeImgBB(fileInput, targetId, btnId) {
   const formData = new FormData(); formData.append('image', file);
   fetch('https://api.imgbb.com/1/upload?key='+API_KEY_IMGBB, {method:'POST', body:formData})
   .then(r=>r.json()).then(j=>{
-    btn.textContent = 'Ganti Foto';
-    if(j.success){ document.getElementById(targetId).value = j.data.url; showToast('Upload Berhasil!'); }
+    btn.textContent = 'Ganti';
+    if(j.success){ document.getElementById(targetId).value = j.data.url; showToast('Foto Berhasil!'); }
   });
 }
 
@@ -277,14 +266,14 @@ function loadKas() {
       <div class="item-card">
         <div class="item-card-title">${t.keterangan}</div>
         <div style="font-size:12px; color:${t.jenis==='masuk'?'green':'red'}">${t.jenis==='masuk'?'+':'-'} Rp ${t.jumlah.toLocaleString('id-ID')}</div>
-        <button class="btn-del" onclick="hapusTrx('${t.id}')">🗑️ Hapus</button>
+        <button class="btn-del" onclick="hapusTrx('${t.id}')">🗑️</button>
       </div>
     `).join('');
   });
 }
 
 function hapusTrx(id) {
-  if(confirm('Hapus transaksi ini? Data di saldo akan otomatis menyesuaikan.')) {
+  if(confirm('Hapus transaksi ini?')) {
     fetch(API_URL, {method:'POST', body:JSON.stringify({action:'deleteTransaksi', id:id})})
     .then(() => { showToast('Terhapus!'); loadKas(); });
   }
@@ -304,59 +293,30 @@ function simpanTransaksi() {
 }
 
 function simpanJadwal() {
-  const data = {
-    action: 'addJadwal', id_masjid: ID_MASJID,
-    nama_kegiatan: document.getElementById('jdw-nama').value,
-    jadwal: document.getElementById('jdw-jadwal').value
-  };
-  fetch(API_URL, {method:'POST', body:JSON.stringify(data)}).then(() => { showToast('Jadwal Tersimpan!'); });
+  const data = { action: 'addJadwal', id_masjid: ID_MASJID, nama_kegiatan: document.getElementById('jdw-nama').value, jadwal: document.getElementById('jdw-jadwal').value };
+  fetch(API_URL, {method:'POST', body:JSON.stringify(data)}).then(() => showToast('Jadwal Tersimpan!'));
 }
 
 function simpanPengumuman() {
-  const data = {
-    action: 'addPengumuman', id_masjid: ID_MASJID,
-    tipe: document.getElementById('peng-tipe').value,
-    judul: document.getElementById('peng-judul').value,
-    isi: document.getElementById('peng-isi').value,
-    ikon: document.getElementById('peng-ikon').value,
-    target_slot: document.getElementById('peng-target-slot').value,
-    terisi_slot: document.getElementById('peng-terisi-slot').value,
-    target_dana: document.getElementById('peng-target').value
-  };
-  fetch(API_URL, {method:'POST', body:JSON.stringify(data)}).then(() => showToast('Program Tayang!'));
+  const data = { action: 'addPengumuman', id_masjid: ID_MASJID, tipe: document.getElementById('peng-tipe').value, judul: document.getElementById('peng-judul').value, isi: document.getElementById('peng-isi').value, ikon: document.getElementById('peng-ikon').value, target_slot: document.getElementById('peng-target-slot').value, terisi_slot: document.getElementById('peng-terisi-slot').value, target_dana: document.getElementById('peng-target').value };
+  fetch(API_URL, {method:'POST', body:JSON.stringify(data)}).then(() => showToast('Tayang!'));
 }
 
 function loadProfilAdmin() {
   fetch(API_URL+'?action=getMasjid&id_masjid='+ID_MASJID).then(r=>r.json()).then(j=>{
     if(j.status==='ok'){
       const d = j.data;
-      document.getElementById('prof-nama').value = d.nama||'';
-      document.getElementById('prof-alamat').value = d.alamat||'';
-      document.getElementById('prof-wa').value = d.telepon_wa||'';
-      document.getElementById('prof-rek1-bank').value = d.rek1_bank||'';
-      document.getElementById('prof-rek1-nomor').value = d.rek1_nomor||'';
-      document.getElementById('prof-rek2-bank').value = d.rek2_bank||'';
-      document.getElementById('prof-rek2-nomor').value = d.rek2_nomor||'';
-      document.getElementById('prof-rek3-bank').value = d.rek3_bank||'';
-      document.getElementById('prof-rek3-nomor').value = d.rek3_nomor||'';
+      document.getElementById('prof-nama').value = d.nama||''; document.getElementById('prof-alamat').value = d.alamat||''; document.getElementById('prof-wa').value = d.telepon_wa||'';
+      document.getElementById('prof-rek1-bank').value = d.rek1_bank||''; document.getElementById('prof-rek1-nomor').value = d.rek1_nomor||'';
+      document.getElementById('prof-rek2-bank').value = d.rek2_bank||''; document.getElementById('prof-rek2-nomor').value = d.rek2_nomor||'';
+      document.getElementById('prof-rek3-bank').value = d.rek3_bank||''; document.getElementById('prof-rek3-nomor').value = d.rek3_nomor||'';
       document.getElementById('admin-masjid-nama').textContent = d.nama;
     }
   });
 }
 
 function simpanProfil() {
-  const data = {
-    action:'updateMasjid', id_masjid:ID_MASJID,
-    nama:document.getElementById('prof-nama').value,
-    alamat:document.getElementById('prof-alamat').value,
-    telepon_wa:document.getElementById('prof-wa').value,
-    rek1_bank:document.getElementById('prof-rek1-bank').value,
-    rek1_nomor:document.getElementById('prof-rek1-nomor').value,
-    rek2_bank:document.getElementById('prof-rek2-bank').value,
-    rek2_nomor:document.getElementById('prof-rek2-nomor').value,
-    rek3_bank:document.getElementById('prof-rek3-bank').value,
-    rek3_nomor:document.getElementById('prof-rek3-nomor').value
-  };
+  const data = { action:'updateMasjid', id_masjid:ID_MASJID, nama:document.getElementById('prof-nama').value, alamat:document.getElementById('prof-alamat').value, telepon_wa:document.getElementById('prof-wa').value, rek1_bank:document.getElementById('prof-rek1-bank').value, rek1_nomor:document.getElementById('prof-rek1-nomor').value, rek2_bank:document.getElementById('prof-rek2-bank').value, rek2_nomor:document.getElementById('prof-rek2-nomor').value, rek3_bank:document.getElementById('prof-rek3-bank').value, rek3_nomor:document.getElementById('prof-rek3-nomor').value };
   fetch(API_URL, {method:'POST', body:JSON.stringify(data)}).then(() => showToast('Profil Terupdate!'));
 }
 
@@ -365,11 +325,8 @@ function logout() { localStorage.removeItem('pow_admin'); location.reload(); }
 window.onload = () => {
   const s = localStorage.getItem('pow_admin');
   if(s){ 
-    try {
-      ADMIN_DATA = JSON.parse(s); ID_MASJID = ADMIN_DATA.id_masjid; renderDashboard(); 
-    } catch(e) { localStorage.removeItem('pow_admin'); location.reload(); }
-  }
-  else document.getElementById('login-wrap').classList.add('show');
+    try { ADMIN_DATA = JSON.parse(s); ID_MASJID = ADMIN_DATA.id_masjid; renderDashboard(); } catch(e) { localStorage.removeItem('pow_admin'); location.reload(); }
+  } else document.getElementById('login-wrap').classList.add('show');
   document.getElementById('splash').classList.add('hide');
 };
 </script>
