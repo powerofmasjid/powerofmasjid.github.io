@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="id">
 <head>
 <meta charset="UTF-8">
@@ -187,21 +187,18 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 </head>
 <body>
 
-<!-- SPLASH LOADING -->
 <div class="splash" id="splash">
   <div class="splash-logo">م</div>
   <div class="splash-text">Memuat data masjid...</div>
   <div class="splash-bar"><div class="splash-fill"></div></div>
 </div>
 
-<!-- ERROR -->
 <div class="error-wrap" id="error-wrap">
   <div class="error-icon">🕌</div>
   <div class="error-text">Masjid tidak ditemukan</div>
   <div class="error-sub">Periksa kembali alamat yang Anda akses</div>
 </div>
 
-<!-- OVERLAY IKLAN -->
 <div class="overlay hide" id="overlay">
   <div class="overlay-card">
     <div class="overlay-header">
@@ -212,7 +209,6 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
   </div>
 </div>
 
-<!-- HEADER -->
 <div class="header">
   <div class="logo-wrap" id="logo-wrap"><span class="logo-placeholder">م</span></div>
   <h1 id="nama-masjid">Memuat...</h1>
@@ -225,16 +221,13 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 
 <div class="main">
 
-  <!-- JADWAL SHOLAT -->
   <div class="sholat-card" id="sholat-card" style="display:none">
     <div class="sholat-title" id="sholat-date">Jadwal Sholat Hari Ini</div>
     <div class="sholat-grid" id="sholat-grid"></div>
   </div>
 
-  <!-- PENGUMUMAN -->
   <div id="list-pengumuman"></div>
 
-  <!-- SALDO -->
   <div class="saldo-card">
     <div class="saldo-label">Saldo Kas Masjid</div>
     <div class="saldo-amount" id="saldo-total">Rp 0</div>
@@ -252,7 +245,6 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
     </div>
   </div>
 
-  <!-- TRANSAKSI -->
   <div class="section">
     <div class="section-head">
       <div class="section-head-left"><div class="dot"></div><h2>Transaksi Terakhir</h2></div>
@@ -260,7 +252,6 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
     <div class="card" id="list-transaksi"><div class="kosong">Memuat...</div></div>
   </div>
 
-  <!-- JADWAL KEGIATAN -->
   <div class="section">
     <div class="section-head">
       <div class="section-head-left"><div class="dot"></div><h2>Jadwal Kegiatan</h2></div>
@@ -268,7 +259,6 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
     <div class="card" id="list-jadwal"><div class="kosong">Memuat...</div></div>
   </div>
 
-  <!-- GALERI -->
   <div class="section" id="section-galeri" style="display:none">
     <div class="section-head">
       <div class="section-head-left"><div class="dot"></div><h2>Dokumentasi Kegiatan</h2></div>
@@ -281,7 +271,6 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
     </div>
   </div>
 
-  <!-- INFAQ & SHADAQAH -->
   <div class="section">
     <div class="section-head">
       <div class="section-head-left"><div class="dot"></div><h2>Infaq & Shadaqah</h2></div>
@@ -300,7 +289,6 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 
 </div>
 
-<!-- FOOTER -->
 <div class="footer">
   Sistem ini dipersembahkan oleh<br>
   <a href="https://powerofmasjid.github.io" target="_blank">Power of Masjid</a> — Yayasan Nasi Jum'at<br>
@@ -310,6 +298,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 <div class="toast" id="toast">Nomor rekening disalin!</div>
 
 <script>
+// Pastikan API_URL ini adalah URL terbaru dari deployment kode.gs Bapak
 var API_URL = 'https://script.google.com/macros/s/AKfycbxw8v4qDT_PJlP1PaXng3vWQYuqW12YiH6H87hjWtuMW3EO6OXHa2ZiJOTf5uBnoL6o/exec';
 var ID_MASJID = '';
 var CACHE_DURATION = 3600000; // 1 jam
@@ -664,7 +653,7 @@ function tampilOverlay() {
 }
 
 // ============================================
-// INIT
+// INIT (SUDAH DIPERCEPAT)
 // ============================================
 async function init() {
   var slug = getSlug();
@@ -672,6 +661,12 @@ async function init() {
     var id = await loadMasjid(slug);
     if (!id) return;
 
+    // --- SPLASH SCREEN LANGSUNG DITUTUP SETELAH NAMA MASJID MUNCUL ---
+    var splash = document.getElementById('splash');
+    splash.classList.add('hide');
+    setTimeout(function(){ splash.style.display = 'none'; }, 600);
+
+    // Proses loading tabel lainnya jalan di latar belakang
     await Promise.all([
       loadSaldo(),
       loadTransaksi(),
@@ -681,10 +676,13 @@ async function init() {
     ]);
   } catch(e) {
     console.error(e);
+    // Jika error, pastikan splash tetap tertutup
+    var splash = document.getElementById('splash');
+    if (splash) {
+      splash.classList.add('hide');
+      setTimeout(function(){ splash.style.display = 'none'; }, 600);
+    }
   }
-  var splash = document.getElementById('splash');
-  splash.classList.add('hide');
-  setTimeout(function(){ splash.style.display = 'none'; }, 600);
 
   // Tampil overlay iklan setelah 3 detik
   setTimeout(function(){ tampilOverlay(); }, 3000);
