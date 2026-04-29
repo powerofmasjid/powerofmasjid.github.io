@@ -283,8 +283,10 @@ function prosesLogin() {
 function renderDashboard() {
   document.getElementById('login-wrap').classList.remove('show');
   document.getElementById('admin-content').style.display = 'block';
+  // Menampilkan Nama Admin yang login
   document.getElementById('admin-nama-role').textContent = ADMIN_DATA.nama + ' (Admin)';
   loadKas();
+  loadProfilAdmin();
 }
 
 function loadKas() {
@@ -311,15 +313,7 @@ function hapusTrx(id) {
 }
 
 function simpanTransaksi() {
-  const data = {
-    action: 'addTransaksi', id_masjid: ID_MASJID,
-    tanggal: document.getElementById('trx-tanggal').value,
-    keterangan: document.getElementById('trx-keterangan').value,
-    jenis: document.getElementById('trx-jenis').value,
-    jumlah: document.getElementById('trx-jumlah').value,
-    bukti_url: document.getElementById('trx-bukti-url').value,
-    dicatat_oleh: ADMIN_DATA.nama
-  };
+  const data = { action: 'addTransaksi', id_masjid: ID_MASJID, tanggal: document.getElementById('trx-tanggal').value, keterangan: document.getElementById('trx-keterangan').value, jenis: document.getElementById('trx-jenis').value, jumlah: document.getElementById('trx-jumlah').value, bukti_url: document.getElementById('trx-bukti-url').value, dicatat_oleh: ADMIN_DATA.nama };
   fetch(API_URL, {method:'POST', body:JSON.stringify(data)}).then(() => { showToast('Tersimpan!'); loadKas(); });
 }
 
@@ -354,20 +348,7 @@ function loadProfilAdmin() {
 }
 
 function simpanProfil() {
-  const data = {
-    action:'updateMasjid', id_masjid:ID_MASJID,
-    nama:document.getElementById('prof-nama').value,
-    alamat:document.getElementById('prof-alamat').value,
-    telepon_wa:document.getElementById('prof-wa').value,
-    logo_url:document.getElementById('prof-logo').value,
-    qris_url:document.getElementById('prof-qris').value,
-    rek1_bank:document.getElementById('prof-rek1-bank').value,
-    rek1_nomor:document.getElementById('prof-rek1-nomor').value,
-    rek2_bank:document.getElementById('prof-rek2-bank').value,
-    rek2_nomor:document.getElementById('prof-rek2-nomor').value,
-    rek3_bank:document.getElementById('prof-rek3-bank').value,
-    rek3_nomor:document.getElementById('prof-rek3-nomor').value
-  };
+  const data = { action:'updateMasjid', id_masjid:ID_MASJID, nama:document.getElementById('prof-nama').value, alamat:document.getElementById('prof-alamat').value, telepon_wa:document.getElementById('prof-wa').value, logo_url:document.getElementById('prof-logo').value, qris_url:document.getElementById('prof-qris').value, rek1_bank:document.getElementById('prof-rek1-bank').value, rek1_nomor:document.getElementById('prof-rek1-nomor').value, rek2_bank:document.getElementById('prof-rek2-bank').value, rek2_nomor:document.getElementById('prof-rek2-nomor').value, rek3_bank:document.getElementById('prof-rek3-bank').value, rek3_nomor:document.getElementById('prof-rek3-nomor').value };
   fetch(API_URL, {method:'POST', body:JSON.stringify(data)}).then(() => showToast('Profil Terupdate!'));
 }
 
@@ -375,9 +356,8 @@ function logout() { localStorage.removeItem('pow_admin'); location.reload(); }
 
 window.onload = () => {
   const s = localStorage.getItem('pow_admin');
-  if(s){ 
-    try { ADMIN_DATA = JSON.parse(s); ID_MASJID = ADMIN_DATA.id_masjid; renderDashboard(); } catch(e) { localStorage.removeItem('pow_admin'); location.reload(); }
-  } else document.getElementById('login-wrap').classList.add('show');
+  if(s){ try { ADMIN_DATA = JSON.parse(s); ID_MASJID = ADMIN_DATA.id_masjid; renderDashboard(); } catch(e) { localStorage.removeItem('pow_admin'); location.reload(); } }
+  else document.getElementById('login-wrap').classList.add('show');
   document.getElementById('splash').classList.add('hide');
 };
 </script>
