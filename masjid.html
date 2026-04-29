@@ -298,8 +298,8 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 <div class="toast" id="toast">Nomor rekening disalin!</div>
 
 <script>
-// Pastikan API_URL ini adalah URL terbaru dari deployment kode.gs Bapak
-var API_URL = 'https://script.google.com/macros/s/AKfycbxw8v4qDT_PJlP1PaXng3vWQYuqW12YiH6H87hjWtuMW3EO6OXHa2ZiJOTf5uBnoL6o/exec';
+// INI ADALAH URL YANG BENAR 100%
+var API_URL = 'https://script.google.com/macros/s/AKfycbyqxGZb7NzDFPRHTXnpfLo6yqc3LOVwb6DsFOOoZZLXCfLI-iYH0g9CeeSm9puhXcJHXg/exec';
 var ID_MASJID = '';
 var CACHE_DURATION = 3600000; // 1 jam
 
@@ -438,7 +438,6 @@ async function loadMasjid(slug) {
     document.getElementById('qris-img').src = d.qris_url;
   }
 
-  // Hitung jadwal sholat langsung setelah data masjid didapat
   if (d.latitude && d.longitude) {
     loadJadwalSholat(d.latitude, d.longitude);
   }
@@ -560,17 +559,12 @@ function loadJadwalSholat(lat, lon) {
   try {
     var latNum = parseFloat(String(lat).trim());
     var lonNum = parseFloat(String(lon).trim());
-    if (isNaN(latNum) || isNaN(lonNum)) {
-      console.log('Koordinat tidak valid:', lat, lon);
-      return;
-    }
-    console.log('Menghitung jadwal sholat untuk:', latNum, lonNum);
+    if (isNaN(latNum) || isNaN(lonNum)) return;
 
     var today = new Date();
     var D2R = Math.PI / 180;
     var R2D = 180 / Math.PI;
 
-    // Hitung Julian Date
     var Y = today.getFullYear();
     var M = today.getMonth() + 1;
     var D = today.getDate();
@@ -585,8 +579,7 @@ function loadJadwalSholat(lat, lon) {
     var decl = R2D * Math.asin(Math.sin(obliq*D2R) * Math.sin(sunLon*D2R));
     var RA = R2D * Math.atan2(Math.cos(obliq*D2R)*Math.sin(sunLon*D2R), Math.cos(sunLon*D2R));
     var EqT = ((L0 - RA) % 360) / 15;
-    var utcOffset = 7;
-    var transit = 12 - lonNum/15 + utcOffset - EqT;
+    var transit = 12 - lonNum/15 + 7 - EqT;
 
     function ha(angle) {
       var cosH = (Math.sin(angle*D2R) - Math.sin(latNum*D2R)*Math.sin(decl*D2R)) / (Math.cos(latNum*D2R)*Math.cos(decl*D2R));
@@ -603,7 +596,6 @@ function loadJadwalSholat(lat, lon) {
       return String(h).padStart(2,'0') + ':' + String(m).padStart(2,'0');
     }
 
-    // Asar - shadow factor 1 (Syafii)
     var asarAngle = R2D * Math.atan(1/(1 + Math.tan(D2R*Math.abs(latNum - decl))));
 
     var sholat = [
@@ -613,8 +605,6 @@ function loadJadwalSholat(lat, lon) {
       {name:'Maghrib', time: fmt(transit + ha(-0.833))},
       {name:'Isya',    time: fmt(transit + ha(-18))}
     ];
-
-    console.log('Jadwal:', JSON.stringify(sholat));
 
     function toMenit(str) {
       var p = str.split(':');
@@ -632,18 +622,16 @@ function loadJadwalSholat(lat, lon) {
     document.getElementById('sholat-grid').innerHTML = sholat.map(function(s,idx){
       return '<div class="sholat-item'+(idx===aktifIdx?' aktif':'')+'"><div class="sholat-name">'+s.name+'</div><div class="sholat-time">'+s.time+'</div></div>';
     }).join('');
-  } catch(e) {
-    console.error('Jadwal sholat error:', e.toString());
-  }
+  } catch(e) {}
 }
 
 // ============================================
-// OVERLAY IKLAN - rotasi konten BJ Grup
+// OVERLAY IKLAN
 // ============================================
 function tampilOverlay() {
   var iklan = [
-    { judul: 'Idul Adha 1446H', ikon: '🐄', title: 'Daftar Kurban via BJFarm', sub: 'Kambing & sapi berkualitas. Kolektif sapi tersedia untuk masjid. Daftarkan sekarang sebelum kuota habis.', link: 'https://wa.me/628123456789', linkText: 'Daftar Kurban Sekarang' },
-    { judul: 'Umroh & Ziarah', ikon: '🕋', title: 'BJHaramain — Mitra Nozoly', sub: 'Paket umroh terpercaya. Oleh-oleh khas Haramain tersedia. Konsultasi gratis, tanpa biaya tambahan.', link: 'https://wa.me/628123456789', linkText: 'Info Umroh Sekarang' }
+    { judul: 'Idul Adha 1446H', ikon: '🐄', title: 'Daftar Kurban via BJFarm', sub: 'Kambing & sapi berkualitas. Kolektif sapi tersedia untuk masjid. Daftarkan sekarang.', link: 'https://wa.me/628123456789', linkText: 'Daftar Kurban Sekarang' },
+    { judul: 'Umroh & Ziarah', ikon: '🕋', title: 'BJHaramain — Mitra Nozoly', sub: 'Paket umroh terpercaya. Oleh-oleh khas Haramain tersedia.', link: 'https://wa.me/628123456789', linkText: 'Info Umroh Sekarang' }
   ];
   var idx = Math.floor(Math.random() * iklan.length);
   var item = iklan[idx];
@@ -653,7 +641,7 @@ function tampilOverlay() {
 }
 
 // ============================================
-// INIT (SUDAH DIPERCEPAT)
+// INIT
 // ============================================
 async function init() {
   var slug = getSlug();
@@ -661,12 +649,12 @@ async function init() {
     var id = await loadMasjid(slug);
     if (!id) return;
 
-    // --- SPLASH SCREEN LANGSUNG DITUTUP SETELAH NAMA MASJID MUNCUL ---
+    // MATIKAN LAYAR HIJAU LANGSUNG
     var splash = document.getElementById('splash');
     splash.classList.add('hide');
     setTimeout(function(){ splash.style.display = 'none'; }, 600);
 
-    // Proses loading tabel lainnya jalan di latar belakang
+    // LANJUT LOAD SISANYA DI BACKGROUND
     await Promise.all([
       loadSaldo(),
       loadTransaksi(),
@@ -675,8 +663,6 @@ async function init() {
       loadGaleri()
     ]);
   } catch(e) {
-    console.error(e);
-    // Jika error, pastikan splash tetap tertutup
     var splash = document.getElementById('splash');
     if (splash) {
       splash.classList.add('hide');
@@ -684,7 +670,6 @@ async function init() {
     }
   }
 
-  // Tampil overlay iklan setelah 3 detik
   setTimeout(function(){ tampilOverlay(); }, 3000);
 }
 
