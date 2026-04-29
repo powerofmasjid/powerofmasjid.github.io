@@ -298,10 +298,12 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 <div class="toast" id="toast">Nomor rekening disalin!</div>
 
 <script>
-// INI ADALAH URL YANG BENAR 100%
+// URL API SUDAH SAYA PERBAIKI
 var API_URL = 'https://script.google.com/macros/s/AKfycbyqxGZb7NzDFPRHTXnpfLo6yqc3LOVwb6DsFOOoZZLXCfLI-iYH0g9CeeSm9puhXcJHXg/exec';
 var ID_MASJID = '';
-var CACHE_DURATION = 3600000; // 1 jam
+var CACHE_DURATION = 86400000;    // 24 jam untuk data statis
+var CACHE_TRANSAKSI = 300000;     // 5 menit untuk transaksi & saldo
+var CACHE_PENGUMUMAN = 1800000;   // 30 menit untuk pengumuman
 
 // ============================================
 // CACHE SYSTEM
@@ -312,12 +314,13 @@ function cacheSet(key, data) {
   } catch(e) {}
 }
 
-function cacheGet(key) {
+function cacheGet(key, duration) {
   try {
     var raw = localStorage.getItem(key);
     if (!raw) return null;
     var obj = JSON.parse(raw);
-    if (Date.now() - obj.time > CACHE_DURATION) { localStorage.removeItem(key); return null; }
+    var dur = duration || CACHE_DURATION;
+    if (Date.now() - obj.time > dur) { localStorage.removeItem(key); return null; }
     return obj.data;
   } catch(e) { return null; }
 }
@@ -372,9 +375,9 @@ function getBannerClass(tipe) {
 // ============================================
 // API FETCH DENGAN CACHE
 // ============================================
-async function apiFetch(action, params, cacheKey) {
+async function apiFetch(action, params, cacheKey, duration) {
   if (cacheKey) {
-    var cached = cacheGet(cacheKey);
+    var cached = cacheGet(cacheKey, duration);
     if (cached) return cached;
   }
   var url = API_URL + '?action=' + action;
@@ -438,6 +441,7 @@ async function loadMasjid(slug) {
     document.getElementById('qris-img').src = d.qris_url;
   }
 
+  // Hitung jadwal sholat langsung setelah data masjid didapat
   if (d.latitude && d.longitude) {
     loadJadwalSholat(d.latitude, d.longitude);
   }
@@ -448,10 +452,7 @@ async function loadMasjid(slug) {
 // ============================================
 // LOAD SALDO
 // ============================================
-async function loadSaldo() {
-  var json = await apiFetch('getSaldo', {id_masjid: ID_MASJID}, 'saldo_' + ID_MASJID);
-  if (json.status !== 'ok') return;
-  var d = json.data;
+function renderSaldo(d) {
   document.getElementById('saldo-total').textContent = rupiah(d.saldo);
   document.getElementById('total-masuk').textContent = rupiah(d.masuk_bulan_ini);
   document.getElementById('total-keluar').textContent = rupiah(d.keluar_bulan_ini);
@@ -459,43 +460,59 @@ async function loadSaldo() {
   document.getElementById('tgl-update').textContent = 'Diperbarui: ' + namaHari(now.getDay()) + ', ' + now.toLocaleDateString('id-ID', {day:'numeric', month:'long', year:'numeric'});
 }
 
+async function loadSaldo() {
+  var json = await apiFetch('getSaldo', {id_masjid: ID_MASJID}, 'saldo_' + ID_MASJID, CACHE_TRANSAKSI);
+  if (json.status !== 'ok') return;
+  renderSaldo(json.data);
+}
+
 // ============================================
 // LOAD TRANSAKSI
 // ============================================
-async function loadTransaksi() {
-  var json = await apiFetch('getTransaksi', {id_masjid: ID_MASJID}, 'transaksi_' + ID_MASJID);
+function renderTransaksi(data) {
   var el = document.getElementById('list-transaksi');
-  if (json.status !== 'ok' || json.data.length === 0) {
+  if (!data || data.length === 0) {
     el.innerHTML = '<div class="kosong">Belum ada transaksi tercatat</div>';
     return;
   }
-  el.innerHTML = json.data.slice(0, 5).map(function(t){
+  el.innerHTML = data.slice(0, 5).map(function(t){
     var bukti = t.bukti_url ? '<a href="' + t.bukti_url + '" target="_blank" class="trx-bukti">Lihat bukti</a>' : '';
     return '<div class="trx-item"><div class="trx-icon ' + t.jenis + '">' + (t.jenis === 'masuk' ? '↑' : '↓') + '</div><div class="trx-info"><div class="trx-name">' + t.keterangan + '</div><div class="trx-date">' + formatTglPendek(t.tanggal) + '</div></div><div class="trx-right"><div class="trx-amount ' + t.jenis + '">' + (t.jenis === 'masuk' ? '+' : '-') + ' ' + rupiah(t.jumlah) + '</div>' + bukti + '</div></div>';
   }).join('');
 }
 
+async function loadTransaksi() {
+  var json = await apiFetch('getTransaksi', {id_masjid: ID_MASJID}, 'transaksi_' + ID_MASJID, CACHE_TRANSAKSI);
+  if (json.status !== 'ok') return;
+  renderTransaksi(json.data);
+}
+
 // ============================================
 // LOAD JADWAL
 // ============================================
-async function loadJadwal() {
-  var json = await apiFetch('getJadwal', {id_masjid: ID_MASJID}, 'jadwal_' + ID_MASJID);
+function renderJadwal(data) {
   var el = document.getElementById('list-jadwal');
-  if (json.status !== 'ok' || json.data.length === 0) {
+  if (!data || data.length === 0) {
     el.innerHTML = '<div class="kosong">Belum ada jadwal kegiatan</div>';
     return;
   }
-  el.innerHTML = json.data.map(function(j){
+  el.innerHTML = data.map(function(j){
     var hari = j.hari ? '<span class="jadwal-hari">' + j.hari + '</span>' : '';
     return '<div class="jadwal-item"><div class="jadwal-dot"></div><div><div class="jadwal-title">' + j.nama_kegiatan + '</div><div class="jadwal-detail">' + j.jadwal + (j.lokasi ? ' · ' + j.lokasi : '') + '</div>' + hari + '</div></div>';
   }).join('');
+}
+
+async function loadJadwal() {
+  var json = await apiFetch('getJadwal', {id_masjid: ID_MASJID}, 'jadwal_' + ID_MASJID);
+  if (json.status !== 'ok') return;
+  renderJadwal(json.data);
 }
 
 // ============================================
 // LOAD PENGUMUMAN
 // ============================================
 async function loadPengumuman() {
-  var json = await apiFetch('getPengumuman', {id_masjid: ID_MASJID}, 'pengumuman_' + ID_MASJID);
+  var json = await apiFetch('getPengumuman', {id_masjid: ID_MASJID}, 'pengumuman_' + ID_MASJID, CACHE_PENGUMUMAN);
   var el = document.getElementById('list-pengumuman');
   if (json.status !== 'ok' || json.data.length === 0) return;
 
@@ -559,12 +576,17 @@ function loadJadwalSholat(lat, lon) {
   try {
     var latNum = parseFloat(String(lat).trim());
     var lonNum = parseFloat(String(lon).trim());
-    if (isNaN(latNum) || isNaN(lonNum)) return;
+    if (isNaN(latNum) || isNaN(lonNum)) {
+      console.log('Koordinat tidak valid:', lat, lon);
+      return;
+    }
+    console.log('Menghitung jadwal sholat untuk:', latNum, lonNum);
 
     var today = new Date();
     var D2R = Math.PI / 180;
     var R2D = 180 / Math.PI;
 
+    // Hitung Julian Date
     var Y = today.getFullYear();
     var M = today.getMonth() + 1;
     var D = today.getDate();
@@ -579,7 +601,8 @@ function loadJadwalSholat(lat, lon) {
     var decl = R2D * Math.asin(Math.sin(obliq*D2R) * Math.sin(sunLon*D2R));
     var RA = R2D * Math.atan2(Math.cos(obliq*D2R)*Math.sin(sunLon*D2R), Math.cos(sunLon*D2R));
     var EqT = ((L0 - RA) % 360) / 15;
-    var transit = 12 - lonNum/15 + 7 - EqT;
+    var utcOffset = 7;
+    var transit = 12 - lonNum/15 + utcOffset - EqT;
 
     function ha(angle) {
       var cosH = (Math.sin(angle*D2R) - Math.sin(latNum*D2R)*Math.sin(decl*D2R)) / (Math.cos(latNum*D2R)*Math.cos(decl*D2R));
@@ -596,6 +619,7 @@ function loadJadwalSholat(lat, lon) {
       return String(h).padStart(2,'0') + ':' + String(m).padStart(2,'0');
     }
 
+    // Asar - shadow factor 1 (Syafii)
     var asarAngle = R2D * Math.atan(1/(1 + Math.tan(D2R*Math.abs(latNum - decl))));
 
     var sholat = [
@@ -605,6 +629,8 @@ function loadJadwalSholat(lat, lon) {
       {name:'Maghrib', time: fmt(transit + ha(-0.833))},
       {name:'Isya',    time: fmt(transit + ha(-18))}
     ];
+
+    console.log('Jadwal:', JSON.stringify(sholat));
 
     function toMenit(str) {
       var p = str.split(':');
@@ -622,16 +648,18 @@ function loadJadwalSholat(lat, lon) {
     document.getElementById('sholat-grid').innerHTML = sholat.map(function(s,idx){
       return '<div class="sholat-item'+(idx===aktifIdx?' aktif':'')+'"><div class="sholat-name">'+s.name+'</div><div class="sholat-time">'+s.time+'</div></div>';
     }).join('');
-  } catch(e) {}
+  } catch(e) {
+    console.error('Jadwal sholat error:', e.toString());
+  }
 }
 
 // ============================================
-// OVERLAY IKLAN
+// OVERLAY IKLAN - rotasi konten BJ Grup
 // ============================================
 function tampilOverlay() {
   var iklan = [
-    { judul: 'Idul Adha 1446H', ikon: '🐄', title: 'Daftar Kurban via BJFarm', sub: 'Kambing & sapi berkualitas. Kolektif sapi tersedia untuk masjid. Daftarkan sekarang.', link: 'https://wa.me/628123456789', linkText: 'Daftar Kurban Sekarang' },
-    { judul: 'Umroh & Ziarah', ikon: '🕋', title: 'BJHaramain — Mitra Nozoly', sub: 'Paket umroh terpercaya. Oleh-oleh khas Haramain tersedia.', link: 'https://wa.me/628123456789', linkText: 'Info Umroh Sekarang' }
+    { judul: 'Idul Adha 1446H', ikon: '🐄', title: 'Daftar Kurban via BJFarm', sub: 'Kambing & sapi berkualitas. Kolektif sapi tersedia untuk masjid. Daftarkan sekarang sebelum kuota habis.', link: 'https://wa.me/628123456789', linkText: 'Daftar Kurban Sekarang' },
+    { judul: 'Umroh & Ziarah', ikon: '🕋', title: 'BJHaramain — Mitra Nozoly', sub: 'Paket umroh terpercaya. Oleh-oleh khas Haramain tersedia. Konsultasi gratis, tanpa biaya tambahan.', link: 'https://wa.me/628123456789', linkText: 'Info Umroh Sekarang' }
   ];
   var idx = Math.floor(Math.random() * iklan.length);
   var item = iklan[idx];
@@ -641,7 +669,7 @@ function tampilOverlay() {
 }
 
 // ============================================
-// INIT
+// INIT 
 // ============================================
 async function init() {
   var slug = getSlug();
@@ -649,12 +677,11 @@ async function init() {
     var id = await loadMasjid(slug);
     if (!id) return;
 
-    // MATIKAN LAYAR HIJAU LANGSUNG
+    // MATIKAN SPLASH LANGSUNG SETELAH NAMA MASJID MUNCUL
     var splash = document.getElementById('splash');
     splash.classList.add('hide');
     setTimeout(function(){ splash.style.display = 'none'; }, 600);
 
-    // LANJUT LOAD SISANYA DI BACKGROUND
     await Promise.all([
       loadSaldo(),
       loadTransaksi(),
@@ -663,13 +690,13 @@ async function init() {
       loadGaleri()
     ]);
   } catch(e) {
+    console.error(e);
+    // Jika gagal, pastikan splash tetap hilang agar tidak nyangkut
     var splash = document.getElementById('splash');
-    if (splash) {
-      splash.classList.add('hide');
-      setTimeout(function(){ splash.style.display = 'none'; }, 600);
-    }
+    if(splash) { splash.classList.add('hide'); setTimeout(function(){ splash.style.display = 'none'; }, 600); }
   }
 
+  // Tampil overlay iklan setelah 3 detik
   setTimeout(function(){ tampilOverlay(); }, 3000);
 }
 
