@@ -82,6 +82,9 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#F7F7F5;color:#1A1A1A
 
 /* KOSONG */
 .kosong{text-align:center;padding:2rem;color:var(--muted);font-size:13px;}
+.login-card .form-group{margin-bottom:0.75rem;}
+.login-card .form-input{border-radius:8px;}
+.login-card .btn-submit{margin-top:0;}
 
 /* DIVIDER */
 .divider{height:1px;background:var(--border);margin:1rem 0;}
@@ -100,12 +103,17 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#F7F7F5;color:#1A1A1A
   <div class="login-card">
     <div class="login-logo">م</div>
     <div class="login-title">Panel Admin Masjid</div>
-    <div class="login-sub">Masuk menggunakan akun Gmail yang terdaftar sebagai admin masjid Anda.</div>
-    <button class="btn-google" onclick="loginGoogle()">
-      <svg class="google-icon" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
-      Masuk dengan Google
-    </button>
-    <div class="login-note">Hanya akun yang terdaftar sebagai admin yang dapat mengakses panel ini.</div>
+    <div class="login-sub">Masuk menggunakan Gmail dan PIN yang telah diberikan oleh Power of Masjid.</div>
+    <div class="form-group" style="text-align:left;margin-bottom:0.75rem;">
+      <label class="form-label">Alamat Gmail</label>
+      <input type="email" class="form-input" id="login-gmail" placeholder="nama@gmail.com" autocomplete="email">
+    </div>
+    <div class="form-group" style="text-align:left;margin-bottom:1rem;">
+      <label class="form-label">PIN (6 Digit)</label>
+      <input type="password" class="form-input" id="login-pin" placeholder="••••••" maxlength="6" autocomplete="current-password">
+    </div>
+    <button class="btn-submit" onclick="prosesLogin()" id="btn-login">Masuk</button>
+    <div class="login-note" style="margin-top:0.75rem;">Belum punya akses? Hubungi Power of Masjid untuk pendaftaran.</div>
   </div>
 </div>
 
@@ -294,6 +302,13 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#F7F7F5;color:#1A1A1A
       <div class="section-title">Edit Profil Masjid</div>
 
       <div class="profil-section">
+        <h3>🔗 Link Website Masjid</h3>
+        <div style="background:#F7F7F5;border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-size:12px;color:var(--muted);word-break:break-all;margin-bottom:8px;" id="link-website">Memuat...</div>
+        <button class="btn-submit" style="margin-top:0;background:var(--primary-light);color:var(--primary);font-weight:500;" onclick="salinLink()">📋 Salin Link</button>
+        <div style="font-size:11px;color:var(--muted);margin-top:6px;">Bagikan link ini ke jamaah via WhatsApp agar mereka bisa akses halaman masjid.</div>
+      </div>
+
+      <div class="profil-section">
         <h3>Informasi Dasar</h3>
         <div class="form-group">
           <label class="form-label">Nama Masjid</label>
@@ -405,6 +420,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#F7F7F5;color:#1A1A1A
 var API_URL = 'https://script.google.com/macros/s/AKfycbx-0YkirH3GX1xCtBms8sPeRLHOeMxJl1O-TuNQfSSiSfPe-cKfparcPaujZLdHTdLZfQ/exec';
 var ADMIN_DATA = null;
 var ID_MASJID = '';
+var SLUG_MASJID = '';
 var TABS = ['transaksi','jadwal','pengumuman','galeri','profil'];
 
 // ============================================
@@ -437,24 +453,54 @@ function gotoTab(tab) {
 // ============================================
 // LOGIN GOOGLE
 // ============================================
-function loginGoogle() {
-  var gmail = prompt('Masukkan Gmail yang terdaftar sebagai admin:');
-  if (!gmail) return;
-  gmail = gmail.trim().toLowerCase();
-  fetch(API_URL + '?action=cekAdmin&gmail=' + encodeURIComponent(gmail))
+function prosesLogin() {
+  var gmail = document.getElementById('login-gmail').value.trim().toLowerCase();
+  var pin = document.getElementById('login-pin').value.trim();
+
+  if (!gmail) { showToast('Masukkan alamat Gmail!', 'error'); return; }
+  if (!pin || pin.length < 6) { showToast('PIN harus 6 digit!', 'error'); return; }
+
+  var btn = document.getElementById('btn-login');
+  btn.disabled = true;
+  btn.textContent = 'Memverifikasi...';
+
+  fetch(API_URL + '?action=cekAdmin&gmail=' + encodeURIComponent(gmail) + '&pin=' + encodeURIComponent(pin))
     .then(function(r){ return r.json(); })
     .then(function(json){
+      btn.disabled = false;
+      btn.textContent = 'Masuk';
       if (json.status === 'ok') {
         ADMIN_DATA = json.data;
         ID_MASJID = json.data.id_masjid;
         localStorage.setItem('pow_admin', JSON.stringify(json.data));
-        tampilAdmin();
+        ambilSlugMasjid();
       } else {
-        showToast('Akses ditolak — Gmail tidak terdaftar', 'error');
+        showToast(json.message || 'Akses ditolak', 'error');
       }
     })
-    .catch(function(){ showToast('Gagal menghubungi server', 'error'); });
+    .catch(function(){
+      btn.disabled = false;
+      btn.textContent = 'Masuk';
+      showToast('Gagal menghubungi server', 'error');
+    });
 }
+
+function ambilSlugMasjid() {
+  fetch(API_URL + '?action=getMasjidSlug&id_masjid=' + ID_MASJID)
+    .then(function(r){ return r.json(); })
+    .then(function(json){
+      if (json.status === 'ok') SLUG_MASJID = json.slug;
+      tampilAdmin();
+    })
+    .catch(function(){ tampilAdmin(); });
+}
+
+// Enter key untuk login
+document.addEventListener('keydown', function(e){
+  if (e.key === 'Enter' && document.getElementById('login-wrap').classList.contains('show')) {
+    prosesLogin();
+  }
+});
 
 function logout() {
   localStorage.removeItem('pow_admin');
@@ -469,12 +515,13 @@ function tampilAdmin() {
   document.getElementById('admin-content').style.display = 'block';
   document.getElementById('admin-nama').textContent = ADMIN_DATA.nama + ' (' + ADMIN_DATA.role + ')';
 
-  // Load nama masjid
+  // Load nama masjid dan slug
   fetch(API_URL + '?action=getMasjid&id_masjid=' + ID_MASJID)
     .then(function(r){ return r.json(); })
     .then(function(json){
       if (json.status === 'ok') {
         document.getElementById('admin-masjid-nama').textContent = json.data.nama;
+        if (json.data.slug) SLUG_MASJID = json.data.slug;
       }
     });
 
@@ -734,7 +781,22 @@ function loadProfilAdmin() {
       document.getElementById('prof-rek3-nomor').value = d.rek3_nomor || '';
       document.getElementById('prof-lat').value = d.latitude || '';
       document.getElementById('prof-lon').value = d.longitude || '';
+
+      // Tampilkan link website
+      var slug = d.slug || SLUG_MASJID || '';
+      var link = slug ? 'https://powerofmasjid.github.io/masjid.html?masjid=' + slug : 'Slug belum diisi';
+      document.getElementById('link-website').textContent = link;
+      if (d.slug) SLUG_MASJID = d.slug;
     });
+}
+
+function salinLink() {
+  var slug = SLUG_MASJID || '';
+  if (!slug) { showToast('Slug masjid belum diisi!', 'error'); return; }
+  var link = 'https://powerofmasjid.github.io/masjid.html?masjid=' + slug;
+  navigator.clipboard.writeText(link).then(function(){
+    showToast('Link berhasil disalin!', 'sukses');
+  });
 }
 
 function simpanProfil() {
@@ -767,7 +829,7 @@ function simpanProfil() {
     if (json.status === 'ok') {
       showToast('Profil masjid berhasil diupdate!', 'sukses');
       // Hapus cache agar website langsung update
-      localStorage.removeItem('masjid_annuriyah-tanjungbarat');
+      if (SLUG_MASJID) localStorage.removeItem('masjid_' + SLUG_MASJID);
     } else {
       showToast('Gagal: ' + json.message, 'error');
     }
@@ -778,15 +840,15 @@ function simpanProfil() {
 // INIT
 // ============================================
 function init() {
-  // Cek apakah sudah login sebelumnya
   var saved = localStorage.getItem('pow_admin');
   if (saved) {
     try {
       ADMIN_DATA = JSON.parse(saved);
       ID_MASJID = ADMIN_DATA.id_masjid;
-      tampilAdmin();
+      ambilSlugMasjid();
     } catch(e) {
       localStorage.removeItem('pow_admin');
+      document.getElementById('login-wrap').classList.add('show');
     }
   } else {
     document.getElementById('login-wrap').classList.add('show');
