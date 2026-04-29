@@ -6,175 +6,829 @@
 <title>Admin — Power of Masjid</title>
 <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-:root {
-  --primary: #1B6B3A;
-  --primary-dark: #0F4228;
-  --primary-light: #E8F5EE;
-  --accent: #C9A84C;
-  --white: #FFFFFF;
-  --bg: #F7F7F5;
-  --text: #1A1A1A;
-  --muted: #6B7280;
-  --border: #E5E7EB;
-}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:#F7F7F5;color:#1A1A1A;}
+:root{--primary:#1B6B3A;--primary-dark:#0F4228;--primary-light:#E8F5EE;--accent:#C9A84C;--white:#FFFFFF;--bg:#F7F7F5;--text:#1A1A1A;--muted:#6B7280;--border:#E5E7EB;}
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: var(--text); overflow-x: hidden; }
+/* SPLASH */
+.splash{position:fixed;inset:0;background:var(--primary-dark);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;transition:opacity 0.5s;}
+.splash.hide{opacity:0;pointer-events:none;}
+.splash-logo{font-family:'Amiri',serif;font-size:48px;color:var(--accent);margin-bottom:0.5rem;}
+.splash-text{color:rgba(255,255,255,0.7);font-size:13px;}
 
-/* SPLASH & LOGIN */
-.splash { position: fixed; inset: 0; background: var(--primary-dark); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; transition: opacity 0.5s; }
-.splash.hide { opacity: 0; pointer-events: none; }
-.splash-logo { font-family: 'Amiri', serif; font-size: 48px; color: var(--accent); margin-bottom: 10px; }
+/* LOGIN */
+.login-wrap{display:none;position:fixed;inset:0;background:var(--primary-dark);align-items:center;justify-content:center;z-index:9998;padding:1.5rem;}
+.login-wrap.show{display:flex;}
+.login-card{background:white;border-radius:20px;padding:2rem;text-align:center;width:100%;max-width:360px;}
+.login-logo{font-family:'Amiri',serif;font-size:40px;color:var(--primary);margin-bottom:0.5rem;}
+.login-title{font-size:18px;font-weight:600;color:var(--text);margin-bottom:4px;}
+.login-sub{font-size:13px;color:var(--muted);margin-bottom:1.5rem;line-height:1.5;}
+.btn-google{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;background:white;border:1px solid var(--border);color:var(--text);padding:12px;border-radius:10px;font-size:14px;font-weight:500;cursor:pointer;font-family:inherit;margin-bottom:10px;}
+.btn-google:hover{background:#f5f5f5;}
+.google-icon{width:20px;height:20px;}
+.login-note{font-size:11px;color:var(--muted);line-height:1.5;}
 
-.login-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); display: none; align-items: center; justify-content: center; z-index: 9000; padding: 20px; }
-.login-overlay.show { display: flex; }
-.login-card { background: white; width: 100%; max-width: 400px; padding: 40px 30px; border-radius: 20px; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.3); }
-.login-logo { width: 60px; height: 60px; background: var(--primary); color: white; border-radius: 15px; display: flex; align-items: center; justify-content: center; font-family: 'Amiri', serif; font-size: 32px; margin: 0 auto 20px; }
-.login-card h2 { margin-bottom: 8px; font-weight: 700; }
-.login-card p { color: var(--muted); font-size: 14px; margin-bottom: 25px; }
+/* HEADER ADMIN */
+.admin-header{background:linear-gradient(160deg,var(--primary-dark),var(--primary));padding:1rem 1.25rem;display:flex;align-items:center;justify-content:space-between;}
+.admin-header-left{display:flex;align-items:center;gap:10px;}
+.admin-logo{font-family:'Amiri',serif;font-size:24px;color:var(--accent);}
+.admin-title{color:white;font-size:14px;font-weight:600;}
+.admin-sub{color:rgba(255,255,255,0.6);font-size:11px;margin-top:1px;}
+.btn-logout{background:rgba(255,255,255,0.15);border:none;color:white;font-size:12px;padding:6px 12px;border-radius:20px;cursor:pointer;font-family:inherit;}
 
-input { width: 100%; padding: 12px 15px; margin: 8px 0 15px; border: 1px solid var(--border); border-radius: 10px; font-family: inherit; font-size: 15px; transition: 0.3s; }
-input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-light); }
-.btn-primary { width: 100%; padding: 14px; background: var(--primary); color: white; border: none; border-radius: 10px; font-weight: 600; cursor: pointer; transition: 0.3s; }
-.btn-primary:hover { background: var(--primary-dark); transform: translateY(-2px); }
-.btn-primary:disabled { background: #ccc; cursor: not-allowed; }
+/* NAV TABS */
+.nav-tabs{background:white;border-bottom:1px solid var(--border);display:flex;overflow-x:auto;padding:0 1rem;}
+.nav-tab{flex-shrink:0;padding:0.875rem 1rem;font-size:13px;font-weight:500;color:var(--muted);border-bottom:2px solid transparent;cursor:pointer;white-space:nowrap;}
+.nav-tab.active{color:var(--primary);border-bottom-color:var(--primary);}
 
-/* LAYOUT DASHBOARD */
-.header { background: var(--primary-dark); color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
-.header-brand { display: flex; align-items: center; gap: 10px; }
-.header-logo { font-family: 'Amiri', serif; font-size: 24px; color: var(--accent); }
-.btn-logout { background: rgba(255,255,255,0.1); border: none; color: white; padding: 8px 15px; border-radius: 8px; font-size: 13px; cursor: pointer; }
+/* MAIN */
+.admin-main{padding:1rem;max-width:600px;margin:0 auto;}
 
-.nav-scroll { background: white; padding: 0 10px; border-bottom: 1px solid var(--border); display: flex; overflow-x: auto; white-space: nowrap; position: sticky; top: 60px; z-index: 90; }
-.nav-link { padding: 15px 20px; color: var(--muted); text-decoration: none; font-size: 14px; font-weight: 600; border-bottom: 3px solid transparent; transition: 0.3s; cursor: pointer; }
-.nav-link.active { color: var(--primary); border-bottom-color: var(--primary); }
+/* SECTION */
+.section-title{font-size:16px;font-weight:600;color:var(--text);margin-bottom:1rem;}
 
-.content { padding: 20px; max-width: 800px; margin: 0 auto; padding-bottom: 100px; }
-.card { background: white; border-radius: 15px; padding: 20px; margin-bottom: 20px; border: 1px solid var(--border); }
-.card-title { font-weight: 700; margin-bottom: 15px; display: flex; align-items: center; justify-content: space-between; }
+/* FORM */
+.form-group{margin-bottom:0.875rem;}
+.form-label{font-size:12px;font-weight:500;color:var(--muted);margin-bottom:4px;display:block;}
+.form-input{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:10px;font-size:14px;font-family:inherit;background:white;color:var(--text);outline:none;}
+.form-input:focus{border-color:var(--primary);}
+.form-select{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:10px;font-size:14px;font-family:inherit;background:white;color:var(--text);outline:none;appearance:none;}
+.form-textarea{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:10px;font-size:14px;font-family:inherit;background:white;color:var(--text);outline:none;resize:vertical;min-height:80px;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.btn-submit{width:100%;background:var(--primary);color:white;border:none;padding:12px;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;margin-top:0.5rem;}
+.btn-submit:active{opacity:0.8;}
+.btn-submit:disabled{opacity:0.5;cursor:not-allowed;}
 
-.tab-content { display: none; }
-.tab-content.active { display: block; animation: fadeIn 0.4s ease; }
+/* CARD LIST */
+.item-card{background:white;border:1px solid var(--border);border-radius:12px;padding:0.875rem;margin-bottom:8px;}
+.item-card-title{font-size:14px;font-weight:500;color:var(--text);}
+.item-card-sub{font-size:12px;color:var(--muted);margin-top:3px;}
+.item-card-footer{display:flex;justify-content:space-between;align-items:center;margin-top:8px;}
+.item-badge{font-size:10px;padding:2px 8px;border-radius:20px;font-weight:500;}
+.badge-masuk{background:var(--primary-light);color:var(--primary);}
+.badge-keluar{background:#FEF2F2;color:#DC2626;}
+.badge-aktif{background:var(--primary-light);color:var(--primary);}
+.badge-nonaktif{background:#F3F4F6;color:var(--muted);}
 
-@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-/* FORM & UI */
-.form-group { margin-bottom: 15px; }
-.form-group label { display: block; font-size: 13px; font-weight: 600; color: var(--muted); margin-bottom: 5px; }
-.link-box { background: var(--primary-light); padding: 15px; border-radius: 12px; border: 1px dashed var(--primary); margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; }
-.link-text { font-size: 13px; color: var(--primary-dark); font-weight: 600; word-break: break-all; margin-right: 10px; }
-.btn-copy { background: var(--primary); color: white; border: none; padding: 6px 12px; border-radius: 6px; font-size: 11px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+/* PROFIL */
+.profil-section{background:white;border:1px solid var(--border);border-radius:14px;padding:1rem;margin-bottom:1rem;}
+.profil-section h3{font-size:14px;font-weight:600;color:var(--text);margin-bottom:0.875rem;padding-bottom:0.5rem;border-bottom:1px solid var(--border);}
 
 /* TOAST */
-.toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: #333; color: white; padding: 12px 25px; border-radius: 50px; font-size: 14px; z-index: 10000; display: none; }
+.toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%) translateY(80px);background:var(--text);color:white;font-size:13px;padding:10px 20px;border-radius:20px;transition:transform 0.3s;z-index:999;white-space:nowrap;}
+.toast.show{transform:translateX(-50%) translateY(0);}
+.toast.sukses{background:var(--primary);}
+.toast.error{background:#DC2626;}
+
+/* KOSONG */
+.kosong{text-align:center;padding:2rem;color:var(--muted);font-size:13px;}
+.login-card .form-group{margin-bottom:0.75rem;}
+.login-card .form-input{border-radius:8px;}
+.login-card .btn-submit{margin-top:0;}
+
+/* DIVIDER */
+.divider{height:1px;background:var(--border);margin:1rem 0;}
 </style>
 </head>
 <body>
 
 <div class="splash" id="splash">
   <div class="splash-logo">م</div>
-  <div style="color:white; font-weight:600; letter-spacing:2px;">POWER OF MASJID</div>
+  <div class="splash-text">Memuat panel admin...</div>
 </div>
 
-<div id="login-wrap" class="login-overlay">
+<div class="login-wrap" id="login-wrap">
   <div class="login-card">
     <div class="login-logo">م</div>
-    <h2>Admin Login</h2>
-    <p>Gunakan Email & PIN untuk mengelola masjid</p>
-    <div style="text-align: left;">
-      <label style="font-size: 12px; color: var(--muted);">Email Pengurus</label>
-      <input type="email" id="login-email" placeholder="email@gmail.com">
-      
-      <label style="font-size: 12px; color: var(--muted);">PIN Keamanan (6 Digit)</label>
-      <input type="password" id="login-pin" placeholder="••••••" maxlength="6" style="text-align:center; letter-spacing:5px;">
-      
-      <button onclick="prosesLogin()" id="btn-login" class="btn-primary">Masuk ke Dashboard</button>
+    <div class="login-title">Panel Admin Masjid</div>
+    <div class="login-sub">Masuk menggunakan Gmail dan PIN yang telah diberikan oleh Power of Masjid.</div>
+    <div class="form-group" style="text-align:left;margin-bottom:0.75rem;">
+      <label class="form-label">Alamat Gmail</label>
+      <input type="email" class="form-input" id="login-gmail" placeholder="nama@gmail.com" autocomplete="email">
     </div>
+    <div class="form-group" style="text-align:left;margin-bottom:1rem;">
+      <label class="form-label">PIN (6 Digit)</label>
+      <input type="password" class="form-input" id="login-pin" placeholder="••••••" maxlength="6" autocomplete="current-password">
+    </div>
+    <button class="btn-submit" onclick="prosesLogin()" id="btn-login">Masuk</button>
+    <div class="login-note" style="margin-top:0.75rem;">Belum punya akses? Hubungi Power of Masjid untuk pendaftaran.</div>
   </div>
 </div>
 
-<div class="header">
-  <div class="header-brand">
-    <div class="header-logo">م</div>
-    <div>
-      <div style="font-weight:700; font-size:14px;">ADMIN PANEL</div>
-      <div id="admin-nama-role" style="font-size:11px; color:var(--accent); margin-top:2px; font-weight:500;">Memuat...</div>
+<div id="admin-content" style="display:none">
+
+  <div class="admin-header">
+    <div class="admin-header-left">
+      <div class="admin-logo">م</div>
+      <div>
+        <div class="admin-title" id="admin-masjid-nama">Panel Admin</div>
+        <div class="admin-sub" id="admin-nama">Memuat...</div>
+      </div>
     </div>
+    <button class="btn-logout" onclick="logout()">Keluar</button>
   </div>
-  <button class="btn-logout" onclick="logout()">Keluar</button>
-</div>
 
-<div class="nav-scroll">
-  <div class="nav-link active" onclick="openTab('profil', this)">Profil</div>
-  <div class="nav-link" onclick="openTab('transaksi', this)">Keuangan</div>
-  <div class="nav-link" onclick="openTab('jadwal', this)">Jadwal</div>
-  <div class="nav-link" onclick="openTab('pengumuman', this)">Pengumuman</div>
-  <div class="nav-link" onclick="openTab('galeri', this)">Galeri</div>
-</div>
+  <div class="nav-tabs">
+    <div class="nav-tab active" onclick="gotoTab('transaksi')">💰 Kas</div>
+    <div class="nav-tab" onclick="gotoTab('jadwal')">📅 Jadwal</div>
+    <div class="nav-tab" onclick="gotoTab('pengumuman')">📢 Pengumuman</div>
+    <div class="nav-tab" onclick="gotoTab('galeri')">📸 Galeri</div>
+    <div class="nav-tab" onclick="gotoTab('profil')">⚙️ Profil</div>
+  </div>
 
-<div class="content">
-  
-  <div id="profil" class="tab-content active">
-    <div class="link-box">
-      <div class="link-text" id="url-publik">https://powerofmasjid.github.io/masjid.html?masjid=...</div>
-      <button class="btn-copy" onclick="copyLink()">Salin Link</button>
-    </div>
-    
-    <div class="card">
-      <div class="card-title">Informasi Dasar</div>
+  <div class="admin-main">
+
+    <div id="tab-transaksi">
+      <div class="section-title">Input Transaksi</div>
       <div class="form-group">
-        <label>Nama Masjid</label>
-        <input type="text" id="prof-nama">
+        <label class="form-label">Tanggal</label>
+        <input type="date" class="form-input" id="trx-tanggal">
       </div>
       <div class="form-group">
-        <label>Alamat Lengkap</label>
-        <input type="text" id="prof-alamat">
+        <label class="form-label">Jenis</label>
+        <select class="form-select" id="trx-jenis">
+          <option value="masuk">Penerimaan</option>
+          <option value="keluar">Pengeluaran</option>
+        </select>
       </div>
       <div class="form-group">
-        <label>Slug URL (Contoh: annuriyah-tanjungbarat)</label>
-        <input type="text" id="prof-slug" readonly style="background:#f0f0f0;">
+        <label class="form-label">Keterangan</label>
+        <input type="text" class="form-input" id="trx-keterangan" placeholder="Contoh: Infaq Jumat, Bayar Listrik...">
       </div>
-      <button class="btn-primary" id="btn-simpan-prof" onclick="simpanProfil()">💾 Simpan Perubahan</button>
+      <div class="form-group">
+        <label class="form-label">Jumlah (Rp)</label>
+        <input type="number" class="form-input" id="trx-jumlah" placeholder="Contoh: 500000">
+      </div>
+      <button class="btn-submit" onclick="simpanTransaksi()">💾 Simpan Transaksi</button>
+
+      <div class="divider"></div>
+      <div class="section-title">Transaksi Terakhir</div>
+      <div id="list-trx-admin"><div class="kosong">Memuat...</div></div>
     </div>
-  </div>
 
-  <div id="transaksi" class="tab-content">
-    <div class="card">
-      <div class="card-title">Catat Transaksi Baru</div>
-      <p style="font-size:12px; color:var(--muted); margin-bottom:15px;">Semua data akan langsung tampil di laporan kas jamaah.</p>
-      <input type="date" id="trx-tgl">
-      <input type="text" id="trx-ket" placeholder="Keterangan (Contoh: Sedekah Jumat)">
-      <select id="trx-jenis" style="width:100%; padding:12px; border:1px solid var(--border); border-radius:10px; margin-bottom:15px;">
-        <option value="masuk">Uang Masuk (+)</option>
-        <option value="keluar">Uang Keluar (-)</option>
-      </select>
-      <input type="number" id="trx-jumlah" placeholder="Jumlah Nominal (Contoh: 500000)">
-      <button class="btn-primary" onclick="simpanTransaksi()">Tambah Transaksi</button>
+    <div id="tab-jadwal" style="display:none">
+      <div class="section-title">Tambah Jadwal Kegiatan</div>
+      <div class="form-group">
+        <label class="form-label">Nama Kegiatan</label>
+        <input type="text" class="form-input" id="jdw-nama" placeholder="Contoh: Kulsam, Pengajian Ibu-Ibu...">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Jadwal / Waktu</label>
+        <input type="text" class="form-input" id="jdw-jadwal" placeholder="Contoh: Setiap Ahad, 08.00 WIB">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Hari</label>
+        <select class="form-select" id="jdw-hari">
+          <option value="">-- Pilih Hari --</option>
+          <option>Ahad</option>
+          <option>Senin</option>
+          <option>Selasa</option>
+          <option>Rabu</option>
+          <option>Kamis</option>
+          <option>Jumat</option>
+          <option>Sabtu</option>
+          <option>Setiap Hari</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Lokasi (opsional)</label>
+        <input type="text" class="form-input" id="jdw-lokasi" placeholder="Contoh: Ruang utama masjid">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Keterangan (opsional)</label>
+        <textarea class="form-textarea" id="jdw-keterangan" placeholder="Info tambahan..."></textarea>
+      </div>
+      <button class="btn-submit" onclick="simpanJadwal()">💾 Simpan Jadwal</button>
+
+      <div class="divider"></div>
+      <div class="section-title">Jadwal Aktif</div>
+      <div id="list-jadwal-admin"><div class="kosong">Memuat...</div></div>
     </div>
-  </div>
 
-  <div id="jadwal" class="tab-content">
-    <div class="card"><div class="card-title">Manajemen Jadwal</div><p>Fitur ini sedang dalam sinkronisasi...</p></div>
-  </div>
-  
-  <div id="pengumuman" class="tab-content"><div class="card"><p>Fitur Pengumuman segera hadir.</p></div></div>
-  <div id="galeri" class="tab-content"><div class="card"><p>Fitur Galeri segera hadir.</p></div></div>
+    <div id="tab-pengumuman" style="display:none">
+      <div class="section-title">Tambah Pengumuman</div>
+      <div class="form-group">
+        <label class="form-label">Tipe</label>
+        <select class="form-select" id="peng-tipe">
+          <option value="UMUM">📢 Umum</option>
+          <option value="KURBAN">🐄 Kurban Idul Adha</option>
+          <option value="RAMADAN">🌙 Ramadan</option>
+          <option value="MAULID">☪️ Maulid Nabi</option>
+          <option value="ISRA_MIRAJ">✨ Isra Mi'raj</option>
+          <option value="IDUL_FITRI">🌟 Idul Fitri</option>
+          <option value="MUHARRAM">📅 Muharram</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Judul</label>
+        <input type="text" class="form-input" id="peng-judul" placeholder="Contoh: Pendaftaran Kurban 1446H">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Isi Pengumuman</label>
+        <textarea class="form-textarea" id="peng-isi" placeholder="Isi detail pengumuman..."></textarea>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Ikon (emoji)</label>
+        <input type="text" class="form-input" id="peng-ikon" placeholder="Contoh: 🐄 atau 🌙">
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Tanggal Mulai</label>
+          <input type="date" class="form-input" id="peng-mulai">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Tanggal Selesai</label>
+          <input type="date" class="form-input" id="peng-selesai">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Target Infaq (Rp) — opsional</label>
+        <input type="number" class="form-input" id="peng-target" placeholder="Kosongkan jika tidak ada target">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Judul Infaq — opsional</label>
+        <input type="text" class="form-input" id="peng-judul-infaq" placeholder="Contoh: Infaq Buka Puasa Ramadan">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Nomor WA Kontak — opsional</label>
+        <input type="text" class="form-input" id="peng-wa" placeholder="Contoh: 628123456789">
+      </div>
+      <button class="btn-submit" onclick="simpanPengumuman()">💾 Simpan Pengumuman</button>
 
+      <div class="divider"></div>
+      <div class="section-title">Pengumuman Aktif</div>
+      <div id="list-peng-admin"><div class="kosong">Memuat...</div></div>
+    </div>
+
+    <div id="tab-galeri" style="display:none">
+      <div class="section-title">Tambah Galeri</div>
+      <div class="form-group">
+        <label class="form-label">Tipe</label>
+        <select class="form-select" id="gal-tipe">
+          <option value="FOTO">📷 Foto</option>
+          <option value="VIDEO_YOUTUBE">▶️ Video YouTube</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Judul</label>
+        <input type="text" class="form-input" id="gal-judul" placeholder="Contoh: Kajian Ramadan 2026">
+      </div>
+      <div class="form-group">
+        <label class="form-label" id="gal-url-label">Link Foto / URL YouTube</label>
+        <input type="text" class="form-input" id="gal-url" placeholder="https://...">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Keterangan (opsional)</label>
+        <input type="text" class="form-input" id="gal-ket" placeholder="Keterangan singkat...">
+      </div>
+      <button class="btn-submit" onclick="simpanGaleri()">💾 Simpan Galeri</button>
+
+      <div class="divider"></div>
+      <div class="section-title">Galeri Tersimpan</div>
+      <div id="list-gal-admin"><div class="kosong">Memuat...</div></div>
+    </div>
+
+    <div id="tab-profil" style="display:none">
+      <div class="section-title">Edit Profil Masjid</div>
+
+      <div class="profil-section">
+        <h3>🔗 Link Website Masjid</h3>
+        <div style="background:#F7F7F5;border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-size:12px;color:var(--muted);word-break:break-all;margin-bottom:8px;" id="link-website">Memuat...</div>
+        <button class="btn-submit" style="margin-top:0;background:var(--primary-light);color:var(--primary);font-weight:500;" onclick="salinLink()">📋 Salin Link</button>
+        <div style="font-size:11px;color:var(--muted);margin-top:6px;">Bagikan link ini ke jamaah via WhatsApp agar mereka bisa akses halaman masjid.</div>
+      </div>
+
+      <div class="profil-section">
+        <h3>Informasi Dasar</h3>
+        <div class="form-group">
+          <label class="form-label">Nama Masjid</label>
+          <input type="text" class="form-input" id="prof-nama">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Alamat</label>
+          <input type="text" class="form-input" id="prof-alamat">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Kota</label>
+          <input type="text" class="form-input" id="prof-kota">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Deskripsi Singkat</label>
+          <textarea class="form-textarea" id="prof-deskripsi" placeholder="Sekilas tentang masjid..."></textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Nomor WA DKM</label>
+          <input type="text" class="form-input" id="prof-wa" placeholder="628123456789">
+        </div>
+      </div>
+
+      <div class="profil-section">
+        <h3>Tema & Tampilan</h3>
+        <div class="form-group">
+          <label class="form-label">Tema Warna</label>
+          <select class="form-select" id="prof-tema">
+            <option value="">Zamrud (Default)</option>
+            <option value="safir">Safir — Biru Elegan</option>
+            <option value="emas">Emas — Klasik Islami</option>
+            <option value="fajar">Fajar — Oranye Hangat</option>
+            <option value="langit">Langit — Biru Segar</option>
+            <option value="tembaga">Tembaga — Merah Tradisional</option>
+            <option value="perak">Perak — Abu Minimalis</option>
+            <option value="merahhati">Merah Hati — Tegas</option>
+            <option value="toska">Toska — Hijau Segar</option>
+            <option value="malam">Malam — Biru Premium</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">URL Logo Masjid</label>
+          <input type="text" class="form-input" id="prof-logo" placeholder="https://link-foto-logo.jpg">
+        </div>
+        <div class="form-group">
+          <label class="form-label">URL QRIS</label>
+          <input type="text" class="form-input" id="prof-qris" placeholder="https://link-foto-qris.jpg">
+        </div>
+      </div>
+
+      <div class="profil-section">
+        <h3>Rekening Bank</h3>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Bank 1</label>
+            <input type="text" class="form-input" id="prof-rek1-bank" placeholder="BSI">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Nomor Rekening 1</label>
+            <input type="text" class="form-input" id="prof-rek1-nomor" placeholder="7123456789">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Bank 2</label>
+            <input type="text" class="form-input" id="prof-rek2-bank" placeholder="BCA">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Nomor Rekening 2</label>
+            <input type="text" class="form-input" id="prof-rek2-nomor" placeholder="1234567890">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Bank 3</label>
+            <input type="text" class="form-input" id="prof-rek3-bank" placeholder="Bank Jakarta">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Nomor Rekening 3</label>
+            <input type="text" class="form-input" id="prof-rek3-nomor" placeholder="0987654321">
+          </div>
+        </div>
+      </div>
+
+      <div class="profil-section">
+        <h3>Koordinat Masjid</h3>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Latitude</label>
+            <input type="text" class="form-input" id="prof-lat" placeholder="-6.3012">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Longitude</label>
+            <input type="text" class="form-input" id="prof-lon" placeholder="106.8234">
+          </div>
+        </div>
+        <div style="font-size:11px;color:var(--muted);margin-top:-4px;">Buka Google Maps → cari masjid → copy koordinat dari URL</div>
+      </div>
+
+      <button class="btn-submit" onclick="simpanProfil()">💾 Simpan Perubahan</button>
+    </div>
+
+  </div>
 </div>
 
-<div class="toast" id="toast"></div>
+<div class="toast" id="toast">Tersimpan!</div>
 
 <script>
-// ============================================
-// KONFIGURASI
-// ============================================
-const API_URL = 'https://script.google.com/macros/s/AKfycbyqxGZb7NzDFPRHTXnpfLo6yqc3LOVwb6DsFOOoZZLXCfLI-iYH0g9CeeSm9puhXcJHXg/exec';
-let ADMIN_DATA = null;
-let ID_MASJID = null;
-let SLUG_MASJID = null;
+// INI ADALAH URL API YANG SUDAH DIPERBAIKI SAYA, SISANYA ASLI CLAUDE
+var API_URL = 'https://script.google.com/macros/s/AKfycbyqxGZb7NzDFPRHTXnpfLo6yqc3LOVwb6DsFOOoZZLXCfLI-iYH0g9CeeSm9puhXcJHXg/exec';
+var ADMIN_DATA = null;
+var ID_MASJID = '';
+var SLUG_MASJID = '';
+var TABS = ['transaksi','jadwal','pengumuman','galeri','profil'];
 
 // ============================================
-// CORE FUNCTIONS
+// TOAST
+// ============================================
+function showToast(msg, type) {
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show ' + (type || '');
+  setTimeout(function(){ t.className = 'toast'; }, 3000);
+}
+
+// ============================================
+// TAB
+// ============================================
+function gotoTab(tab) {
+  TABS.forEach(function(t){
+    document.getElementById('tab-' + t).style.display = t === tab ? 'block' : 'none';
+  });
+  document.querySelectorAll('.nav-tab').forEach(function(el, i){
+    el.classList.toggle('active', TABS[i] === tab);
+  });
+  if (tab === 'transaksi') loadTransaksiAdmin();
+  if (tab === 'jadwal') loadJadwalAdmin();
+  if (tab === 'pengumuman') loadPengumumanAdmin();
+  if (tab === 'galeri') loadGaleriAdmin();
+  if (tab === 'profil') loadProfilAdmin();
+}
+
+// ============================================
+// LOGIN GOOGLE
+// ============================================
+function prosesLogin() {
+  var gmail = document.getElementById('login-gmail').value.trim().toLowerCase();
+  var pin = document.getElementById('login-pin').value.trim();
+
+  if (!gmail) { showToast('Masukkan alamat Gmail!', 'error'); return; }
+  if (!pin || pin.length < 6) { showToast('PIN harus 6 digit!', 'error'); return; }
+
+  var btn = document.getElementById('btn-login');
+  btn.disabled = true;
+  btn.textContent = 'Memverifikasi...';
+
+  fetch(API_URL + '?action=cekAdmin&gmail=' + encodeURIComponent(gmail) + '&pin=' + encodeURIComponent(pin))
+    .then(function(r){ return r.json(); })
+    .then(function(json){
+      btn.disabled = false;
+      btn.textContent = 'Masuk';
+      if (json.status === 'ok') {
+        ADMIN_DATA = json.data;
+        ID_MASJID = json.data.id_masjid;
+        localStorage.setItem('pow_admin', JSON.stringify(json.data));
+        ambilSlugMasjid();
+      } else {
+        showToast(json.message || 'Akses ditolak', 'error');
+      }
+    })
+    .catch(function(){
+      btn.disabled = false;
+      btn.textContent = 'Masuk';
+      showToast('Gagal menghubungi server', 'error');
+    });
+}
+
+function ambilSlugMasjid() {
+  fetch(API_URL + '?action=getMasjidSlug&id_masjid=' + ID_MASJID)
+    .then(function(r){ return r.json(); })
+    .then(function(json){
+      if (json.status === 'ok') SLUG_MASJID = json.slug;
+      tampilAdmin();
+    })
+    .catch(function(){ tampilAdmin(); });
+}
+
+// Enter key untuk login
+document.addEventListener('keydown', function(e){
+  if (e.key === 'Enter' && document.getElementById('login-wrap').classList.contains('show')) {
+    prosesLogin();
+  }
+});
+
+function logout() {
+  localStorage.removeItem('pow_admin');
+  ADMIN_DATA = null;
+  ID_MASJID = '';
+  document.getElementById('admin-content').style.display = 'none';
+  document.getElementById('login-wrap').classList.add('show');
+}
+
+function tampilAdmin() {
+  document.getElementById('login-wrap').classList.remove('show');
+  document.getElementById('admin-content').style.display = 'block';
+  document.getElementById('admin-nama').textContent = ADMIN_DATA.nama + ' (' + ADMIN_DATA.role + ')';
+
+  // Load nama masjid dan slug
+  fetch(API_URL + '?action=getMasjid&id_masjid=' + ID_MASJID)
+    .then(function(r){ return r.json(); })
+    .then(function(json){
+      if (json.status === 'ok') {
+        document.getElementById('admin-masjid-nama').textContent = json.data.nama;
+        if (json.data.slug) SLUG_MASJID = json.data.slug;
+      }
+    });
+
+  // Set tanggal hari ini
+  var today = new Date().toISOString().split('T')[0];
+  document.getElementById('trx-tanggal').value = today;
+
+  loadTransaksiAdmin();
+}
+
+// ============================================
+// API POST
+// ============================================
+function apiPost(data, callback) {
+  fetch(API_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
+  })
+  .then(function(r){ return r.json(); })
+  .then(callback)
+  .catch(function(){ showToast('Gagal menghubungi server', 'error'); });
+}
+
+function rupiah(n) { return 'Rp ' + Number(n).toLocaleString('id-ID'); }
+function formatTgl(t) { var d = new Date(t); return isNaN(d) ? t : d.toLocaleDateString('id-ID',{day:'numeric',month:'short',year:'numeric'}); }
+
+// ============================================
+// TRANSAKSI
+// ============================================
+function simpanTransaksi() {
+  var keterangan = document.getElementById('trx-keterangan').value.trim();
+  var jumlah = document.getElementById('trx-jumlah').value;
+  var tanggal = document.getElementById('trx-tanggal').value;
+  var jenis = document.getElementById('trx-jenis').value;
+
+  if (!keterangan || !jumlah || !tanggal) { showToast('Lengkapi semua field!', 'error'); return; }
+
+  var btn = document.querySelector('#tab-transaksi .btn-submit');
+  btn.disabled = true;
+  btn.textContent = 'Menyimpan...';
+
+  apiPost({
+    action: 'addTransaksi',
+    id_masjid: ID_MASJID,
+    tanggal: tanggal,
+    keterangan: keterangan,
+    jenis: jenis,
+    jumlah: parseFloat(jumlah),
+    dicatat_oleh: ADMIN_DATA.nama
+  }, function(json){
+    btn.disabled = false;
+    btn.textContent = '💾 Simpan Transaksi';
+    if (json.status === 'ok') {
+      showToast('Transaksi berhasil disimpan!', 'sukses');
+      document.getElementById('trx-keterangan').value = '';
+      document.getElementById('trx-jumlah').value = '';
+      loadTransaksiAdmin();
+    } else {
+      showToast('Gagal: ' + json.message, 'error');
+    }
+  });
+}
+
+function loadTransaksiAdmin() {
+  fetch(API_URL + '?action=getTransaksi&id_masjid=' + ID_MASJID)
+    .then(function(r){ return r.json(); })
+    .then(function(json){
+      var el = document.getElementById('list-trx-admin');
+      if (json.status !== 'ok' || json.data.length === 0) {
+        el.innerHTML = '<div class="kosong">Belum ada transaksi</div>';
+        return;
+      }
+      el.innerHTML = json.data.slice(0,10).map(function(t){
+        return '<div class="item-card"><div class="item-card-title">' + t.keterangan + '</div><div class="item-card-sub">' + formatTgl(t.tanggal) + ' · ' + t.dicatat_oleh + '</div><div class="item-card-footer"><span class="item-badge ' + (t.jenis==='masuk'?'badge-masuk':'badge-keluar') + '">' + (t.jenis==='masuk'?'Penerimaan':'Pengeluaran') + '</span><strong>' + (t.jenis==='masuk'?'+':'-') + ' ' + rupiah(t.jumlah) + '</strong></div></div>';
+      }).join('');
+    });
+}
+
+// ============================================
+// JADWAL
+// ============================================
+function simpanJadwal() {
+  var nama = document.getElementById('jdw-nama').value.trim();
+  var jadwal = document.getElementById('jdw-jadwal').value.trim();
+  if (!nama || !jadwal) { showToast('Nama dan jadwal wajib diisi!', 'error'); return; }
+
+  var btn = document.querySelector('#tab-jadwal .btn-submit');
+  btn.disabled = true;
+  btn.textContent = 'Menyimpan...';
+
+  apiPost({
+    action: 'addJadwal',
+    id_masjid: ID_MASJID,
+    nama_kegiatan: nama,
+    jadwal: jadwal,
+    hari: document.getElementById('jdw-hari').value,
+    lokasi: document.getElementById('jdw-lokasi').value,
+    keterangan: document.getElementById('jdw-keterangan').value
+  }, function(json){
+    btn.disabled = false;
+    btn.textContent = '💾 Simpan Jadwal';
+    if (json.status === 'ok') {
+      showToast('Jadwal berhasil disimpan!', 'sukses');
+      document.getElementById('jdw-nama').value = '';
+      document.getElementById('jdw-jadwal').value = '';
+      document.getElementById('jdw-lokasi').value = '';
+      document.getElementById('jdw-keterangan').value = '';
+      loadJadwalAdmin();
+    } else {
+      showToast('Gagal: ' + json.message, 'error');
+    }
+  });
+}
+
+function loadJadwalAdmin() {
+  fetch(API_URL + '?action=getJadwal&id_masjid=' + ID_MASJID)
+    .then(function(r){ return r.json(); })
+    .then(function(json){
+      var el = document.getElementById('list-jadwal-admin');
+      if (json.status !== 'ok' || json.data.length === 0) {
+        el.innerHTML = '<div class="kosong">Belum ada jadwal</div>';
+        return;
+      }
+      el.innerHTML = json.data.map(function(j){
+        return '<div class="item-card"><div class="item-card-title">' + j.nama_kegiatan + '</div><div class="item-card-sub">' + j.jadwal + (j.lokasi?' · '+j.lokasi:'') + '</div><div class="item-card-footer"><span class="item-badge badge-aktif">' + (j.hari||'Rutin') + '</span></div></div>';
+      }).join('');
+    });
+}
+
+// ============================================
+// PENGUMUMAN
+// ============================================
+function simpanPengumuman() {
+  var judul = document.getElementById('peng-judul').value.trim();
+  var isi = document.getElementById('peng-isi').value.trim();
+  var mulai = document.getElementById('peng-mulai').value;
+  var selesai = document.getElementById('peng-selesai').value;
+  if (!judul || !isi || !mulai || !selesai) { showToast('Judul, isi, dan tanggal wajib diisi!', 'error'); return; }
+
+  var btn = document.querySelector('#tab-pengumuman .btn-submit');
+  btn.disabled = true;
+  btn.textContent = 'Menyimpan...';
+
+  apiPost({
+    action: 'addPengumuman',
+    id_masjid: ID_MASJID,
+    tipe: document.getElementById('peng-tipe').value,
+    judul: judul,
+    isi: isi,
+    ikon: document.getElementById('peng-ikon').value,
+    tanggal_mulai: mulai,
+    tanggal_selesai: selesai,
+    target_infaq: parseFloat(document.getElementById('peng-target').value) || 0,
+    judul_infaq: document.getElementById('peng-judul-infaq').value,
+    telepon_wa: document.getElementById('peng-wa').value
+  }, function(json){
+    btn.disabled = false;
+    btn.textContent = '💾 Simpan Pengumuman';
+    if (json.status === 'ok') {
+      showToast('Pengumuman berhasil disimpan!', 'sukses');
+      document.getElementById('peng-judul').value = '';
+      document.getElementById('peng-isi').value = '';
+      loadPengumumanAdmin();
+    } else {
+      showToast('Gagal: ' + json.message, 'error');
+    }
+  });
+}
+
+function loadPengumumanAdmin() {
+  fetch(API_URL + '?action=getPengumuman&id_masjid=' + ID_MASJID)
+    .then(function(r){ return r.json(); })
+    .then(function(json){
+      var el = document.getElementById('list-peng-admin');
+      if (json.status !== 'ok' || json.data.length === 0) {
+        el.innerHTML = '<div class="kosong">Tidak ada pengumuman aktif</div>';
+        return;
+      }
+      el.innerHTML = json.data.map(function(p){
+        return '<div class="item-card"><div class="item-card-title">' + (p.ikon||'📢') + ' ' + p.judul + '</div><div class="item-card-sub">' + p.isi.substring(0,80) + '...</div><div class="item-card-footer"><span class="item-badge badge-aktif">' + p.tipe + '</span><span style="font-size:11px;color:var(--muted)">s/d ' + formatTgl(p.tanggal_selesai) + '</span></div></div>';
+      }).join('');
+    });
+}
+
+// ============================================
+// GALERI
+// ============================================
+function simpanGaleri() {
+  var judul = document.getElementById('gal-judul').value.trim();
+  var url = document.getElementById('gal-url').value.trim();
+  if (!judul || !url) { showToast('Judul dan URL wajib diisi!', 'error'); return; }
+
+  var btn = document.querySelector('#tab-galeri .btn-submit');
+  btn.disabled = true;
+  btn.textContent = 'Menyimpan...';
+
+  apiPost({
+    action: 'addGaleri',
+    id_masjid: ID_MASJID,
+    judul: judul,
+    tipe: document.getElementById('gal-tipe').value,
+    url: url,
+    keterangan: document.getElementById('gal-ket').value
+  }, function(json){
+    btn.disabled = false;
+    btn.textContent = '💾 Simpan Galeri';
+    if (json.status === 'ok') {
+      showToast('Galeri berhasil disimpan!', 'sukses');
+      document.getElementById('gal-judul').value = '';
+      document.getElementById('gal-url').value = '';
+      document.getElementById('gal-ket').value = '';
+      loadGaleriAdmin();
+    } else {
+      showToast('Gagal: ' + json.message, 'error');
+    }
+  });
+}
+
+function loadGaleriAdmin() {
+  fetch(API_URL + '?action=getGaleri&id_masjid=' + ID_MASJID)
+    .then(function(r){ return r.json(); })
+    .then(function(json){
+      var el = document.getElementById('list-gal-admin');
+      if (json.status !== 'ok' || json.data.length === 0) {
+        el.innerHTML = '<div class="kosong">Belum ada galeri</div>';
+        return;
+      }
+      el.innerHTML = json.data.map(function(g){
+        return '<div class="item-card"><div class="item-card-title">' + g.judul + '</div><div class="item-card-sub">' + g.url.substring(0,50) + '...</div><div class="item-card-footer"><span class="item-badge badge-aktif">' + g.tipe + '</span><span style="font-size:11px;color:var(--muted)">' + formatTgl(g.tanggal) + '</span></div></div>';
+      }).join('');
+    });
+}
+
+// ============================================
+// PROFIL
+// ============================================
+function loadProfilAdmin() {
+  fetch(API_URL + '?action=getMasjid&id_masjid=' + ID_MASJID)
+    .then(function(r){ return r.json(); })
+    .then(function(json){
+      if (json.status !== 'ok') return;
+      var d = json.data;
+      document.getElementById('prof-nama').value = d.nama || '';
+      document.getElementById('prof-alamat').value = d.alamat || '';
+      document.getElementById('prof-kota').value = d.kota || '';
+      document.getElementById('prof-deskripsi').value = d.deskripsi || '';
+      document.getElementById('prof-wa').value = d.telepon_wa || '';
+      document.getElementById('prof-tema').value = d.tema || '';
+      document.getElementById('prof-logo').value = d.logo_url || '';
+      document.getElementById('prof-qris').value = d.qris_url || '';
+      document.getElementById('prof-rek1-bank').value = d.rek1_bank || '';
+      document.getElementById('prof-rek1-nomor').value = d.rek1_nomor || '';
+      document.getElementById('prof-rek2-bank').value = d.rek2_bank || '';
+      document.getElementById('prof-rek2-nomor').value = d.rek2_nomor || '';
+      document.getElementById('prof-rek3-bank').value = d.rek3_bank || '';
+      document.getElementById('prof-rek3-nomor').value = d.rek3_nomor || '';
+      document.getElementById('prof-lat').value = d.latitude || '';
+      document.getElementById('prof-lon').value = d.longitude || '';
+
+      // Tampilkan link website
+      var slug = d.slug || SLUG_MASJID || '';
+      var link = slug ? 'https://powerofmasjid.github.io/masjid.html?masjid=' + slug : 'Slug belum diisi';
+      document.getElementById('link-website').textContent = link;
+      if (d.slug) SLUG_MASJID = d.slug;
+    });
+}
+
+function salinLink() {
+  var slug = SLUG_MASJID || '';
+  if (!slug) { showToast('Slug masjid belum diisi!', 'error'); return; }
+  var link = 'https://powerofmasjid.github.io/masjid.html?masjid=' + slug;
+  navigator.clipboard.writeText(link).then(function(){
+    showToast('Link berhasil disalin!', 'sukses');
+  });
+}
+
+function simpanProfil() {
+  var btn = document.querySelector('#tab-profil .btn-submit');
+  btn.disabled = true;
+  btn.textContent = 'Menyimpan...';
+
+  apiPost({
+    action: 'updateMasjid',
+    id_masjid: ID_MASJID,
+    nama: document.getElementById('prof-nama').value,
+    alamat: document.getElementById('prof-alamat').value,
+    kota: document.getElementById('prof-kota').value,
+    deskripsi: document.getElementById('prof-deskripsi').value,
+    telepon_wa: document.getElementById('prof-wa').value,
+    tema: document.getElementById('prof-tema').value,
+    logo_url: document.getElementById('prof-logo').value,
+    qris_url: document.getElementById('prof-qris').value,
+    rek1_bank: document.getElementById('prof-rek1-bank').value,
+    rek1_nomor: document.getElementById('prof-rek1-nomor').value,
+    rek2_bank: document.getElementById('prof-rek2-bank').value,
+    rek2_nomor: document.getElementById('prof-rek2-nomor').value,
+    rek3_bank: document.getElementById('prof-rek3-bank').value,
+    rek3_nomor: document.getElementById('prof-rek3-nomor').value,
+    latitude: document.getElementById('prof-lat').value,
+    longitude: document.getElementById('prof-lon').value
+  }, function(json){
+    btn.disabled = false;
+    btn.textContent = '💾 Simpan Perubahan';
+    if (json.status === 'ok') {
+      showToast('Profil masjid berhasil diupdate!', 'sukses');
+      // Hapus cache agar website langsung update
+      if (SLUG_MASJID) localStorage.removeItem('masjid_' + SLUG_MASJID);
+    } else {
+      showToast('Gagal: ' + json.message, 'error');
+    }
+  });
+}
+
+// ============================================
+// INIT
 // ============================================
 function init() {
   var saved = localStorage.getItem('pow_admin');
@@ -182,146 +836,19 @@ function init() {
     try {
       ADMIN_DATA = JSON.parse(saved);
       ID_MASJID = ADMIN_DATA.id_masjid;
-      SLUG_MASJID = ADMIN_DATA.slug;
-      
-      document.getElementById('login-wrap').classList.remove('show');
-      document.getElementById('splash').classList.add('hide');
-      
-      // MEMUNCULKAN NAMA ADMIN DI HEADER
-      document.getElementById('admin-nama-role').textContent = ADMIN_DATA.nama + ' (' + ADMIN_DATA.role + ')';
-      
-      loadProfilAdmin();
+      ambilSlugMasjid();
     } catch(e) {
       localStorage.removeItem('pow_admin');
-      showLogin();
+      document.getElementById('login-wrap').classList.add('show');
     }
   } else {
-    showLogin();
+    document.getElementById('login-wrap').classList.add('show');
   }
-}
-
-function showLogin() {
   document.getElementById('splash').classList.add('hide');
-  document.getElementById('login-wrap').classList.add('show');
+  setTimeout(function(){ document.getElementById('splash').style.display='none'; }, 600);
 }
 
-function prosesLogin() {
-  var gmail = document.getElementById('login-email').value;
-  var pin = document.getElementById('login-pin').value;
-  var btn = document.getElementById('btn-login');
-
-  if (!gmail || !pin) { showToast('Email dan PIN wajib diisi', 'error'); return; }
-
-  btn.disabled = true;
-  btn.textContent = 'Memverifikasi...';
-
-  fetch(API_URL + '?action=cekAdmin&gmail=' + encodeURIComponent(gmail) + '&pin=' + encodeURIComponent(pin))
-    .then(r => r.json())
-    .then(json => {
-      btn.disabled = false;
-      btn.textContent = 'Masuk ke Dashboard';
-      if (json.status === 'ok') {
-        ADMIN_DATA = json.data;
-        ID_MASJID = ADMIN_DATA.id_masjid;
-        SLUG_MASJID = ADMIN_DATA.slug;
-        localStorage.setItem('pow_admin', JSON.stringify(ADMIN_DATA));
-        document.getElementById('login-wrap').classList.remove('show');
-        
-        // MEMUNCULKAN NAMA ADMIN DI HEADER SAAT BARU LOGIN
-        document.getElementById('admin-nama-role').textContent = ADMIN_DATA.nama + ' (' + ADMIN_DATA.role + ')';
-        
-        showToast('Selamat datang, ' + ADMIN_DATA.nama, 'sukses');
-        loadProfilAdmin();
-      } else {
-        showToast(json.message, 'error');
-      }
-    })
-    .catch(() => {
-      btn.disabled = false;
-      showToast('Gagal terhubung ke server', 'error');
-    });
-}
-
-function loadProfilAdmin() {
-  if (!ID_MASJID) return;
-  
-  // Set URL Publik
-  const url = 'https://powerofmasjid.github.io/masjid.html?masjid=' + SLUG_MASJID;
-  document.getElementById('url-publik').textContent = url;
-
-  fetch(API_URL + '?action=getMasjid&id_masjid=' + ID_MASJID)
-    .then(r => r.json())
-    .then(json => {
-      if (json.status === 'ok') {
-        let d = json.data;
-        document.getElementById('prof-nama').value = d.nama || '';
-        document.getElementById('prof-alamat').value = d.alamat || '';
-        document.getElementById('prof-slug').value = d.slug || '';
-      }
-    });
-}
-
-function simpanProfil() {
-  const btn = document.getElementById('btn-simpan-prof');
-  btn.disabled = true;
-  btn.textContent = 'Menyimpan...';
-
-  const data = {
-    action: 'updateMasjid',
-    id_masjid: ID_MASJID,
-    nama: document.getElementById('prof-nama').value,
-    alamat: document.getElementById('prof-alamat').value
-  };
-
-  fetch(API_URL, {
-    method: 'POST',
-    mode: 'no-cors',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data)
-  }).then(() => {
-    btn.disabled = false;
-    btn.textContent = '💾 Simpan Perubahan';
-    showToast('Data berhasil diperbarui!', 'sukses');
-    // HAPUS CACHE DINAMIS
-    if (SLUG_MASJID) {
-      localStorage.removeItem('masjid_' + SLUG_MASJID);
-    }
-  }).catch(() => {
-    btn.disabled = false;
-    showToast('Gagal menyimpan ke server', 'error');
-  });
-}
-
-// ============================================
-// UI HELPERS
-// ============================================
-function openTab(tabId, el) {
-  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.nav-link').forEach(n => n.classList.remove('active'));
-  document.getElementById(tabId).classList.add('active');
-  el.classList.add('active');
-}
-
-function copyLink() {
-  const url = document.getElementById('url-publik').textContent;
-  navigator.clipboard.writeText(url);
-  showToast('Link disalin ke clipboard!', 'sukses');
-}
-
-function showToast(msg, type) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.style.display = 'block';
-  t.style.background = type === 'sukses' ? '#1B6B3A' : '#DC2626';
-  setTimeout(() => { t.style.display = 'none'; }, 3000);
-}
-
-function logout() {
-  localStorage.removeItem('pow_admin');
-  location.reload();
-}
-
-window.onload = init;
+init();
 </script>
 </body>
 </html>
