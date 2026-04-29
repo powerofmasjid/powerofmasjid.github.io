@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Power of Masjid</title>
 <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
-<script src="https://unpkg.com/adhan@4.4.3/lib/bundle/adhan.iife.min.js"></script>
+
 <style>
 :root{--primary:#1B6B3A;--primary-dark:#0F4228;--primary-light:#E8F5EE;--accent:#C9A84C;--accent-light:#FBF3E0;--bg:#F7F7F5;--white:#FFFFFF;--text:#1A1A1A;--muted:#6B7280;--border:#E5E7EB;--masuk:#1B6B3A;--keluar:#DC2626;}
 .tema-safir{--primary:#1B3A6B;--primary-dark:#0F2240;--primary-light:#E8EEF5;--accent:#4C7AC9;}
@@ -310,7 +310,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 <div class="toast" id="toast">Nomor rekening disalin!</div>
 
 <script>
-var API_URL = 'https://script.google.com/macros/s/AKfycbx-0YkirH3GX1xCtBms8sPeRLHOeMxJl1O-TuNQfSSiSfPe-cKfparcPaujZLdHTdLZfQ/exec';
+var API_URL = 'https://script.google.com/macros/s/AKfycbxw8v4qDT_PJlP1PaXng3vWQYuqW12YiH6H87hjWtuMW3EO6OXHa2ZiJOTf5uBnoL6o/exec';
 var ID_MASJID = '';
 var CACHE_DURATION = 3600000; // 1 jam
 
@@ -571,120 +571,81 @@ function loadJadwalSholat(lat, lon) {
   try {
     var latNum = parseFloat(String(lat).trim());
     var lonNum = parseFloat(String(lon).trim());
-    if (isNaN(latNum) || isNaN(lonNum)) return;
+    if (isNaN(latNum) || isNaN(lonNum)) {
+      console.log('Koordinat tidak valid:', lat, lon);
+      return;
+    }
+    console.log('Menghitung jadwal sholat untuk:', latNum, lonNum);
 
     var today = new Date();
+    var D2R = Math.PI / 180;
+    var R2D = 180 / Math.PI;
 
-    // Hitung manual menggunakan rumus sederhana
-    // Gunakan API publik tanpa server sebagai fallback
-    var params = {
-      fajr: 20, isha: 18 // sudut untuk metode Indonesia
-    };
+    // Hitung Julian Date
+    var Y = today.getFullYear();
+    var M = today.getMonth() + 1;
+    var D = today.getDate();
+    var JD = 367*Y - Math.floor(7*(Y+Math.floor((M+9)/12))/4) + Math.floor(275*M/9) + D + 1721013.5;
 
-    // Konversi ke jam berdasarkan koordinat Jakarta
-    // Offset WIB = UTC+7
+    var T = (JD - 2451545) / 36525;
+    var L0 = (280.46646 + 36000.76983*T) % 360;
+    var M0 = (357.52911 + 35999.05029*T) % 360;
+    var C = (1.914602 - 0.004817*T)*Math.sin(M0*D2R) + 0.019993*Math.sin(2*M0*D2R);
+    var sunLon = L0 + C;
+    var obliq = 23.4393 - 0.0130*T;
+    var decl = R2D * Math.asin(Math.sin(obliq*D2R) * Math.sin(sunLon*D2R));
+    var RA = R2D * Math.atan2(Math.cos(obliq*D2R)*Math.sin(sunLon*D2R), Math.cos(sunLon*D2R));
+    var EqT = ((L0 - RA) % 360) / 15;
     var utcOffset = 7;
+    var transit = 12 - lonNum/15 + utcOffset - EqT;
 
-    // Waktu sholat perkiraan untuk Jakarta berdasarkan koordinat
-    var subuh   = hitungWaktu(latNum, lonNum, today, 'fajr', utcOffset);
-    var dzuhur  = hitungWaktu(latNum, lonNum, today, 'dhuhr', utcOffset);
-    var ashar   = hitungWaktu(latNum, lonNum, today, 'asr', utcOffset);
-    var maghrib = hitungWaktu(latNum, lonNum, today, 'maghrib', utcOffset);
-    var isya    = hitungWaktu(latNum, lonNum, today, 'isha', utcOffset);
-
-    function fmt(jam, menit) {
-      return String(Math.floor(jam)).padStart(2,'0') + ':' + String(Math.round(menit)).padStart(2,'0');
+    function ha(angle) {
+      var cosH = (Math.sin(angle*D2R) - Math.sin(latNum*D2R)*Math.sin(decl*D2R)) / (Math.cos(latNum*D2R)*Math.cos(decl*D2R));
+      if (cosH < -1) cosH = -1;
+      if (cosH > 1) cosH = 1;
+      return R2D * Math.acos(cosH) / 15;
     }
 
+    function fmt(t) {
+      t = ((t % 24) + 24) % 24;
+      var h = Math.floor(t);
+      var m = Math.round((t - h) * 60);
+      if (m === 60) { h++; m = 0; }
+      return String(h).padStart(2,'0') + ':' + String(m).padStart(2,'0');
+    }
+
+    // Asar - shadow factor 1 (Syafii)
+    var asarAngle = R2D * Math.atan(1/(1 + Math.tan(D2R*Math.abs(latNum - decl))));
+
     var sholat = [
-      {name:'Subuh',   time: subuh},
-      {name:'Dzuhur',  time: dzuhur},
-      {name:'Ashar',   time: ashar},
-      {name:'Maghrib', time: maghrib},
-      {name:'Isya',    time: isya}
+      {name:'Subuh',   time: fmt(transit - ha(-20))},
+      {name:'Dzuhur',  time: fmt(transit)},
+      {name:'Ashar',   time: fmt(transit + ha(asarAngle))},
+      {name:'Maghrib', time: fmt(transit + ha(-0.833))},
+      {name:'Isya',    time: fmt(transit + ha(-18))}
     ];
+
+    console.log('Jadwal:', JSON.stringify(sholat));
 
     function toMenit(str) {
       var p = str.split(':');
-      return parseInt(p[0]) * 60 + parseInt(p[1]);
+      return parseInt(p[0])*60 + parseInt(p[1]);
     }
 
-    var jamSekarang = today.getHours() * 60 + today.getMinutes();
+    var now = today.getHours()*60 + today.getMinutes();
     var aktifIdx = 0;
     for (var i = 0; i < sholat.length; i++) {
-      if (jamSekarang >= toMenit(sholat[i].time)) aktifIdx = i;
+      if (now >= toMenit(sholat[i].time)) aktifIdx = i;
     }
 
     document.getElementById('sholat-card').style.display = 'block';
-    document.getElementById('sholat-date').textContent = namaHari(today.getDay()) + ', ' + today.toLocaleDateString('id-ID', {day:'numeric', month:'long', year:'numeric'});
-    document.getElementById('sholat-grid').innerHTML = sholat.map(function(s, idx){
-      return '<div class="sholat-item' + (idx === aktifIdx ? ' aktif' : '') + '"><div class="sholat-name">' + s.name + '</div><div class="sholat-time">' + s.time + '</div></div>';
+    document.getElementById('sholat-date').textContent = namaHari(today.getDay()) + ', ' + today.toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'});
+    document.getElementById('sholat-grid').innerHTML = sholat.map(function(s,idx){
+      return '<div class="sholat-item'+(idx===aktifIdx?' aktif':'')+'"><div class="sholat-name">'+s.name+'</div><div class="sholat-time">'+s.time+'</div></div>';
     }).join('');
   } catch(e) {
-    console.error('Jadwal sholat error:', e);
+    console.error('Jadwal sholat error:', e.toString());
   }
-}
-
-function hitungWaktu(lat, lon, date, waktu, utcOffset) {
-  var D2R = Math.PI / 180;
-  var R2D = 180 / Math.PI;
-
-  var JD = Math.floor(365.25 * (date.getFullYear() + 4716)) +
-           Math.floor(30.6001 * (date.getMonth() + 2)) +
-           date.getDate() - 1524.5;
-
-  var T = (JD - 2451545) / 36525;
-  var L0 = 280.46646 + 36000.76983 * T;
-  var M = 357.52911 + 35999.05029 * T;
-  var C = (1.914602 - 0.004817 * T) * Math.sin(M * D2R) + 0.019993 * Math.sin(2 * M * D2R);
-  var sunLon = L0 + C;
-  var obliq = 23.439291111 - 0.013004167 * T;
-  var RA = R2D * Math.atan2(Math.cos(obliq * D2R) * Math.sin(sunLon * D2R), Math.cos(sunLon * D2R)) / 15;
-  var decl = R2D * Math.asin(Math.sin(obliq * D2R) * Math.sin(sunLon * D2R));
-  var EqT = (L0 - 0.0057183 - RA + 360) % 360;
-  var transit = 12 + utcOffset - lon / 15 - EqT / 15;
-
-  function hourAngle(angle) {
-    var cosHA = (Math.sin(angle * D2R) - Math.sin(lat * D2R) * Math.sin(decl * D2R)) /
-                (Math.cos(lat * D2R) * Math.cos(decl * D2R));
-    if (cosHA < -1 || cosHA > 1) return null;
-    return R2D * Math.acos(cosHA) / 15;
-  }
-
-  var ha, jam, menit;
-
-  if (waktu === 'dhuhr') {
-    jam = Math.floor(transit);
-    menit = (transit - jam) * 60;
-    return String(jam).padStart(2,'0') + ':' + String(Math.round(menit)).padStart(2,'0');
-  }
-  if (waktu === 'fajr') {
-    ha = hourAngle(-20);
-    var t = ha ? transit - ha : transit - 1.5;
-    jam = Math.floor(t); menit = (t - jam) * 60;
-    return String(jam).padStart(2,'0') + ':' + String(Math.round(menit)).padStart(2,'0');
-  }
-  if (waktu === 'maghrib') {
-    ha = hourAngle(-0.833);
-    var t = ha ? transit + ha : transit + 0.25;
-    jam = Math.floor(t); menit = (t - jam) * 60;
-    return String(jam).padStart(2,'0') + ':' + String(Math.round(menit)).padStart(2,'0');
-  }
-  if (waktu === 'isha') {
-    ha = hourAngle(-18);
-    var t = ha ? transit + ha : transit + 1.25;
-    jam = Math.floor(t); menit = (t - jam) * 60;
-    return String(jam).padStart(2,'0') + ':' + String(Math.round(menit)).padStart(2,'0');
-  }
-  if (waktu === 'asr') {
-    var shadow = 1 / Math.tan(D2R * (R2D * Math.atan(1 / (1 + Math.tan(D2R * Math.abs(lat - decl)))) + 0));
-    var cosHA = (Math.sin(Math.atan(1/(shadow + Math.tan(D2R*Math.abs(lat-decl))))) - Math.sin(lat*D2R)*Math.sin(decl*D2R)) / (Math.cos(lat*D2R)*Math.cos(decl*D2R));
-    ha = cosHA >= -1 && cosHA <= 1 ? R2D * Math.acos(cosHA) / 15 : 0.25;
-    var t = transit + ha;
-    jam = Math.floor(t); menit = (t - jam) * 60;
-    return String(jam).padStart(2,'0') + ':' + String(Math.round(menit)).padStart(2,'0');
-  }
-  return '00:00';
 }
 
 // ============================================
