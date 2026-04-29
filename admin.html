@@ -96,7 +96,10 @@ input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px
 <div class="header">
   <div class="header-brand">
     <div class="header-logo">م</div>
-    <div style="font-weight:700; font-size:14px;">ADMIN PANEL</div>
+    <div>
+      <div style="font-weight:700; font-size:14px;">ADMIN PANEL</div>
+      <div id="admin-nama-role" style="font-size:11px; color:var(--accent); margin-top:2px; font-weight:500;">Memuat...</div>
+    </div>
   </div>
   <button class="btn-logout" onclick="logout()">Keluar</button>
 </div>
@@ -183,6 +186,10 @@ function init() {
       
       document.getElementById('login-wrap').classList.remove('show');
       document.getElementById('splash').classList.add('hide');
+      
+      // MEMUNCULKAN NAMA ADMIN DI HEADER
+      document.getElementById('admin-nama-role').textContent = ADMIN_DATA.nama + ' (' + ADMIN_DATA.role + ')';
+      
       loadProfilAdmin();
     } catch(e) {
       localStorage.removeItem('pow_admin');
@@ -219,6 +226,10 @@ function prosesLogin() {
         SLUG_MASJID = ADMIN_DATA.slug;
         localStorage.setItem('pow_admin', JSON.stringify(ADMIN_DATA));
         document.getElementById('login-wrap').classList.remove('show');
+        
+        // MEMUNCULKAN NAMA ADMIN DI HEADER SAAT BARU LOGIN
+        document.getElementById('admin-nama-role').textContent = ADMIN_DATA.nama + ' (' + ADMIN_DATA.role + ')';
+        
         showToast('Selamat datang, ' + ADMIN_DATA.nama, 'sukses');
         loadProfilAdmin();
       } else {
