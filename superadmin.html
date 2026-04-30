@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Superadmin — Power of Masjid</title>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-dark: #0A2F1C;
+  --panel-bg: #113F27;
+  --gold: #C9A84C;
+  --text-light: #E8F5EE;
+  --border: rgba(201, 168, 76, 0.2);
+  --danger: #DC2626;
+  --success: #10B981;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg-dark); color: var(--text-light); }
+
+/* HEADER */
+.header { background: linear-gradient(180deg, #051A0F, var(--bg-dark)); padding: 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; }
+.logo-area { display: flex; align-items: center; gap: 10px; }
+.logo-icon { font-family: 'Amiri', serif; font-size: 32px; color: var(--gold); }
+.brand-name { font-weight: 700; font-size: 16px; letter-spacing: 1px; color: white; }
+.brand-sub { font-size: 11px; color: var(--gold); text-transform: uppercase; letter-spacing: 2px; }
+
+/* TABS */
+.nav-scroll { background: var(--panel-bg); display: flex; overflow-x: auto; border-bottom: 1px solid var(--border); }
+.nav-tab { padding: 15px 20px; font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.6); white-space: nowrap; cursor: pointer; border-bottom: 3px solid transparent; transition: 0.3s; }
+.nav-tab.active { color: var(--gold); border-bottom-color: var(--gold); }
+
+/* MAIN CONTENT */
+.content { padding: 20px; max-width: 800px; margin: 0 auto; padding-bottom: 80px; }
+.tab-content { display: none; animation: fadeIn 0.3s ease; }
+.tab-content.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+/* CARDS */
+.card { background: var(--panel-bg); border: 1px solid var(--border); border-radius: 16px; padding: 20px; margin-bottom: 20px; }
+.card-title { font-size: 16px; font-weight: 700; color: var(--gold); margin-bottom: 15px; display: flex; align-items: center; justify-content: space-between; }
+
+/* STATS GRID */
+.stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+.stat-box { background: rgba(0,0,0,0.2); border: 1px solid var(--border); border-radius: 12px; padding: 15px; text-align: center; }
+.stat-val { font-family: 'Amiri', serif; font-size: 28px; color: var(--gold); font-weight: 700; }
+.stat-lbl { font-size: 11px; color: rgba(255,255,255,0.7); margin-top: 5px; text-transform: uppercase; letter-spacing: 1px; }
+
+/* PROGRESS BAR */
+.progress-bg { background: rgba(255,255,255,0.1); height: 12px; border-radius: 20px; overflow: hidden; margin: 15px 0 8px; }
+.progress-fill { background: linear-gradient(90deg, #C9A84C, #FDE68A); height: 100%; border-radius: 20px; width: 10%; transition: width 1s ease; }
+.progress-info { display: flex; justify-content: space-between; font-size: 12px; color: rgba(255,255,255,0.8); }
+
+/* FORMS */
+.form-group { margin-bottom: 15px; }
+.form-group label { display: block; font-size: 12px; font-weight: 500; color: rgba(255,255,255,0.8); margin-bottom: 6px; }
+.form-control { width: 100%; background: rgba(0,0,0,0.3); border: 1px solid var(--border); color: white; padding: 12px 15px; border-radius: 10px; font-family: inherit; font-size: 14px; outline: none; }
+.form-control:focus { border-color: var(--gold); }
+.btn-primary { width: 100%; background: var(--gold); color: var(--bg-dark); border: none; padding: 14px; border-radius: 10px; font-weight: 700; font-size: 14px; cursor: pointer; font-family: inherit; margin-top: 10px; }
+.btn-outline { width: 100%; background: transparent; color: var(--gold); border: 1px solid var(--gold); padding: 10px; border-radius: 8px; font-weight: 600; font-size: 13px; cursor: pointer; font-family: inherit; margin-top: 10px; }
+
+/* LIST MASJID */
+.list-item { background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 15px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+.item-info h4 { font-size: 14px; color: white; margin-bottom: 4px; }
+.item-info p { font-size: 11px; color: rgba(255,255,255,0.6); }
+.badge { font-size: 10px; padding: 4px 8px; border-radius: 6px; font-weight: 600; }
+.badge-active { background: rgba(16, 185, 129, 0.2); color: var(--success); }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo-area">
+    <div class="logo-icon">?</div>
+    <div>
+      <div class="brand-name">SUPERADMIN</div>
+      <div class="brand-sub">Power of Masjid</div>
+    </div>
+  </div>
+  <div style="font-size:20px; cursor:pointer;" onclick="alert('Fitur Logout akan segera aktif')">??</div>
+</div>
+
+<div class="nav-scroll">
+  <div class="nav-tab active" onclick="bukaTab('dashboard', this)">?? Dashboard</div>
+  <div class="nav-tab" onclick="bukaTab('masjid', this)">?? Kelola Masjid</div>
+  <div class="nav-tab" onclick="bukaTab('iklan', this)">?? Iklan & Broadcast</div>
+</div>
+
+<div class="content">
+
+  <!-- TAB DASHBOARD -->
+  <div id="dashboard" class="tab-content active">
+    
+    <div class="card">
+      <div class="card-title">Statistik Platform</div>
+      <div class="stats-grid">
+        <div class="stat-box">
+          <div class="stat-val">1</div>
+          <div class="stat-lbl">Masjid Aktif</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val">Rp 0</div>
+          <div class="stat-lbl">Perputaran Kas</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="background: linear-gradient(145deg, #113F27, #0A2F1C);">
+      <div class="card-title">Ekspedisi Tracker ??</div>
+      <p style="font-size:13px; color:rgba(255,255,255,0.8); line-height:1.5;">Target 10 Masjid terintegrasi sebelum Milad ke-10 YNJ (4 November 2026).</p>
+      
+      <div class="progress-bg">
+        <div class="progress-fill"></div>
+      </div>
+      <div class="progress-info">
+        <span>Tercapai: 1 Masjid</span>
+        <span style="color:var(--gold); font-weight:bold;">10%</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB KELOLA MASJID -->
+  <div id="masjid" class="tab-content">
+    <div class="card">
+      <div class="card-title">Tambah Masjid & DKM Baru</div>
+      <p style="font-size:12px; color:rgba(255,255,255,0.6); margin-bottom:15px;">Buat akses admin baru untuk DKM agar mereka bisa login ke panel admin.html.</p>
+      
+      <div class="form-group">
+        <label>Nama Masjid</label>
+        <input type="text" class="form-control" placeholder="Contoh: Masjid Jami' An-Nuriyah">
+      </div>
+      <div class="form-group">
+        <label>Slug URL (Unik)</label>
+        <input type="text" class="form-control" placeholder="Contoh: annuriyah-tanjungbarat">
+      </div>
+      <div class="form-group">
+        <label>Email Pengurus (Untuk Login)</label>
+        <input type="email" class="form-control" placeholder="dkm.annuriyah@gmail.com">
+      </div>
+      <div class="form-group">
+        <label>PIN Admin (6 Digit)</label>
+        <input type="number" class="form-control" placeholder="123456">
+      </div>
+      <button class="btn-primary" onclick="alert('Sinkronisasi database Superadmin akan dilakukan di Tahap 2')">? Buat Akses Masjid Baru</button>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Daftar Masjid Terdaftar</div>
+      
+      <div class="list-item">
+        <div class="item-info">
+          <h4>Masjid Jami' An-Nuriyah</h4>
+          <p>Slug: annuriyah-tanjungbarat</p>
+        </div>
+        <div style="text-align:right;">
+          <span class="badge badge-active">AKTIF</span>
+          <br>
+          <span style="font-size:11px; color:var(--gold); cursor:pointer; text-decoration:underline; display:inline-block; margin-top:5px;">Reset PIN</span>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+
+  <!-- TAB IKLAN & BROADCAST -->
+  <div id="iklan" class="tab-content">
+    <div class="card">
+      <div class="card-title">Kelola Iklan Pop-up (Global)</div>
+      <p style="font-size:12px; color:rgba(255,255,255,0.6); margin-bottom:15px;">Ganti materi iklan pop-up yang muncul di SEMUA website masjid yang terdaftar di platform.</p>
+      
+      <div class="form-group">
+        <label>Judul Iklan</label>
+        <input type="text" class="form-control" value="Idul Adha 1446H">
+      </div>
+      <div class="form-group">
+        <label>Nama Program / Sponsor</label>
+        <input type="text" class="form-control" value="Daftar Kurban via BJFarm">
+      </div>
+      <div class="form-group">
+        <label>Deskripsi Singkat</label>
+        <textarea class="form-control" style="height:80px">Kambing & sapi berkualitas. Kolektif sapi tersedia untuk masjid.</textarea>
+      </div>
+      <div class="form-group">
+        <label>Link Tujuan (WhatsApp/Web)</label>
+        <input type="text" class="form-control" value="https://wa.me/628123456789">
+      </div>
+      <button class="btn-primary" onclick="alert('Sinkronisasi database Superadmin akan dilakukan di Tahap 2')">?? Update Iklan Global</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function bukaTab(tabId, el) {
+  // Sembunyikan semua konten
+  var contents = document.getElementsByClassName('tab-content');
+  for (var i = 0; i < contents.length; i++) {
+    contents[i].classList.remove('active');
+  }
+  
+  // Hilangkan warna emas dari semua menu
+  var tabs = document.getElementsByClassName('nav-tab');
+  for (var i = 0; i < tabs.length; i++) {
+    tabs[i].classList.remove('active');
+  }
+  
+  // Tampilkan yang dipilih
+  document.getElementById(tabId).classList.add('active');
+  el.classList.add('active');
+}
+</script>
+
+</body>
+</html>
