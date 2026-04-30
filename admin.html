@@ -23,6 +23,9 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#F7F7F5;color:#1A1A1A
 .login-logo{font-family:'Amiri',serif;font-size:40px;color:var(--primary);margin-bottom:0.5rem;}
 .login-title{font-size:18px;font-weight:600;color:var(--text);margin-bottom:4px;}
 .login-sub{font-size:13px;color:var(--muted);margin-bottom:1.5rem;line-height:1.5;}
+.btn-google{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;background:white;border:1px solid var(--border);color:var(--text);padding:12px;border-radius:10px;font-size:14px;font-weight:500;cursor:pointer;font-family:inherit;margin-bottom:10px;}
+.btn-google:hover{background:#f5f5f5;}
+.google-icon{width:20px;height:20px;}
 .login-note{font-size:11px;color:var(--muted);line-height:1.5;}
 
 /* HEADER ADMIN */
@@ -39,7 +42,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#F7F7F5;color:#1A1A1A
 .nav-tab.active{color:var(--primary);border-bottom-color:var(--primary);}
 
 /* MAIN */
-.admin-main{padding:1rem;max-width:600px;margin:0 auto;padding-bottom:100px;}
+.admin-main{padding:1rem;max-width:600px;margin:0 auto;}
 
 /* SECTION */
 .section-title{font-size:16px;font-weight:600;color:var(--text);margin-bottom:1rem;}
@@ -89,16 +92,18 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#F7F7F5;color:#1A1A1A
 </head>
 <body>
 
+<!-- SPLASH -->
 <div class="splash" id="splash">
   <div class="splash-logo">م</div>
   <div class="splash-text">Memuat panel admin...</div>
 </div>
 
+<!-- LOGIN -->
 <div class="login-wrap" id="login-wrap">
   <div class="login-card">
     <div class="login-logo">م</div>
     <div class="login-title">Panel Admin Masjid</div>
-    <div class="login-sub">Masuk menggunakan Gmail dan PIN pengurus.</div>
+    <div class="login-sub">Masuk menggunakan Gmail dan PIN yang telah diberikan oleh Power of Masjid.</div>
     <div class="form-group" style="text-align:left;margin-bottom:0.75rem;">
       <label class="form-label">Alamat Gmail</label>
       <input type="email" class="form-input" id="login-gmail" placeholder="nama@gmail.com" autocomplete="email">
@@ -108,11 +113,14 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#F7F7F5;color:#1A1A1A
       <input type="password" class="form-input" id="login-pin" placeholder="••••••" maxlength="6" autocomplete="current-password">
     </div>
     <button class="btn-submit" onclick="prosesLogin()" id="btn-login">Masuk</button>
+    <div class="login-note" style="margin-top:0.75rem;">Belum punya akses? Hubungi Power of Masjid untuk pendaftaran.</div>
   </div>
 </div>
 
+<!-- KONTEN ADMIN -->
 <div id="admin-content" style="display:none">
 
+  <!-- HEADER -->
   <div class="admin-header">
     <div class="admin-header-left">
       <div class="admin-logo">م</div>
@@ -124,6 +132,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#F7F7F5;color:#1A1A1A
     <button class="btn-logout" onclick="logout()">Keluar</button>
   </div>
 
+  <!-- NAV TABS -->
   <div class="nav-tabs">
     <div class="nav-tab active" onclick="gotoTab('transaksi')">💰 Kas</div>
     <div class="nav-tab" onclick="gotoTab('jadwal')">📅 Jadwal</div>
@@ -134,6 +143,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#F7F7F5;color:#1A1A1A
 
   <div class="admin-main">
 
+    <!-- TAB TRANSAKSI -->
     <div id="tab-transaksi">
       <div class="section-title">Input Transaksi</div>
       <div class="form-group">
@@ -162,11 +172,12 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#F7F7F5;color:#1A1A1A
       <div id="list-trx-admin"><div class="kosong">Memuat...</div></div>
     </div>
 
+    <!-- TAB JADWAL -->
     <div id="tab-jadwal" style="display:none">
       <div class="section-title">Tambah Jadwal Kegiatan</div>
       <div class="form-group">
         <label class="form-label">Nama Kegiatan</label>
-        <input type="text" class="form-input" id="jdw-nama" placeholder="Contoh: Pengajian Ibu-Ibu...">
+        <input type="text" class="form-input" id="jdw-nama" placeholder="Contoh: Kulsam, Pengajian Ibu-Ibu...">
       </div>
       <div class="form-group">
         <label class="form-label">Jadwal / Waktu</label>
@@ -201,6 +212,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#F7F7F5;color:#1A1A1A
       <div id="list-jadwal-admin"><div class="kosong">Memuat...</div></div>
     </div>
 
+    <!-- TAB PENGUMUMAN -->
     <div id="tab-pengumuman" style="display:none">
       <div class="section-title">Tambah Pengumuman</div>
       <div class="form-group">
@@ -209,11 +221,15 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#F7F7F5;color:#1A1A1A
           <option value="UMUM">📢 Umum</option>
           <option value="KURBAN">🐄 Kurban Idul Adha</option>
           <option value="RAMADAN">🌙 Ramadan</option>
+          <option value="MAULID">☪️ Maulid Nabi</option>
+          <option value="ISRA_MIRAJ">✨ Isra Mi'raj</option>
+          <option value="IDUL_FITRI">🌟 Idul Fitri</option>
+          <option value="MUHARRAM">📅 Muharram</option>
         </select>
       </div>
       <div class="form-group">
         <label class="form-label">Judul</label>
-        <input type="text" class="form-input" id="peng-judul" placeholder="Contoh: Pendaftaran Kurban">
+        <input type="text" class="form-input" id="peng-judul" placeholder="Contoh: Pendaftaran Kurban 1446H">
       </div>
       <div class="form-group">
         <label class="form-label">Isi Pengumuman</label>
@@ -221,7 +237,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#F7F7F5;color:#1A1A1A
       </div>
       <div class="form-group">
         <label class="form-label">Ikon (emoji)</label>
-        <input type="text" class="form-input" id="peng-ikon" placeholder="Contoh: 📢">
+        <input type="text" class="form-input" id="peng-ikon" placeholder="Contoh: 🐄 atau 🌙">
       </div>
       <div class="form-row">
         <div class="form-group">
@@ -233,6 +249,18 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#F7F7F5;color:#1A1A1A
           <input type="date" class="form-input" id="peng-selesai">
         </div>
       </div>
+      <div class="form-group">
+        <label class="form-label">Target Infaq (Rp) — opsional</label>
+        <input type="number" class="form-input" id="peng-target" placeholder="Kosongkan jika tidak ada target">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Judul Infaq — opsional</label>
+        <input type="text" class="form-input" id="peng-judul-infaq" placeholder="Contoh: Infaq Buka Puasa Ramadan">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Nomor WA Kontak — opsional</label>
+        <input type="text" class="form-input" id="peng-wa" placeholder="Contoh: 628123456789">
+      </div>
       <button class="btn-submit" onclick="simpanPengumuman()">💾 Simpan Pengumuman</button>
 
       <div class="divider"></div>
@@ -240,6 +268,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#F7F7F5;color:#1A1A1A
       <div id="list-peng-admin"><div class="kosong">Memuat...</div></div>
     </div>
 
+    <!-- TAB GALERI -->
     <div id="tab-galeri" style="display:none">
       <div class="section-title">Tambah Galeri</div>
       <div class="form-group">
@@ -251,11 +280,17 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#F7F7F5;color:#1A1A1A
       </div>
       <div class="form-group">
         <label class="form-label">Judul</label>
-        <input type="text" class="form-input" id="gal-judul" placeholder="Contoh: Kajian Ramadan">
+        <input type="text" class="form-input" id="gal-judul" placeholder="Contoh: Kajian Ramadan 2026">
       </div>
       <div class="form-group">
-        <label class="form-label">Link Foto / URL YouTube</label>
-        <input type="text" class="form-input" id="gal-url" placeholder="https://...">
+        <label class="form-label">Upload Foto / Link YouTube</label>
+        <input type="file" id="gal-file" accept="image/*" class="form-input" style="margin-bottom:8px; cursor:pointer;" onchange="uploadKeImgBB(this)">
+        <div id="status-upload" style="font-size:11px; color:var(--primary); margin-bottom:8px; display:none;">⏳ Sedang mengunggah ke server...</div>
+        <input type="text" class="form-input" id="gal-url" placeholder="URL akan otomatis terisi disini...">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Keterangan (opsional)</label>
+        <input type="text" class="form-input" id="gal-ket" placeholder="Keterangan singkat...">
       </div>
       <button class="btn-submit" onclick="simpanGaleri()">💾 Simpan Galeri</button>
 
@@ -264,13 +299,15 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#F7F7F5;color:#1A1A1A
       <div id="list-gal-admin"><div class="kosong">Memuat...</div></div>
     </div>
 
+    <!-- TAB PROFIL -->
     <div id="tab-profil" style="display:none">
       <div class="section-title">Edit Profil Masjid</div>
 
       <div class="profil-section">
         <h3>🔗 Link Website Masjid</h3>
-        <div style="background:#F7F7F5;border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-size:12px;color:var(--primary-dark);word-break:break-all;margin-bottom:8px;font-weight:600;" id="link-website">Memuat...</div>
-        <button class="btn-submit" style="margin-top:0;background:var(--primary-light);color:var(--primary);font-weight:600;" onclick="salinLink()">📋 Salin Link</button>
+        <div style="background:#F7F7F5;border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-size:12px;color:var(--muted);word-break:break-all;margin-bottom:8px;" id="link-website">Memuat...</div>
+        <button class="btn-submit" style="margin-top:0;background:var(--primary-light);color:var(--primary);font-weight:500;" onclick="salinLink()">📋 Salin Link</button>
+        <div style="font-size:11px;color:var(--muted);margin-top:6px;">Bagikan link ini ke jamaah via WhatsApp agar mereka bisa akses halaman masjid.</div>
       </div>
 
       <div class="profil-section">
@@ -289,7 +326,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#F7F7F5;color:#1A1A1A
         </div>
         <div class="form-group">
           <label class="form-label">Deskripsi Singkat</label>
-          <textarea class="form-textarea" id="prof-deskripsi"></textarea>
+          <textarea class="form-textarea" id="prof-deskripsi" placeholder="Sekilas tentang masjid..."></textarea>
         </div>
         <div class="form-group">
           <label class="form-label">Nomor WA DKM</label>
@@ -316,11 +353,11 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#F7F7F5;color:#1A1A1A
         </div>
         <div class="form-group">
           <label class="form-label">URL Logo Masjid</label>
-          <input type="text" class="form-input" id="prof-logo">
+          <input type="text" class="form-input" id="prof-logo" placeholder="https://link-foto-logo.jpg">
         </div>
         <div class="form-group">
           <label class="form-label">URL QRIS</label>
-          <input type="text" class="form-input" id="prof-qris">
+          <input type="text" class="form-input" id="prof-qris" placeholder="https://link-foto-qris.jpg">
         </div>
       </div>
 
@@ -329,31 +366,31 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#F7F7F5;color:#1A1A1A
         <div class="form-row">
           <div class="form-group">
             <label class="form-label">Bank 1</label>
-            <input type="text" class="form-input" id="prof-rek1-bank">
+            <input type="text" class="form-input" id="prof-rek1-bank" placeholder="BSI">
           </div>
           <div class="form-group">
             <label class="form-label">Nomor Rekening 1</label>
-            <input type="text" class="form-input" id="prof-rek1-nomor">
+            <input type="text" class="form-input" id="prof-rek1-nomor" placeholder="7123456789">
           </div>
         </div>
         <div class="form-row">
           <div class="form-group">
             <label class="form-label">Bank 2</label>
-            <input type="text" class="form-input" id="prof-rek2-bank">
+            <input type="text" class="form-input" id="prof-rek2-bank" placeholder="BCA">
           </div>
           <div class="form-group">
             <label class="form-label">Nomor Rekening 2</label>
-            <input type="text" class="form-input" id="prof-rek2-nomor">
+            <input type="text" class="form-input" id="prof-rek2-nomor" placeholder="1234567890">
           </div>
         </div>
         <div class="form-row">
           <div class="form-group">
             <label class="form-label">Bank 3</label>
-            <input type="text" class="form-input" id="prof-rek3-bank">
+            <input type="text" class="form-input" id="prof-rek3-bank" placeholder="Bank Jakarta">
           </div>
           <div class="form-group">
             <label class="form-label">Nomor Rekening 3</label>
-            <input type="text" class="form-input" id="prof-rek3-nomor">
+            <input type="text" class="form-input" id="prof-rek3-nomor" placeholder="0987654321">
           </div>
         </div>
       </div>
@@ -363,13 +400,14 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#F7F7F5;color:#1A1A1A
         <div class="form-row">
           <div class="form-group">
             <label class="form-label">Latitude</label>
-            <input type="text" class="form-input" id="prof-lat">
+            <input type="text" class="form-input" id="prof-lat" placeholder="-6.3012">
           </div>
           <div class="form-group">
             <label class="form-label">Longitude</label>
-            <input type="text" class="form-input" id="prof-lon">
+            <input type="text" class="form-input" id="prof-lon" placeholder="106.8234">
           </div>
         </div>
+        <div style="font-size:11px;color:var(--muted);margin-top:-4px;">Buka Google Maps → cari masjid → copy koordinat dari URL</div>
       </div>
 
       <button class="btn-submit" onclick="simpanProfil()">💾 Simpan Perubahan</button>
@@ -381,7 +419,6 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#F7F7F5;color:#1A1A1A
 <div class="toast" id="toast">Tersimpan!</div>
 
 <script>
-// PASTIKAN API_URL INI BENAR
 var API_URL = 'https://script.google.com/macros/s/AKfycbxrRV5Vq1cHe0sKO20MMUVmBGHwA7QwAUu7LrJ7NPfjhn3T2u-2eVZQj6fYtMUwm9-cOA/exec';
 var ADMIN_DATA = null;
 var ID_MASJID = '';
@@ -416,13 +453,14 @@ function gotoTab(tab) {
 }
 
 // ============================================
-// LOGIN EMAIL + PIN
+// LOGIN GOOGLE
 // ============================================
 function prosesLogin() {
   var gmail = document.getElementById('login-gmail').value.trim().toLowerCase();
   var pin = document.getElementById('login-pin').value.trim();
 
-  if (!gmail || !pin) { showToast('Masukkan Gmail dan PIN!', 'error'); return; }
+  if (!gmail) { showToast('Masukkan alamat Gmail!', 'error'); return; }
+  if (!pin || pin.length < 6) { showToast('PIN harus 6 digit!', 'error'); return; }
 
   var btn = document.getElementById('btn-login');
   btn.disabled = true;
@@ -436,12 +474,8 @@ function prosesLogin() {
       if (json.status === 'ok') {
         ADMIN_DATA = json.data;
         ID_MASJID = json.data.id_masjid;
-        
-        // POIN 1: Menangkap SLUG_MASJID dari data login
-        SLUG_MASJID = ADMIN_DATA.slug || '';
-        
         localStorage.setItem('pow_admin', JSON.stringify(json.data));
-        tampilAdmin();
+        ambilSlugMasjid();
       } else {
         showToast(json.message || 'Akses ditolak', 'error');
       }
@@ -453,11 +487,27 @@ function prosesLogin() {
     });
 }
 
+function ambilSlugMasjid() {
+  fetch(API_URL + '?action=getMasjidSlug&id_masjid=' + ID_MASJID)
+    .then(function(r){ return r.json(); })
+    .then(function(json){
+      if (json.status === 'ok') SLUG_MASJID = json.slug;
+      tampilAdmin();
+    })
+    .catch(function(){ tampilAdmin(); });
+}
+
+// Enter key untuk login
+document.addEventListener('keydown', function(e){
+  if (e.key === 'Enter' && document.getElementById('login-wrap').classList.contains('show')) {
+    prosesLogin();
+  }
+});
+
 function logout() {
   localStorage.removeItem('pow_admin');
   ADMIN_DATA = null;
   ID_MASJID = '';
-  SLUG_MASJID = '';
   document.getElementById('admin-content').style.display = 'none';
   document.getElementById('login-wrap').classList.add('show');
 }
@@ -467,14 +517,17 @@ function tampilAdmin() {
   document.getElementById('admin-content').style.display = 'block';
   document.getElementById('admin-nama').textContent = ADMIN_DATA.nama + ' (' + ADMIN_DATA.role + ')';
 
+  // Load nama masjid dan slug
   fetch(API_URL + '?action=getMasjid&id_masjid=' + ID_MASJID)
     .then(function(r){ return r.json(); })
     .then(function(json){
       if (json.status === 'ok') {
         document.getElementById('admin-masjid-nama').textContent = json.data.nama;
+        if (json.data.slug) SLUG_MASJID = json.data.slug;
       }
     });
 
+  // Set tanggal hari ini
   var today = new Date().toISOString().split('T')[0];
   document.getElementById('trx-tanggal').value = today;
 
@@ -487,6 +540,7 @@ function tampilAdmin() {
 function apiPost(data, callback) {
   fetch(API_URL, {
     method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(data)
   })
   .then(function(r){ return r.json(); })
@@ -523,17 +577,13 @@ function simpanTransaksi() {
   }, function(json){
     btn.disabled = false;
     btn.textContent = '💾 Simpan Transaksi';
-    if (json && json.status === 'ok') {
+    if (json.status === 'ok') {
       showToast('Transaksi berhasil disimpan!', 'sukses');
       document.getElementById('trx-keterangan').value = '';
       document.getElementById('trx-jumlah').value = '';
-      if (SLUG_MASJID) {
-        localStorage.removeItem('transaksi_' + SLUG_MASJID);
-        localStorage.removeItem('saldo_' + SLUG_MASJID);
-      }
       loadTransaksiAdmin();
     } else {
-      showToast('Gagal menyimpan', 'error');
+      showToast('Gagal: ' + json.message, 'error');
     }
   });
 }
@@ -543,7 +593,10 @@ function loadTransaksiAdmin() {
     .then(function(r){ return r.json(); })
     .then(function(json){
       var el = document.getElementById('list-trx-admin');
-      if (json.status !== 'ok' || json.data.length === 0) { el.innerHTML = '<div class="kosong">Belum ada transaksi</div>'; return; }
+      if (json.status !== 'ok' || json.data.length === 0) {
+        el.innerHTML = '<div class="kosong">Belum ada transaksi</div>';
+        return;
+      }
       el.innerHTML = json.data.slice(0,10).map(function(t){
         return '<div class="item-card"><div class="item-card-title">' + t.keterangan + '</div><div class="item-card-sub">' + formatTgl(t.tanggal) + ' · ' + t.dicatat_oleh + '</div><div class="item-card-footer"><span class="item-badge ' + (t.jenis==='masuk'?'badge-masuk':'badge-keluar') + '">' + (t.jenis==='masuk'?'Penerimaan':'Pengeluaran') + '</span><strong>' + (t.jenis==='masuk'?'+':'-') + ' ' + rupiah(t.jumlah) + '</strong></div></div>';
       }).join('');
@@ -573,10 +626,15 @@ function simpanJadwal() {
   }, function(json){
     btn.disabled = false;
     btn.textContent = '💾 Simpan Jadwal';
-    if (json && json.status === 'ok') {
+    if (json.status === 'ok') {
       showToast('Jadwal berhasil disimpan!', 'sukses');
-      if (SLUG_MASJID) localStorage.removeItem('jadwal_' + SLUG_MASJID);
+      document.getElementById('jdw-nama').value = '';
+      document.getElementById('jdw-jadwal').value = '';
+      document.getElementById('jdw-lokasi').value = '';
+      document.getElementById('jdw-keterangan').value = '';
       loadJadwalAdmin();
+    } else {
+      showToast('Gagal: ' + json.message, 'error');
     }
   });
 }
@@ -586,9 +644,12 @@ function loadJadwalAdmin() {
     .then(function(r){ return r.json(); })
     .then(function(json){
       var el = document.getElementById('list-jadwal-admin');
-      if (json.status !== 'ok' || json.data.length === 0) { el.innerHTML = '<div class="kosong">Belum ada jadwal</div>'; return; }
+      if (json.status !== 'ok' || json.data.length === 0) {
+        el.innerHTML = '<div class="kosong">Belum ada jadwal</div>';
+        return;
+      }
       el.innerHTML = json.data.map(function(j){
-        return '<div class="item-card"><div class="item-card-title">' + j.nama_kegiatan + '</div><div class="item-card-sub">' + j.jadwal + '</div></div>';
+        return '<div class="item-card"><div class="item-card-title">' + j.nama_kegiatan + '</div><div class="item-card-sub">' + j.jadwal + (j.lokasi?' · '+j.lokasi:'') + '</div><div class="item-card-footer"><span class="item-badge badge-aktif">' + (j.hari||'Rutin') + '</span></div></div>';
       }).join('');
     });
 }
@@ -598,7 +659,10 @@ function loadJadwalAdmin() {
 // ============================================
 function simpanPengumuman() {
   var judul = document.getElementById('peng-judul').value.trim();
-  if (!judul) { showToast('Judul wajib diisi!', 'error'); return; }
+  var isi = document.getElementById('peng-isi').value.trim();
+  var mulai = document.getElementById('peng-mulai').value;
+  var selesai = document.getElementById('peng-selesai').value;
+  if (!judul || !isi || !mulai || !selesai) { showToast('Judul, isi, dan tanggal wajib diisi!', 'error'); return; }
 
   var btn = document.querySelector('#tab-pengumuman .btn-submit');
   btn.disabled = true;
@@ -609,17 +673,23 @@ function simpanPengumuman() {
     id_masjid: ID_MASJID,
     tipe: document.getElementById('peng-tipe').value,
     judul: judul,
-    isi: document.getElementById('peng-isi').value,
+    isi: isi,
     ikon: document.getElementById('peng-ikon').value,
-    tanggal_mulai: document.getElementById('peng-mulai').value,
-    tanggal_selesai: document.getElementById('peng-selesai').value
+    tanggal_mulai: mulai,
+    tanggal_selesai: selesai,
+    target_infaq: parseFloat(document.getElementById('peng-target').value) || 0,
+    judul_infaq: document.getElementById('peng-judul-infaq').value,
+    telepon_wa: document.getElementById('peng-wa').value
   }, function(json){
     btn.disabled = false;
     btn.textContent = '💾 Simpan Pengumuman';
-    if (json && json.status === 'ok') {
+    if (json.status === 'ok') {
       showToast('Pengumuman berhasil disimpan!', 'sukses');
-      if (SLUG_MASJID) localStorage.removeItem('pengumuman_' + SLUG_MASJID);
+      document.getElementById('peng-judul').value = '';
+      document.getElementById('peng-isi').value = '';
       loadPengumumanAdmin();
+    } else {
+      showToast('Gagal: ' + json.message, 'error');
     }
   });
 }
@@ -629,35 +699,75 @@ function loadPengumumanAdmin() {
     .then(function(r){ return r.json(); })
     .then(function(json){
       var el = document.getElementById('list-peng-admin');
-      if (json.status !== 'ok' || json.data.length === 0) { el.innerHTML = '<div class="kosong">Tidak ada pengumuman</div>'; return; }
+      if (json.status !== 'ok' || json.data.length === 0) {
+        el.innerHTML = '<div class="kosong">Tidak ada pengumuman aktif</div>';
+        return;
+      }
       el.innerHTML = json.data.map(function(p){
-        return '<div class="item-card"><div class="item-card-title">' + p.judul + '</div></div>';
+        return '<div class="item-card"><div class="item-card-title">' + (p.ikon||'📢') + ' ' + p.judul + '</div><div class="item-card-sub">' + p.isi.substring(0,80) + '...</div><div class="item-card-footer"><span class="item-badge badge-aktif">' + p.tipe + '</span><span style="font-size:11px;color:var(--muted)">s/d ' + formatTgl(p.tanggal_selesai) + '</span></div></div>';
       }).join('');
     });
 }
 
 // ============================================
-// GALERI
+// GALERI & UPLOAD IMGBB
 // ============================================
+function uploadKeImgBB(input) {
+  if (!input.files || input.files.length === 0) return;
+  var file = input.files[0];
+  var formData = new FormData();
+  formData.append('image', file);
+  
+  document.getElementById('status-upload').style.display = 'block';
+  document.getElementById('gal-url').value = '';
+  
+  fetch('https://api.imgbb.com/1/upload?key=13e22ae09205fa7788ec0cd06e94cfaa', {
+    method: 'POST',
+    body: formData
+  })
+  .then(function(response) { return response.json(); })
+  .then(function(result) {
+    document.getElementById('status-upload').style.display = 'none';
+    if(result.success) {
+      document.getElementById('gal-url').value = result.data.url;
+      showToast('Foto berhasil diupload!', 'sukses');
+    } else {
+      showToast('Gagal upload foto', 'error');
+    }
+  })
+  .catch(function(error) {
+    document.getElementById('status-upload').style.display = 'none';
+    showToast('Error koneksi upload', 'error');
+  });
+}
+
 function simpanGaleri() {
+  var judul = document.getElementById('gal-judul').value.trim();
   var url = document.getElementById('gal-url').value.trim();
-  if (!url) return;
+  if (!judul || !url) { showToast('Judul dan URL wajib diisi!', 'error'); return; }
 
   var btn = document.querySelector('#tab-galeri .btn-submit');
   btn.disabled = true;
+  btn.textContent = 'Menyimpan...';
 
   apiPost({
     action: 'addGaleri',
     id_masjid: ID_MASJID,
-    judul: document.getElementById('gal-judul').value,
+    judul: judul,
     tipe: document.getElementById('gal-tipe').value,
-    url: url
+    url: url,
+    keterangan: document.getElementById('gal-ket').value
   }, function(json){
     btn.disabled = false;
-    if (json && json.status === 'ok') {
-      showToast('Galeri disimpan!', 'sukses');
-      if (SLUG_MASJID) localStorage.removeItem('galeri_' + SLUG_MASJID);
+    btn.textContent = '💾 Simpan Galeri';
+    if (json.status === 'ok') {
+      showToast('Galeri berhasil disimpan!', 'sukses');
+      document.getElementById('gal-judul').value = '';
+      document.getElementById('gal-url').value = '';
+      document.getElementById('gal-ket').value = '';
       loadGaleriAdmin();
+    } else {
+      showToast('Gagal: ' + json.message, 'error');
     }
   });
 }
@@ -667,8 +777,13 @@ function loadGaleriAdmin() {
     .then(function(r){ return r.json(); })
     .then(function(json){
       var el = document.getElementById('list-gal-admin');
-      if (json.status !== 'ok' || json.data.length === 0) { el.innerHTML = '<div class="kosong">Belum ada galeri</div>'; return; }
-      el.innerHTML = json.data.map(function(g){ return '<div class="item-card"><div class="item-card-title">' + g.judul + '</div></div>'; }).join('');
+      if (json.status !== 'ok' || json.data.length === 0) {
+        el.innerHTML = '<div class="kosong">Belum ada galeri</div>';
+        return;
+      }
+      el.innerHTML = json.data.map(function(g){
+        return '<div class="item-card"><div class="item-card-title">' + g.judul + '</div><div class="item-card-sub">' + g.url.substring(0,50) + '...</div><div class="item-card-footer"><span class="item-badge badge-aktif">' + g.tipe + '</span><span style="font-size:11px;color:var(--muted)">' + formatTgl(g.tanggal) + '</span></div></div>';
+      }).join('');
     });
 }
 
@@ -698,18 +813,20 @@ function loadProfilAdmin() {
       document.getElementById('prof-lat').value = d.latitude || '';
       document.getElementById('prof-lon').value = d.longitude || '';
 
-      // Tampilkan Link URL Sesuai Permintaan (Bisa langsung disalin)
+      // Tampilkan link website
+      var slug = d.slug || SLUG_MASJID || '';
+      var link = slug ? 'https://powerofmasjid.github.io/masjid.html?masjid=' + slug : 'Slug belum diisi';
+      document.getElementById('link-website').textContent = link;
       if (d.slug) SLUG_MASJID = d.slug;
-      var linkTampil = SLUG_MASJID ? 'https://powerofmasjid.github.io/masjid.html?masjid=' + SLUG_MASJID : 'Slug belum tersedia';
-      document.getElementById('link-website').textContent = linkTampil;
     });
 }
 
 function salinLink() {
-  if (!SLUG_MASJID) { showToast('Gagal menyalin, slug kosong!', 'error'); return; }
-  var link = 'https://powerofmasjid.github.io/masjid.html?masjid=' + SLUG_MASJID;
+  var slug = SLUG_MASJID || '';
+  if (!slug) { showToast('Slug masjid belum diisi!', 'error'); return; }
+  var link = 'https://powerofmasjid.github.io/masjid.html?masjid=' + slug;
   navigator.clipboard.writeText(link).then(function(){
-    showToast('Link tersalin ke clipboard!', 'sukses');
+    showToast('Link berhasil disalin!', 'sukses');
   });
 }
 
@@ -740,16 +857,12 @@ function simpanProfil() {
   }, function(json){
     btn.disabled = false;
     btn.textContent = '💾 Simpan Perubahan';
-    if (json && json.status === 'ok') {
+    if (json.status === 'ok') {
       showToast('Profil masjid berhasil diupdate!', 'sukses');
-      
-      // POIN 2: Menghapus cache saat simpan profil sukses
-      if (SLUG_MASJID) {
-        localStorage.removeItem('masjid_' + SLUG_MASJID);
-      }
-      
+      // Hapus cache agar website langsung update
+      if (SLUG_MASJID) localStorage.removeItem('masjid_' + SLUG_MASJID);
     } else {
-      showToast('Gagal: ' + (json ? json.message : 'Unknown error'), 'error');
+      showToast('Gagal: ' + json.message, 'error');
     }
   });
 }
@@ -763,8 +876,7 @@ function init() {
     try {
       ADMIN_DATA = JSON.parse(saved);
       ID_MASJID = ADMIN_DATA.id_masjid;
-      SLUG_MASJID = ADMIN_DATA.slug || '';
-      tampilAdmin();
+      ambilSlugMasjid();
     } catch(e) {
       localStorage.removeItem('pow_admin');
       document.getElementById('login-wrap').classList.add('show');
@@ -773,10 +885,10 @@ function init() {
     document.getElementById('login-wrap').classList.add('show');
   }
   document.getElementById('splash').classList.add('hide');
-  setTimeout(function(){ document.getElementById('splash').style.display='none'; }, 500);
+  setTimeout(function(){ document.getElementById('splash').style.display='none'; }, 600);
 }
 
-window.onload = init;
+init();
 </script>
 </body>
 </html>
