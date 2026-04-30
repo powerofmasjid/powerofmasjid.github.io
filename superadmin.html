@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="id">
 <head>
 <meta charset="UTF-8">
@@ -221,8 +221,8 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg-dark);
 <div class="toast" id="toast">Notifikasi</div>
 
 <script>
-// PASTIKAN API_URL INI BENAR SESUAI MILIK BAPAK
-const API_URL = 'https://script.google.com/macros/s/AKfycbyqxGZb7NzDFPRHTXnpfLo6yqc3LOVwb6DsFOOoZZLXCfLI-iYH0g9CeeSm9puhXcJHXg/exec';
+// LINK API BARU
+const API_URL = 'https://script.google.com/macros/s/AKfycbxrRV5Vq1cHe0sKO20MMUVmBGHwA7QwAUu7LrJ7NPfjhn3T2u-2eVZQj6fYtMUwm9-cOA/exec';
 
 function showToast(msg) {
   var t = document.getElementById('toast');
@@ -249,8 +249,7 @@ function prosesLogin() {
   btn.disabled = true;
   btn.textContent = 'MEMVERIFIKASI...';
 
-  // Sementara kita pakai hardcode di frontend sebelum API siap (Ganti dengan PIN rahasia Bapak)
-  // Nanti di Tahap 2 kita ubah ke cek via API Google Script
+  // SILAKAN GANTI ANGKA 999999 DI BAWAH INI MENJADI PIN RAHASIA BAPAK
   if (pin === "999999") { 
     localStorage.setItem('is_superadmin', 'true');
     masukSistem();
@@ -276,25 +275,21 @@ function masukSistem() {
 // 2. LOAD DATA DINAMIS
 async function loadDashboardData() {
   try {
-    // Memanggil API khusus superadmin (Nanti harus disiapkan di kode.gs)
     const res = await fetch(API_URL + '?action=getSuperadminData');
     const json = await res.json();
     
     if (json.status === 'ok') {
       const data = json.data;
       
-      // Update Statistik
       document.getElementById('stat-masjid').textContent = data.total_masjid;
       document.getElementById('stat-kas').textContent = 'Rp ' + Number(data.total_kas).toLocaleString('id-ID');
       
-      // Update Ekspedisi Tracker
       let persen = (data.total_masjid / 10) * 100;
       if(persen > 100) persen = 100;
       document.getElementById('ekspedisi-bar').style.width = persen + '%';
       document.getElementById('ekspedisi-text').textContent = 'Tercapai: ' + data.total_masjid + ' Masjid';
       document.getElementById('ekspedisi-persen').textContent = persen + '%';
       
-      // Update List Masjid
       const listContainer = document.getElementById('list-masjid-container');
       if(data.list_masjid && data.list_masjid.length > 0) {
         listContainer.innerHTML = data.list_masjid.map(m => `
@@ -347,7 +342,7 @@ async function tambahMasjidBaru() {
       document.getElementById('reg-slug').value = '';
       document.getElementById('reg-email').value = '';
       document.getElementById('reg-pin').value = '';
-      loadDashboardData(); // Refresh list
+      loadDashboardData(); 
     } else {
       showToast('Gagal: ' + json.message);
     }
