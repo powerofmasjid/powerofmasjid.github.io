@@ -23,9 +23,6 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#F7F7F5;color:#1A1A1A
 .login-logo{font-family:'Amiri',serif;font-size:40px;color:var(--primary);margin-bottom:0.5rem;}
 .login-title{font-size:18px;font-weight:600;color:var(--text);margin-bottom:4px;}
 .login-sub{font-size:13px;color:var(--muted);margin-bottom:1.5rem;line-height:1.5;}
-.btn-google{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;background:white;border:1px solid var(--border);color:var(--text);padding:12px;border-radius:10px;font-size:14px;font-weight:500;cursor:pointer;font-family:inherit;margin-bottom:10px;}
-.btn-google:hover{background:#f5f5f5;}
-.google-icon{width:20px;height:20px;}
 .login-note{font-size:11px;color:var(--muted);line-height:1.5;}
 
 /* HEADER ADMIN */
@@ -68,7 +65,6 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#F7F7F5;color:#1A1A1A
 .badge-masuk{background:var(--primary-light);color:var(--primary);}
 .badge-keluar{background:#FEF2F2;color:#DC2626;}
 .badge-aktif{background:var(--primary-light);color:var(--primary);}
-.badge-nonaktif{background:#F3F4F6;color:var(--muted);}
 
 /* PROFIL */
 .profil-section{background:white;border:1px solid var(--border);border-radius:14px;padding:1rem;margin-bottom:1rem;}
@@ -165,6 +161,12 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#F7F7F5;color:#1A1A1A
         <label class="form-label">Jumlah (Rp)</label>
         <input type="number" class="form-input" id="trx-jumlah" placeholder="Contoh: 500000">
       </div>
+      <div class="form-group">
+        <label class="form-label">Upload Bukti Transaksi/Nota (Opsional)</label>
+        <input type="file" accept="image/*" class="form-input" style="margin-bottom:8px; cursor:pointer;" onchange="uploadKeImgBB(this, 'trx-bukti', 'status-upload-trx')">
+        <div id="status-upload-trx" style="font-size:11px; color:var(--primary); margin-bottom:8px; display:none;">⏳ Sedang mengunggah bukti transaksi...</div>
+        <input type="text" class="form-input" id="trx-bukti" placeholder="URL otomatis terisi..." readonly>
+      </div>
       <button class="btn-submit" onclick="simpanTransaksi()">💾 Simpan Transaksi</button>
 
       <div class="divider"></div>
@@ -180,22 +182,8 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#F7F7F5;color:#1A1A1A
         <input type="text" class="form-input" id="jdw-nama" placeholder="Contoh: Kulsam, Pengajian Ibu-Ibu...">
       </div>
       <div class="form-group">
-        <label class="form-label">Jadwal / Waktu</label>
-        <input type="text" class="form-input" id="jdw-jadwal" placeholder="Contoh: Setiap Ahad, 08.00 WIB">
-      </div>
-      <div class="form-group">
-        <label class="form-label">Hari</label>
-        <select class="form-select" id="jdw-hari">
-          <option value="">-- Pilih Hari --</option>
-          <option>Ahad</option>
-          <option>Senin</option>
-          <option>Selasa</option>
-          <option>Rabu</option>
-          <option>Kamis</option>
-          <option>Jumat</option>
-          <option>Sabtu</option>
-          <option>Setiap Hari</option>
-        </select>
+        <label class="form-label">Jadwal / Waktu Bebas</label>
+        <input type="text" class="form-input" id="jdw-jadwal" placeholder="Contoh: Setiap Ahad Pagi, 08.00 WIB">
       </div>
       <div class="form-group">
         <label class="form-label">Lokasi (opsional)</label>
@@ -217,9 +205,10 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#F7F7F5;color:#1A1A1A
       <div class="section-title">Tambah Pengumuman</div>
       <div class="form-group">
         <label class="form-label">Tipe</label>
-        <select class="form-select" id="peng-tipe">
+        <select class="form-select" id="peng-tipe" onchange="document.getElementById('peng-ikon').value = this.options[this.selectedIndex].text.split(' ')[0];">
           <option value="UMUM">📢 Umum</option>
           <option value="KURBAN">🐄 Kurban Idul Adha</option>
+          <option value="SAPI_KOLEKTIF">🐂 Patungan Sapi Kolektif</option>
           <option value="RAMADAN">🌙 Ramadan</option>
           <option value="MAULID">☪️ Maulid Nabi</option>
           <option value="ISRA_MIRAJ">✨ Isra Mi'raj</option>
@@ -236,8 +225,8 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#F7F7F5;color:#1A1A1A
         <textarea class="form-textarea" id="peng-isi" placeholder="Isi detail pengumuman..."></textarea>
       </div>
       <div class="form-group">
-        <label class="form-label">Ikon (emoji)</label>
-        <input type="text" class="form-input" id="peng-ikon" placeholder="Contoh: 🐄 atau 🌙">
+        <label class="form-label">Ikon (emoji) — Terisi Otomatis, Bisa Diedit</label>
+        <input type="text" class="form-input" id="peng-ikon" placeholder="Contoh: 🐄 atau 🌙" value="📢">
       </div>
       <div class="form-row">
         <div class="form-group">
@@ -249,16 +238,20 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#F7F7F5;color:#1A1A1A
           <input type="date" class="form-input" id="peng-selesai">
         </div>
       </div>
+      
+      <div class="divider"></div>
+      <div class="section-title" style="font-size:14px;">Pengaturan Target & Patungan (Opsional)</div>
+      
       <div class="form-group">
-        <label class="form-label">Target Infaq (Rp) — opsional</label>
-        <input type="number" class="form-input" id="peng-target" placeholder="Kosongkan jika tidak ada target">
+        <label class="form-label">Target Dana / Patungan (Rp)</label>
+        <input type="number" class="form-input" id="peng-target" placeholder="Contoh: 21000000 (Untuk Sapi Kolektif)">
       </div>
       <div class="form-group">
-        <label class="form-label">Judul Infaq — opsional</label>
-        <input type="text" class="form-input" id="peng-judul-infaq" placeholder="Contoh: Infaq Buka Puasa Ramadan">
+        <label class="form-label">Judul Progress Bar</label>
+        <input type="text" class="form-input" id="peng-judul-infaq" placeholder="Contoh: 1 Sapi (7 Orang) atau Target Infaq Ramadan">
       </div>
       <div class="form-group">
-        <label class="form-label">Nomor WA Kontak — opsional</label>
+        <label class="form-label">Nomor WA Kontak Panitia</label>
         <input type="text" class="form-input" id="peng-wa" placeholder="Contoh: 628123456789">
       </div>
       <button class="btn-submit" onclick="simpanPengumuman()">💾 Simpan Pengumuman</button>
@@ -284,9 +277,9 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#F7F7F5;color:#1A1A1A
       </div>
       <div class="form-group">
         <label class="form-label">Upload Foto / Link YouTube</label>
-        <input type="file" id="gal-file" accept="image/*" class="form-input" style="margin-bottom:8px; cursor:pointer;" onchange="uploadKeImgBB(this)">
-        <div id="status-upload" style="font-size:11px; color:var(--primary); margin-bottom:8px; display:none;">⏳ Sedang mengunggah ke server...</div>
-        <input type="text" class="form-input" id="gal-url" placeholder="URL akan otomatis terisi disini...">
+        <input type="file" accept="image/*" class="form-input" style="margin-bottom:8px; cursor:pointer;" onchange="uploadKeImgBB(this, 'gal-url', 'status-upload-gal')">
+        <div id="status-upload-gal" style="font-size:11px; color:var(--primary); margin-bottom:8px; display:none;">⏳ Sedang mengunggah ke server...</div>
+        <input type="text" class="form-input" id="gal-url" placeholder="URL otomatis terisi (atau ketik URL YouTube)...">
       </div>
       <div class="form-group">
         <label class="form-label">Keterangan (opsional)</label>
@@ -352,12 +345,16 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#F7F7F5;color:#1A1A1A
           </select>
         </div>
         <div class="form-group">
-          <label class="form-label">URL Logo Masjid</label>
-          <input type="text" class="form-input" id="prof-logo" placeholder="https://link-foto-logo.jpg">
+          <label class="form-label">Upload Logo Masjid</label>
+          <input type="file" accept="image/*" class="form-input" style="margin-bottom:8px; cursor:pointer;" onchange="uploadKeImgBB(this, 'prof-logo', 'status-upload-logo')">
+          <div id="status-upload-logo" style="font-size:11px; color:var(--primary); margin-bottom:8px; display:none;">⏳ Sedang mengunggah logo...</div>
+          <input type="text" class="form-input" id="prof-logo" placeholder="URL otomatis terisi..." readonly>
         </div>
         <div class="form-group">
-          <label class="form-label">URL QRIS</label>
-          <input type="text" class="form-input" id="prof-qris" placeholder="https://link-foto-qris.jpg">
+          <label class="form-label">Upload QRIS Masjid</label>
+          <input type="file" accept="image/*" class="form-input" style="margin-bottom:8px; cursor:pointer;" onchange="uploadKeImgBB(this, 'prof-qris', 'status-upload-qris')">
+          <div id="status-upload-qris" style="font-size:11px; color:var(--primary); margin-bottom:8px; display:none;">⏳ Sedang mengunggah QRIS...</div>
+          <input type="text" class="form-input" id="prof-qris" placeholder="URL otomatis terisi..." readonly>
         </div>
       </div>
 
@@ -517,7 +514,6 @@ function tampilAdmin() {
   document.getElementById('admin-content').style.display = 'block';
   document.getElementById('admin-nama').textContent = ADMIN_DATA.nama + ' (' + ADMIN_DATA.role + ')';
 
-  // Load nama masjid dan slug
   fetch(API_URL + '?action=getMasjid&id_masjid=' + ID_MASJID)
     .then(function(r){ return r.json(); })
     .then(function(json){
@@ -527,7 +523,6 @@ function tampilAdmin() {
       }
     });
 
-  // Set tanggal hari ini
   var today = new Date().toISOString().split('T')[0];
   document.getElementById('trx-tanggal').value = today;
 
@@ -552,6 +547,38 @@ function rupiah(n) { return 'Rp ' + Number(n).toLocaleString('id-ID'); }
 function formatTgl(t) { var d = new Date(t); return isNaN(d) ? t : d.toLocaleDateString('id-ID',{day:'numeric',month:'short',year:'numeric'}); }
 
 // ============================================
+// FUNGSI UPLOAD GLOBAL (IMGBB)
+// ============================================
+function uploadKeImgBB(input, targetId, statusId) {
+  if (!input.files || input.files.length === 0) return;
+  var file = input.files[0];
+  var formData = new FormData();
+  formData.append('image', file);
+  
+  document.getElementById(statusId).style.display = 'block';
+  document.getElementById(targetId).value = '';
+  
+  fetch('https://api.imgbb.com/1/upload?key=13e22ae09205fa7788ec0cd06e94cfaa', {
+    method: 'POST',
+    body: formData
+  })
+  .then(function(response) { return response.json(); })
+  .then(function(result) {
+    document.getElementById(statusId).style.display = 'none';
+    if(result.success) {
+      document.getElementById(targetId).value = result.data.url;
+      showToast('Foto berhasil diupload!', 'sukses');
+    } else {
+      showToast('Gagal upload foto', 'error');
+    }
+  })
+  .catch(function(error) {
+    document.getElementById(statusId).style.display = 'none';
+    showToast('Error koneksi upload', 'error');
+  });
+}
+
+// ============================================
 // TRANSAKSI
 // ============================================
 function simpanTransaksi() {
@@ -559,6 +586,7 @@ function simpanTransaksi() {
   var jumlah = document.getElementById('trx-jumlah').value;
   var tanggal = document.getElementById('trx-tanggal').value;
   var jenis = document.getElementById('trx-jenis').value;
+  var bukti = document.getElementById('trx-bukti').value.trim();
 
   if (!keterangan || !jumlah || !tanggal) { showToast('Lengkapi semua field!', 'error'); return; }
 
@@ -573,7 +601,8 @@ function simpanTransaksi() {
     keterangan: keterangan,
     jenis: jenis,
     jumlah: parseFloat(jumlah),
-    dicatat_oleh: ADMIN_DATA.nama
+    dicatat_oleh: ADMIN_DATA.nama,
+    bukti_url: bukti
   }, function(json){
     btn.disabled = false;
     btn.textContent = '💾 Simpan Transaksi';
@@ -581,6 +610,7 @@ function simpanTransaksi() {
       showToast('Transaksi berhasil disimpan!', 'sukses');
       document.getElementById('trx-keterangan').value = '';
       document.getElementById('trx-jumlah').value = '';
+      document.getElementById('trx-bukti').value = '';
       loadTransaksiAdmin();
     } else {
       showToast('Gagal: ' + json.message, 'error');
@@ -620,7 +650,7 @@ function simpanJadwal() {
     id_masjid: ID_MASJID,
     nama_kegiatan: nama,
     jadwal: jadwal,
-    hari: document.getElementById('jdw-hari').value,
+    hari: '', // Dikosongkan karena form hari sudah dihapus
     lokasi: document.getElementById('jdw-lokasi').value,
     keterangan: document.getElementById('jdw-keterangan').value
   }, function(json){
@@ -649,7 +679,7 @@ function loadJadwalAdmin() {
         return;
       }
       el.innerHTML = json.data.map(function(j){
-        return '<div class="item-card"><div class="item-card-title">' + j.nama_kegiatan + '</div><div class="item-card-sub">' + j.jadwal + (j.lokasi?' · '+j.lokasi:'') + '</div><div class="item-card-footer"><span class="item-badge badge-aktif">' + (j.hari||'Rutin') + '</span></div></div>';
+        return '<div class="item-card"><div class="item-card-title">' + j.nama_kegiatan + '</div><div class="item-card-sub">' + j.jadwal + (j.lokasi?' · '+j.lokasi:'') + '</div></div>';
       }).join('');
     });
 }
@@ -710,37 +740,8 @@ function loadPengumumanAdmin() {
 }
 
 // ============================================
-// GALERI & UPLOAD IMGBB
+// GALERI
 // ============================================
-function uploadKeImgBB(input) {
-  if (!input.files || input.files.length === 0) return;
-  var file = input.files[0];
-  var formData = new FormData();
-  formData.append('image', file);
-  
-  document.getElementById('status-upload').style.display = 'block';
-  document.getElementById('gal-url').value = '';
-  
-  fetch('https://api.imgbb.com/1/upload?key=13e22ae09205fa7788ec0cd06e94cfaa', {
-    method: 'POST',
-    body: formData
-  })
-  .then(function(response) { return response.json(); })
-  .then(function(result) {
-    document.getElementById('status-upload').style.display = 'none';
-    if(result.success) {
-      document.getElementById('gal-url').value = result.data.url;
-      showToast('Foto berhasil diupload!', 'sukses');
-    } else {
-      showToast('Gagal upload foto', 'error');
-    }
-  })
-  .catch(function(error) {
-    document.getElementById('status-upload').style.display = 'none';
-    showToast('Error koneksi upload', 'error');
-  });
-}
-
 function simpanGaleri() {
   var judul = document.getElementById('gal-judul').value.trim();
   var url = document.getElementById('gal-url').value.trim();
