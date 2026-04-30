@@ -381,16 +381,13 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#F7F7F5;color:#1A1A1A
 <div class="toast" id="toast">Tersimpan!</div>
 
 <script>
-// PASTIKAN API_URL INI BENAR
-var API_URL = 'https://script.google.com/macros/s/AKfycbyqxGZb7NzDFPRHTXnpfLo6yqc3LOVwb6DsFOOoZZLXCfLI-iYH0g9CeeSm9puhXcJHXg/exec';
+// LINK API BARU
+var API_URL = 'https://script.google.com/macros/s/AKfycbxrRV5Vq1cHe0sKO20MMUVmBGHwA7QwAUu7LrJ7NPfjhn3T2u-2eVZQj6fYtMUwm9-cOA/exec';
 var ADMIN_DATA = null;
 var ID_MASJID = '';
 var SLUG_MASJID = '';
 var TABS = ['transaksi','jadwal','pengumuman','galeri','profil'];
 
-// ============================================
-// TOAST
-// ============================================
 function showToast(msg, type) {
   var t = document.getElementById('toast');
   t.textContent = msg;
@@ -398,9 +395,6 @@ function showToast(msg, type) {
   setTimeout(function(){ t.className = 'toast'; }, 3000);
 }
 
-// ============================================
-// TAB
-// ============================================
 function gotoTab(tab) {
   TABS.forEach(function(t){
     document.getElementById('tab-' + t).style.display = t === tab ? 'block' : 'none';
@@ -415,9 +409,6 @@ function gotoTab(tab) {
   if (tab === 'profil') loadProfilAdmin();
 }
 
-// ============================================
-// LOGIN EMAIL + PIN
-// ============================================
 function prosesLogin() {
   var gmail = document.getElementById('login-gmail').value.trim().toLowerCase();
   var pin = document.getElementById('login-pin').value.trim();
@@ -436,10 +427,7 @@ function prosesLogin() {
       if (json.status === 'ok') {
         ADMIN_DATA = json.data;
         ID_MASJID = json.data.id_masjid;
-        
-        // POIN 1: Menangkap SLUG_MASJID dari data login
         SLUG_MASJID = ADMIN_DATA.slug || '';
-        
         localStorage.setItem('pow_admin', JSON.stringify(json.data));
         tampilAdmin();
       } else {
@@ -481,14 +469,8 @@ function tampilAdmin() {
   loadTransaksiAdmin();
 }
 
-// ============================================
-// API POST
-// ============================================
 function apiPost(data, callback) {
-  fetch(API_URL, {
-    method: 'POST',
-    body: JSON.stringify(data)
-  })
+  fetch(API_URL, { method: 'POST', body: JSON.stringify(data) })
   .then(function(r){ return r.json(); })
   .then(callback)
   .catch(function(){ showToast('Gagal menghubungi server', 'error'); });
@@ -497,9 +479,6 @@ function apiPost(data, callback) {
 function rupiah(n) { return 'Rp ' + Number(n).toLocaleString('id-ID'); }
 function formatTgl(t) { var d = new Date(t); return isNaN(d) ? t : d.toLocaleDateString('id-ID',{day:'numeric',month:'short',year:'numeric'}); }
 
-// ============================================
-// TRANSAKSI
-// ============================================
 function simpanTransaksi() {
   var keterangan = document.getElementById('trx-keterangan').value.trim();
   var jumlah = document.getElementById('trx-jumlah').value;
@@ -513,13 +492,7 @@ function simpanTransaksi() {
   btn.textContent = 'Menyimpan...';
 
   apiPost({
-    action: 'addTransaksi',
-    id_masjid: ID_MASJID,
-    tanggal: tanggal,
-    keterangan: keterangan,
-    jenis: jenis,
-    jumlah: parseFloat(jumlah),
-    dicatat_oleh: ADMIN_DATA.nama
+    action: 'addTransaksi', id_masjid: ID_MASJID, tanggal: tanggal, keterangan: keterangan, jenis: jenis, jumlah: parseFloat(jumlah), dicatat_oleh: ADMIN_DATA.nama
   }, function(json){
     btn.disabled = false;
     btn.textContent = '💾 Simpan Transaksi';
@@ -550,9 +523,6 @@ function loadTransaksiAdmin() {
     });
 }
 
-// ============================================
-// JADWAL
-// ============================================
 function simpanJadwal() {
   var nama = document.getElementById('jdw-nama').value.trim();
   var jadwal = document.getElementById('jdw-jadwal').value.trim();
@@ -563,13 +533,7 @@ function simpanJadwal() {
   btn.textContent = 'Menyimpan...';
 
   apiPost({
-    action: 'addJadwal',
-    id_masjid: ID_MASJID,
-    nama_kegiatan: nama,
-    jadwal: jadwal,
-    hari: document.getElementById('jdw-hari').value,
-    lokasi: document.getElementById('jdw-lokasi').value,
-    keterangan: document.getElementById('jdw-keterangan').value
+    action: 'addJadwal', id_masjid: ID_MASJID, nama_kegiatan: nama, jadwal: jadwal, hari: document.getElementById('jdw-hari').value, lokasi: document.getElementById('jdw-lokasi').value, keterangan: document.getElementById('jdw-keterangan').value
   }, function(json){
     btn.disabled = false;
     btn.textContent = '💾 Simpan Jadwal';
@@ -593,9 +557,6 @@ function loadJadwalAdmin() {
     });
 }
 
-// ============================================
-// PENGUMUMAN
-// ============================================
 function simpanPengumuman() {
   var judul = document.getElementById('peng-judul').value.trim();
   if (!judul) { showToast('Judul wajib diisi!', 'error'); return; }
@@ -605,14 +566,7 @@ function simpanPengumuman() {
   btn.textContent = 'Menyimpan...';
 
   apiPost({
-    action: 'addPengumuman',
-    id_masjid: ID_MASJID,
-    tipe: document.getElementById('peng-tipe').value,
-    judul: judul,
-    isi: document.getElementById('peng-isi').value,
-    ikon: document.getElementById('peng-ikon').value,
-    tanggal_mulai: document.getElementById('peng-mulai').value,
-    tanggal_selesai: document.getElementById('peng-selesai').value
+    action: 'addPengumuman', id_masjid: ID_MASJID, tipe: document.getElementById('peng-tipe').value, judul: judul, isi: document.getElementById('peng-isi').value, ikon: document.getElementById('peng-ikon').value, tanggal_mulai: document.getElementById('peng-mulai').value, tanggal_selesai: document.getElementById('peng-selesai').value
   }, function(json){
     btn.disabled = false;
     btn.textContent = '💾 Simpan Pengumuman';
@@ -636,9 +590,6 @@ function loadPengumumanAdmin() {
     });
 }
 
-// ============================================
-// GALERI
-// ============================================
 function simpanGaleri() {
   var url = document.getElementById('gal-url').value.trim();
   if (!url) return;
@@ -647,11 +598,7 @@ function simpanGaleri() {
   btn.disabled = true;
 
   apiPost({
-    action: 'addGaleri',
-    id_masjid: ID_MASJID,
-    judul: document.getElementById('gal-judul').value,
-    tipe: document.getElementById('gal-tipe').value,
-    url: url
+    action: 'addGaleri', id_masjid: ID_MASJID, judul: document.getElementById('gal-judul').value, tipe: document.getElementById('gal-tipe').value, url: url
   }, function(json){
     btn.disabled = false;
     if (json && json.status === 'ok') {
@@ -672,9 +619,6 @@ function loadGaleriAdmin() {
     });
 }
 
-// ============================================
-// PROFIL
-// ============================================
 function loadProfilAdmin() {
   fetch(API_URL + '?action=getMasjid&id_masjid=' + ID_MASJID)
     .then(function(r){ return r.json(); })
@@ -698,7 +642,6 @@ function loadProfilAdmin() {
       document.getElementById('prof-lat').value = d.latitude || '';
       document.getElementById('prof-lon').value = d.longitude || '';
 
-      // Tampilkan Link URL Sesuai Permintaan (Bisa langsung disalin)
       if (d.slug) SLUG_MASJID = d.slug;
       var linkTampil = SLUG_MASJID ? 'https://powerofmasjid.github.io/masjid.html?masjid=' + SLUG_MASJID : 'Slug belum tersedia';
       document.getElementById('link-website').textContent = linkTampil;
@@ -708,9 +651,7 @@ function loadProfilAdmin() {
 function salinLink() {
   if (!SLUG_MASJID) { showToast('Gagal menyalin, slug kosong!', 'error'); return; }
   var link = 'https://powerofmasjid.github.io/masjid.html?masjid=' + SLUG_MASJID;
-  navigator.clipboard.writeText(link).then(function(){
-    showToast('Link tersalin ke clipboard!', 'sukses');
-  });
+  navigator.clipboard.writeText(link).then(function(){ showToast('Link tersalin ke clipboard!', 'sukses'); });
 }
 
 function simpanProfil() {
@@ -719,44 +660,19 @@ function simpanProfil() {
   btn.textContent = 'Menyimpan...';
 
   apiPost({
-    action: 'updateMasjid',
-    id_masjid: ID_MASJID,
-    nama: document.getElementById('prof-nama').value,
-    alamat: document.getElementById('prof-alamat').value,
-    kota: document.getElementById('prof-kota').value,
-    deskripsi: document.getElementById('prof-deskripsi').value,
-    telepon_wa: document.getElementById('prof-wa').value,
-    tema: document.getElementById('prof-tema').value,
-    logo_url: document.getElementById('prof-logo').value,
-    qris_url: document.getElementById('prof-qris').value,
-    rek1_bank: document.getElementById('prof-rek1-bank').value,
-    rek1_nomor: document.getElementById('prof-rek1-nomor').value,
-    rek2_bank: document.getElementById('prof-rek2-bank').value,
-    rek2_nomor: document.getElementById('prof-rek2-nomor').value,
-    rek3_bank: document.getElementById('prof-rek3-bank').value,
-    rek3_nomor: document.getElementById('prof-rek3-nomor').value,
-    latitude: document.getElementById('prof-lat').value,
-    longitude: document.getElementById('prof-lon').value
+    action: 'updateMasjid', id_masjid: ID_MASJID, nama: document.getElementById('prof-nama').value, alamat: document.getElementById('prof-alamat').value, kota: document.getElementById('prof-kota').value, deskripsi: document.getElementById('prof-deskripsi').value, telepon_wa: document.getElementById('prof-wa').value, tema: document.getElementById('prof-tema').value, logo_url: document.getElementById('prof-logo').value, qris_url: document.getElementById('prof-qris').value, rek1_bank: document.getElementById('prof-rek1-bank').value, rek1_nomor: document.getElementById('prof-rek1-nomor').value, rek2_bank: document.getElementById('prof-rek2-bank').value, rek2_nomor: document.getElementById('prof-rek2-nomor').value, rek3_bank: document.getElementById('prof-rek3-bank').value, rek3_nomor: document.getElementById('prof-rek3-nomor').value, latitude: document.getElementById('prof-lat').value, longitude: document.getElementById('prof-lon').value
   }, function(json){
     btn.disabled = false;
     btn.textContent = '💾 Simpan Perubahan';
     if (json && json.status === 'ok') {
       showToast('Profil masjid berhasil diupdate!', 'sukses');
-      
-      // POIN 2: Menghapus cache saat simpan profil sukses
-      if (SLUG_MASJID) {
-        localStorage.removeItem('masjid_' + SLUG_MASJID);
-      }
-      
+      if (SLUG_MASJID) { localStorage.removeItem('masjid_' + SLUG_MASJID); }
     } else {
       showToast('Gagal: ' + (json ? json.message : 'Unknown error'), 'error');
     }
   });
 }
 
-// ============================================
-// INIT
-// ============================================
 function init() {
   var saved = localStorage.getItem('pow_admin');
   if (saved) {
