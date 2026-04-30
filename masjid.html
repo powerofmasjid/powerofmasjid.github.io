@@ -298,18 +298,13 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 <div class="toast" id="toast">Nomor rekening disalin!</div>
 
 <script>
-// PASTIKAN API_URL INI BENAR
-var API_URL = 'https://script.google.com/macros/s/AKfycbyqxGZb7NzDFPRHTXnpfLo6yqc3LOVwb6DsFOOoZZLXCfLI-iYH0g9CeeSm9puhXcJHXg/exec';
+// LINK API BARU
+var API_URL = 'https://script.google.com/macros/s/AKfycbxrRV5Vq1cHe0sKO20MMUVmBGHwA7QwAUu7LrJ7NPfjhn3T2u-2eVZQj6fYtMUwm9-cOA/exec';
 var ID_MASJID = '';
 var CACHE_DURATION = 3600000; // 1 jam
 
-// ============================================
-// CACHE SYSTEM
-// ============================================
 function cacheSet(key, data) {
-  try {
-    localStorage.setItem(key, JSON.stringify({ data: data, time: Date.now() }));
-  } catch(e) {}
+  try { localStorage.setItem(key, JSON.stringify({ data: data, time: Date.now() })); } catch(e) {}
 }
 
 function cacheGet(key) {
@@ -323,36 +318,19 @@ function cacheGet(key) {
 }
 
 function cacheClear(id_masjid) {
-  var keys = ['masjid_' + id_masjid, 'saldo_' + id_masjid, 'transaksi_' + id_masjid, 'jadwal_' + id_masjid, 'pengumuman_' + id_masjid, 'galeri_' + id_masjid, 'sholat_' + id_masjid];
+  var keys = ['masjid_' + id_masjid, 'saldo_' + id_masjid, 'transaksi_' + id_masjid, 'jadwal_' + id_masjid, 'pengumuman_' + id_masjid, 'galeri_' + id_masjid, 'sholat_' + id_masjid, 'iklan_global'];
   keys.forEach(function(k){ localStorage.removeItem(k); });
 }
 
-// ============================================
-// HELPER (Perbaikan SLUG ada di sini)
-// ============================================
 function getSlug() {
   var params = new URLSearchParams(window.location.search);
   return params.get('masjid') || 'annuriyah-tanjungbarat';
 }
 
 function rupiah(n) { return 'Rp ' + Number(n).toLocaleString('id-ID'); }
-
-function formatTgl(t) {
-  var d = new Date(t);
-  if (isNaN(d)) return t;
-  var hari = ['Ahad','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
-  return hari[d.getDay()] + ', ' + d.toLocaleDateString('id-ID', {day:'numeric', month:'short', year:'numeric'});
-}
-
-function formatTglPendek(t) {
-  var d = new Date(t);
-  if (isNaN(d)) return t;
-  return d.toLocaleDateString('id-ID', {day:'numeric', month:'short', year:'numeric'});
-}
-
-function namaHari(idx) {
-  return ['Ahad','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'][idx];
-}
+function formatTgl(t) { var d = new Date(t); return isNaN(d) ? t : ['Ahad','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'][d.getDay()] + ', ' + d.toLocaleDateString('id-ID', {day:'numeric', month:'short', year:'numeric'}); }
+function formatTglPendek(t) { var d = new Date(t); return isNaN(d) ? t : d.toLocaleDateString('id-ID', {day:'numeric', month:'short', year:'numeric'}); }
+function namaHari(idx) { return ['Ahad','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'][idx]; }
 
 function salin(n) {
   navigator.clipboard.writeText(n).then(function(){
@@ -369,27 +347,19 @@ function getBannerClass(tipe) {
   return map[tipe] || 'banner banner-umum';
 }
 
-// ============================================
-// API FETCH DENGAN CACHE
-// ============================================
 async function apiFetch(action, params, cacheKey) {
   if (cacheKey) {
     var cached = cacheGet(cacheKey);
     if (cached) return cached;
   }
   var url = API_URL + '?action=' + action;
-  if (params) {
-    Object.keys(params).forEach(function(k){ url += '&' + k + '=' + params[k]; });
-  }
+  if (params) { Object.keys(params).forEach(function(k){ url += '&' + k + '=' + params[k]; }); }
   var res = await fetch(url);
   var json = await res.json();
   if (cacheKey && json.status === 'ok') cacheSet(cacheKey, json);
   return json;
 }
 
-// ============================================
-// LOAD MASJID
-// ============================================
 async function loadMasjid(slug) {
   var json = await apiFetch('getMasjidBySlug', {slug: slug}, 'masjid_' + slug);
   if (json.status !== 'ok') {
@@ -438,17 +408,10 @@ async function loadMasjid(slug) {
     document.getElementById('qris-img').src = d.qris_url;
   }
 
-  // Hitung jadwal sholat langsung setelah data masjid didapat
-  if (d.latitude && d.longitude) {
-    loadJadwalSholat(d.latitude, d.longitude);
-  }
-
+  if (d.latitude && d.longitude) { loadJadwalSholat(d.latitude, d.longitude); }
   return d.id_masjid;
 }
 
-// ============================================
-// LOAD SALDO
-// ============================================
 async function loadSaldo() {
   var json = await apiFetch('getSaldo', {id_masjid: ID_MASJID}, 'saldo_' + ID_MASJID);
   if (json.status !== 'ok') return;
@@ -460,9 +423,6 @@ async function loadSaldo() {
   document.getElementById('tgl-update').textContent = 'Diperbarui: ' + namaHari(now.getDay()) + ', ' + now.toLocaleDateString('id-ID', {day:'numeric', month:'long', year:'numeric'});
 }
 
-// ============================================
-// LOAD TRANSAKSI
-// ============================================
 async function loadTransaksi() {
   var json = await apiFetch('getTransaksi', {id_masjid: ID_MASJID}, 'transaksi_' + ID_MASJID);
   var el = document.getElementById('list-transaksi');
@@ -476,9 +436,6 @@ async function loadTransaksi() {
   }).join('');
 }
 
-// ============================================
-// LOAD JADWAL
-// ============================================
 async function loadJadwal() {
   var json = await apiFetch('getJadwal', {id_masjid: ID_MASJID}, 'jadwal_' + ID_MASJID);
   var el = document.getElementById('list-jadwal');
@@ -492,9 +449,6 @@ async function loadJadwal() {
   }).join('');
 }
 
-// ============================================
-// LOAD PENGUMUMAN
-// ============================================
 async function loadPengumuman() {
   var json = await apiFetch('getPengumuman', {id_masjid: ID_MASJID}, 'pengumuman_' + ID_MASJID);
   var el = document.getElementById('list-pengumuman');
@@ -524,9 +478,6 @@ async function loadPengumuman() {
   el.innerHTML = html;
 }
 
-// ============================================
-// LOAD GALERI
-// ============================================
 async function loadGaleri() {
   var json = await apiFetch('getGaleri', {id_masjid: ID_MASJID}, 'galeri_' + ID_MASJID);
   if (json.status !== 'ok' || json.data.length === 0) return;
@@ -553,24 +504,16 @@ async function loadGaleri() {
   }
 }
 
-// ============================================
-// LOAD JADWAL SHOLAT
-// ============================================
 function loadJadwalSholat(lat, lon) {
   try {
     var latNum = parseFloat(String(lat).trim());
     var lonNum = parseFloat(String(lon).trim());
-    if (isNaN(latNum) || isNaN(lonNum)) {
-      console.log('Koordinat tidak valid:', lat, lon);
-      return;
-    }
-    console.log('Menghitung jadwal sholat untuk:', latNum, lonNum);
+    if (isNaN(latNum) || isNaN(lonNum)) return;
 
     var today = new Date();
     var D2R = Math.PI / 180;
     var R2D = 180 / Math.PI;
 
-    // Hitung Julian Date
     var Y = today.getFullYear();
     var M = today.getMonth() + 1;
     var D = today.getDate();
@@ -585,8 +528,7 @@ function loadJadwalSholat(lat, lon) {
     var decl = R2D * Math.asin(Math.sin(obliq*D2R) * Math.sin(sunLon*D2R));
     var RA = R2D * Math.atan2(Math.cos(obliq*D2R)*Math.sin(sunLon*D2R), Math.cos(sunLon*D2R));
     var EqT = ((L0 - RA) % 360) / 15;
-    var utcOffset = 7;
-    var transit = 12 - lonNum/15 + utcOffset - EqT;
+    var transit = 12 - lonNum/15 + 7 - EqT;
 
     function ha(angle) {
       var cosH = (Math.sin(angle*D2R) - Math.sin(latNum*D2R)*Math.sin(decl*D2R)) / (Math.cos(latNum*D2R)*Math.cos(decl*D2R));
@@ -603,7 +545,6 @@ function loadJadwalSholat(lat, lon) {
       return String(h).padStart(2,'0') + ':' + String(m).padStart(2,'0');
     }
 
-    // Asar - shadow factor 1 (Syafii)
     var asarAngle = R2D * Math.atan(1/(1 + Math.tan(D2R*Math.abs(latNum - decl))));
 
     var sholat = [
@@ -614,54 +555,40 @@ function loadJadwalSholat(lat, lon) {
       {name:'Isya',    time: fmt(transit + ha(-18))}
     ];
 
-    console.log('Jadwal:', JSON.stringify(sholat));
-
-    function toMenit(str) {
-      var p = str.split(':');
-      return parseInt(p[0])*60 + parseInt(p[1]);
-    }
-
+    function toMenit(str) { var p = str.split(':'); return parseInt(p[0])*60 + parseInt(p[1]); }
     var now = today.getHours()*60 + today.getMinutes();
     var aktifIdx = 0;
-    for (var i = 0; i < sholat.length; i++) {
-      if (now >= toMenit(sholat[i].time)) aktifIdx = i;
-    }
+    for (var i = 0; i < sholat.length; i++) { if (now >= toMenit(sholat[i].time)) aktifIdx = i; }
 
     document.getElementById('sholat-card').style.display = 'block';
     document.getElementById('sholat-date').textContent = namaHari(today.getDay()) + ', ' + today.toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'});
     document.getElementById('sholat-grid').innerHTML = sholat.map(function(s,idx){
       return '<div class="sholat-item'+(idx===aktifIdx?' aktif':'')+'"><div class="sholat-name">'+s.name+'</div><div class="sholat-time">'+s.time+'</div></div>';
     }).join('');
-  } catch(e) {
-    console.error('Jadwal sholat error:', e.toString());
-  }
+  } catch(e) {}
 }
 
 // ============================================
-// OVERLAY IKLAN
+// OVERLAY IKLAN GLOBAL (TARIK DATA DARI SHEET IKLAN)
 // ============================================
-function tampilOverlay() {
-  var iklan = [
-    { judul: 'Idul Adha 1446H', ikon: '🐄', title: 'Daftar Kurban via BJFarm', sub: 'Kambing & sapi berkualitas. Kolektif sapi tersedia untuk masjid. Daftarkan sekarang sebelum kuota habis.', link: 'https://wa.me/628123456789', linkText: 'Daftar Kurban Sekarang' },
-    { judul: 'Umroh & Ziarah', ikon: '🕋', title: 'BJHaramain — Mitra Nozoly', sub: 'Paket umroh terpercaya. Oleh-oleh khas Haramain tersedia. Konsultasi gratis, tanpa biaya tambahan.', link: 'https://wa.me/628123456789', linkText: 'Info Umroh Sekarang' }
-  ];
-  var idx = Math.floor(Math.random() * iklan.length);
-  var item = iklan[idx];
-  document.getElementById('overlay-title').textContent = item.judul;
-  document.getElementById('overlay-body').innerHTML = '<div class="overlay-iklan"><div class="overlay-iklan-icon">' + item.ikon + '</div><div class=\"overlay-iklan-title\">' + item.title + '</div><div class=\"overlay-iklan-sub\">' + item.sub + '</div></div><a href=\"' + item.link + '\" target=\"_blank\" class=\"overlay-btn\">' + item.linkText + '</a>';
-  document.getElementById('overlay').classList.remove('hide');
+async function tampilOverlay() {
+  try {
+    var json = await apiFetch('getIklanGlobal', null, 'iklan_global');
+    if (json && json.status === 'ok' && json.data) {
+      var item = json.data;
+      document.getElementById('overlay-title').textContent = item.judul || 'Pengumuman';
+      document.getElementById('overlay-body').innerHTML = '<div class="overlay-iklan"><div class="overlay-iklan-icon">📢</div><div class="overlay-iklan-title">' + item.program + '</div><div class="overlay-iklan-sub">' + item.deskripsi + '</div></div><a href="' + item.link + '" target="_blank" class="overlay-btn">Lihat Detail</a>';
+      document.getElementById('overlay').classList.remove('hide');
+    }
+  } catch(e) {}
 }
 
-// ============================================
-// INIT (SUDAH DIPERCEPAT & DIBENARKAN)
-// ============================================
 async function init() {
   var slug = getSlug();
   try {
     var id = await loadMasjid(slug);
     if (!id) return;
 
-    // Loading cepat: tutup splash screen segera
     var splash = document.getElementById('splash');
     if (splash) {
       splash.classList.add('hide');
@@ -676,8 +603,6 @@ async function init() {
       loadGaleri()
     ]);
   } catch(e) {
-    console.error(e);
-    // Tutup splash jika error agar tidak stuck
     var splash = document.getElementById('splash');
     if (splash) {
       splash.classList.add('hide');
@@ -685,7 +610,7 @@ async function init() {
     }
   }
 
-  // Tampil overlay iklan setelah 3 detik
+  // Menampilkan Iklan Global setelah 3 detik
   setTimeout(function(){ tampilOverlay(); }, 3000);
 }
 
