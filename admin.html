@@ -23,6 +23,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#F7F7F5;color:#1A1A1A
 .login-logo{font-family:'Amiri',serif;font-size:40px;color:var(--primary);margin-bottom:0.5rem;}
 .login-title{font-size:18px;font-weight:600;color:var(--text);margin-bottom:4px;}
 .login-sub{font-size:13px;color:var(--muted);margin-bottom:1.5rem;line-height:1.5;}
+.login-note{font-size:11px;color:var(--muted);line-height:1.5;}
 
 /* HEADER ADMIN */
 .admin-header{background:linear-gradient(160deg,var(--primary-dark),var(--primary));padding:1rem 1.25rem;display:flex;align-items:center;justify-content:space-between;}
@@ -54,7 +55,6 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#F7F7F5;color:#1A1A1A
 .btn-submit{width:100%;background:var(--primary);color:white;border:none;padding:12px;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;margin-top:0.5rem;}
 .btn-submit:active{opacity:0.8;}
 .btn-submit:disabled{opacity:0.5;cursor:not-allowed;}
-.btn-outline{width:100%;background:white;color:var(--primary);border:1px solid var(--primary);padding:12px;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;margin-top:0.5rem;}
 
 /* CARD LIST */
 .item-card{background:white;border:1px solid var(--border);border-radius:12px;padding:0.875rem;margin-bottom:8px;}
@@ -64,6 +64,8 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#F7F7F5;color:#1A1A1A
 .item-badge{font-size:10px;padding:2px 8px;border-radius:20px;font-weight:500;}
 .badge-masuk{background:var(--primary-light);color:var(--primary);}
 .badge-keluar{background:#FEF2F2;color:#DC2626;}
+.badge-aktif{background:var(--primary-light);color:var(--primary);}
+.badge-nonaktif{background:#F3F4F6;color:var(--muted);}
 
 /* PROFIL */
 .profil-section{background:white;border:1px solid var(--border);border-radius:14px;padding:1rem;margin-bottom:1rem;}
@@ -82,7 +84,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#F7F7F5;color:#1A1A1A
 .login-card .btn-submit{margin-top:0;}
 
 /* DIVIDER */
-.divider{height:1px;background:var(--border);margin:1.5rem 0;}
+.divider{height:1px;background:var(--border);margin:1rem 0;}
 </style>
 </head>
 <body>
@@ -132,7 +134,6 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#F7F7F5;color:#1A1A1A
 
   <div class="admin-main">
 
-    <!-- TAB KAS / TRANSAKSI -->
     <div id="tab-transaksi">
       <div class="section-title">Input Transaksi</div>
       <div class="form-group">
@@ -156,21 +157,11 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#F7F7F5;color:#1A1A1A
       </div>
       <button class="btn-submit" onclick="simpanTransaksi()">💾 Simpan Transaksi</button>
 
-      <!-- BAGIAN BARU: CETAK LAPORAN -->
-      <div class="divider"></div>
-      <div class="section-title">Cetak Laporan Bulanan</div>
-      <div class="form-row">
-        <input type="month" class="form-input" id="lap-bulan">
-        <button class="btn-outline" style="margin-top:0;" onclick="cetakLaporan()">🖨️ Cetak PDF</button>
-      </div>
-      <p style="font-size:11px; color:var(--muted); margin-top:8px;">Pilih bulan dan cetak laporan keuangan khusus untuk diarsip pengurus.</p>
-      
       <div class="divider"></div>
       <div class="section-title">Transaksi Terakhir</div>
       <div id="list-trx-admin"><div class="kosong">Memuat...</div></div>
     </div>
 
-    <!-- TAB JADWAL -->
     <div id="tab-jadwal" style="display:none">
       <div class="section-title">Tambah Jadwal Kegiatan</div>
       <div class="form-group">
@@ -185,9 +176,14 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#F7F7F5;color:#1A1A1A
         <label class="form-label">Hari</label>
         <select class="form-select" id="jdw-hari">
           <option value="">-- Pilih Hari --</option>
-          <option>Ahad</option><option>Senin</option><option>Selasa</option>
-          <option>Rabu</option><option>Kamis</option><option>Jumat</option>
-          <option>Sabtu</option><option>Setiap Hari</option>
+          <option>Ahad</option>
+          <option>Senin</option>
+          <option>Selasa</option>
+          <option>Rabu</option>
+          <option>Kamis</option>
+          <option>Jumat</option>
+          <option>Sabtu</option>
+          <option>Setiap Hari</option>
         </select>
       </div>
       <div class="form-group">
@@ -205,7 +201,6 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#F7F7F5;color:#1A1A1A
       <div id="list-jadwal-admin"><div class="kosong">Memuat...</div></div>
     </div>
 
-    <!-- TAB PENGUMUMAN -->
     <div id="tab-pengumuman" style="display:none">
       <div class="section-title">Tambah Pengumuman</div>
       <div class="form-group">
@@ -245,7 +240,6 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#F7F7F5;color:#1A1A1A
       <div id="list-peng-admin"><div class="kosong">Memuat...</div></div>
     </div>
 
-    <!-- TAB GALERI -->
     <div id="tab-galeri" style="display:none">
       <div class="section-title">Tambah Galeri</div>
       <div class="form-group">
@@ -270,7 +264,6 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#F7F7F5;color:#1A1A1A
       <div id="list-gal-admin"><div class="kosong">Memuat...</div></div>
     </div>
 
-    <!-- TAB PROFIL -->
     <div id="tab-profil" style="display:none">
       <div class="section-title">Edit Profil Masjid</div>
 
@@ -309,11 +302,16 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#F7F7F5;color:#1A1A1A
         <div class="form-group">
           <label class="form-label">Tema Warna</label>
           <select class="form-select" id="prof-tema">
-            <option value="">Zamrud (Default)</option><option value="safir">Safir — Biru Elegan</option>
-            <option value="emas">Emas — Klasik Islami</option><option value="fajar">Fajar — Oranye Hangat</option>
-            <option value="langit">Langit — Biru Segar</option><option value="tembaga">Tembaga — Merah Tradisional</option>
-            <option value="perak">Perak — Abu Minimalis</option><option value="merahhati">Merah Hati — Tegas</option>
-            <option value="toska">Toska — Hijau Segar</option><option value="malam">Malam — Biru Premium</option>
+            <option value="">Zamrud (Default)</option>
+            <option value="safir">Safir — Biru Elegan</option>
+            <option value="emas">Emas — Klasik Islami</option>
+            <option value="fajar">Fajar — Oranye Hangat</option>
+            <option value="langit">Langit — Biru Segar</option>
+            <option value="tembaga">Tembaga — Merah Tradisional</option>
+            <option value="perak">Perak — Abu Minimalis</option>
+            <option value="merahhati">Merah Hati — Tegas</option>
+            <option value="toska">Toska — Hijau Segar</option>
+            <option value="malam">Malam — Biru Premium</option>
           </select>
         </div>
         <div class="form-group">
@@ -329,24 +327,48 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#F7F7F5;color:#1A1A1A
       <div class="profil-section">
         <h3>Rekening Bank</h3>
         <div class="form-row">
-          <div class="form-group"><label class="form-label">Bank 1</label><input type="text" class="form-input" id="prof-rek1-bank"></div>
-          <div class="form-group"><label class="form-label">Nomor Rekening 1</label><input type="text" class="form-input" id="prof-rek1-nomor"></div>
+          <div class="form-group">
+            <label class="form-label">Bank 1</label>
+            <input type="text" class="form-input" id="prof-rek1-bank">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Nomor Rekening 1</label>
+            <input type="text" class="form-input" id="prof-rek1-nomor">
+          </div>
         </div>
         <div class="form-row">
-          <div class="form-group"><label class="form-label">Bank 2</label><input type="text" class="form-input" id="prof-rek2-bank"></div>
-          <div class="form-group"><label class="form-label">Nomor Rekening 2</label><input type="text" class="form-input" id="prof-rek2-nomor"></div>
+          <div class="form-group">
+            <label class="form-label">Bank 2</label>
+            <input type="text" class="form-input" id="prof-rek2-bank">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Nomor Rekening 2</label>
+            <input type="text" class="form-input" id="prof-rek2-nomor">
+          </div>
         </div>
         <div class="form-row">
-          <div class="form-group"><label class="form-label">Bank 3</label><input type="text" class="form-input" id="prof-rek3-bank"></div>
-          <div class="form-group"><label class="form-label">Nomor Rekening 3</label><input type="text" class="form-input" id="prof-rek3-nomor"></div>
+          <div class="form-group">
+            <label class="form-label">Bank 3</label>
+            <input type="text" class="form-input" id="prof-rek3-bank">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Nomor Rekening 3</label>
+            <input type="text" class="form-input" id="prof-rek3-nomor">
+          </div>
         </div>
       </div>
 
       <div class="profil-section">
         <h3>Koordinat Masjid</h3>
         <div class="form-row">
-          <div class="form-group"><label class="form-label">Latitude</label><input type="text" class="form-input" id="prof-lat"></div>
-          <div class="form-group"><label class="form-label">Longitude</label><input type="text" class="form-input" id="prof-lon"></div>
+          <div class="form-group">
+            <label class="form-label">Latitude</label>
+            <input type="text" class="form-input" id="prof-lat">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Longitude</label>
+            <input type="text" class="form-input" id="prof-lon">
+          </div>
         </div>
       </div>
 
@@ -359,15 +381,16 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#F7F7F5;color:#1A1A1A
 <div class="toast" id="toast">Tersimpan!</div>
 
 <script>
-// PASTIKAN API URL BENAR
+// PASTIKAN API_URL INI BENAR
 var API_URL = 'https://script.google.com/macros/s/AKfycbxrRV5Vq1cHe0sKO20MMUVmBGHwA7QwAUu7LrJ7NPfjhn3T2u-2eVZQj6fYtMUwm9-cOA/exec';
 var ADMIN_DATA = null;
 var ID_MASJID = '';
 var SLUG_MASJID = '';
-var NAMA_MASJID_AKTIF = '';
-var ALL_TRANSAKSI = []; // Array untuk menyimpan data cetak
 var TABS = ['transaksi','jadwal','pengumuman','galeri','profil'];
 
+// ============================================
+// TOAST
+// ============================================
 function showToast(msg, type) {
   var t = document.getElementById('toast');
   t.textContent = msg;
@@ -375,6 +398,9 @@ function showToast(msg, type) {
   setTimeout(function(){ t.className = 'toast'; }, 3000);
 }
 
+// ============================================
+// TAB
+// ============================================
 function gotoTab(tab) {
   TABS.forEach(function(t){
     document.getElementById('tab-' + t).style.display = t === tab ? 'block' : 'none';
@@ -389,6 +415,9 @@ function gotoTab(tab) {
   if (tab === 'profil') loadProfilAdmin();
 }
 
+// ============================================
+// LOGIN EMAIL + PIN
+// ============================================
 function prosesLogin() {
   var gmail = document.getElementById('login-gmail').value.trim().toLowerCase();
   var pin = document.getElementById('login-pin').value.trim();
@@ -407,7 +436,10 @@ function prosesLogin() {
       if (json.status === 'ok') {
         ADMIN_DATA = json.data;
         ID_MASJID = json.data.id_masjid;
+        
+        // POIN 1: Menangkap SLUG_MASJID dari data login
         SLUG_MASJID = ADMIN_DATA.slug || '';
+        
         localStorage.setItem('pow_admin', JSON.stringify(json.data));
         tampilAdmin();
       } else {
@@ -435,27 +467,28 @@ function tampilAdmin() {
   document.getElementById('admin-content').style.display = 'block';
   document.getElementById('admin-nama').textContent = ADMIN_DATA.nama + ' (' + ADMIN_DATA.role + ')';
 
-  // Set default bulan cetak
-  var today = new Date();
-  document.getElementById('lap-bulan').value = today.getFullYear() + '-' + String(today.getMonth()+1).padStart(2,'0');
-
   fetch(API_URL + '?action=getMasjid&id_masjid=' + ID_MASJID)
     .then(function(r){ return r.json(); })
     .then(function(json){
       if (json.status === 'ok') {
-        NAMA_MASJID_AKTIF = json.data.nama;
         document.getElementById('admin-masjid-nama').textContent = json.data.nama;
       }
     });
 
-  var todayDate = today.toISOString().split('T')[0];
-  document.getElementById('trx-tanggal').value = todayDate;
+  var today = new Date().toISOString().split('T')[0];
+  document.getElementById('trx-tanggal').value = today;
 
   loadTransaksiAdmin();
 }
 
+// ============================================
+// API POST
+// ============================================
 function apiPost(data, callback) {
-  fetch(API_URL, { method: 'POST', body: JSON.stringify(data) })
+  fetch(API_URL, {
+    method: 'POST',
+    body: JSON.stringify(data)
+  })
   .then(function(r){ return r.json(); })
   .then(callback)
   .catch(function(){ showToast('Gagal menghubungi server', 'error'); });
@@ -464,6 +497,9 @@ function apiPost(data, callback) {
 function rupiah(n) { return 'Rp ' + Number(n).toLocaleString('id-ID'); }
 function formatTgl(t) { var d = new Date(t); return isNaN(d) ? t : d.toLocaleDateString('id-ID',{day:'numeric',month:'short',year:'numeric'}); }
 
+// ============================================
+// TRANSAKSI
+// ============================================
 function simpanTransaksi() {
   var keterangan = document.getElementById('trx-keterangan').value.trim();
   var jumlah = document.getElementById('trx-jumlah').value;
@@ -477,7 +513,13 @@ function simpanTransaksi() {
   btn.textContent = 'Menyimpan...';
 
   apiPost({
-    action: 'addTransaksi', id_masjid: ID_MASJID, tanggal: tanggal, keterangan: keterangan, jenis: jenis, jumlah: parseFloat(jumlah), dicatat_oleh: ADMIN_DATA.nama
+    action: 'addTransaksi',
+    id_masjid: ID_MASJID,
+    tanggal: tanggal,
+    keterangan: keterangan,
+    jenis: jenis,
+    jumlah: parseFloat(jumlah),
+    dicatat_oleh: ADMIN_DATA.nama
   }, function(json){
     btn.disabled = false;
     btn.textContent = '💾 Simpan Transaksi';
@@ -501,135 +543,16 @@ function loadTransaksiAdmin() {
     .then(function(r){ return r.json(); })
     .then(function(json){
       var el = document.getElementById('list-trx-admin');
-      if (json.status !== 'ok' || json.data.length === 0) { 
-        ALL_TRANSAKSI = []; 
-        el.innerHTML = '<div class="kosong">Belum ada transaksi</div>'; 
-        return; 
-      }
-      
-      // Simpan semua ke memory untuk fitur cetak
-      ALL_TRANSAKSI = json.data;
-      
-      // Tampilkan 10 terakhir di UI
+      if (json.status !== 'ok' || json.data.length === 0) { el.innerHTML = '<div class="kosong">Belum ada transaksi</div>'; return; }
       el.innerHTML = json.data.slice(0,10).map(function(t){
         return '<div class="item-card"><div class="item-card-title">' + t.keterangan + '</div><div class="item-card-sub">' + formatTgl(t.tanggal) + ' · ' + t.dicatat_oleh + '</div><div class="item-card-footer"><span class="item-badge ' + (t.jenis==='masuk'?'badge-masuk':'badge-keluar') + '">' + (t.jenis==='masuk'?'Penerimaan':'Pengeluaran') + '</span><strong>' + (t.jenis==='masuk'?'+':'-') + ' ' + rupiah(t.jumlah) + '</strong></div></div>';
       }).join('');
     });
 }
 
-// FUNGSI BARU: CETAK LAPORAN PDF
-function cetakLaporan() {
-  var blnVal = document.getElementById('lap-bulan').value;
-  if (!blnVal) { showToast('Pilih bulan cetak!', 'error'); return; }
-  
-  var year = parseInt(blnVal.split('-')[0]);
-  var month = parseInt(blnVal.split('-')[1]);
-  
-  // Filter berdasarkan bulan
-  var terfilter = ALL_TRANSAKSI.filter(function(t) {
-    var d = new Date(t.tanggal);
-    return d.getFullYear() === year && (d.getMonth() + 1) === month;
-  });
-
-  if (terfilter.length === 0) {
-    showToast('Tidak ada transaksi di bulan tsb', 'error');
-    return;
-  }
-
-  // Rekapitulasi Data
-  var htmlRows = '';
-  var totMasuk = 0;
-  var totKeluar = 0;
-  
-  // Balik urutan agar dari tgl tertua (bawah) ke terbaru (atas), karena data dari API .reverse()
-  terfilter.slice().reverse().forEach(function(t) {
-    var isMasuk = t.jenis === 'masuk';
-    var nMasuk = isMasuk ? t.jumlah : 0;
-    var nKeluar = !isMasuk ? t.jumlah : 0;
-    totMasuk += nMasuk;
-    totKeluar += nKeluar;
-    
-    htmlRows += '<tr>';
-    htmlRows += '<td>' + formatTgl(t.tanggal) + '</td>';
-    htmlRows += '<td>' + t.keterangan + '</td>';
-    htmlRows += '<td style="text-align:right;">' + (nMasuk ? rupiah(nMasuk) : '-') + '</td>';
-    htmlRows += '<td style="text-align:right;">' + (nKeluar ? rupiah(nKeluar) : '-') + '</td>';
-    htmlRows += '</tr>';
-  });
-
-  var saldoAkhir = totMasuk - totKeluar;
-  var namaBulanText = new Date(year, month - 1, 1).toLocaleDateString('id-ID', { month: 'long', year: 'numeric' });
-
-  // Buat HTML Laporan Bersih
-  var printWindow = window.open('', '_blank');
-  var printHTML = `
-    <!DOCTYPE html>
-    <html lang="id">
-    <head>
-      <meta charset="UTF-8">
-      <title>Laporan Kas ${NAMA_MASJID_AKTIF}</title>
-      <style>
-        body { font-family: Arial, sans-serif; color: #000; padding: 20px; }
-        .kop { text-align: center; margin-bottom: 20px; border-bottom: 2px solid #000; padding-bottom: 10px; }
-        .kop h2 { margin: 0 0 5px 0; font-size: 20px; }
-        .kop p { margin: 0; font-size: 14px; }
-        table { width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 13px; }
-        th, td { border: 1px solid #000; padding: 8px; text-align: left; }
-        th { background: #f2f2f2; text-align: center; }
-        .total-row { font-weight: bold; background: #f9f9f9; }
-        .footer-ttd { margin-top: 40px; display: flex; justify-content: flex-end; }
-        .ttd-box { text-align: center; width: 200px; }
-      </style>
-    </head>
-    <body>
-      <div class="kop">
-        <h2>LAPORAN KAS MASJID</h2>
-        <p><strong>${NAMA_MASJID_AKTIF}</strong></p>
-        <p>Periode: ${namaBulanText}</p>
-      </div>
-
-      <table>
-        <thead>
-          <tr>
-            <th width="15%">Tanggal</th>
-            <th>Keterangan</th>
-            <th width="20%">Penerimaan</th>
-            <th width="20%">Pengeluaran</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${htmlRows}
-          <tr class="total-row">
-            <td colspan="2" style="text-align:right;">TOTAL</td>
-            <td style="text-align:right;">${rupiah(totMasuk)}</td>
-            <td style="text-align:right;">${rupiah(totKeluar)}</td>
-          </tr>
-          <tr class="total-row">
-            <td colspan="2" style="text-align:right;">SALDO BERSIH PERIODE INI</td>
-            <td colspan="2" style="text-align:center;">${rupiah(saldoAkhir)}</td>
-          </tr>
-        </tbody>
-      </table>
-
-      <div class="footer-ttd">
-        <div class="ttd-box">
-          <p>Pengurus / Bendahara,</p>
-          <br><br><br>
-          <p><strong>${ADMIN_DATA.nama}</strong></p>
-        </div>
-      </div>
-
-      <script>
-        window.onload = function() { window.print(); window.close(); }
-      <\/script>
-    </body>
-    </html>
-  `;
-  
-  printWindow.document.write(printHTML);
-  printWindow.document.close();
-}
-
+// ============================================
+// JADWAL
+// ============================================
 function simpanJadwal() {
   var nama = document.getElementById('jdw-nama').value.trim();
   var jadwal = document.getElementById('jdw-jadwal').value.trim();
@@ -640,7 +563,13 @@ function simpanJadwal() {
   btn.textContent = 'Menyimpan...';
 
   apiPost({
-    action: 'addJadwal', id_masjid: ID_MASJID, nama_kegiatan: nama, jadwal: jadwal, hari: document.getElementById('jdw-hari').value, lokasi: document.getElementById('jdw-lokasi').value, keterangan: document.getElementById('jdw-keterangan').value
+    action: 'addJadwal',
+    id_masjid: ID_MASJID,
+    nama_kegiatan: nama,
+    jadwal: jadwal,
+    hari: document.getElementById('jdw-hari').value,
+    lokasi: document.getElementById('jdw-lokasi').value,
+    keterangan: document.getElementById('jdw-keterangan').value
   }, function(json){
     btn.disabled = false;
     btn.textContent = '💾 Simpan Jadwal';
@@ -664,6 +593,9 @@ function loadJadwalAdmin() {
     });
 }
 
+// ============================================
+// PENGUMUMAN
+// ============================================
 function simpanPengumuman() {
   var judul = document.getElementById('peng-judul').value.trim();
   if (!judul) { showToast('Judul wajib diisi!', 'error'); return; }
@@ -673,7 +605,14 @@ function simpanPengumuman() {
   btn.textContent = 'Menyimpan...';
 
   apiPost({
-    action: 'addPengumuman', id_masjid: ID_MASJID, tipe: document.getElementById('peng-tipe').value, judul: judul, isi: document.getElementById('peng-isi').value, ikon: document.getElementById('peng-ikon').value, tanggal_mulai: document.getElementById('peng-mulai').value, tanggal_selesai: document.getElementById('peng-selesai').value
+    action: 'addPengumuman',
+    id_masjid: ID_MASJID,
+    tipe: document.getElementById('peng-tipe').value,
+    judul: judul,
+    isi: document.getElementById('peng-isi').value,
+    ikon: document.getElementById('peng-ikon').value,
+    tanggal_mulai: document.getElementById('peng-mulai').value,
+    tanggal_selesai: document.getElementById('peng-selesai').value
   }, function(json){
     btn.disabled = false;
     btn.textContent = '💾 Simpan Pengumuman';
@@ -697,6 +636,9 @@ function loadPengumumanAdmin() {
     });
 }
 
+// ============================================
+// GALERI
+// ============================================
 function simpanGaleri() {
   var url = document.getElementById('gal-url').value.trim();
   if (!url) return;
@@ -705,7 +647,11 @@ function simpanGaleri() {
   btn.disabled = true;
 
   apiPost({
-    action: 'addGaleri', id_masjid: ID_MASJID, judul: document.getElementById('gal-judul').value, tipe: document.getElementById('gal-tipe').value, url: url
+    action: 'addGaleri',
+    id_masjid: ID_MASJID,
+    judul: document.getElementById('gal-judul').value,
+    tipe: document.getElementById('gal-tipe').value,
+    url: url
   }, function(json){
     btn.disabled = false;
     if (json && json.status === 'ok') {
@@ -726,6 +672,9 @@ function loadGaleriAdmin() {
     });
 }
 
+// ============================================
+// PROFIL
+// ============================================
 function loadProfilAdmin() {
   fetch(API_URL + '?action=getMasjid&id_masjid=' + ID_MASJID)
     .then(function(r){ return r.json(); })
@@ -749,6 +698,7 @@ function loadProfilAdmin() {
       document.getElementById('prof-lat').value = d.latitude || '';
       document.getElementById('prof-lon').value = d.longitude || '';
 
+      // Tampilkan Link URL Sesuai Permintaan (Bisa langsung disalin)
       if (d.slug) SLUG_MASJID = d.slug;
       var linkTampil = SLUG_MASJID ? 'https://powerofmasjid.github.io/masjid.html?masjid=' + SLUG_MASJID : 'Slug belum tersedia';
       document.getElementById('link-website').textContent = linkTampil;
@@ -758,7 +708,9 @@ function loadProfilAdmin() {
 function salinLink() {
   if (!SLUG_MASJID) { showToast('Gagal menyalin, slug kosong!', 'error'); return; }
   var link = 'https://powerofmasjid.github.io/masjid.html?masjid=' + SLUG_MASJID;
-  navigator.clipboard.writeText(link).then(function(){ showToast('Link tersalin ke clipboard!', 'sukses'); });
+  navigator.clipboard.writeText(link).then(function(){
+    showToast('Link tersalin ke clipboard!', 'sukses');
+  });
 }
 
 function simpanProfil() {
@@ -767,19 +719,44 @@ function simpanProfil() {
   btn.textContent = 'Menyimpan...';
 
   apiPost({
-    action: 'updateMasjid', id_masjid: ID_MASJID, nama: document.getElementById('prof-nama').value, alamat: document.getElementById('prof-alamat').value, kota: document.getElementById('prof-kota').value, deskripsi: document.getElementById('prof-deskripsi').value, telepon_wa: document.getElementById('prof-wa').value, tema: document.getElementById('prof-tema').value, logo_url: document.getElementById('prof-logo').value, qris_url: document.getElementById('prof-qris').value, rek1_bank: document.getElementById('prof-rek1-bank').value, rek1_nomor: document.getElementById('prof-rek1-nomor').value, rek2_bank: document.getElementById('prof-rek2-bank').value, rek2_nomor: document.getElementById('prof-rek2-nomor').value, rek3_bank: document.getElementById('prof-rek3-bank').value, rek3_nomor: document.getElementById('prof-rek3-nomor').value, latitude: document.getElementById('prof-lat').value, longitude: document.getElementById('prof-lon').value
+    action: 'updateMasjid',
+    id_masjid: ID_MASJID,
+    nama: document.getElementById('prof-nama').value,
+    alamat: document.getElementById('prof-alamat').value,
+    kota: document.getElementById('prof-kota').value,
+    deskripsi: document.getElementById('prof-deskripsi').value,
+    telepon_wa: document.getElementById('prof-wa').value,
+    tema: document.getElementById('prof-tema').value,
+    logo_url: document.getElementById('prof-logo').value,
+    qris_url: document.getElementById('prof-qris').value,
+    rek1_bank: document.getElementById('prof-rek1-bank').value,
+    rek1_nomor: document.getElementById('prof-rek1-nomor').value,
+    rek2_bank: document.getElementById('prof-rek2-bank').value,
+    rek2_nomor: document.getElementById('prof-rek2-nomor').value,
+    rek3_bank: document.getElementById('prof-rek3-bank').value,
+    rek3_nomor: document.getElementById('prof-rek3-nomor').value,
+    latitude: document.getElementById('prof-lat').value,
+    longitude: document.getElementById('prof-lon').value
   }, function(json){
     btn.disabled = false;
     btn.textContent = '💾 Simpan Perubahan';
     if (json && json.status === 'ok') {
       showToast('Profil masjid berhasil diupdate!', 'sukses');
-      if (SLUG_MASJID) { localStorage.removeItem('masjid_' + SLUG_MASJID); }
+      
+      // POIN 2: Menghapus cache saat simpan profil sukses
+      if (SLUG_MASJID) {
+        localStorage.removeItem('masjid_' + SLUG_MASJID);
+      }
+      
     } else {
       showToast('Gagal: ' + (json ? json.message : 'Unknown error'), 'error');
     }
   });
 }
 
+// ============================================
+// INIT
+// ============================================
 function init() {
   var saved = localStorage.getItem('pow_admin');
   if (saved) {
