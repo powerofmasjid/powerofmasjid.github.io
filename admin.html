@@ -51,6 +51,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#F7F7F5;color:#1A1A1A
   </div>
   <div class="nav-tabs">
     <div class="nav-tab active" onclick="gotoTab('transaksi')">💰 Kas</div>
+    <div class="nav-tab" onclick="gotoTab('amal')">🤝 Program Amal</div>
     <div class="nav-tab" onclick="gotoTab('jadwal')">📅 Jadwal</div>
     <div class="nav-tab" onclick="gotoTab('pengumuman')">📢 Pengumuman</div>
     <div class="nav-tab" onclick="gotoTab('galeri')">📸 Galeri</div>
@@ -58,12 +59,14 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#F7F7F5;color:#1A1A1A
   </div>
 
   <div class="admin-main">
+    
+    <!-- TAB KAS / TRANSAKSI -->
     <div id="tab-transaksi">
       <div class="section-title">Input Transaksi</div>
       <input type="hidden" id="trx-id-edit">
       <div class="form-group"><label class="form-label">Tanggal</label><input type="date" class="form-input" id="trx-tanggal"></div>
       <div class="form-group"><label class="form-label">Jenis</label><select class="form-select" id="trx-jenis" onchange="toggleBuktiForm()"><option value="masuk">Penerimaan</option><option value="keluar">Pengeluaran</option></select></div>
-      <div class="form-group"><label class="form-label">Keterangan</label><input type="text" class="form-input" id="trx-keterangan"></div>
+      <div class="form-group"><label class="form-label">Keterangan (Contoh: Kotak Amal Jumat / Zakat Mal Bapak H. Ahmad)</label><input type="text" class="form-input" id="trx-keterangan"></div>
       <div class="form-group"><label class="form-label">Jumlah (Rp)</label><input type="number" class="form-input" id="trx-jumlah"></div>
       <div class="form-group" id="form-upload-bukti" style="display:none">
         <label class="form-label">Upload Bukti Nota (ImgBB)</label>
@@ -71,9 +74,9 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#F7F7F5;color:#1A1A1A
         <div id="st-trx" style="display:none; font-size:10px;">⏳ Mengunggah...</div>
         <input type="text" class="form-input" id="trx-bukti" readonly style="margin-top:5px; font-size:10px;">
       </div>
-      <button class="btn-submit" onclick="simpanTransaksi()" id="btn-trx">💾 Simpan</button>
+      <button class="btn-submit" onclick="simpanTransaksi()" id="btn-trx">💾 Simpan Kas</button>
       <div class="divider"></div>
-      <div class="section-title">Cetak Laporan</div>
+      <div class="section-title">Cetak Laporan Kas</div>
       <div class="form-row">
         <select class="form-select" id="pdf-bulan"><option value="1">Januari</option><option value="2">Februari</option><option value="3">Maret</option><option value="4">April</option><option value="5">Mei</option><option value="6">Juni</option><option value="7">Juli</option><option value="8">Agustus</option><option value="9">September</option><option value="10">Oktober</option><option value="11">November</option><option value="12">Desember</option></select>
         <input type="number" class="form-input" id="pdf-tahun" value="2026">
@@ -82,6 +85,64 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#F7F7F5;color:#1A1A1A
       <div class="divider"></div><div id="list-trx-admin"></div>
     </div>
 
+    <!-- TAB PROGRAM AMAL (KURBAN/ZAKAT/INFAQ) -->
+    <div id="tab-amal" style="display:none">
+      <div class="profil-section">
+        <h3>1. Buat Program Amal Baru</h3>
+        <div class="form-group"><label class="form-label">Tipe Program</label>
+          <select class="form-select" id="amal-tipe">
+            <option value="KURBAN">🐄 Kurban (Berbasis Nama)</option>
+            <option value="ZAKAT">🌾 Zakat Fitrah (Uang/Beras)</option>
+            <option value="INFAQ">🧱 Infaq Pembangunan (Uang/Barang)</option>
+          </select>
+        </div>
+        <div class="form-group"><label class="form-label">Judul Program (Contoh: Sapi Kolektif 2026)</label><input type="text" class="form-input" id="amal-judul"></div>
+        <div class="form-group"><label class="form-label">Target Dana / Harga Patokan (Rp)</label><input type="number" class="form-input" id="amal-harga" placeholder="Contoh: 3500000"></div>
+        <div class="form-row">
+          <div class="form-group"><label class="form-label">Tgl Mulai</label><input type="date" class="form-input" id="amal-mulai"></div>
+          <div class="form-group"><label class="form-label">Tgl Selesai</label><input type="date" class="form-input" id="amal-selesai"></div>
+        </div>
+        <button class="btn-submit" onclick="simpanProgramAmal()">📝 Buat Program</button>
+      </div>
+
+      <div class="profil-section">
+        <h3>2. Input Data Jamaah</h3>
+        <div class="form-group">
+          <label class="form-label">Pilih Program Aktif</label>
+          <select class="form-select" id="pilih-program" onchange="gantiFormAmal()">
+            <option value="">-- Pilih Program Dulu --</option>
+          </select>
+        </div>
+
+        <!-- FORM KURBAN -->
+        <div id="form-kurban" style="display:none">
+           <div class="form-group"><label class="form-label">Nama Shohibul Qurban</label><input type="text" class="form-input" id="krb-nama"></div>
+           <div class="form-group"><label class="form-label">Jenis Hewan</label><select class="form-select" id="krb-jenis"><option value="Sapi Kolektif">Sapi Kolektif (1/7)</option><option value="Kambing">Kambing / Domba (Utuh)</option><option value="Sapi Utuh">Sapi Utuh Pribadi</option></select></div>
+           <div class="form-group"><label class="form-label">No. Telepon / WA</label><input type="text" class="form-input" id="krb-wa"></div>
+        </div>
+
+        <!-- FORM ZAKAT -->
+        <div id="form-zakat" style="display:none">
+           <div class="form-group"><label class="form-label">Nama Kepala Keluarga</label><input type="text" class="form-input" id="zkt-nama"></div>
+           <div class="form-group"><label class="form-label">Jumlah Jiwa</label><input type="number" class="form-input" id="zkt-jiwa" value="1"></div>
+           <div class="form-group"><label class="form-label">Bentuk Zakat</label><select class="form-select" id="zkt-jenis"><option value="UANG">Uang Tunai</option><option value="BERAS">Beras</option></select></div>
+           <div class="form-group"><label class="form-label">Nominal Uang (Rp) / Liter Beras</label><input type="number" class="form-input" id="zkt-nominal"></div>
+        </div>
+
+        <!-- FORM INFAQ -->
+        <div id="form-infaq" style="display:none">
+           <div class="form-group"><label class="form-label">Nama Donatur</label><input type="text" class="form-input" id="inf-nama" placeholder="Biarkan kosong jika Hamba Allah"></div>
+           <div class="form-group"><label class="form-label">Bentuk Sumbangan</label><select class="form-select" id="inf-jenis" onchange="toggleInfaqBarang()"><option value="uang">Uang Tunai</option><option value="barang">Barang / Material Bangunan</option></select></div>
+           <div class="form-group" id="wrap-inf-uang"><label class="form-label">Nominal (Rp)</label><input type="number" class="form-input" id="inf-nominal"></div>
+           <div class="form-group" id="wrap-inf-barang" style="display:none"><label class="form-label">Nama/Jumlah Barang (Misal: 10 Sak Semen)</label><input type="text" class="form-input" id="inf-catatan"></div>
+        </div>
+
+        <button class="btn-submit" id="btn-simpan-data-amal" style="display:none; background:var(--accent); color:#4A3810;" onclick="simpanDataAmal()">💾 Simpan Data Jamaah</button>
+      </div>
+      <div id="list-data-amal"></div>
+    </div>
+
+    <!-- TAB JADWAL -->
     <div id="tab-jadwal" style="display:none">
       <div class="section-title">Kelola Jadwal</div>
       <div class="form-group"><label class="form-label">Nama Kegiatan</label><input type="text" class="form-input" id="jdw-nama"></div>
@@ -92,23 +153,23 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#F7F7F5;color:#1A1A1A
       <div class="divider"></div><div id="list-jadwal-admin"></div>
     </div>
 
+    <!-- TAB PENGUMUMAN (MADING MURNI) -->
     <div id="tab-pengumuman" style="display:none">
-      <div class="section-title">Tambah Pengumuman</div>
-      <div class="form-group"><label class="form-label">Tipe Kegiatan</label>
+      <div class="section-title">Mading / Pengumuman Informasi</div>
+      <div class="form-group"><label class="form-label">Tipe Berita</label>
         <select class="form-select" id="peng-tipe" onchange="document.getElementById('peng-ikon').value = this.options[this.selectedIndex].text.split(' ')[0];">
-          <option value="UMUM">📢 Umum</option><option value="KURBAN">🐄 Kurban & Sapi Kolektif</option><option value="RAMADAN">🌙 Ramadan</option><option value="MAULID">☪️ Maulid Nabi</option><option value="ISRA_MIRAJ">✨ Isra Mi'raj</option><option value="IDUL_FITRI">🌟 Idul Fitri</option>
+          <option value="UMUM">📢 Umum</option><option value="RAMADAN">🌙 Ramadan</option><option value="MAULID">☪️ Maulid Nabi</option><option value="ISRA_MIRAJ">✨ Isra Mi'raj</option><option value="IDUL_FITRI">🌟 Idul Fitri</option>
         </select>
       </div>
       <div class="form-group"><label class="form-label">Judul Banner</label><input type="text" class="form-input" id="peng-judul"></div>
       <div class="form-group"><label class="form-label">Isi Detail</label><textarea class="form-textarea" id="peng-isi"></textarea></div>
       <div class="form-group"><label class="form-label">Ikon Emoji</label><input type="text" class="form-input" id="peng-ikon" value="📢"></div>
-      <div class="form-row"><div class="form-group"><label class="form-label">Mulai</label><input type="date" class="form-input" id="peng-mulai"></div><div class="form-group"><label class="form-label">Selesai</label><input type="date" class="form-input" id="peng-selesai"></div></div>
-      <div class="form-group"><label class="form-label">Target Dana (Contoh: Harga 1 Sapi)</label><input type="number" class="form-input" id="peng-target" placeholder="Misal: 21000000"></div>
-      <div class="form-group"><label class="form-label">Judul Infaq / Sapi Kolektif</label><input type="text" class="form-input" id="peng-judul-infaq" placeholder="Contoh: Sapi Kolektif 1"></div>
-      <button class="btn-submit" onclick="simpanPengumuman()">💾 Publikasikan</button>
+      <div class="form-row"><div class="form-group"><label class="form-label">Mulai Tampil</label><input type="date" class="form-input" id="peng-mulai"></div><div class="form-group"><label class="form-label">Selesai Tampil</label><input type="date" class="form-input" id="peng-selesai"></div></div>
+      <button class="btn-submit" onclick="simpanPengumuman()">💾 Publikasikan Mading</button>
       <div class="divider"></div><div id="list-peng-admin"></div>
     </div>
 
+    <!-- TAB GALERI -->
     <div id="tab-galeri" style="display:none">
       <div class="section-title">Kelola Galeri</div>
       <div class="form-group"><label class="form-label">Media</label><select class="form-select" id="gal-tipe" onchange="toggleGaleriForm()"><option value="FOTO">📷 Foto</option><option value="VIDEO_YOUTUBE">▶️ Video YouTube</option></select></div>
@@ -119,8 +180,21 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#F7F7F5;color:#1A1A1A
       <div class="divider"></div><div id="list-gal-admin"></div>
     </div>
 
+    <!-- TAB PROFIL & TEMA -->
     <div id="tab-profil" style="display:none">
       <div class="section-title">Edit Profil & Tema</div>
+      
+      <div class="profil-section">
+        <h3>Tautan Website (Kritik Claude Fix)</h3>
+        <div class="form-group"><label class="form-label">Slug URL (Nama Unik Masjid)</label><input type="text" class="form-input" id="prof-slug"></div>
+        <div class="form-group"><label class="form-label">Link Web Jamaah</label>
+          <div class="form-row" style="grid-template-columns: 1fr auto;">
+            <input type="text" class="form-input" id="link-web" readonly style="background:#f3f4f6; color:#6b7280; font-size:11px;">
+            <button class="btn-submit" style="margin-top:0; padding:10px;" onclick="salinLinkWeb()">📄 Salin Link</button>
+          </div>
+        </div>
+      </div>
+
       <div class="profil-section">
         <h3>Informasi Dasar</h3>
         <div class="form-group"><label class="form-label">Nama Masjid</label><input type="text" class="form-input" id="prof-nama"></div>
@@ -171,11 +245,16 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#F7F7F5;color:#1A1A1A
 
 <script>
 var API_URL = 'https://script.google.com/macros/s/AKfycbxjONgLD4w4zNvJ5pYSgp2nrlRh9KHNGsWICQKk8m3YDglNEMdvrOyxmyzhGN_ja_62oQ/exec';
-var ADMIN_DATA = null, ID_MASJID = '', LAST_5_TRX = [];
+var ADMIN_DATA = null, ID_MASJID = '', LAST_5_TRX = [], LIST_PROGRAM = [];
 
 function showToast(m, t) { var el = document.getElementById('toast'); el.textContent = m; el.className = 'toast show ' + (t || ''); setTimeout(() => el.className = 'toast', 3000); }
 function toggleBuktiForm() { document.getElementById('form-upload-bukti').style.display = document.getElementById('trx-jenis').value === 'keluar' ? 'block' : 'none'; }
 function toggleGaleriForm() { document.getElementById('wrap-upload-gal').style.display = document.getElementById('gal-tipe').value === 'FOTO' ? 'block' : 'none'; }
+function toggleInfaqBarang() { 
+    var isUang = document.getElementById('inf-jenis').value === 'uang';
+    document.getElementById('wrap-inf-uang').style.display = isUang ? 'block' : 'none';
+    document.getElementById('wrap-inf-barang').style.display = isUang ? 'none' : 'block';
+}
 
 function uploadKeImgBB(input, targetId, statusId) {
   if (!input.files[0]) return;
@@ -189,9 +268,9 @@ function uploadKeImgBB(input, targetId, statusId) {
 }
 
 function gotoTab(t) {
-  ['transaksi','jadwal','pengumuman','galeri','profil'].forEach(id => document.getElementById('tab-'+id).style.display = id === t ? 'block' : 'none');
-  document.querySelectorAll('.nav-tab').forEach((el, i) => el.classList.toggle('active', ['transaksi','jadwal','pengumuman','galeri','profil'][i] === t));
-  if(t==='transaksi') loadTransaksiAdmin(); if(t==='jadwal') loadJadwalAdmin(); if(t==='pengumuman') loadPengumumanAdmin(); if(t==='galeri') loadGaleriAdmin(); if(t==='profil') loadProfilAdmin();
+  ['transaksi','amal','jadwal','pengumuman','galeri','profil'].forEach(id => document.getElementById('tab-'+id).style.display = id === t ? 'block' : 'none');
+  document.querySelectorAll('.nav-tab').forEach((el, i) => el.classList.toggle('active', ['transaksi','amal','jadwal','pengumuman','galeri','profil'][i] === t));
+  if(t==='transaksi') loadTransaksiAdmin(); if(t==='amal') loadProgramAmalAdmin(); if(t==='jadwal') loadJadwalAdmin(); if(t==='pengumuman') loadPengumumanAdmin(); if(t==='galeri') loadGaleriAdmin(); if(t==='profil') loadProfilAdmin();
 }
 
 function prosesLogin() {
@@ -209,12 +288,13 @@ function tampilAdmin() {
   loadTransaksiAdmin();
 }
 
+// TRANSAKSI KAS
 function simpanTransaksi() {
   var data = { action: 'addTransaksi', id_masjid: ID_MASJID, tanggal: document.getElementById('trx-tanggal').value, keterangan: document.getElementById('trx-keterangan').value, jenis: document.getElementById('trx-jenis').value, jumlah: parseFloat(document.getElementById('trx-jumlah').value), bukti_url: document.getElementById('trx-bukti').value, dicatat_oleh: ADMIN_DATA.nama };
   var idEdit = document.getElementById('trx-id-edit').value;
   if (idEdit) data.action = 'updateTransaksi', data.id_trx = idEdit;
   fetch(API_URL, { method: 'POST', body: JSON.stringify(data) }).then(r => r.json()).then(j => {
-    if (j.status === 'ok') { showToast('Berhasil!', 'sukses'); document.getElementById('trx-id-edit').value = ''; document.getElementById('btn-trx').textContent = '💾 Simpan'; loadTransaksiAdmin(); }
+    if (j.status === 'ok') { showToast('Berhasil!', 'sukses'); document.getElementById('trx-id-edit').value = ''; document.getElementById('btn-trx').textContent = '💾 Simpan Kas'; loadTransaksiAdmin(); }
   });
 }
 
@@ -246,13 +326,130 @@ function generatePDF() {
   });
 }
 
-function simpanJadwal() { var d = { action:'addJadwal', id_masjid:ID_MASJID, nama_kegiatan:document.getElementById('jdw-nama').value, jadwal:document.getElementById('jdw-jadwal').value }; fetch(API_URL,{method:'POST', body:JSON.stringify(d)}).then(()=>loadJadwalAdmin()); }
-function loadJadwalAdmin() { fetch(API_URL+'?action=getJadwal&id_masjid='+ID_MASJID).then(r=>r.json()).then(j=>{ if(j.data) document.getElementById('list-jadwal-admin').innerHTML = j.data.map(i=>`<div class="item-card">${i.nama_kegiatan}</div>`).join(''); }); }
-function simpanPengumuman() { var d = { action:'addPengumuman', id_masjid:ID_MASJID, tipe:document.getElementById('peng-tipe').value, judul:document.getElementById('peng-judul').value, isi:document.getElementById('peng-isi').value, ikon:document.getElementById('peng-ikon').value, tanggal_mulai:document.getElementById('peng-mulai').value, tanggal_selesai:document.getElementById('peng-selesai').value, target_infaq:document.getElementById('peng-target').value, judul_infaq:document.getElementById('peng-judul-infaq').value }; fetch(API_URL,{method:'POST', body:JSON.stringify(d)}).then(()=>loadPengumumanAdmin()); }
-function loadPengumumanAdmin() { fetch(API_URL+'?action=getPengumuman&id_masjid='+ID_MASJID).then(r=>r.json()).then(j=>{ if(j.data) document.getElementById('list-peng-admin').innerHTML = j.data.map(i=>`<div class="item-card">${i.judul}</div>`).join(''); }); }
+// PROGRAM AMAL (KURBAN/ZAKAT/INFAQ)
+function loadProgramAmalAdmin() {
+  fetch(API_URL + '?action=getProgramAmal&id_masjid=' + ID_MASJID).then(r => r.json()).then(j => {
+    if (j.status === 'ok') {
+      LIST_PROGRAM = j.data;
+      var sel = document.getElementById('pilih-program');
+      sel.innerHTML = '<option value="">-- Pilih Program Aktif --</option>' + LIST_PROGRAM.map(p => `<option value="${p.id}" data-tipe="${p.tipe}">[${p.tipe}] ${p.judul}</option>`).join('');
+    }
+  });
+}
 
-function loadProfilAdmin() { fetch(API_URL+'?action=getMasjid&id_masjid='+ID_MASJID).then(r=>r.json()).then(j=>{ var d = j.data; document.getElementById('prof-nama').value=d.nama||''; document.getElementById('prof-alamat').value=d.alamat||''; document.getElementById('prof-kota').value=d.kota||''; document.getElementById('prof-deskripsi').value=d.deskripsi||''; document.getElementById('prof-wa').value=d.telepon_wa||''; document.getElementById('prof-tema').value=d.tema||''; document.getElementById('prof-logo').value=d.logo_url||''; document.getElementById('prof-qris').value=d.qris_url||''; document.getElementById('prof-rek1-bank').value=d.rek1_bank||''; document.getElementById('prof-rek1-nomor').value=d.rek1_nomor||''; document.getElementById('prof-rek2-bank').value=d.rek2_bank||''; document.getElementById('prof-rek2-nomor').value=d.rek2_nomor||''; document.getElementById('prof-rek3-bank').value=d.rek3_bank||''; document.getElementById('prof-rek3-nomor').value=d.rek3_nomor||''; document.getElementById('prof-lat').value=d.latitude||''; document.getElementById('prof-lon').value=d.longitude||''; }); }
-function simpanProfil() { var d = { action:'updateMasjid', id_masjid:ID_MASJID, nama:document.getElementById('prof-nama').value, alamat:document.getElementById('prof-alamat').value, kota:document.getElementById('prof-kota').value, deskripsi:document.getElementById('prof-deskripsi').value, telepon_wa:document.getElementById('prof-wa').value, tema:document.getElementById('prof-tema').value, logo_url:document.getElementById('prof-logo').value, qris_url:document.getElementById('prof-qris').value, rek1_bank:document.getElementById('prof-rek1-bank').value, rek1_nomor:document.getElementById('prof-rek1-nomor').value, rek2_bank:document.getElementById('prof-rek2-bank').value, rek2_nomor:document.getElementById('prof-rek2-nomor').value, rek3_bank:document.getElementById('prof-rek3-bank').value, rek3_nomor:document.getElementById('prof-rek3-nomor').value, latitude:document.getElementById('prof-lat').value, longitude:document.getElementById('prof-lon').value }; fetch(API_URL,{method:'POST', body:JSON.stringify(d)}).then(()=>showToast('Profil Berhasil Diperbarui', 'sukses')); }
+function simpanProgramAmal() {
+  var d = { action: 'addProgramAmal', id_masjid: ID_MASJID, tipe: document.getElementById('amal-tipe').value, judul: document.getElementById('amal-judul').value, harga_target: document.getElementById('amal-harga').value, tanggal_mulai: document.getElementById('amal-mulai').value, tanggal_selesai: document.getElementById('amal-selesai').value };
+  fetch(API_URL, {method:'POST', body:JSON.stringify(d)}).then(r => r.json()).then(j => {
+      if(j.status === 'ok') { showToast('Program Dibuat!', 'sukses'); loadProgramAmalAdmin(); }
+  });
+}
+
+function gantiFormAmal() {
+  var sel = document.getElementById('pilih-program');
+  var tipe = sel.options[sel.selectedIndex].getAttribute('data-tipe');
+  
+  document.getElementById('form-kurban').style.display = 'none';
+  document.getElementById('form-zakat').style.display = 'none';
+  document.getElementById('form-infaq').style.display = 'none';
+  document.getElementById('btn-simpan-data-amal').style.display = 'none';
+  
+  if(tipe === 'KURBAN') { document.getElementById('form-kurban').style.display = 'block'; document.getElementById('btn-simpan-data-amal').style.display = 'block'; }
+  else if(tipe === 'ZAKAT') { document.getElementById('form-zakat').style.display = 'block'; document.getElementById('btn-simpan-data-amal').style.display = 'block'; }
+  else if(tipe === 'INFAQ') { document.getElementById('form-infaq').style.display = 'block'; document.getElementById('btn-simpan-data-amal').style.display = 'block'; }
+  
+  loadDataAmalAdmin(sel.value, tipe);
+}
+
+function simpanDataAmal() {
+  var sel = document.getElementById('pilih-program');
+  var id_prog = sel.value;
+  var tipe = sel.options[sel.selectedIndex].getAttribute('data-tipe');
+  if(!id_prog) return;
+
+  var d = { id_masjid: ID_MASJID, id_program: id_prog };
+  
+  if(tipe === 'KURBAN') {
+      d.action = 'addKurban'; d.nama = document.getElementById('krb-nama').value; d.jenis = document.getElementById('krb-jenis').value; d.telepon = document.getElementById('krb-wa').value;
+  } else if(tipe === 'ZAKAT') {
+      d.action = 'addZakat'; d.nama = document.getElementById('zkt-nama').value; d.jumlah_jiwa = document.getElementById('zkt-jiwa').value; d.jenis = document.getElementById('zkt-jenis').value; d.nominal = document.getElementById('zkt-nominal').value;
+  } else if(tipe === 'INFAQ') {
+      d.action = 'addInfaq'; d.nama = document.getElementById('inf-nama').value || 'Hamba Allah';
+      if(document.getElementById('inf-jenis').value === 'uang') { d.nominal = document.getElementById('inf-nominal').value; } 
+      else { d.catatan = document.getElementById('inf-catatan').value; d.nominal = 0; }
+  }
+
+  fetch(API_URL, {method:'POST', body:JSON.stringify(d)}).then(r => r.json()).then(j => {
+      if(j.status === 'ok') { showToast('Data Jamaah Tersimpan', 'sukses'); loadDataAmalAdmin(id_prog, tipe); }
+  });
+}
+
+function loadDataAmalAdmin(id_prog, tipe) {
+  if(!id_prog) { document.getElementById('list-data-amal').innerHTML = ''; return; }
+  var actionStr = tipe === 'KURBAN' ? 'getKurban' : (tipe === 'ZAKAT' ? 'getZakat' : 'getInfaq');
+  fetch(API_URL + `?action=${actionStr}&id_masjid=${ID_MASJID}&id_program=${id_prog}`).then(r => r.json()).then(j => {
+      if(j.status === 'ok' && j.data.length > 0) {
+          document.getElementById('list-data-amal').innerHTML = j.data.slice(-5).reverse().map(i => {
+              var detail = tipe === 'KURBAN' ? i.jenis : (tipe === 'ZAKAT' ? `${i.jumlah_jiwa} Jiwa (${i.jenis})` : (Number(i.nominal) > 0 ? `Rp ${Number(i.nominal).toLocaleString()}` : i.catatan));
+              return `<div class="item-card"><div class="item-card-title">${i.nama}</div><div class="item-card-footer"><span class="item-badge badge-masuk">${detail}</span></div></div>`;
+          }).join('');
+      } else {
+          document.getElementById('list-data-amal').innerHTML = '<div class="kosong">Belum ada data di program ini.</div>';
+      }
+  });
+}
+
+// JADWAL & PENGUMUMAN & GALERI
+function simpanJadwal() { var d = { action:'addJadwal', id_masjid:ID_MASJID, nama_kegiatan:document.getElementById('jdw-nama').value, jadwal:document.getElementById('jdw-jadwal').value, lokasi:document.getElementById('jdw-lokasi').value, keterangan:document.getElementById('jdw-keterangan').value }; fetch(API_URL,{method:'POST', body:JSON.stringify(d)}).then(()=>loadJadwalAdmin()); }
+function loadJadwalAdmin() { fetch(API_URL+'?action=getJadwal&id_masjid='+ID_MASJID).then(r=>r.json()).then(j=>{ if(j.data) document.getElementById('list-jadwal-admin').innerHTML = j.data.map(i=>`<div class="item-card">${i.nama_kegiatan}</div>`).join(''); }); }
+function simpanPengumuman() { var d = { action:'addPengumuman', id_masjid:ID_MASJID, tipe:document.getElementById('peng-tipe').value, judul:document.getElementById('peng-judul').value, isi:document.getElementById('peng-isi').value, ikon:document.getElementById('peng-ikon').value, tanggal_mulai:document.getElementById('peng-mulai').value, tanggal_selesai:document.getElementById('peng-selesai').value }; fetch(API_URL,{method:'POST', body:JSON.stringify(d)}).then(()=>loadPengumumanAdmin()); }
+function loadPengumumanAdmin() { fetch(API_URL+'?action=getPengumuman&id_masjid='+ID_MASJID).then(r=>r.json()).then(j=>{ if(j.data) document.getElementById('list-peng-admin').innerHTML = j.data.map(i=>`<div class="item-card">${i.judul}</div>`).join(''); }); }
+function simpanGaleri() { var d = { action:'addGaleri', id_masjid:ID_MASJID, judul:document.getElementById('gal-judul').value, tipe:document.getElementById('gal-tipe').value, url:document.getElementById('gal-url').value }; fetch(API_URL,{method:'POST', body:JSON.stringify(d)}).then(()=>loadGaleriAdmin()); }
+function loadGaleriAdmin() { fetch(API_URL+'?action=getGaleri&id_masjid='+ID_MASJID).then(r=>r.json()).then(j=>{ if(j.data) document.getElementById('list-gal-admin').innerHTML = j.data.map(i=>`<div class="item-card">${i.judul}</div>`).join(''); }); }
+
+// PROFIL & TEMA
+function buatLinkWebDisplay(slugInput) {
+    var curUrl = window.location.href.split('?')[0];
+    var baseWebUrl = curUrl.substring(0, curUrl.lastIndexOf("/")) + "/masjid.html?masjid=" + (slugInput || ADMIN_DATA.slug || '');
+    document.getElementById('link-web').value = baseWebUrl;
+}
+
+function salinLinkWeb() {
+    var urlText = document.getElementById('link-web').value;
+    navigator.clipboard.writeText(urlText).then(() => showToast('Link berhasil disalin!', 'sukses'));
+}
+
+function loadProfilAdmin() { 
+  fetch(API_URL+'?action=getMasjid&id_masjid='+ID_MASJID).then(r=>r.json()).then(j=>{ 
+    var d = j.data; 
+    document.getElementById('prof-slug').value=d.slug||'';
+    buatLinkWebDisplay(d.slug);
+    document.getElementById('prof-nama').value=d.nama||''; document.getElementById('prof-alamat').value=d.alamat||''; document.getElementById('prof-kota').value=d.kota||''; document.getElementById('prof-deskripsi').value=d.deskripsi||''; document.getElementById('prof-wa').value=d.telepon_wa||''; document.getElementById('prof-tema').value=d.tema||''; document.getElementById('prof-logo').value=d.logo_url||''; document.getElementById('prof-qris').value=d.qris_url||''; document.getElementById('prof-rek1-bank').value=d.rek1_bank||''; document.getElementById('prof-rek1-nomor').value=d.rek1_nomor||''; document.getElementById('prof-rek2-bank').value=d.rek2_bank||''; document.getElementById('prof-rek2-nomor').value=d.rek2_nomor||''; document.getElementById('prof-rek3-bank').value=d.rek3_bank||''; document.getElementById('prof-rek3-nomor').value=d.rek3_nomor||''; document.getElementById('prof-lat').value=d.latitude||''; document.getElementById('prof-lon').value=d.longitude||''; 
+  }); 
+}
+
+function simpanProfil() { 
+  var newSlug = document.getElementById('prof-slug').value;
+  var d = { action:'updateMasjid', id_masjid:ID_MASJID, slug:newSlug, nama:document.getElementById('prof-nama').value, alamat:document.getElementById('prof-alamat').value, kota:document.getElementById('prof-kota').value, deskripsi:document.getElementById('prof-deskripsi').value, telepon_wa:document.getElementById('prof-wa').value, tema:document.getElementById('prof-tema').value, logo_url:document.getElementById('prof-logo').value, qris_url:document.getElementById('prof-qris').value, rek1_bank:document.getElementById('prof-rek1-bank').value, rek1_nomor:document.getElementById('prof-rek1-nomor').value, rek2_bank:document.getElementById('prof-rek2-bank').value, rek2_nomor:document.getElementById('prof-rek2-nomor').value, rek3_bank:document.getElementById('prof-rek3-bank').value, rek3_nomor:document.getElementById('prof-rek3-nomor').value, latitude:document.getElementById('prof-lat').value, longitude:document.getElementById('prof-lon').value }; 
+  
+  fetch(API_URL,{method:'POST', body:JSON.stringify(d)}).then(r=>r.json()).then(j=>{
+      if (j.status === 'ok') {
+          showToast('Profil Tersimpan! Cache dibersihkan.', 'sukses');
+          // Update Slug Baru di Memori Admin
+          if (j.new_slug) {
+              ADMIN_DATA.slug = j.new_slug;
+              localStorage.setItem('pow_admin', JSON.stringify(ADMIN_DATA));
+              buatLinkWebDisplay(j.new_slug);
+          }
+          // Membersihkan Cache Frontend Lama agar pengunjung langsung melihat perubahan
+          var keysToClear = [];
+          for (var i = 0; i < localStorage.length; i++) {
+              if (localStorage.key(i).startsWith('masjid_')) keysToClear.push(localStorage.key(i));
+          }
+          keysToClear.forEach(k => localStorage.removeItem(k));
+      }
+  }); 
+}
+
 function logout() { localStorage.removeItem('pow_admin'); location.reload(); }
 window.onload = () => { var s = localStorage.getItem('pow_admin'); if (s) { ADMIN_DATA = JSON.parse(s); ID_MASJID = ADMIN_DATA.id_masjid; tampilAdmin(); } else document.getElementById('login-wrap').classList.add('show'); document.getElementById('splash').style.display='none'; };
 </script>
