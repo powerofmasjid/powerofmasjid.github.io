@@ -403,7 +403,8 @@ async function loadMasjid(slug) {
 // FITUR BARU: PROGRAM AMAL (Sesuai Logika Kesepakatan)
 // ============================================
 async function loadProgramAmal() {
-  var json = await apiFetch('getProgramAmal', {id_masjid: ID_MASJID}, 'program_amal_' + ID_MASJID);
+  // Matikan Cache di baris ini menggunakan Date.now() agar selalu nge-refresh real-time
+  var json = await apiFetch('getProgramAmal', {id_masjid: ID_MASJID, _t: Date.now()}, null);
   if (json.status !== 'ok' || json.data.length === 0) return;
   
   var container = document.getElementById('list-program-amal');
@@ -420,7 +421,7 @@ async function loadProgramAmal() {
 async function fetchDataAmal(program) {
    var action = program.tipe === 'KURBAN' ? 'getKurban' : (program.tipe === 'ZAKAT' ? 'getZakat' : 'getInfaq');
    // Tidak menggunakan cache dulu agar data selalu akurat & realtime
-   var res = await apiFetch(action, {id_masjid: ID_MASJID, id_program: program.id}, null); 
+   var res = await apiFetch(action, {id_masjid: ID_MASJID, id_program: program.id, _t: Date.now()}, null); 
    var el = document.getElementById('amal-content-'+program.id);
    
    if(res.status !== 'ok' || res.data.length === 0) {
@@ -662,7 +663,7 @@ async function init() {
     await Promise.all([
       loadSaldo(),
       loadTransaksi(),
-      loadProgramAmal(), // Menjalankan Fitur Amal
+      loadProgramAmal(), // Menjalankan Fitur Amal Tanpa Cache
       loadJadwal(),
       loadPengumuman(),
       loadGaleri()
