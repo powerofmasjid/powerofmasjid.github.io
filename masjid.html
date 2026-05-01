@@ -64,12 +64,8 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 
 /* BANNER PENGUMUMAN */
 .banner{border-radius:12px;padding:0.875rem 1rem;margin-bottom:0.75rem;display:flex;gap:10px;align-items:flex-start;}
-.banner-umum{background:var(--accent-light);border:1px solid rgba(201,168,76,0.3);}
-.banner-kurban{background:#FEF3E8;border:1px solid rgba(180,83,9,0.25);}
-.banner-ramadan{background:#E8EEF5;border:1px solid rgba(27,58,107,0.25);}
-.banner-maulid{background:#E8FAF8;border:1px solid rgba(15,118,110,0.25);}
-.banner-isra{background:#FFF1F2;border:1px solid rgba(136,19,55,0.25);}
-.banner-icon{font-size:22px;flex-shrink:0;margin-top:2px;}
+.banner-umum{background:var(--white);border:1px solid var(--border);box-shadow:0 2px 10px rgba(0,0,0,0.03);}
+.banner-icon{font-size:20px;flex-shrink:0;margin-top:2px;}
 .banner-content{flex:1;}
 .banner-judul{font-size:14px;font-weight:600;color:var(--primary);margin-bottom:3px;}
 .banner-isi{font-size:12px;color:var(--muted);line-height:1.6;}
@@ -296,7 +292,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 <div class="toast" id="toast">Nomor rekening disalin!</div>
 
 <script>
-// LINK API BARU (TELAH DISESUAIKAN)
+// LINK API BARU
 var API_URL = 'https://script.google.com/macros/s/AKfycbxjONgLD4w4zNvJ5pYSgp2nrlRh9KHNGsWICQKk8m3YDglNEMdvrOyxmyzhGN_ja_62oQ/exec';
 var ID_MASJID = '';
 var CACHE_DURATION = 3600000; // 1 jam
@@ -333,11 +329,6 @@ function salin(n) {
 }
 
 function tutupOverlay() { document.getElementById('overlay').classList.add('hide'); }
-
-function getBannerClass(tipe) {
-  var map = { 'KURBAN':'banner banner-kurban', 'RAMADAN':'banner banner-ramadan', 'MAULID':'banner banner-maulid', 'ISRA_MIRAJ':'banner banner-isra', 'IDUL_FITRI':'banner banner-ramadan' };
-  return map[tipe] || 'banner banner-umum';
-}
 
 async function apiFetch(action, params, cacheKey) {
   if (cacheKey) {
@@ -400,7 +391,7 @@ async function loadMasjid(slug) {
 }
 
 // ============================================
-// FITUR BARU: PROGRAM AMAL (Sesuai Logika Kesepakatan)
+// PROGRAM AMAL (Sesuai Logika Kesepakatan)
 // ============================================
 async function loadProgramAmal() {
   // Matikan Cache di baris ini menggunakan Date.now() agar selalu nge-refresh real-time
@@ -420,22 +411,38 @@ async function loadProgramAmal() {
 
 async function fetchDataAmal(program) {
    var action = program.tipe === 'KURBAN' ? 'getKurban' : (program.tipe === 'ZAKAT' ? 'getZakat' : 'getInfaq');
-   // Tidak menggunakan cache dulu agar data selalu akurat & realtime
    var res = await apiFetch(action, {id_masjid: ID_MASJID, id_program: program.id, _t: Date.now()}, null); 
    var el = document.getElementById('amal-content-'+program.id);
    
+   // HEADER PROGRAM (Deskripsi & Target/Harga)
+   var headerHtml = '<div style="padding:15px 15px 0;">';
+   if(program.deskripsi) {
+       headerHtml += '<div style="font-size:12px; color:var(--muted); margin-bottom:12px; line-height:1.5;">' + program.deskripsi + '</div>';
+   }
+   if(program.tipe === 'KURBAN' && Number(program.harga_target) > 0) {
+       headerHtml += '<div style="font-size:11px; display:inline-block; background:var(--primary-light); color:var(--primary); padding:4px 10px; border-radius:12px; margin-bottom:12px; font-weight:600;">Harga Patokan: ' + rupiah(program.harga_target) + '</div>';
+   }
+   if(program.tipe === 'INFAQ' && Number(program.harga_target) > 0) {
+       headerHtml += '<div style="font-size:11px; display:inline-block; background:var(--accent-light); color:var(--primary); border:1px solid rgba(201,168,76,0.3); padding:4px 10px; border-radius:12px; margin-bottom:12px; font-weight:600;">Target Dana: ' + rupiah(program.harga_target) + '</div>';
+   }
+   headerHtml += '</div>';
+
    if(res.status !== 'ok' || res.data.length === 0) {
-      el.innerHTML = '<div class="kosong">Belum ada partisipan yang tercatat.</div>';
+      el.innerHTML = headerHtml + '<div class="kosong" style="padding-top:0;">Belum ada partisipan yang tercatat.</div>';
       return;
    }
    
    var data = res.data;
-   var html = '<div style="padding:1rem;">';
+   var html = headerHtml + '<div style="padding:0 1rem 1rem;">';
    
-   // LOGIKA KURBAN (Kelompok Sapi 1/7 & Utuh)
+   // LOGIKA KURBAN (Sapi Kolektif, Sapi Utuh, Kambing Utuh)
    if(program.tipe === 'KURBAN') {
-       var sapiKol = []; var utuh = [];
-       data.forEach(d => { if(d.jenis === 'Sapi Kolektif') sapiKol.push(d.nama); else utuh.push({nama: d.nama, jenis: d.jenis}); });
+       var sapiKol = []; var sapiUtuh = []; var kambing = [];
+       data.forEach(d => { 
+           if(d.jenis === 'Sapi Kolektif') sapiKol.push(d.nama); 
+           else if(d.jenis === 'Sapi Utuh') sapiUtuh.push(d.nama);
+           else kambing.push(d.nama);
+       });
        
        var kelompok = 1;
        for(var i=0; i<sapiKol.length; i+=7) {
@@ -448,11 +455,18 @@ async function fetchDataAmal(program) {
            html += '</ol></div>';
            kelompok++;
        }
-       if(utuh.length > 0) {
+       if(sapiUtuh.length > 0) {
            html += '<div style="margin-bottom:0.5rem; background:var(--bg); border:1px solid var(--border); border-radius:8px; padding:10px;">';
-           html += '<div style="font-weight:600; font-size:12px; margin-bottom:8px; color:var(--primary); display:flex; align-items:center; gap:6px;"><span>🐐</span> Kurban Utuh (Pribadi)</div>';
+           html += '<div style="font-weight:600; font-size:12px; margin-bottom:8px; color:var(--primary); display:flex; align-items:center; gap:6px;"><span>🐂</span> Sapi Utuh (Pribadi)</div>';
            html += '<ul style="margin-left:1.5rem; font-size:12px; color:var(--text); line-height:1.8;">';
-           utuh.forEach(u => { html += '<li>' + u.nama + ' <span style="color:var(--muted); font-size:10px;">(' + u.jenis + ')</span></li>'; });
+           sapiUtuh.forEach(nama => { html += '<li>' + nama + '</li>'; });
+           html += '</ul></div>';
+       }
+       if(kambing.length > 0) {
+           html += '<div style="margin-bottom:0.5rem; background:var(--bg); border:1px solid var(--border); border-radius:8px; padding:10px;">';
+           html += '<div style="font-weight:600; font-size:12px; margin-bottom:8px; color:var(--primary); display:flex; align-items:center; gap:6px;"><span>🐐</span> Kambing / Domba</div>';
+           html += '<ul style="margin-left:1.5rem; font-size:12px; color:var(--text); line-height:1.8;">';
+           kambing.forEach(nama => { html += '<li>' + nama + '</li>'; });
            html += '</ul></div>';
        }
        
@@ -462,7 +476,7 @@ async function fetchDataAmal(program) {
        data.forEach(d => {
            tJiwa += Number(d.jumlah_jiwa) || 0;
            if(d.jenis === 'UANG') tUang += Number(d.nominal) || 0;
-           if(d.jenis === 'BERAS') tBeras += Number(d.nominal) || 0;
+           if(d.jenis === 'BERAS') tBeras += Number(d.nominal) || 0; // Nominal dari Admin sudah dikali 3.5
        });
        
        html += '<div style="background:var(--primary-light); padding:12px; border-radius:10px; margin-bottom:12px; text-align:center;">';
@@ -481,7 +495,7 @@ async function fetchDataAmal(program) {
        });
        html += '</div>';
        
-   // LOGIKA INFAQ PEMBANGUNAN (Uang & Material, Top 5 Terbaru)
+   // LOGIKA INFAQ KHUSUS (Uang & Material, Top 5 Terbaru)
    } else if(program.tipe === 'INFAQ') {
        var tUang = 0; var barang = [];
        data.forEach(d => {
@@ -490,7 +504,7 @@ async function fetchDataAmal(program) {
        });
        
        html += '<div style="background:var(--accent-light); border:1px solid rgba(201,168,76,0.3); padding:15px; border-radius:10px; margin-bottom:15px; text-align:center;">';
-       html += '<div style="font-size:11px; color:var(--primary); font-weight:600; margin-bottom:4px; letter-spacing:1px;">TOTAL DANA TERKUMPUL</div>';
+       html += '<div style="font-size:11px; color:var(--primary); font-weight:600; margin-bottom:4px; letter-spacing:1px;">TOTAL UANG TERKUMPUL</div>';
        html += '<div style="font-family:\'Amiri\',serif; font-size:28px; font-weight:700; color:var(--primary);">' + rupiah(tUang) + '</div>';
        if(barang.length > 0) {
            html += '<div style="font-size:11px; color:var(--text); margin-top:8px; padding-top:8px; border-top:1px dashed rgba(201,168,76,0.4);"><b>Material Diterima:</b><br>' + barang.join(', ') + '</div>';
@@ -565,7 +579,8 @@ async function loadPengumuman() {
   var html = '';
   for (var i = 0; i < json.data.length; i++) {
     var p = json.data[i];
-    html += '<div class="' + getBannerClass(p.tipe) + '"><div class="banner-icon">' + (p.ikon || '📢') + '</div><div class="banner-content"><div class="banner-judul">' + p.judul + '</div><div class="banner-isi">' + p.isi + '</div></div></div>';
+    // Mading diubah menjadi murni banner elegan tanpa tipe warna-warni/emoji sesuai instruksi
+    html += '<div class="banner banner-umum"><div class="banner-icon">📢</div><div class="banner-content"><div class="banner-judul">' + p.judul + '</div><div class="banner-isi">' + p.isi + '</div></div></div>';
   }
   el.innerHTML = html;
 }
