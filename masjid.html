@@ -73,14 +73,6 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 .banner-content{flex:1;}
 .banner-judul{font-size:14px;font-weight:600;color:var(--primary);margin-bottom:3px;}
 .banner-isi{font-size:12px;color:var(--muted);line-height:1.6;}
-.banner-actions{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;}
-.btn-wa{background:var(--primary);color:white;border:none;font-size:12px;padding:6px 14px;border-radius:20px;cursor:pointer;font-family:inherit;text-decoration:none;display:inline-flex;align-items:center;gap:4px;}
-.btn-daftar{background:var(--accent);color:#4A3810;border:none;font-size:12px;padding:6px 14px;border-radius:20px;cursor:pointer;font-family:inherit;text-decoration:none;display:inline-flex;align-items:center;gap:4px;}
-.progress-wrap{margin-top:10px;}
-.progress-label{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:5px;}
-.progress-bar{height:8px;background:rgba(0,0,0,0.08);border-radius:20px;overflow:hidden;}
-.progress-fill{height:100%;background:var(--primary);border-radius:20px;transition:width 1s ease;}
-.progress-info{font-size:11px;color:var(--primary);font-weight:600;margin-top:5px;text-align:right;}
 
 /* SALDO */
 .saldo-card{background:var(--white);border-radius:16px;padding:1.5rem;box-shadow:0 4px 24px rgba(0,0,0,0.06);border:1px solid var(--border);margin-bottom:1rem;text-align:center;}
@@ -102,7 +94,6 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 .section-head-left{display:flex;align-items:center;gap:8px;}
 .section-head .dot{width:8px;height:8px;border-radius:50%;background:var(--accent);}
 .section-head h2{font-size:13px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;}
-.section-head .lihat-semua{font-size:11px;color:var(--primary);text-decoration:none;}
 
 /* CARD */
 .card{background:var(--white);border-radius:14px;border:1px solid var(--border);overflow:hidden;}
@@ -156,14 +147,11 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 .rek-right{display:flex;align-items:center;gap:8px;}
 .rek-no{font-size:15px;font-weight:600;}
 .btn-salin{background:var(--primary-light);color:var(--primary);border:none;font-size:11px;padding:4px 10px;border-radius:6px;cursor:pointer;font-weight:500;font-family:inherit;}
-.btn-salin:active{opacity:0.7;}
 
 /* FOOTER */
 .footer{text-align:center;padding:1.5rem 1rem;font-size:12px;color:var(--muted);border-top:1px solid var(--border);background:var(--white);margin-top:1rem;}
 .footer a{color:var(--primary);text-decoration:none;font-weight:600;}
 .pow-badge{display:inline-flex;align-items:center;gap:4px;background:var(--primary-light);color:var(--primary);font-size:11px;padding:4px 10px;border-radius:20px;margin-top:8px;font-weight:500;}
-
-/* KOSONG */
 .kosong{text-align:center;padding:2rem 1rem;color:var(--muted);font-size:13px;}
 
 /* TOAST */
@@ -221,13 +209,19 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 
 <div class="main">
 
+  <!-- JADWAL SHOLAT -->
   <div class="sholat-card" id="sholat-card" style="display:none">
     <div class="sholat-title" id="sholat-date">Jadwal Sholat Hari Ini</div>
     <div class="sholat-grid" id="sholat-grid"></div>
   </div>
 
+  <!-- PENGUMUMAN MADING -->
   <div id="list-pengumuman"></div>
 
+  <!-- PROGRAM AMAL DINAMIS (KURBAN, ZAKAT, INFAQ KHUSUS) -->
+  <div id="list-program-amal"></div>
+
+  <!-- SALDO KAS -->
   <div class="saldo-card">
     <div class="saldo-label">Saldo Kas Masjid</div>
     <div class="saldo-amount" id="saldo-total">Rp 0</div>
@@ -245,6 +239,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
     </div>
   </div>
 
+  <!-- TRANSAKSI -->
   <div class="section">
     <div class="section-head">
       <div class="section-head-left"><div class="dot"></div><h2>Transaksi Terakhir</h2></div>
@@ -252,6 +247,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
     <div class="card" id="list-transaksi"><div class="kosong">Memuat...</div></div>
   </div>
 
+  <!-- JADWAL -->
   <div class="section">
     <div class="section-head">
       <div class="section-head-left"><div class="dot"></div><h2>Jadwal Kegiatan</h2></div>
@@ -259,6 +255,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
     <div class="card" id="list-jadwal"><div class="kosong">Memuat...</div></div>
   </div>
 
+  <!-- GALERI -->
   <div class="section" id="section-galeri" style="display:none">
     <div class="section-head">
       <div class="section-head-left"><div class="dot"></div><h2>Dokumentasi Kegiatan</h2></div>
@@ -271,6 +268,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
     </div>
   </div>
 
+  <!-- INFO REKENING -->
   <div class="section">
     <div class="section-head">
       <div class="section-head-left"><div class="dot"></div><h2>Infaq & Shadaqah</h2></div>
@@ -298,7 +296,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 <div class="toast" id="toast">Nomor rekening disalin!</div>
 
 <script>
-// LINK API BARU
+// LINK API BARU (TELAH DISESUAIKAN)
 var API_URL = 'https://script.google.com/macros/s/AKfycbxjONgLD4w4zNvJ5pYSgp2nrlRh9KHNGsWICQKk8m3YDglNEMdvrOyxmyzhGN_ja_62oQ/exec';
 var ID_MASJID = '';
 var CACHE_DURATION = 3600000; // 1 jam
@@ -317,18 +315,12 @@ function cacheGet(key) {
   } catch(e) { return null; }
 }
 
-function cacheClear(id_masjid) {
-  var keys = ['masjid_' + id_masjid, 'saldo_' + id_masjid, 'transaksi_' + id_masjid, 'jadwal_' + id_masjid, 'pengumuman_' + id_masjid, 'galeri_' + id_masjid, 'sholat_' + id_masjid, 'iklan_global'];
-  keys.forEach(function(k){ localStorage.removeItem(k); });
-}
-
 function getSlug() {
   var params = new URLSearchParams(window.location.search);
   return params.get('masjid') || 'annuriyah-tanjungbarat';
 }
 
 function rupiah(n) { return 'Rp ' + Number(n).toLocaleString('id-ID'); }
-function formatTgl(t) { var d = new Date(t); return isNaN(d) ? t : ['Ahad','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'][d.getDay()] + ', ' + d.toLocaleDateString('id-ID', {day:'numeric', month:'short', year:'numeric'}); }
 function formatTglPendek(t) { var d = new Date(t); return isNaN(d) ? t : d.toLocaleDateString('id-ID', {day:'numeric', month:'short', year:'numeric'}); }
 function namaHari(idx) { return ['Ahad','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'][idx]; }
 
@@ -374,12 +366,7 @@ async function loadMasjid(slug) {
   document.getElementById('alamat-masjid').textContent = d.alamat + ', ' + d.kota;
   document.title = d.nama + ' — Power of Masjid';
 
-  if (d.deskripsi) {
-    var el = document.getElementById('deskripsi-masjid');
-    el.textContent = d.deskripsi;
-    el.style.display = 'block';
-  }
-
+  if (d.deskripsi) { document.getElementById('deskripsi-masjid').textContent = d.deskripsi; document.getElementById('deskripsi-masjid').style.display = 'block'; }
   if (d.logo_url) document.getElementById('logo-wrap').innerHTML = '<img src="' + d.logo_url + '" alt="Logo ' + d.nama + '">';
   if (d.tema) document.body.classList.add('tema-' + d.tema);
 
@@ -412,6 +399,132 @@ async function loadMasjid(slug) {
   return d.id_masjid;
 }
 
+// ============================================
+// FITUR BARU: PROGRAM AMAL (Sesuai Logika Kesepakatan)
+// ============================================
+async function loadProgramAmal() {
+  var json = await apiFetch('getProgramAmal', {id_masjid: ID_MASJID}, 'program_amal_' + ID_MASJID);
+  if (json.status !== 'ok' || json.data.length === 0) return;
+  
+  var container = document.getElementById('list-program-amal');
+  var html = '';
+  
+  for (var i = 0; i < json.data.length; i++) {
+     var p = json.data[i];
+     html += '<div class="section"><div class="section-head"><div class="section-head-left"><div class="dot"></div><h2>' + p.judul + '</h2></div></div><div class="card" id="amal-content-'+p.id+'"><div class="kosong">Memuat data...</div></div></div>';
+     fetchDataAmal(p); // Load detail partisipan
+  }
+  container.innerHTML = html;
+}
+
+async function fetchDataAmal(program) {
+   var action = program.tipe === 'KURBAN' ? 'getKurban' : (program.tipe === 'ZAKAT' ? 'getZakat' : 'getInfaq');
+   // Tidak menggunakan cache dulu agar data selalu akurat & realtime
+   var res = await apiFetch(action, {id_masjid: ID_MASJID, id_program: program.id}, null); 
+   var el = document.getElementById('amal-content-'+program.id);
+   
+   if(res.status !== 'ok' || res.data.length === 0) {
+      el.innerHTML = '<div class="kosong">Belum ada partisipan yang tercatat.</div>';
+      return;
+   }
+   
+   var data = res.data;
+   var html = '<div style="padding:1rem;">';
+   
+   // LOGIKA KURBAN (Kelompok Sapi 1/7 & Utuh)
+   if(program.tipe === 'KURBAN') {
+       var sapiKol = []; var utuh = [];
+       data.forEach(d => { if(d.jenis === 'Sapi Kolektif') sapiKol.push(d.nama); else utuh.push({nama: d.nama, jenis: d.jenis}); });
+       
+       var kelompok = 1;
+       for(var i=0; i<sapiKol.length; i+=7) {
+           html += '<div style="margin-bottom:1rem; background:var(--bg); border:1px solid var(--border); border-radius:8px; padding:10px;">';
+           html += '<div style="font-weight:600; font-size:12px; margin-bottom:8px; color:var(--primary); display:flex; align-items:center; gap:6px;"><span>🐄</span> Sapi Ke-' + kelompok + ' (Kolektif)</div>';
+           html += '<ol style="margin-left:1.5rem; font-size:12px; color:var(--text); line-height:1.8;">';
+           var chunk = sapiKol.slice(i, i+7);
+           chunk.forEach(nama => { html += '<li>' + nama + '</li>'; });
+           for(var j=chunk.length; j<7; j++) { html += '<li style="color:#A0AEC0;">(Tersedia)</li>'; }
+           html += '</ol></div>';
+           kelompok++;
+       }
+       if(utuh.length > 0) {
+           html += '<div style="margin-bottom:0.5rem; background:var(--bg); border:1px solid var(--border); border-radius:8px; padding:10px;">';
+           html += '<div style="font-weight:600; font-size:12px; margin-bottom:8px; color:var(--primary); display:flex; align-items:center; gap:6px;"><span>🐐</span> Kurban Utuh (Pribadi)</div>';
+           html += '<ul style="margin-left:1.5rem; font-size:12px; color:var(--text); line-height:1.8;">';
+           utuh.forEach(u => { html += '<li>' + u.nama + ' <span style="color:var(--muted); font-size:10px;">(' + u.jenis + ')</span></li>'; });
+           html += '</ul></div>';
+       }
+       
+   // LOGIKA ZAKAT (Rekapitulasi Total & Daftar Nama)
+   } else if(program.tipe === 'ZAKAT') {
+       var tJiwa = 0; var tUang = 0; var tBeras = 0;
+       data.forEach(d => {
+           tJiwa += Number(d.jumlah_jiwa) || 0;
+           if(d.jenis === 'UANG') tUang += Number(d.nominal) || 0;
+           if(d.jenis === 'BERAS') tBeras += Number(d.nominal) || 0;
+       });
+       
+       html += '<div style="background:var(--primary-light); padding:12px; border-radius:10px; margin-bottom:12px; text-align:center;">';
+       html += '<div style="font-size:11px; color:var(--primary); font-weight:600; letter-spacing:1px; margin-bottom:8px;">📊 REKAPITULASI SEMENTARA</div>';
+       html += '<div style="display:flex; justify-content:space-between; font-size:12px; color:var(--text);">';
+       html += '<div>Muzakki<br><b style="font-size:14px; color:var(--primary);">' + tJiwa + ' Jiwa</b></div>';
+       html += '<div>Beras<br><b style="font-size:14px; color:var(--primary);">' + tBeras + ' Liter</b></div>';
+       html += '<div>Uang<br><b style="font-size:14px; color:var(--primary);">' + rupiah(tUang) + '</b></div>';
+       html += '</div></div>';
+       
+       html += '<div style="max-height:250px; overflow-y:auto; padding-right:5px;">';
+       data.forEach(d => {
+           html += '<div style="padding:10px 0; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center;">';
+           html += '<span style="font-size:13px; font-weight:500;">' + d.nama + '</span><span style="font-size:11px; background:var(--bg); padding:4px 8px; border-radius:12px; color:var(--muted);">' + d.jumlah_jiwa + ' Jiwa (' + d.jenis + ')</span>';
+           html += '</div>';
+       });
+       html += '</div>';
+       
+   // LOGIKA INFAQ PEMBANGUNAN (Uang & Material, Top 5 Terbaru)
+   } else if(program.tipe === 'INFAQ') {
+       var tUang = 0; var barang = [];
+       data.forEach(d => {
+           if(Number(d.nominal) > 0) tUang += Number(d.nominal);
+           if(d.catatan) barang.push(d.catatan);
+       });
+       
+       html += '<div style="background:var(--accent-light); border:1px solid rgba(201,168,76,0.3); padding:15px; border-radius:10px; margin-bottom:15px; text-align:center;">';
+       html += '<div style="font-size:11px; color:var(--primary); font-weight:600; margin-bottom:4px; letter-spacing:1px;">TOTAL DANA TERKUMPUL</div>';
+       html += '<div style="font-family:\'Amiri\',serif; font-size:28px; font-weight:700; color:var(--primary);">' + rupiah(tUang) + '</div>';
+       if(barang.length > 0) {
+           html += '<div style="font-size:11px; color:var(--text); margin-top:8px; padding-top:8px; border-top:1px dashed rgba(201,168,76,0.4);"><b>Material Diterima:</b><br>' + barang.join(', ') + '</div>';
+       }
+       html += '</div>';
+       
+       html += '<div style="font-size:12px; font-weight:600; margin-bottom:10px; color:var(--muted);">DAFTAR 5 DONATUR TERBARU:</div>';
+       var listTerbaru = data.slice(0, 5); 
+       listTerbaru.forEach((d, index) => {
+           var displayVal = Number(d.nominal) > 0 ? rupiah(d.nominal) : d.catatan;
+           var badgeBaru = index === 0 ? '<span style="font-size:9px; background:var(--primary); color:white; padding:2px 6px; border-radius:10px; margin-left:6px; vertical-align:middle;">Baru</span>' : '';
+           html += '<div style="padding:10px 0; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center;">';
+           html += '<span style="font-size:13px; font-weight:500;">' + d.nama + badgeBaru + '</span><span style="font-size:13px; font-weight:600; color:var(--primary);">' + displayVal + '</span>';
+           html += '</div>';
+       });
+       
+       if(data.length > 5) {
+           html += '<div id="all-infaq-'+program.id+'" style="display:none;">';
+           var sisa = data.slice(5);
+           sisa.forEach(d => {
+               var displayVal = Number(d.nominal) > 0 ? rupiah(d.nominal) : d.catatan;
+               html += '<div style="padding:10px 0; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center;">';
+               html += '<span style="font-size:13px; font-weight:500;">' + d.nama + '</span><span style="font-size:13px; font-weight:600; color:var(--primary);">' + displayVal + '</span>';
+               html += '</div>';
+           });
+           html += '</div>';
+           html += '<button style="width:100%; margin-top:12px; background:var(--bg); border:1px solid var(--border); color:var(--primary); padding:10px; border-radius:8px; font-size:12px; font-weight:600; cursor:pointer;" onclick="document.getElementById(\'all-infaq-'+program.id+'\').style.display=\'block\'; this.style.display=\'none\';">🔍 Lihat Semua ' + data.length + ' Donatur</button>';
+       }
+   }
+   
+   html += '</div>';
+   el.innerHTML = html;
+}
+// ============================================
+
 async function loadSaldo() {
   var json = await apiFetch('getSaldo', {id_masjid: ID_MASJID}, 'saldo_' + ID_MASJID);
   if (json.status !== 'ok') return;
@@ -426,10 +539,7 @@ async function loadSaldo() {
 async function loadTransaksi() {
   var json = await apiFetch('getTransaksi', {id_masjid: ID_MASJID}, 'transaksi_' + ID_MASJID);
   var el = document.getElementById('list-transaksi');
-  if (json.status !== 'ok' || json.data.length === 0) {
-    el.innerHTML = '<div class="kosong">Belum ada transaksi tercatat</div>';
-    return;
-  }
+  if (json.status !== 'ok' || json.data.length === 0) { el.innerHTML = '<div class="kosong">Belum ada transaksi tercatat</div>'; return; }
   el.innerHTML = json.data.slice(0, 5).map(function(t){
     var bukti = t.bukti_url ? '<a href="' + t.bukti_url + '" target="_blank" class="trx-bukti">Lihat bukti</a>' : '';
     return '<div class="trx-item"><div class="trx-icon ' + t.jenis + '">' + (t.jenis === 'masuk' ? '↑' : '↓') + '</div><div class="trx-info"><div class="trx-name">' + t.keterangan + '</div><div class="trx-date">' + formatTglPendek(t.tanggal) + '</div></div><div class="trx-right"><div class="trx-amount ' + t.jenis + '">' + (t.jenis === 'masuk' ? '+' : '-') + ' ' + rupiah(t.jumlah) + '</div>' + bukti + '</div></div>';
@@ -439,10 +549,7 @@ async function loadTransaksi() {
 async function loadJadwal() {
   var json = await apiFetch('getJadwal', {id_masjid: ID_MASJID}, 'jadwal_' + ID_MASJID);
   var el = document.getElementById('list-jadwal');
-  if (json.status !== 'ok' || json.data.length === 0) {
-    el.innerHTML = '<div class="kosong">Belum ada jadwal kegiatan</div>';
-    return;
-  }
+  if (json.status !== 'ok' || json.data.length === 0) { el.innerHTML = '<div class="kosong">Belum ada jadwal kegiatan</div>'; return; }
   el.innerHTML = json.data.map(function(j){
     var hari = j.hari ? '<span class="jadwal-hari">' + j.hari + '</span>' : '';
     return '<div class="jadwal-item"><div class="jadwal-dot"></div><div><div class="jadwal-title">' + j.nama_kegiatan + '</div><div class="jadwal-detail">' + j.jadwal + (j.lokasi ? ' · ' + j.lokasi : '') + '</div>' + hari + '</div></div>';
@@ -457,23 +564,7 @@ async function loadPengumuman() {
   var html = '';
   for (var i = 0; i < json.data.length; i++) {
     var p = json.data[i];
-    var progressHtml = '';
-
-    if (p.target_infaq > 0) {
-      try {
-        var progJson = await apiFetch('getProgressInfaq', {id_masjid: ID_MASJID, id_pengumuman: p.id}, null);
-        if (progJson.status === 'ok') {
-          var pg = progJson.data;
-          progressHtml = '<div class="progress-wrap"><div class="progress-label"><span>' + (p.judul_infaq || 'Target Infaq') + '</span><span>' + pg.persen + '%</span></div><div class="progress-bar"><div class="progress-fill" style="width:' + pg.persen + '%"></div></div><div class="progress-info">' + rupiah(pg.terkumpul) + ' dari ' + rupiah(pg.target) + '</div></div>';
-        }
-      } catch(e) {}
-    }
-
-    var actions = '';
-    if (p.telepon_wa) actions += '<a href="https://wa.me/' + p.telepon_wa + '" target="_blank" class="btn-wa">💬 Hubungi DKM</a>';
-    if (p.link_daftar) actions += '<a href="' + p.link_daftar + '" target="_blank" class="btn-daftar">📝 Daftar</a>';
-
-    html += '<div class="' + getBannerClass(p.tipe) + '"><div class="banner-icon">' + (p.ikon || '📢') + '</div><div class="banner-content"><div class="banner-judul">' + p.judul + '</div><div class="banner-isi">' + p.isi + '</div>' + progressHtml + (actions ? '<div class="banner-actions">' + actions + '</div>' : '') + '</div></div>';
+    html += '<div class="' + getBannerClass(p.tipe) + '"><div class="banner-icon">' + (p.ikon || '📢') + '</div><div class="banner-content"><div class="banner-judul">' + p.judul + '</div><div class="banner-isi">' + p.isi + '</div></div></div>';
   }
   el.innerHTML = html;
 }
@@ -484,16 +575,11 @@ async function loadGaleri() {
 
   var fotos = json.data.filter(function(g){ return g.tipe === 'FOTO'; });
   var videos = json.data.filter(function(g){ return g.tipe === 'VIDEO_YOUTUBE'; });
-  var fotoHtml = '';
-  var videoHtml = '';
+  var fotoHtml = ''; var videoHtml = '';
 
-  fotos.slice(0, 4).forEach(function(f){
-    fotoHtml += '<div class="foto-item"><img src="' + f.url + '" alt="' + f.judul + '" loading="lazy"><div class="foto-caption">' + f.judul + '</div></div>';
-  });
-
+  fotos.slice(0, 4).forEach(function(f){ fotoHtml += '<div class="foto-item"><img src="' + f.url + '" alt="' + f.judul + '" loading="lazy"><div class="foto-caption">' + f.judul + '</div></div>'; });
   videos.slice(0, 2).forEach(function(v){
-    var url = v.url;
-    var ytId = url.replace('https://www.youtube.com/watch?v=','').replace('https://youtu.be/','').split('&')[0].split('?')[0];
+    var ytId = v.url.replace('https://www.youtube.com/watch?v=','').replace('https://youtu.be/','').split('&')[0].split('?')[0];
     videoHtml += '<div class="video-item"><iframe src="https://www.youtube.com/embed/' + ytId + '" allowfullscreen loading="lazy"></iframe></div><div class="video-caption">' + v.judul + '</div>';
   });
 
@@ -506,58 +592,42 @@ async function loadGaleri() {
 
 function loadJadwalSholat(lat, lon) {
   try {
-    var latNum = parseFloat(String(lat).trim());
-    var lonNum = parseFloat(String(lon).trim());
+    var latNum = parseFloat(String(lat).trim()); var lonNum = parseFloat(String(lon).trim());
     if (isNaN(latNum) || isNaN(lonNum)) return;
 
-    var today = new Date();
-    var D2R = Math.PI / 180;
-    var R2D = 180 / Math.PI;
-
-    var Y = today.getFullYear();
-    var M = today.getMonth() + 1;
-    var D = today.getDate();
+    var today = new Date(); var D2R = Math.PI / 180; var R2D = 180 / Math.PI;
+    var Y = today.getFullYear(); var M = today.getMonth() + 1; var D = today.getDate();
     var JD = 367*Y - Math.floor(7*(Y+Math.floor((M+9)/12))/4) + Math.floor(275*M/9) + D + 1721013.5;
 
     var T = (JD - 2451545) / 36525;
     var L0 = (280.46646 + 36000.76983*T) % 360;
     var M0 = (357.52911 + 35999.05029*T) % 360;
     var C = (1.914602 - 0.004817*T)*Math.sin(M0*D2R) + 0.019993*Math.sin(2*M0*D2R);
-    var sunLon = L0 + C;
-    var obliq = 23.4393 - 0.0130*T;
+    var sunLon = L0 + C; var obliq = 23.4393 - 0.0130*T;
     var decl = R2D * Math.asin(Math.sin(obliq*D2R) * Math.sin(sunLon*D2R));
     var RA = R2D * Math.atan2(Math.cos(obliq*D2R)*Math.sin(sunLon*D2R), Math.cos(sunLon*D2R));
-    var EqT = ((L0 - RA) % 360) / 15;
-    var transit = 12 - lonNum/15 + 7 - EqT;
+    var EqT = ((L0 - RA) % 360) / 15; var transit = 12 - lonNum/15 + 7 - EqT;
 
     function ha(angle) {
       var cosH = (Math.sin(angle*D2R) - Math.sin(latNum*D2R)*Math.sin(decl*D2R)) / (Math.cos(latNum*D2R)*Math.cos(decl*D2R));
-      if (cosH < -1) cosH = -1;
-      if (cosH > 1) cosH = 1;
+      if (cosH < -1) cosH = -1; if (cosH > 1) cosH = 1;
       return R2D * Math.acos(cosH) / 15;
     }
 
     function fmt(t) {
-      t = ((t % 24) + 24) % 24;
-      var h = Math.floor(t);
-      var m = Math.round((t - h) * 60);
-      if (m === 60) { h++; m = 0; }
-      return String(h).padStart(2,'0') + ':' + String(m).padStart(2,'0');
+      t = ((t % 24) + 24) % 24; var h = Math.floor(t); var m = Math.round((t - h) * 60);
+      if (m === 60) { h++; m = 0; } return String(h).padStart(2,'0') + ':' + String(m).padStart(2,'0');
     }
 
     var asarAngle = R2D * Math.atan(1/(1 + Math.tan(D2R*Math.abs(latNum - decl))));
-
     var sholat = [
-      {name:'Subuh',   time: fmt(transit - ha(-20))},
-      {name:'Dzuhur',  time: fmt(transit)},
-      {name:'Ashar',   time: fmt(transit + ha(asarAngle))},
-      {name:'Maghrib', time: fmt(transit + ha(-0.833))},
-      {name:'Isya',    time: fmt(transit + ha(-18))}
+      {name:'Subuh', time: fmt(transit - ha(-20))}, {name:'Dzuhur', time: fmt(transit)},
+      {name:'Ashar', time: fmt(transit + ha(asarAngle))}, {name:'Maghrib', time: fmt(transit + ha(-0.833))},
+      {name:'Isya', time: fmt(transit + ha(-18))}
     ];
 
     function toMenit(str) { var p = str.split(':'); return parseInt(p[0])*60 + parseInt(p[1]); }
-    var now = today.getHours()*60 + today.getMinutes();
-    var aktifIdx = 0;
+    var now = today.getHours()*60 + today.getMinutes(); var aktifIdx = 0;
     for (var i = 0; i < sholat.length; i++) { if (now >= toMenit(sholat[i].time)) aktifIdx = i; }
 
     document.getElementById('sholat-card').style.display = 'block';
@@ -568,9 +638,6 @@ function loadJadwalSholat(lat, lon) {
   } catch(e) {}
 }
 
-// ============================================
-// OVERLAY IKLAN GLOBAL (TARIK DATA DARI SHEET IKLAN)
-// ============================================
 async function tampilOverlay() {
   try {
     var json = await apiFetch('getIklanGlobal', null, 'iklan_global');
@@ -590,27 +657,20 @@ async function init() {
     if (!id) return;
 
     var splash = document.getElementById('splash');
-    if (splash) {
-      splash.classList.add('hide');
-      setTimeout(function(){ splash.style.display = 'none'; }, 600);
-    }
+    if (splash) { splash.classList.add('hide'); setTimeout(function(){ splash.style.display = 'none'; }, 600); }
 
     await Promise.all([
       loadSaldo(),
       loadTransaksi(),
+      loadProgramAmal(), // Menjalankan Fitur Amal
       loadJadwal(),
       loadPengumuman(),
       loadGaleri()
     ]);
   } catch(e) {
     var splash = document.getElementById('splash');
-    if (splash) {
-      splash.classList.add('hide');
-      setTimeout(function(){ splash.style.display = 'none'; }, 600);
-    }
+    if (splash) { splash.classList.add('hide'); setTimeout(function(){ splash.style.display = 'none'; }, 600); }
   }
-
-  // Menampilkan Iklan Global setelah 3 detik
   setTimeout(function(){ tampilOverlay(); }, 3000);
 }
 
