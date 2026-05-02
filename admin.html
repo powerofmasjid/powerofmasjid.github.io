@@ -115,6 +115,8 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#F7F7F5;color:#1A1A1A
           </select>
         </div>
 
+        <input type="hidden" id="amal-jamaah-id-edit"> <!-- Penanda Mode Edit Jamaah -->
+
         <!-- FORM KURBAN (Hanya Sapi & Kambing Utuh) -->
         <div id="form-kurban" style="display:none">
            <div class="form-group"><label class="form-label">Nama Shohibul Qurban</label><input type="text" class="form-input" id="krb-nama"></div>
@@ -158,6 +160,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#F7F7F5;color:#1A1A1A
     <!-- TAB JADWAL -->
     <div id="tab-jadwal" style="display:none">
       <div class="section-title">Kelola Jadwal</div>
+      <input type="hidden" id="jdw-id-edit">
       <div class="form-group"><label class="form-label">Nama Kegiatan</label><input type="text" class="form-input" id="jdw-nama"></div>
       <div class="form-group"><label class="form-label">Jadwal / Waktu Bebas</label><input type="text" class="form-input" id="jdw-jadwal"></div>
       <div class="form-group"><label class="form-label">Lokasi (Opsional)</label><input type="text" class="form-input" id="jdw-lokasi"></div>
@@ -169,6 +172,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#F7F7F5;color:#1A1A1A
     <!-- TAB PENGUMUMAN (MADING MURNI) -->
     <div id="tab-pengumuman" style="display:none">
       <div class="section-title">Papan Pengumuman Berita</div>
+      <input type="hidden" id="peng-id-edit">
       <div class="form-group"><label class="form-label">Judul Berita</label><input type="text" class="form-input" id="peng-judul" placeholder="Contoh: Pengajian Rutin Jumat Malam"></div>
       <div class="form-group"><label class="form-label">Isi Detail Berita</label><textarea class="form-textarea" id="peng-isi"></textarea></div>
       <div class="form-row">
@@ -253,9 +257,10 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#F7F7F5;color:#1A1A1A
 <div class="toast" id="toast">Tersimpan!</div>
 
 <script>
-// LINK API BARU
-var API_URL = 'https://script.google.com/macros/s/AKfycbyIXGmR7PAet-K42D5dADJM-PxkZYGFMFYkI4ruAGPrK06NyCV5FUD0rL7rCn29BxK4lA/exec';
+// LINK API BARU SESUAI INSTRUKSI
+var API_URL = 'https://script.google.com/macros/s/AKfycbybLit4uWhWGsIUZZwiuQ0R5m9VTy87wNN2mD4OnUIC1R4gc0OiPtu22f984W-wxTBcYQ/exec';
 var ADMIN_DATA = null, ID_MASJID = '', LAST_5_TRX = [], LIST_PROGRAM = [];
+var LIST_JADWAL = [], LIST_PENGUMUMAN = [], LIST_DATA_AMAL = []; // Penampung Data Edit
 
 function showToast(m, t) { var el = document.getElementById('toast'); el.textContent = m; el.className = 'toast show ' + (t || ''); setTimeout(() => el.className = 'toast', 3000); }
 
@@ -297,7 +302,6 @@ function uploadKeImgBB(input, targetId, statusId) {
   
   if(document.getElementById(statusId)) document.getElementById(statusId).style.display = 'block';
   
-  // Menggunakan mode 'no-cors' terkadang bermasalah. Standarnya ImgBB mengizinkan CORS dari browser.
   fetch('https://api.imgbb.com/1/upload?key=13e22ae09205fa7788ec0cd06e94cfaa', { 
     method: 'POST', 
     body: fd 
@@ -306,7 +310,6 @@ function uploadKeImgBB(input, targetId, statusId) {
   .then(res => {
       if(document.getElementById(statusId)) document.getElementById(statusId).style.display = 'none';
       if (res.success) { 
-          // Menyimpan URL langsung (.jpg/.png) ke dalam input agar bisa dibaca oleh masjid.html
           document.getElementById(targetId).value = res.data.url; 
           showToast('Upload Berhasil!', 'sukses'); 
       } else {
@@ -375,14 +378,22 @@ function loadTransaksiAdmin() {
     var el = document.getElementById('list-trx-admin');
     if (j.status !== 'ok' || j.data.length === 0) { el.innerHTML = '<div class="kosong">Belum ada transaksi</div>'; return; }
     LAST_5_TRX = j.data.slice(0, 5);
-    el.innerHTML = LAST_5_TRX.map((t, idx) => `<div class="item-card"><div class="item-card-title">${t.keterangan} <div><button class="btn-edit-trx" style="background:#DC2626;" onclick="hapusTrx('${t.id}')">🗑️ Hapus</button></div></div><div class="item-card-footer"><span class="item-badge ${t.jenis==='masuk'?'badge-masuk':'badge-keluar'}">${t.jenis}</span> <strong>Rp ${t.jumlah.toLocaleString()}</strong></div></div>`).join('');
+    el.innerHTML = LAST_5_TRX.map((t, idx) => `<div class="item-card"><div class="item-card-title">${t.keterangan} <div><button class="btn-edit-trx" onclick="editTrx(${idx})">✏️ Edit</button> <button class="btn-edit-trx" style="background:#DC2626;" onclick="hapusTrx('${t.id}')">🗑️ Hapus</button></div></div><div class="item-card-footer"><span class="item-badge ${t.jenis==='masuk'?'badge-masuk':'badge-keluar'}">${t.jenis}</span> <strong>Rp ${t.jumlah.toLocaleString()}</strong></div></div>`).join('');
   });
 }
 
-// FUNGSI HAPUS TRANSAKSI
+function editTrx(idx) {
+  var t = LAST_5_TRX[idx]; document.getElementById('trx-id-edit').value = t.id;
+  document.getElementById('trx-tanggal').value = new Date(t.tanggal).toISOString().split('T')[0];
+  document.getElementById('trx-jenis').value = t.jenis; document.getElementById('trx-keterangan').value = t.keterangan;
+  document.getElementById('trx-jumlah').value = t.jumlah; document.getElementById('trx-bukti').value = t.bukti_url || '';
+  document.getElementById('btn-trx').innerHTML = '📝 Update Transaksi'; toggleBuktiForm();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
 function hapusTrx(id_trx) {
   if(!confirm('Apakah Anda yakin ingin MENGHAPUS transaksi ini secara permanen?')) return;
-  var data = { action: 'deleteTransaksi', id_masjid: ID_MASJID, id_transaksi: id_trx }; // Sesuai parameter code.gs
+  var data = { action: 'deleteTransaksi', id_masjid: ID_MASJID, id_transaksi: id_trx }; 
   fetch(API_URL, { method: 'POST', body: JSON.stringify(data) })
   .then(r => r.json())
   .then(j => {
@@ -415,7 +426,7 @@ function loadProgramAmalAdmin() {
     if (j.status === 'ok') {
       LIST_PROGRAM = j.data;
       var sel = document.getElementById('pilih-program');
-      var lastSelected = sel.value; // Simpan memori pilihan terakhir agar tidak ke-reset
+      var lastSelected = sel.value; 
       
       sel.innerHTML = '<option value="">-- Pilih Program Dulu --</option>' + LIST_PROGRAM.map(p => `<option value="${p.id}" data-tipe="${p.tipe}">[${p.tipe}] ${p.judul}</option>`).join('');
       
@@ -457,7 +468,7 @@ function toggleZakatNominal() {
 
 function hitungZakatBeras() {
     var jiwa = document.getElementById('zkt-jiwa').value || 0;
-    document.getElementById('zkt-beras-total').value = (jiwa * 3.5) + ' Liter'; // Paten 3.5 Liter
+    document.getElementById('zkt-beras-total').value = (jiwa * 3.5) + ' Liter'; 
 }
 
 function toggleInfaqBarang() { 
@@ -472,6 +483,11 @@ function gantiFormAmal() {
   document.getElementById('form-zakat').style.display = 'none';
   document.getElementById('form-infaq').style.display = 'none';
   document.getElementById('btn-simpan-data-amal').style.display = 'none';
+  
+  // Bersihkan ID Edit setiap ganti program
+  document.getElementById('amal-jamaah-id-edit').value = '';
+  document.getElementById('btn-simpan-data-amal').innerHTML = '💾 Simpan Data Jamaah';
+  
   document.getElementById('list-data-amal').innerHTML = '';
   
   if(!sel.value) return; 
@@ -502,7 +518,7 @@ function simpanDataAmal(btn) {
           d.nominal = document.getElementById('zkt-nominal').value;
           if(!d.nominal) { showToast('Nominal uang wajib diisi!', 'error'); return; }
       } else {
-          d.nominal = d.jumlah_jiwa * 3.5; // Sistem mengunci hitungan beras 3.5 L
+          d.nominal = d.jumlah_jiwa * 3.5; 
       }
   } else if(tipe === 'INFAQ') {
       d.action = 'addInfaq'; d.nama = document.getElementById('inf-nama').value || 'Hamba Allah';
@@ -515,11 +531,22 @@ function simpanDataAmal(btn) {
       }
   }
 
+  // TANGKAP ID EDIT JIKA ADA
+  var idEdit = document.getElementById('amal-jamaah-id-edit').value;
+  if(idEdit) {
+      d.id = idEdit;
+      if(tipe === 'KURBAN') d.action = 'updateKurban';
+      else if(tipe === 'ZAKAT') d.action = 'updateZakat';
+      else if(tipe === 'INFAQ') d.action = 'updateInfaq';
+  }
+
   setLoading(btn, true);
   fetch(API_URL, {method:'POST', body:JSON.stringify(d)}).then(r => r.json()).then(j => {
       setLoading(btn, false);
       if(j.status === 'ok') { 
           showToast('Data Jamaah Tersimpan', 'sukses'); 
+          document.getElementById('amal-jamaah-id-edit').value = '';
+          document.getElementById('btn-simpan-data-amal').innerHTML = '💾 Simpan Data Jamaah';
           document.getElementById('krb-nama').value = '';
           document.getElementById('zkt-nama').value = '';
           document.getElementById('inf-nama').value = '';
@@ -535,25 +562,159 @@ function loadDataAmalAdmin(id_prog, tipe) {
   var actionStr = tipe === 'KURBAN' ? 'getKurban' : (tipe === 'ZAKAT' ? 'getZakat' : 'getInfaq');
   fetch(API_URL + `?action=${actionStr}&id_masjid=${ID_MASJID}&id_program=${id_prog}&_t=`+Date.now()).then(r => r.json()).then(j => {
       if(j.status === 'ok' && j.data.length > 0) {
+          LIST_DATA_AMAL = j.data; // Simpan untuk diedit
           document.getElementById('list-data-amal').innerHTML = j.data.slice(-5).reverse().map(i => {
               var detail = tipe === 'KURBAN' ? i.jenis : (tipe === 'ZAKAT' ? `${i.jumlah_jiwa} Jiwa (${i.jenis})` : (Number(i.nominal) > 0 ? `Rp ${Number(i.nominal).toLocaleString()}` : i.catatan));
-              return `<div class="item-card"><div class="item-card-title">${i.nama}</div><div class="item-card-footer"><span class="item-badge badge-masuk">${detail}</span></div></div>`;
+              return `<div class="item-card"><div class="item-card-title">${i.nama} <div><button class="btn-edit-trx" onclick="editDataAmal('${i.id}', '${tipe}')">✏️ Edit</button> <button class="btn-edit-trx" style="background:#DC2626;" onclick="hapusDataAmal('${i.id}', '${tipe}')">🗑️ Hapus</button></div></div><div class="item-card-footer"><span class="item-badge badge-masuk">${detail}</span></div></div>`;
           }).join('');
       } else {
+          LIST_DATA_AMAL = [];
           document.getElementById('list-data-amal').innerHTML = '<div class="kosong">Belum ada data jamaah di program ini.</div>';
       }
   });
 }
 
-// ----------------------------------------------------
-// JADWAL & PENGUMUMAN & GALERI
-// ----------------------------------------------------
-function simpanJadwal(btn) { var d = { action:'addJadwal', id_masjid:ID_MASJID, nama_kegiatan:document.getElementById('jdw-nama').value, jadwal:document.getElementById('jdw-jadwal').value, lokasi:document.getElementById('jdw-lokasi').value, keterangan:document.getElementById('jdw-keterangan').value }; setLoading(btn,true); fetch(API_URL,{method:'POST', body:JSON.stringify(d)}).then(()=>{ setLoading(btn,false); loadJadwalAdmin(); }).catch(()=>{ setLoading(btn,false); }); }
-function loadJadwalAdmin() { fetch(API_URL+'?action=getJadwal&id_masjid='+ID_MASJID+'&_t='+Date.now()).then(r=>r.json()).then(j=>{ if(j.data) document.getElementById('list-jadwal-admin').innerHTML = j.data.map(i=>`<div class="item-card">${i.nama_kegiatan}</div>`).join(''); }); }
+// MESIN EDIT & HAPUS PROGRAM AMAL
+function editDataAmal(id, tipe) {
+    var dataObj = LIST_DATA_AMAL.find(x => x.id === id);
+    if(!dataObj) return;
+    
+    document.getElementById('amal-jamaah-id-edit').value = id;
+    
+    if(tipe === 'KURBAN') {
+        document.getElementById('krb-nama').value = dataObj.nama;
+        document.getElementById('krb-jenis').value = dataObj.jenis;
+        document.getElementById('krb-wa').value = dataObj.telepon || '';
+    } else if(tipe === 'ZAKAT') {
+        document.getElementById('zkt-nama').value = dataObj.nama;
+        document.getElementById('zkt-jiwa').value = dataObj.jumlah_jiwa;
+        document.getElementById('zkt-jenis').value = dataObj.jenis;
+        if(dataObj.jenis === 'UANG') document.getElementById('zkt-nominal').value = dataObj.nominal;
+        toggleZakatNominal();
+    } else if(tipe === 'INFAQ') {
+        document.getElementById('inf-nama').value = dataObj.nama;
+        var isUang = Number(dataObj.nominal) > 0;
+        document.getElementById('inf-jenis').value = isUang ? 'uang' : 'barang';
+        toggleInfaqBarang();
+        if(isUang) document.getElementById('inf-nominal').value = dataObj.nominal;
+        else document.getElementById('inf-catatan').value = dataObj.catatan;
+    }
+    
+    document.getElementById('btn-simpan-data-amal').innerHTML = '📝 Update Data Jamaah';
+    window.scrollTo({top:0, behavior:'smooth'});
+}
 
-function simpanPengumuman(btn) { var d = { action:'addPengumuman', id_masjid:ID_MASJID, tipe:'UMUM', judul:document.getElementById('peng-judul').value, isi:document.getElementById('peng-isi').value, ikon:'📢', tanggal_mulai:document.getElementById('peng-mulai').value, tanggal_selesai:document.getElementById('peng-selesai').value }; setLoading(btn,true); fetch(API_URL,{method:'POST', body:JSON.stringify(d)}).then(()=>{ setLoading(btn,false); loadPengumumanAdmin(); }).catch(()=>{ setLoading(btn,false); }); }
-function loadPengumumanAdmin() { fetch(API_URL+'?action=getPengumuman&id_masjid='+ID_MASJID+'&_t='+Date.now()).then(r=>r.json()).then(j=>{ if(j.data) document.getElementById('list-peng-admin').innerHTML = j.data.map(i=>`<div class="item-card">${i.judul}</div>`).join(''); }); }
+function hapusDataAmal(id, tipe) {
+    if(!confirm('Apakah Anda yakin ingin menghapus data jamaah ini permanen?')) return;
+    var actionStr = tipe === 'KURBAN' ? 'deleteKurban' : (tipe === 'ZAKAT' ? 'deleteZakat' : 'deleteInfaq');
+    
+    fetch(API_URL, {method:'POST', body:JSON.stringify({action:actionStr, id_masjid:ID_MASJID, id:id})})
+    .then(r=>r.json()).then(j=>{ 
+        showToast('Data jamaah terhapus', 'sukses'); 
+        var sel = document.getElementById('pilih-program');
+        loadDataAmalAdmin(sel.value, tipe); 
+    });
+}
 
+// ----------------------------------------------------
+// JADWAL & PENGUMUMAN & GALERI (DENGAN EDIT/HAPUS)
+// ----------------------------------------------------
+
+// === JADWAL ===
+function simpanJadwal(btn) { 
+  var d = { action:'addJadwal', id_masjid:ID_MASJID, nama_kegiatan:document.getElementById('jdw-nama').value, jadwal:document.getElementById('jdw-jadwal').value, lokasi:document.getElementById('jdw-lokasi').value, keterangan:document.getElementById('jdw-keterangan').value }; 
+  var idEdit = document.getElementById('jdw-id-edit').value;
+  if (idEdit) { d.action = 'updateJadwal'; d.id_jadwal = idEdit; }
+  
+  setLoading(btn,true); 
+  fetch(API_URL,{method:'POST', body:JSON.stringify(d)}).then(()=>{ 
+    setLoading(btn,false); 
+    showToast('Jadwal tersimpan!', 'sukses');
+    document.getElementById('jdw-id-edit').value = '';
+    document.getElementById('jdw-nama').value = '';
+    document.getElementById('jdw-jadwal').value = '';
+    document.getElementById('jdw-lokasi').value = '';
+    document.getElementById('jdw-keterangan').value = '';
+    btn.innerHTML = '💾 Simpan Jadwal';
+    loadJadwalAdmin(); 
+  }).catch(()=>{ setLoading(btn,false); }); 
+}
+
+function loadJadwalAdmin() { 
+  fetch(API_URL+'?action=getJadwal&id_masjid='+ID_MASJID+'&_t='+Date.now()).then(r=>r.json()).then(j=>{ 
+    if(j.data) {
+      LIST_JADWAL = j.data;
+      document.getElementById('list-jadwal-admin').innerHTML = j.data.map((i, idx)=>`<div class="item-card"><div class="item-card-title">${i.nama_kegiatan} <div><button class="btn-edit-trx" onclick="editJadwal(${idx})">✏️ Edit</button> <button class="btn-edit-trx" style="background:#DC2626;" onclick="hapusJadwal('${i.id}')">🗑️ Hapus</button></div></div><div class="item-card-footer"><span class="item-badge badge-masuk">${i.jadwal}</span></div></div>`).join(''); 
+    } else {
+      document.getElementById('list-jadwal-admin').innerHTML = '<div class="kosong">Belum ada jadwal</div>';
+    }
+  }); 
+}
+
+function editJadwal(idx) {
+  var d = LIST_JADWAL[idx]; 
+  document.getElementById('jdw-id-edit').value = d.id;
+  document.getElementById('jdw-nama').value = d.nama_kegiatan; 
+  document.getElementById('jdw-jadwal').value = d.jadwal;
+  document.getElementById('jdw-lokasi').value = d.lokasi; 
+  document.getElementById('jdw-keterangan').value = d.keterangan;
+  document.querySelector('#tab-jadwal .btn-submit').innerHTML = '📝 Update Jadwal';
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function hapusJadwal(id) {
+  if(!confirm('Hapus jadwal ini permanen?')) return;
+  fetch(API_URL, {method:'POST', body:JSON.stringify({action:'deleteJadwal', id_masjid:ID_MASJID, id_jadwal:id})}).then(r=>r.json()).then(j=>{ showToast('Jadwal dihapus', 'sukses'); loadJadwalAdmin(); });
+}
+
+// === PENGUMUMAN ===
+function simpanPengumuman(btn) { 
+  var d = { action:'addPengumuman', id_masjid:ID_MASJID, tipe:'UMUM', judul:document.getElementById('peng-judul').value, isi:document.getElementById('peng-isi').value, ikon:'📢', tanggal_mulai:document.getElementById('peng-mulai').value, tanggal_selesai:document.getElementById('peng-selesai').value }; 
+  var idEdit = document.getElementById('peng-id-edit').value;
+  if (idEdit) { d.action = 'updatePengumuman'; d.id = idEdit; }
+  
+  setLoading(btn,true); 
+  fetch(API_URL,{method:'POST', body:JSON.stringify(d)}).then(()=>{ 
+    setLoading(btn,false); 
+    showToast('Pengumuman tersimpan!', 'sukses');
+    document.getElementById('peng-id-edit').value = '';
+    document.getElementById('peng-judul').value = '';
+    document.getElementById('peng-isi').value = '';
+    document.getElementById('peng-mulai').value = '';
+    document.getElementById('peng-selesai').value = '';
+    btn.innerHTML = '💾 Publikasikan Berita';
+    loadPengumumanAdmin(); 
+  }).catch(()=>{ setLoading(btn,false); }); 
+}
+
+function loadPengumumanAdmin() { 
+  fetch(API_URL+'?action=getPengumuman&id_masjid='+ID_MASJID+'&_t='+Date.now()).then(r=>r.json()).then(j=>{ 
+    if(j.data) {
+      LIST_PENGUMUMAN = j.data;
+      document.getElementById('list-peng-admin').innerHTML = j.data.map((i, idx)=>`<div class="item-card"><div class="item-card-title">${i.judul} <div><button class="btn-edit-trx" onclick="editPengumuman(${idx})">✏️ Edit</button> <button class="btn-edit-trx" style="background:#DC2626;" onclick="hapusPengumuman('${i.id}')">🗑️ Hapus</button></div></div></div>`).join(''); 
+    } else {
+      document.getElementById('list-peng-admin').innerHTML = '<div class="kosong">Belum ada pengumuman</div>';
+    }
+  }); 
+}
+
+function editPengumuman(idx) {
+  var d = LIST_PENGUMUMAN[idx]; 
+  document.getElementById('peng-id-edit').value = d.id;
+  document.getElementById('peng-judul').value = d.judul; 
+  document.getElementById('peng-isi').value = d.isi;
+  document.getElementById('peng-mulai').value = new Date(d.tanggal_mulai).toISOString().split('T')[0];
+  document.getElementById('peng-selesai').value = new Date(d.tanggal_selesai).toISOString().split('T')[0];
+  document.querySelector('#tab-pengumuman .btn-submit').innerHTML = '📝 Update Berita';
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function hapusPengumuman(id) {
+  if(!confirm('Hapus berita ini permanen?')) return;
+  fetch(API_URL, {method:'POST', body:JSON.stringify({action:'deletePengumuman', id_masjid:ID_MASJID, id_pengumuman:id})}).then(r=>r.json()).then(j=>{ showToast('Berita dihapus', 'sukses'); loadPengumumanAdmin(); });
+}
+
+// === GALERI ===
 function simpanGaleri(btn) { 
   var d = { 
     action: 'addGaleri', 
@@ -573,7 +734,21 @@ function simpanGaleri(btn) {
       loadGaleriAdmin(); 
   }).catch(()=>{ setLoading(btn,false); }); 
 }
-function loadGaleriAdmin() { fetch(API_URL+'?action=getGaleri&id_masjid='+ID_MASJID+'&_t='+Date.now()).then(r=>r.json()).then(j=>{ if(j.data) document.getElementById('list-gal-admin').innerHTML = j.data.map(i=>`<div class="item-card">${i.judul}</div>`).join(''); }); }
+
+function loadGaleriAdmin() { 
+  fetch(API_URL+'?action=getGaleri&id_masjid='+ID_MASJID+'&_t='+Date.now()).then(r=>r.json()).then(j=>{ 
+    if(j.data) {
+      document.getElementById('list-gal-admin').innerHTML = j.data.map(i=>`<div class="item-card"><div class="item-card-title">${i.judul} <div><button class="btn-edit-trx" style="background:#DC2626;" onclick="hapusGaleri('${i.id}')">🗑️ Hapus</button></div></div><div class="item-card-footer"><span class="item-badge badge-masuk">${i.tipe}</span></div></div>`).join(''); 
+    } else {
+      document.getElementById('list-gal-admin').innerHTML = '<div class="kosong">Belum ada galeri</div>';
+    }
+  }); 
+}
+
+function hapusGaleri(id) {
+  if(!confirm('Hapus galeri ini permanen?')) return;
+  fetch(API_URL, {method:'POST', body:JSON.stringify({action:'deleteGaleri', id_masjid:ID_MASJID, id_galeri:id})}).then(r=>r.json()).then(j=>{ showToast('Galeri dihapus', 'sukses'); loadGaleriAdmin(); });
+}
 
 // ----------------------------------------------------
 // PROFIL & TEMA
