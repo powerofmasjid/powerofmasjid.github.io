@@ -15,8 +15,6 @@ a{text-decoration:none;}
 /* NAVBAR */
 .navbar{background:var(--white);padding:1rem 0;position:sticky;top:0;z-index:100;border-bottom:1px solid var(--border);}
 .nav-inner{display:flex;justify-content:space-between;align-items:center;}
-.nav-brand{font-family:'Amiri',serif;font-size:24px;font-weight:700;color:var(--primary);display:flex;align-items:center;gap:8px;}
-.nav-brand span{color:var(--accent);}
 
 /* HERO SECTION */
 .hero{padding:5rem 0 4rem;text-align:center;background:linear-gradient(180deg, var(--primary-light) 0%, var(--bg) 100%);}
@@ -81,7 +79,17 @@ a{text-decoration:none;}
 
 <nav class="navbar">
   <div class="container nav-inner">
-    <div class="nav-brand">م <span>Power of Masjid</span></div>
+    <!-- LOGO GITHUB DIMASUKKAN DI SINI -->
+    <div class="nav-brand" style="display: flex; align-items: center; gap: 15px;">
+      <!-- Logo Power of Masjid -->
+      <img src="Logo Power of Masjid.png" alt="Power of Masjid" style="height: 40px; width: auto;">
+      
+      <!-- Garis Pemisah Tipis -->
+      <span style="color: #E5E7EB; font-size: 24px; font-weight: 300;">|</span> 
+      
+      <!-- Logo Yayasan -->
+      <img src="Logo Yayasan Nasi Jumat (tembus).png" alt="Yayasan Nasi Jumat" style="height: 40px; width: auto;">
+    </div>
   </div>
 </nav>
 
@@ -92,7 +100,6 @@ a{text-decoration:none;}
     <p>DKM tidak perlu paham teknologi. Cukup kirim data, kami bantu buatkan website masjid yang rapi, transparan, dan siap menerima donasi.</p>
     
     <div class="hero-cta">
-      <!-- TOMBOL WA ATAS SUDAH DIUPDATE -->
       <a href="https://wa.me/628211043809?text=Assalamu'alaikum,%20saya%20pengurus%20masjid.%20Ingin%20dibantu%20dibuatkan%20website%20gratis%20dari%20Power%20of%20Masjid." target="_blank" class="btn btn-primary">
         💬 Daftarkan Masjid (Kami Bantu Sampai Aktif)
       </a>
@@ -173,7 +180,6 @@ a{text-decoration:none;}
       <span>✓ Admin Mudah</span>
     </div>
 
-    <!-- TOMBOL WA BAWAH SUDAH DIUPDATE -->
     <a href="https://wa.me/628211043809?text=Assalamu'alaikum,%20saya%20pengurus%20masjid.%20Ingin%20dibantu%20dibuatkan%20website%20gratis%20dari%20Power%20of%20Masjid." target="_blank" class="btn btn-primary" style="background:var(--accent); color:var(--primary-dark); box-shadow:none;">
       💬 Hubungi Sekarang via WhatsApp
     </a>
@@ -189,7 +195,9 @@ a{text-decoration:none;}
       </p>
     </div>
     <div class="footer-bottom">
-      &copy; 2026 Power of Masjid — Yayasan Nasi Jum'at.<br>Bangkit dan Bergerak dari Masjid.
+      &copy; 2026 Power of Masjid — Yayasan Nasi Jum'at.<br>
+      <!-- SLOGAN BARU DIMASUKKAN DI SINI -->
+      Memakmurkan Masjid Menguatkan Umat.
     </div>
   </div>
 </footer>
