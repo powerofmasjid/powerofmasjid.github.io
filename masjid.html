@@ -117,15 +117,15 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 .jadwal-detail{font-size:12px;color:var(--muted);margin-top:3px;}
 .jadwal-hari{display:inline-block;background:var(--primary-light);color:var(--primary);font-size:10px;padding:2px 6px;border-radius:4px;margin-top:4px;}
 
-/* GALERI */
+/* GALERI - PERBAIKAN CSS KLASIK UNTUK POCO/BROWSER LAMA */
 .galeri-wrap{padding:1rem;}
 .foto-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:0.75rem;}
-.foto-item{border-radius:10px;overflow:hidden;aspect-ratio:1;background:var(--bg);position:relative;cursor:pointer;}
-.foto-item img{width:100%;height:100%;object-fit:cover;transition:transform 0.3s;}
+.foto-item{border-radius:10px;overflow:hidden;padding-bottom:100%;background:var(--bg);position:relative;cursor:pointer;}
+.foto-item img{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;transition:transform 0.3s;}
 .foto-item:hover img{transform:scale(1.05);}
-.foto-caption{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,0.6));color:white;font-size:10px;padding:12px 6px 4px;}
-.video-item{border-radius:10px;overflow:hidden;aspect-ratio:16/9;margin-bottom:8px;}
-.video-item iframe{width:100%;height:100%;border:none;}
+.foto-caption{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,0.6));color:white;font-size:10px;padding:12px 6px 4px;z-index:2;}
+.video-item{border-radius:10px;overflow:hidden;padding-bottom:56.25%;position:relative;margin-bottom:8px;}
+.video-item iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:none;}
 .video-caption{font-size:12px;color:var(--muted);text-align:center;margin-bottom:10px;}
 
 /* INFAQ */
@@ -168,7 +168,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 .overlay-iklan-sub{font-size:12px;color:var(--muted);margin-top:3px;line-height:1.5;}
 .overlay-btn{display:block;background:var(--primary);color:white;text-decoration:none;text-align:center;padding:10px;border-radius:10px;font-size:13px;font-weight:500;margin-top:0.75rem;}
 
-/* CSS TAMBAHAN KOMPROMI CHATGPT */
+/* CSS TAMBAHAN */
 .progress-wrap{background:var(--border);height:8px;border-radius:10px;overflow:hidden;margin:10px 0;}
 .progress-bar{background:var(--primary);height:100%;border-radius:10px;transition:width 1s ease-in-out;}
 .urgency-label{font-size:11px;color:var(--accent);font-weight:600;background:rgba(201,168,76,0.1);padding:3px 8px;border-radius:12px;display:inline-block;margin-bottom:8px;transition:0.3s;}
@@ -293,6 +293,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 
 </div>
 
+<!-- Slogan & Yayasan Tetap Aman Terjaga -->
 <div class="footer">
   Sistem ini dipersembahkan oleh<br>
   <a href="https://powerofmasjid.github.io" target="_blank">Power of Masjid</a> — Yayasan Nasi Jum'at<br>
@@ -302,10 +303,10 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 <div class="toast" id="toast">Nomor rekening disalin!</div>
 
 <script>
-// LINK API BARU YANG DISEPAKATI
-var API_URL = 'https://script.google.com/macros/s/AKfycbyIXGmR7PAet-K42D5dADJM-PxkZYGFMFYkI4ruAGPrK06NyCV5FUD0rL7rCn29BxK4lA/exec';
+// LINK API BARU
+var API_URL = 'https://script.google.com/macros/s/AKfycbybLit4uWhWGsIUZZwiuQ0R5m9VTy87wNN2mD4OnUIC1R4gc0OiPtu22f984W-wxTBcYQ/exec';
 var ID_MASJID = '';
-var CACHE_DURATION = 3600000; // 1 jam
+var CACHE_DURATION = 60000; // DIUBAH KE 1 MENIT agar DKM lebih mudah cek update
 
 function cacheSet(key, data) {
   try { localStorage.setItem(key, JSON.stringify({ data: data, time: Date.now() })); } catch(e) {}
@@ -402,14 +403,13 @@ async function loadMasjid(slug) {
 }
 
 // ============================================
-// PROGRAM AMAL (Integrasi Psikologi & Konversi ChatGPT)
+// PROGRAM AMAL (Integrasi Psikologi & Konversi)
 // ============================================
 async function loadProgramAmal() {
   var json = await apiFetch('getProgramAmal', {id_masjid: ID_MASJID, _t: Date.now()}, null);
   var container = document.getElementById('list-program-amal');
   if (json.status !== 'ok' || json.data.length === 0) { container.innerHTML = ''; return; }
   
-  // Emotional Hook (Instruksi Poin 7 ChatGPT)
   var html = '<div style="text-align:center; font-size:13px; color:var(--primary); font-weight:600; margin-bottom:15px; padding:10px; background:var(--primary-light); border-radius:10px;">Mari ambil bagian dalam kebaikan hari ini 🤲</div>';
   
   for (var i = 0; i < json.data.length; i++) {
@@ -424,8 +424,9 @@ async function fetchDataAmal(program) {
    var action = program.tipe === 'KURBAN' ? 'getKurban' : (program.tipe === 'ZAKAT' ? 'getZakat' : 'getInfaq');
    var res = await apiFetch(action, {id_masjid: ID_MASJID, id_program: program.id, _t: Date.now()}, null); 
    var el = document.getElementById('amal-content-'+program.id);
+   var currentUrl = window.location.href; // AMBIL LINK WEB OTOMATIS
    
-   // HEADER PROGRAM
+   // HEADER PROGRAM (DESKRIPSI DITAMPILKAN DI SINI)
    var headerHtml = '<div style="padding:15px 15px 0;">';
    if(program.deskripsi) {
        headerHtml += '<div style="font-size:12px; color:var(--muted); margin-bottom:12px; line-height:1.5;">' + program.deskripsi + '</div>';
@@ -443,7 +444,7 @@ async function fetchDataAmal(program) {
    var data = res.data;
    var html = headerHtml + '<div style="padding:0 1rem 1rem;">';
    
-   // LOGIKA KURBAN DENGAN PROGRESS BAR (Instruksi Poin 3 ChatGPT)
+   // LOGIKA KURBAN 
    if(program.tipe === 'KURBAN') {
        var sapiKol = []; var sapiUtuh = []; var kambing = [];
        data.forEach(d => { 
@@ -464,7 +465,6 @@ async function fetchDataAmal(program) {
            html += '<div style="font-size:10px; font-weight:600; color:var(--accent);">' + chunk.length + '/7 Terisi</div>';
            html += '</div>';
            
-           // Progress Bar Sapi
            html += '<div class="progress-wrap" style="height:6px; margin:0 0 10px 0;"><div class="progress-bar" style="width:' + progressKurban + '%"></div></div>';
            
            html += '<ol style="margin-left:1.5rem; font-size:12px; color:var(--text); line-height:1.8;">';
@@ -488,9 +488,8 @@ async function fetchDataAmal(program) {
            html += '</ul></div>';
        }
 
-       // CTA KUAT (Instruksi Poin 1 ChatGPT)
        var waTextKurban = encodeURIComponent("Assalamu'alaikum,\nSaya ingin berpartisipasi dalam program Kurban:\n*" + program.judul + "*\n\nMohon diarahkan untuk proses donasinya.");
-       var shareTextKurban = encodeURIComponent("Yuk ikuti program Kurban *" + program.judul + "* di Masjid kita!");
+       var shareTextKurban = encodeURIComponent("Yuk ikuti program Kurban *" + program.judul + "* di Masjid kita! Cek selengkapnya di sini: " + currentUrl);
        html += '<div class="cta-group" style="margin-top:15px;">';
        html += '<a href="https://wa.me/' + window.WA_MASJID + '?text=' + waTextKurban + '" target="_blank" class="btn-cta btn-cta-primary">🐄 Ikut Kurban</a>';
        html += '<a href="https://wa.me/?text=' + shareTextKurban + '" target="_blank" class="btn-cta btn-cta-outline">📤 Bagikan</a>';
@@ -522,13 +521,13 @@ async function fetchDataAmal(program) {
        html += '</div>';
 
        var waTextZakat = encodeURIComponent("Assalamu'alaikum,\nSaya ingin menunaikan Zakat Fitrah untuk program:\n*" + program.judul + "*\n\nMohon diarahkan untuk proses pembayarannya.");
-       var shareTextZakat = encodeURIComponent("Mari tunaikan Zakat Fitrah *" + program.judul + "* di Masjid kita.");
+       var shareTextZakat = encodeURIComponent("Mari tunaikan Zakat Fitrah *" + program.judul + "* di Masjid kita. Info donasi klik: " + currentUrl);
        html += '<div class="cta-group">';
-       html += '<a href="https://wa.me/' + window.WA_MASJID + '?text=' + waTextZakat + '" target="_blank" class="btn-cta btn-cta-primary">🌾 Tunaikan Sekarang</a>'; // Instruksi Poin 4
+       html += '<a href="https://wa.me/' + window.WA_MASJID + '?text=' + waTextZakat + '" target="_blank" class="btn-cta btn-cta-primary">🌾 Tunaikan Sekarang</a>';
        html += '<a href="https://wa.me/?text=' + shareTextZakat + '" target="_blank" class="btn-cta btn-cta-outline">📤 Bagikan</a>';
        html += '</div>';
        
-   // LOGIKA INFAQ KHUSUS (Dengan Progress Bar Berjiwa)
+   // LOGIKA INFAQ KHUSUS
    } else if(program.tipe === 'INFAQ') {
        var tUang = 0; var barang = [];
        data.forEach(d => {
@@ -539,7 +538,6 @@ async function fetchDataAmal(program) {
        var targetDana = Number(program.harga_target) || 0;
        var progressBerapa = targetDana > 0 ? Math.min(Math.round((tUang / targetDana) * 100), 100) : 0;
        
-       // GLOW EFFECT JIKA >80% (Instruksi Poin 2 ChatGPT)
        var urgencyStyle = progressBerapa >= 80 && progressBerapa < 100 ? 'box-shadow: 0 0 15px rgba(201,168,76,0.3); border-color:var(--accent);' : '';
        
        html += '<div style="background:var(--accent-light); border:1px solid rgba(201,168,76,0.3); padding:15px; border-radius:10px; margin-bottom:15px; text-align:center; ' + urgencyStyle + '">';
@@ -563,9 +561,8 @@ async function fetchDataAmal(program) {
            html += '<div style="font-size:11px; color:var(--text); margin-top:8px; padding-top:8px; border-top:1px dashed rgba(201,168,76,0.4);"><b>Material Diterima:</b><br>' + barang.join(', ') + '</div>';
        }
        
-       // CTA KUAT INFAQ
        var waTextInfaq = encodeURIComponent("Assalamu'alaikum,\nSaya ingin berpartisipasi dalam program donasi:\n*" + program.judul + "*\n\nMohon diarahkan untuk proses donasinya.");
-       var shareTextInfaq = encodeURIComponent("Yuk bantu program *" + program.judul + "* di Masjid kita. Salurkan donasi terbaikmu!");
+       var shareTextInfaq = encodeURIComponent("Yuk bantu program *" + program.judul + "* di Masjid kita! Salurkan donasi terbaikmu melalui link ini: " + currentUrl);
        html += '<div class="cta-group">';
        html += '<a href="https://wa.me/' + window.WA_MASJID + '?text=' + waTextInfaq + '" target="_blank" class="btn-cta btn-cta-primary">💚 Donasi Sekarang</a>';
        html += '<a href="https://wa.me/?text=' + shareTextInfaq + '" target="_blank" class="btn-cta btn-cta-outline">📤 Bagikan</a>';
@@ -646,6 +643,7 @@ async function loadPengumuman() {
   el.innerHTML = html;
 }
 
+// PERBAIKAN MESIN DETEKSI YOUTUBE (Tembus Link HP)
 async function loadGaleri() {
   var json = await apiFetch('getGaleri', {id_masjid: ID_MASJID}, 'galeri_' + ID_MASJID);
   if (json.status !== 'ok' || json.data.length === 0) return;
@@ -654,10 +652,18 @@ async function loadGaleri() {
   var videos = json.data.filter(function(g){ return g.tipe === 'VIDEO_YOUTUBE'; });
   var fotoHtml = ''; var videoHtml = '';
 
-  fotos.slice(0, 4).forEach(function(f){ fotoHtml += '<div class="foto-item"><img src="' + f.url + '" alt="' + f.judul + '" loading="lazy"><div class="foto-caption">' + f.judul + '</div></div>'; });
+  fotos.slice(0, 4).forEach(function(f){ 
+      fotoHtml += '<div class="foto-item"><img src="' + f.url + '" alt="' + f.judul + '" loading="lazy"><div class="foto-caption">' + f.judul + '</div></div>'; 
+  });
+  
   videos.slice(0, 2).forEach(function(v){
-    var ytId = v.url.replace('https://www.youtube.com/watch?v=','').replace('https://youtu.be/','').split('&')[0].split('?')[0];
-    videoHtml += '<div class="video-item"><iframe src="https://www.youtube.com/embed/' + ytId + '" allowfullscreen loading="lazy"></iframe></div><div class="video-caption">' + v.judul + '</div>';
+    var ytId = "";
+    var match = v.url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([^&?]+)/);
+    if (match && match[1]) ytId = match[1];
+    
+    if (ytId) {
+      videoHtml += '<div class="video-item"><iframe src="https://www.youtube.com/embed/' + ytId + '" allowfullscreen loading="lazy"></iframe></div><div class="video-caption">' + v.judul + '</div>';
+    }
   });
 
   if (fotoHtml || videoHtml) {
@@ -743,7 +749,7 @@ async function init() {
     await Promise.all([
       loadSaldo(),
       loadTransaksi(),
-      loadProgramAmal(), // Menjalankan Fitur Amal Tanpa Cache
+      loadProgramAmal(),
       loadJadwal(),
       loadPengumuman(),
       loadGaleri()
