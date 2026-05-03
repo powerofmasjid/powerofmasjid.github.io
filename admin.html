@@ -52,6 +52,9 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#F7F7F5;color:#1A1A1A
 .btn-modal{flex:1;padding:10px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;border:none;}
 .btn-modal-cancel{background:#F3F4F6;color:#374151;}
 .btn-modal-confirm{background:#DC2626;color:white;}
+
+/* TAMPILAN STATUS UPLOAD YANG JELAS */
+.status-upload { display:none; font-size:11px; font-weight:600; color:#D97706; background:#FEF3C7; padding:10px; border-radius:8px; margin-top:8px; text-align:center; border: 1px dashed #D97706; }
 </style>
 </head>
 <body>
@@ -118,8 +121,8 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#F7F7F5;color:#1A1A1A
       <div class="form-group" id="form-upload-bukti" style="display:none">
         <label class="form-label">Upload Bukti Nota</label>
         <input type="file" accept="image/*" class="form-input" onchange="uploadKeDrive(this, 'trx-bukti', 'st-trx')">
-        <div id="st-trx" style="display:none; font-size:10px;">⏳ Mengunggah ke Drive...</div>
-        <input type="text" class="form-input" id="trx-bukti" readonly style="margin-top:5px; font-size:10px;">
+        <div id="st-trx" class="status-upload">⏳ Mohon tunggu! Foto sedang meluncur ke Google Drive...</div>
+        <input type="text" class="form-input" id="trx-bukti" readonly placeholder="Otomatis terisi setelah foto siap" style="margin-top:5px; font-size:10px;">
       </div>
       <button class="btn-submit" onclick="simpanTransaksi(this)" id="btn-trx">💾 Simpan Kas</button>
       <div class="divider"></div>
@@ -234,8 +237,12 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#F7F7F5;color:#1A1A1A
       <div class="section-title">Kelola Galeri</div>
       <div class="form-group"><label class="form-label">Media</label><select class="form-select" id="gal-tipe" onchange="toggleGaleriForm()"><option value="FOTO">📷 Foto</option><option value="VIDEO_YOUTUBE">▶️ Video YouTube</option></select></div>
       <div class="form-group"><label class="form-label">Judul</label><input type="text" class="form-input" id="gal-judul"></div>
-      <div class="form-group" id="wrap-upload-gal"><label class="form-label">Pilih Foto</label><input type="file" accept="image/*" class="form-input" onchange="uploadKeDrive(this, 'gal-url', 'stg')"><div id="stg" style="display:none; font-size:10px;">⏳ Sedang mengompres & mengunggah...</div></div>
-      <div class="form-group"><label class="form-label">URL (Otomatis/YouTube)</label><input type="text" class="form-input" id="gal-url"></div>
+      <div class="form-group" id="wrap-upload-gal">
+        <label class="form-label">Pilih Foto</label>
+        <input type="file" accept="image/*" class="form-input" onchange="uploadKeDrive(this, 'gal-url', 'stg')">
+        <div id="stg" class="status-upload">⏳ Mohon tunggu! Foto sedang meluncur ke Google Drive...</div>
+      </div>
+      <div class="form-group"><label class="form-label">URL (Otomatis/YouTube)</label><input type="text" class="form-input" id="gal-url" placeholder="Akan terisi otomatis / Masukkan link YouTube"></div>
       <button class="btn-submit" onclick="simpanGaleri(this)">💾 Simpan Galeri</button>
       <div class="divider"></div><div id="list-gal-admin"></div>
     </div>
@@ -280,8 +287,18 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#F7F7F5;color:#1A1A1A
             <option value="malam">Malam — Biru Premium</option>
           </select>
         </div>
-        <div class="form-group"><label class="form-label">Upload Logo</label><input type="file" accept="image/*" onchange="uploadKeDrive(this, 'prof-logo', 'sl')"><div id="sl" style="display:none; font-size:10px;">⏳ Mengunggah...</div><input type="text" class="form-input" id="prof-logo" readonly style="margin-top:5px;"></div>
-        <div class="form-group"><label class="form-label">Upload QRIS</label><input type="file" accept="image/*" onchange="uploadKeDrive(this, 'prof-qris', 'sq')"><div id="sq" style="display:none; font-size:10px;">⏳ Mengunggah...</div><input type="text" class="form-input" id="prof-qris" readonly style="margin-top:5px;"></div>
+        <div class="form-group">
+          <label class="form-label">Upload Logo</label>
+          <input type="file" accept="image/*" onchange="uploadKeDrive(this, 'prof-logo', 'sl')">
+          <div id="sl" class="status-upload">⏳ Mohon tunggu! Foto sedang meluncur ke Google Drive...</div>
+          <input type="text" class="form-input" id="prof-logo" readonly style="margin-top:5px;">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Upload QRIS</label>
+          <input type="file" accept="image/*" onchange="uploadKeDrive(this, 'prof-qris', 'sq')">
+          <div id="sq" class="status-upload">⏳ Mohon tunggu! Foto sedang meluncur ke Google Drive...</div>
+          <input type="text" class="form-input" id="prof-qris" readonly style="margin-top:5px;">
+        </div>
       </div>
 
       <div class="profil-section">
@@ -361,24 +378,32 @@ document.getElementById('btn-confirm-delete').addEventListener('click', function
   }).catch(() => { batalHapus(); showToast('Koneksi Terputus'); });
 });
 
-
-// === REVISI: MESIN UPLOAD DENGAN AUTO-KOMPRES ===
+// === MESIN UPLOAD DENGAN PENGUNCI TOMBOL ===
 function uploadKeDrive(input, targetId, statusId) {
   if (!input.files || input.files.length === 0) return;
   var file = input.files[0];
-  if(document.getElementById(statusId)) document.getElementById(statusId).style.display = 'block';
+  
+  var statusEl = document.getElementById(statusId);
+  if(statusEl) statusEl.style.display = 'block';
+  
+  // MENGUNCI SEMUA TOMBOL SIMPAN AGAR USER TIDAK KESELEK
+  var btns = document.querySelectorAll('.btn-submit');
+  btns.forEach(b => { 
+      if(!b.dataset.ori) b.dataset.ori = b.innerHTML; 
+      b.disabled = true; 
+      b.style.opacity = '0.5'; 
+      b.innerHTML = '⏳ Menunggu Foto...'; 
+  });
   
   var reader = new FileReader();
   reader.onload = function(e) {
-    // Proses kompresi gambar sebelum dikirim
     var img = new Image();
     img.onload = function() {
       var canvas = document.createElement('canvas');
-      var max_size = 800; // Ukuran maksimal layar HP
+      var max_size = 800; 
       var width = img.width;
       var height = img.height;
       
-      // Hitung skala pengecilan
       if (width > height) {
         if (width > max_size) { height *= max_size / width; width = max_size; }
       } else {
@@ -390,7 +415,6 @@ function uploadKeDrive(input, targetId, statusId) {
       var ctx = canvas.getContext('2d');
       ctx.drawImage(img, 0, 0, width, height);
       
-      // Ubah gambar jadi kualitas rendah (70%) biar enteng
       var dataUrl = canvas.toDataURL('image/jpeg', 0.7);
       var base64Data = dataUrl.split(',')[1];
       
@@ -404,11 +428,17 @@ function uploadKeDrive(input, targetId, statusId) {
       
       fetch(API_URL, { method: 'POST', body: JSON.stringify(obj) })
       .then(r => r.json()).then(res => {
-        if(document.getElementById(statusId)) document.getElementById(statusId).style.display = 'none';
-        if (res.status === 'ok') { document.getElementById(targetId).value = res.url; showToast('Foto Siap!'); }
-        else { showToast('Gagal Upload'); }
+        if(statusEl) statusEl.style.display = 'none';
+        // MEMBUKA KEMBALI TOMBOL SIMPAN
+        btns.forEach(b => { b.disabled = false; b.style.opacity = '1'; b.innerHTML = b.dataset.ori; });
+        
+        if (res.status === 'ok') { 
+            document.getElementById(targetId).value = res.url; 
+            showToast('Foto Siap! Silakan klik Simpan.'); 
+        } else { showToast('Gagal Upload: ' + res.message); }
       }).catch(err => {
-        if(document.getElementById(statusId)) document.getElementById(statusId).style.display = 'none';
+        if(statusEl) statusEl.style.display = 'none';
+        btns.forEach(b => { b.disabled = false; b.style.opacity = '1'; b.innerHTML = b.dataset.ori; });
         showToast('Koneksi Terputus (Jaringan Buruk)');
       });
     };
@@ -748,9 +778,13 @@ function loadGaleriAdmin() {
   }); 
 }
 
+// === REVISI: PENGECEKAN GALERI JIKA UPLOAD BELUM SELESAI ===
 function simpanGaleri(btn) { 
   var d = { api_key: KUNCI_RAHASIA, action: 'addGaleri', id_masjid: ID_MASJID, judul: document.getElementById('gal-judul').value, tipe: document.getElementById('gal-tipe').value, url: document.getElementById('gal-url').value }; 
-  if(!d.judul || !d.url) { showToast('Isi judul & URL!'); return; }
+  
+  if(!d.judul) { showToast('Isi judul galeri dulu!'); return; }
+  if(!d.url) { showToast('URL kosong! Tunggu foto selesai di-upload dulu.'); return; }
+  
   setLoading(btn,true); fetch(API_URL,{method:'POST', body:JSON.stringify(d)}).then(()=>{ setLoading(btn,false); showToast('Ok!'); document.getElementById('gal-judul').value = ''; document.getElementById('gal-url').value = ''; loadGaleriAdmin(); }); 
 }
 
