@@ -62,13 +62,15 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#F7F7F5;color:#1A1A1A
 <body>
 
 <div class="splash" id="splash">
-  <img src="https://raw.githubusercontent.com/powerofmasjid/logo/refs/heads/main/logo_tanpa_teks.png" class="logo-pow-img">
+  <!-- MENGGUNAKAN NAMA FILE LANGSUNG -->
+  <img src="Logo%20Power%20of%20Masjid.png" class="logo-pow-img">
   <div class="splash-text">Memuat panel admin...</div>
 </div>
 
 <div class="login-wrap" id="login-wrap">
   <div class="login-card">
-    <img src="https://raw.githubusercontent.com/powerofmasjid/logo/refs/heads/main/logo_tanpa_teks.png" class="logo-pow-img">
+    <!-- MENGGUNAKAN NAMA FILE LANGSUNG -->
+    <img src="Logo%20Power%20of%20Masjid.png" class="logo-pow-img">
     <div class="login-title">Panel Admin Masjid</div>
     <div class="login-sub">Masuk menggunakan Gmail dan PIN masjid Anda.</div>
     <div class="form-group" style="text-align:left;"><label class="form-label">Alamat Gmail</label><input type="email" class="form-input" id="login-gmail"></div>
@@ -93,7 +95,8 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#F7F7F5;color:#1A1A1A
 <div id="admin-content" style="display:none">
   <div class="admin-header">
     <div class="admin-header-left">
-      <img src="https://raw.githubusercontent.com/powerofmasjid/logo/refs/heads/main/logo_tanpa_teks.png" class="logo-pow-header">
+      <!-- MENGGUNAKAN NAMA FILE LANGSUNG -->
+      <img src="Logo%20Power%20of%20Masjid.png" class="logo-pow-header">
       <div>
         <div class="admin-title">Panel Admin Masjid</div>
         <div class="admin-sub" id="admin-nama-display">Admin</div>
@@ -245,7 +248,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#F7F7F5;color:#1A1A1A
       <div class="divider"></div><div id="list-gal-admin"></div>
     </div>
 
-    <!-- TAB PROFIL -->
+    <!-- TAB PROFIL & TEMA -->
     <div id="tab-profil" style="display:none">
       <div class="section-title">Profil & Pengaturan</div>
       
@@ -308,7 +311,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#F7F7F5;color:#1A1A1A
 <div class="toast" id="toast">Berhasil!</div>
 
 <script>
-var API_URL = 'https://script.google.com/macros/s/AKfycbx_0Qk7aFh1MMxS7yi_HMG1W0zOP5RjAa0HOf70_m30QyVTYMlGOihU3kCG_uk-97O-0A/exec';
+var API_URL = 'https://script.google.com/macros/s/AKfycbxjONgLD4w4zNvJ5pYSgp2nrlRh9KHNGsWICQKk8m3YDglNEMdvrOyxmyzhGN_ja_62oQ/exec';
 var KUNCI_RAHASIA = 'POW_MASJID_SECURE_2026'; 
 var ADMIN_DATA = null, ID_MASJID = '', LAST_5_TRX = [], LIST_PROGRAM = [];
 var LIST_JADWAL = [], LIST_PENGUMUMAN = [], LIST_DATA_AMAL = [], LIST_GALERI = []; 
@@ -408,16 +411,17 @@ function toggleGaleriForm() { document.getElementById('wrap-upload-gal').style.d
 function prosesLogin() {
   var g = document.getElementById('login-gmail').value, p = document.getElementById('login-pin').value;
   var btn = document.getElementById('btn-login'); setLoading(btn, true);
-  fetch(API_URL + '?action=cekAdmin&gmail=' + g + '&pin=' + p).then(r => r.json()).then(j => {
+  fetch(API_URL + '?action=cekAdmin&gmail=' + encodeURIComponent(g) + '&pin=' + p).then(r => r.json()).then(j => {
       setLoading(btn, false);
       if (j.status === 'ok') { ADMIN_DATA = j.data; ID_MASJID = j.data.id_masjid; localStorage.setItem('pow_admin', JSON.stringify(j.data)); tampilAdmin(); }
-      else alert(j.message);
-  });
+      else showToast(j.message, 'error');
+  }).catch(() => { setLoading(btn, false); showToast('Gagal Terhubung', 'error'); });
 }
 
 function tampilAdmin() {
   document.getElementById('login-wrap').classList.remove('show'); document.getElementById('admin-content').style.display = 'block';
   document.getElementById('admin-nama-display').textContent = ADMIN_DATA.nama;
+  fetch(API_URL + '?action=getMasjid&id_masjid=' + ID_MASJID + '&_t=' + Date.now()).then(r => r.json()).then(j => { if (j.status === 'ok') document.getElementById('admin-masjid-nama').textContent = j.data.nama; });
   loadTransaksiAdmin();
 }
 
