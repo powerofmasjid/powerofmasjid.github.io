@@ -12,7 +12,6 @@
 body{font-family:'Plus Jakarta Sans',sans-serif;background:#F7F7F5;color:#1A1A1A;}
 :root{--primary:#1B6B3A;--primary-dark:#0F4228;--primary-light:#E8F5EE;--accent:#C9A84C;--white:#FFFFFF;--bg:#F7F7F5;--text:#1A1A1A;--muted:#6B7280;--border:#E5E7EB;}
 
-/* === REVISI: LOGO GITHUB === */
 .logo-pow-img { width: 130px; height: 130px; object-fit: contain; margin-bottom: 15px; }
 .logo-pow-header { width: 40px; height: 40px; object-fit: contain; }
 
@@ -20,7 +19,6 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#F7F7F5;color:#1A1A1A
 .login-wrap{display:none;position:fixed;inset:0;background:var(--primary-dark);align-items:center;justify-content:center;z-index:9998;padding:1.5rem;}.login-wrap.show{display:flex;}.login-card{background:white;border-radius:20px;padding:2rem;text-align:center;width:100%;max-width:360px;box-shadow:0 10px 25px rgba(0,0,0,0.2);}.login-title{font-size:18px;font-weight:600;color:var(--text);margin-bottom:4px;}.login-sub{font-size:13px;color:var(--muted);margin-bottom:1.5rem;}
 .admin-header{background:linear-gradient(160deg,var(--primary-dark),var(--primary));padding:1rem 1.25rem;display:flex;align-items:center;justify-content:space-between;}.admin-header-left{display:flex;align-items:center;gap:12px;}
 
-/* === REVISI: JUDUL PANEL LEBIH BESAR, NAMA ADMIN KECIL === */
 .admin-title{color:white;font-size:16px;font-weight:700;letter-spacing:0.5px;}.admin-sub{color:rgba(255,255,255,0.7);font-size:11px;margin-top:2px;font-weight:400;}
 
 .btn-logout{background:rgba(255,255,255,0.15);border:none;color:white;font-size:12px;padding:6px 12px;border-radius:20px;cursor:pointer;}
@@ -29,14 +27,12 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#F7F7F5;color:#1A1A1A
 .form-group{margin-bottom:0.875rem;}.form-label{font-size:12px;font-weight:500;color:var(--muted);margin-bottom:4px;display:block;}.form-input, .form-select, .form-textarea{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:10px;font-size:14px;font-family:inherit;background:white;color:var(--text);outline:none;}.form-input:focus{border-color:var(--primary);}.form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
 .btn-submit{width:100%;background:var(--primary);color:white;border:none;padding:12px;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;margin-top:0.5rem;transition:0.2s;}
 
-/* === REVISI: ITEM CARD BISA DI-KLIK UNTUK MUNCULKAN TOMBOL === */
 .item-card{background:white;border:1px solid var(--border);border-radius:12px;padding:1rem;margin-bottom:8px;cursor:pointer;transition:background 0.2s;}
 .item-card:hover{background:#F9FAFB;}
 .item-card-title{font-size:14px;font-weight:500;color:var(--text);display:flex;justify-content:space-between;align-items:flex-start;}
 .item-card-footer{display:flex;justify-content:space-between;align-items:center;margin-top:8px;}
 .item-badge{font-size:10px;padding:2px 8px;border-radius:20px;font-weight:500;}.badge-masuk{background:var(--primary-light);color:var(--primary);}.badge-keluar{background:#FEF2F2;color:#DC2626;}
 
-/* === REVISI: TOMBOL EDIT & HAPUS DISEMBUNYIKAN AWALNYA === */
 .action-buttons{display:none; margin-top:10px; gap:8px; padding-top:10px; border-top:1px dashed var(--border);}
 .item-card.expanded .action-buttons{display:flex;}
 .btn-action{flex:1; padding:6px; border-radius:6px; font-size:11px; font-weight:600; cursor:pointer; border:none; text-align:center;}
@@ -46,7 +42,6 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#F7F7F5;color:#1A1A1A
 .profil-section{background:white;border:1px solid var(--border);border-radius:14px;padding:1rem;margin-bottom:1rem;}.profil-section h3{font-size:14px;font-weight:600;color:var(--text);margin-bottom:0.875rem;padding-bottom:0.5rem;border-bottom:1px solid var(--border);}
 .toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%) translateY(80px);background:var(--text);color:white;font-size:13px;padding:10px 20px;border-radius:20px;transition:0.3s;z-index:999;}.toast.show{transform:translateX(-50%) translateY(0);}.divider{height:1px;background:var(--border);margin:1rem 0;}
 
-/* === REVISI: MODAL POP-UP KONFIRMASI HAPUS YANG CANTIK === */
 .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:10000;align-items:center;justify-content:center;padding:1rem;}
 .modal-overlay.show{display:flex;}
 .modal-card{background:white;border-radius:16px;padding:1.5rem;width:100%;max-width:320px;text-align:center;box-shadow:0 10px 25px rgba(0,0,0,0.2);}
@@ -62,14 +57,12 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#F7F7F5;color:#1A1A1A
 <body>
 
 <div class="splash" id="splash">
-  <!-- MENGGUNAKAN NAMA FILE LANGSUNG -->
   <img src="Logo%20Power%20of%20Masjid.png" class="logo-pow-img">
   <div class="splash-text">Memuat panel admin...</div>
 </div>
 
 <div class="login-wrap" id="login-wrap">
   <div class="login-card">
-    <!-- MENGGUNAKAN NAMA FILE LANGSUNG -->
     <img src="Logo%20Power%20of%20Masjid.png" class="logo-pow-img">
     <div class="login-title">Panel Admin Masjid</div>
     <div class="login-sub">Masuk menggunakan Gmail dan PIN masjid Anda.</div>
@@ -95,7 +88,6 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#F7F7F5;color:#1A1A1A
 <div id="admin-content" style="display:none">
   <div class="admin-header">
     <div class="admin-header-left">
-      <!-- MENGGUNAKAN NAMA FILE LANGSUNG -->
       <img src="Logo%20Power%20of%20Masjid.png" class="logo-pow-header">
       <div>
         <div class="admin-title">Panel Admin Masjid</div>
@@ -242,7 +234,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#F7F7F5;color:#1A1A1A
       <div class="section-title">Kelola Galeri</div>
       <div class="form-group"><label class="form-label">Media</label><select class="form-select" id="gal-tipe" onchange="toggleGaleriForm()"><option value="FOTO">📷 Foto</option><option value="VIDEO_YOUTUBE">▶️ Video YouTube</option></select></div>
       <div class="form-group"><label class="form-label">Judul</label><input type="text" class="form-input" id="gal-judul"></div>
-      <div class="form-group" id="wrap-upload-gal"><label class="form-label">Pilih Foto</label><input type="file" accept="image/*" class="form-input" onchange="uploadKeDrive(this, 'gal-url', 'stg')"><div id="stg" style="display:none; font-size:10px;">⏳ Mengunggah ke Drive...</div></div>
+      <div class="form-group" id="wrap-upload-gal"><label class="form-label">Pilih Foto</label><input type="file" accept="image/*" class="form-input" onchange="uploadKeDrive(this, 'gal-url', 'stg')"><div id="stg" style="display:none; font-size:10px;">⏳ Sedang mengompres & mengunggah...</div></div>
       <div class="form-group"><label class="form-label">URL (Otomatis/YouTube)</label><input type="text" class="form-input" id="gal-url"></div>
       <button class="btn-submit" onclick="simpanGaleri(this)">💾 Simpan Galeri</button>
       <div class="divider"></div><div id="list-gal-admin"></div>
@@ -315,19 +307,17 @@ var API_URL = 'https://script.google.com/macros/s/AKfycbx_0Qk7aFh1MMxS7yi_HMG1W0
 var KUNCI_RAHASIA = 'POW_MASJID_SECURE_2026'; 
 var ADMIN_DATA = null, ID_MASJID = '', LAST_5_TRX = [], LIST_PROGRAM = [];
 var LIST_JADWAL = [], LIST_PENGUMUMAN = [], LIST_DATA_AMAL = [], LIST_GALERI = []; 
-var targetDelete = null; // Variabel penampung id yang mau dihapus
+var targetDelete = null; 
 
 function showToast(m) { var el = document.getElementById('toast'); el.textContent = m; el.className = 'toast show'; setTimeout(() => el.className = 'toast', 3000); }
 function setLoading(btn, load) { if(!btn) return; if(load) { btn.dataset.ori = btn.innerHTML; btn.innerHTML = '⏳...'; btn.disabled = true; } else { btn.innerHTML = btn.dataset.ori; btn.disabled = false; } }
 
-// LOGIKA KLIK KARTU UNTUK MEMUNCULKAN TOMBOL EDIT/HAPUS
 function toggleAction(element) {
   var cards = document.querySelectorAll('.item-card');
   cards.forEach(c => { if(c !== element) c.classList.remove('expanded'); });
   element.classList.toggle('expanded');
 }
 
-// MESIN MODAL POP-UP KONFIRMASI
 function konfirmasiHapus(actionStr, idItem, tipeProg='') {
   targetDelete = { action: actionStr, id: idItem, tipe: tipeProg };
   document.getElementById('delete-modal').classList.add('show');
@@ -372,7 +362,7 @@ document.getElementById('btn-confirm-delete').addEventListener('click', function
 });
 
 
-// FUNGSI UPLOAD LANGSUNG KE GOOGLE DRIVE
+// === REVISI: MESIN UPLOAD DENGAN AUTO-KOMPRES ===
 function uploadKeDrive(input, targetId, statusId) {
   if (!input.files || input.files.length === 0) return;
   var file = input.files[0];
@@ -380,21 +370,49 @@ function uploadKeDrive(input, targetId, statusId) {
   
   var reader = new FileReader();
   reader.onload = function(e) {
-    var data = e.target.result.split(",");
-    var obj = {
-      action: 'uploadMedia',
-      api_key: KUNCI_RAHASIA,
-      filename: file.name,
-      mimeType: data[0].match(/:(.*?);/)[1],
-      base64: data[1]
+    // Proses kompresi gambar sebelum dikirim
+    var img = new Image();
+    img.onload = function() {
+      var canvas = document.createElement('canvas');
+      var max_size = 800; // Ukuran maksimal layar HP
+      var width = img.width;
+      var height = img.height;
+      
+      // Hitung skala pengecilan
+      if (width > height) {
+        if (width > max_size) { height *= max_size / width; width = max_size; }
+      } else {
+        if (height > max_size) { width *= max_size / height; height = max_size; }
+      }
+      
+      canvas.width = width;
+      canvas.height = height;
+      var ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, width, height);
+      
+      // Ubah gambar jadi kualitas rendah (70%) biar enteng
+      var dataUrl = canvas.toDataURL('image/jpeg', 0.7);
+      var base64Data = dataUrl.split(',')[1];
+      
+      var obj = {
+        action: 'uploadMedia',
+        api_key: KUNCI_RAHASIA,
+        filename: file.name,
+        mimeType: 'image/jpeg',
+        base64: base64Data
+      };
+      
+      fetch(API_URL, { method: 'POST', body: JSON.stringify(obj) })
+      .then(r => r.json()).then(res => {
+        if(document.getElementById(statusId)) document.getElementById(statusId).style.display = 'none';
+        if (res.status === 'ok') { document.getElementById(targetId).value = res.url; showToast('Foto Siap!'); }
+        else { showToast('Gagal Upload'); }
+      }).catch(err => {
+        if(document.getElementById(statusId)) document.getElementById(statusId).style.display = 'none';
+        showToast('Koneksi Terputus (Jaringan Buruk)');
+      });
     };
-    
-    fetch(API_URL, { method: 'POST', body: JSON.stringify(obj) })
-    .then(r => r.json()).then(res => {
-      if(document.getElementById(statusId)) document.getElementById(statusId).style.display = 'none';
-      if (res.status === 'ok') { document.getElementById(targetId).value = res.url; showToast('Foto Siap!'); }
-      else { showToast('Gagal Upload'); }
-    });
+    img.src = e.target.result;
   };
   reader.readAsDataURL(file);
 }
