@@ -145,8 +145,12 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#F7F7F5;color:#1A1A1A
           </select>
         </div>
         <div class="form-group"><label class="form-label">Judul Program</label><input type="text" class="form-input" id="amal-judul" placeholder="Contoh: Sapi Kolektif 2026 / Infaq Karpet"></div>
-        <div class="form-group"><label class="form-label">Deskripsi Program (Penjelasan Singkat)</label><textarea class="form-textarea" id="amal-deskripsi" placeholder="Jelaskan tujuan program ini agar jamaah mengerti..."></textarea></div>
-        <div class="form-group" id="wrap-amal-harga"><label class="form-label" id="label-amal-harga">Harga Patokan Sapi/Kambing (Rp)</label><input type="number" class="form-input" id="amal-harga" placeholder="Contoh: 3500000"></div>
+        <div class="form-group"><label class="form-label">Deskripsi Program (Isi Detailnya)</label><textarea class="form-textarea" id="amal-deskripsi" placeholder="Jelaskan tujuan program ini agar jamaah mengerti..."></textarea></div>
+        <div class="form-group">
+            <label class="form-label">Nomor WA Panitia Program (Opsional)</label>
+            <input type="text" class="form-input" id="amal-wa-panitia" placeholder="Contoh: 628123456789 (Kosongkan jika pakai WA utama)">
+        </div>
+        <div class="form-group" id="wrap-amal-harga"><label class="form-label" id="label-amal-harga">Harga Sapi/Kambing (Rp)</label><input type="number" class="form-input" id="amal-harga" placeholder="Contoh: 3500000"></div>
         <div class="form-row">
           <div class="form-group"><label class="form-label">Tgl Mulai</label><input type="date" class="form-input" id="amal-mulai"></div>
           <div class="form-group"><label class="form-label">Tgl Selesai</label><input type="date" class="form-input" id="amal-selesai"></div>
@@ -265,7 +269,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#F7F7F5;color:#1A1A1A
         <div class="form-group"><label class="form-label">Alamat</label><input type="text" class="form-input" id="prof-alamat"></div>
         <div class="form-group"><label class="form-label">Kota</label><input type="text" class="form-input" id="prof-kota"></div>
         <div class="form-group"><label class="form-label">Deskripsi</label><textarea class="form-textarea" id="prof-deskripsi"></textarea></div>
-        <div class="form-group"><label class="form-label">Nomor WA DKM</label><input type="text" class="form-input" id="prof-wa"></div>
+        <div class="form-group"><label class="form-label">Nomor WA Utama Masjid</label><input type="text" class="form-input" id="prof-wa"></div>
       </div>
       
       <div class="profil-section">
@@ -318,7 +322,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#F7F7F5;color:#1A1A1A
 <div class="toast" id="toast">Berhasil!</div>
 
 <script>
-// === MENGGUNAKAN API URL TERBARU BAPAK ===
+// LINK API BARU
 var API_URL = 'https://script.google.com/macros/s/AKfycbxgZ7lA1kLtsE1fFuHTFzq1D1ujTVsSpDsIVDbhmjrKrV3jTUUnOBu9f6_nTjSCnpNdkA/exec';
 
 var KUNCI_RAHASIA = 'POW_MASJID_SECURE_2026'; 
@@ -378,7 +382,6 @@ document.getElementById('btn-confirm-delete').addEventListener('click', function
   }).catch(() => { batalHapus(); showToast('Koneksi Terputus'); });
 });
 
-// === MESIN UPLOAD + KONVERTER DIRECT LINK DRIVE ===
 function uploadKeDrive(input, targetId, statusId) {
   if (!input.files || input.files.length === 0) return;
   var file = input.files[0];
@@ -431,7 +434,6 @@ function uploadKeDrive(input, targetId, statusId) {
         btns.forEach(b => { b.disabled = false; b.style.opacity = '1'; b.innerHTML = b.dataset.ori; });
         
         if (res.status === 'ok') { 
-            // === KONVERTER AJAIB GOOGLE DRIVE JADI GAMBAR MENTAH ===
             var linkMateng = res.url;
             if (linkMateng.includes('drive.google.com/file/d/')) {
                 var fileId = linkMateng.split('/d/')[1].split('/')[0];
@@ -440,7 +442,6 @@ function uploadKeDrive(input, targetId, statusId) {
                 var fileId = linkMateng.split('id=')[1];
                 linkMateng = 'https://drive.google.com/uc?export=view&id=' + fileId;
             }
-            
             document.getElementById(targetId).value = linkMateng; 
             showToast('Foto Siap! Silakan klik Simpan.'); 
         } else { showToast('Gagal Upload: ' + res.message); }
@@ -549,8 +550,12 @@ function generatePDF() {
 // ----------------------------------------------------
 function toggleHargaTarget() {
     var tipe = document.getElementById('amal-tipe').value;
-    if(tipe === 'ZAKAT') document.getElementById('wrap-amal-harga').style.display = 'none';
-    else { document.getElementById('wrap-amal-harga').style.display = 'block'; document.getElementById('label-amal-harga').innerText = tipe === 'KURBAN' ? 'Harga Patokan Sapi/Kambing (Rp)' : 'Target Dana (Rp)'; }
+    if(tipe === 'ZAKAT') {
+        document.getElementById('wrap-amal-harga').style.display = 'none';
+    } else { 
+        document.getElementById('wrap-amal-harga').style.display = 'block'; 
+        document.getElementById('label-amal-harga').innerText = tipe === 'KURBAN' ? 'Harga Sapi/Kambing (Rp)' : 'Target Dana (Rp)'; 
+    }
 }
 
 function loadProgramAmalAdmin() {
@@ -570,7 +575,15 @@ function simpanProgramAmal(btn) {
   var judul = document.getElementById('amal-judul').value;
   if(!judul) { showToast('Judul Program wajib diisi!'); return; }
   
-  var d = { api_key: KUNCI_RAHASIA, action: 'addProgramAmal', id_masjid: ID_MASJID, tipe: document.getElementById('amal-tipe').value, judul: judul, deskripsi: document.getElementById('amal-deskripsi').value, harga_target: document.getElementById('amal-harga').value || 0, tanggal_mulai: document.getElementById('amal-mulai').value, tanggal_selesai: document.getElementById('amal-selesai').value };
+  // TRIK GAIB: Menyisipkan nomor WA Panitia ke dalam teks deskripsi
+  var descAsli = document.getElementById('amal-deskripsi').value;
+  var waPanitia = document.getElementById('amal-wa-panitia').value;
+  var finalDesc = descAsli;
+  if (waPanitia) {
+      finalDesc += '|||WA:' + waPanitia;
+  }
+  
+  var d = { api_key: KUNCI_RAHASIA, action: 'addProgramAmal', id_masjid: ID_MASJID, tipe: document.getElementById('amal-tipe').value, judul: judul, deskripsi: finalDesc, harga_target: document.getElementById('amal-harga').value || 0, tanggal_mulai: document.getElementById('amal-mulai').value, tanggal_selesai: document.getElementById('amal-selesai').value };
   
   var editId = document.getElementById('amal-prog-id-edit').value;
   if(editId) { d.action = 'updateProgramAmal'; d.id = editId; }
@@ -580,8 +593,12 @@ function simpanProgramAmal(btn) {
       setLoading(btn, false);
       if(j.status === 'ok') { 
           showToast('Program Tersimpan!'); 
-          document.getElementById('amal-judul').value = ''; document.getElementById('amal-deskripsi').value = ''; document.getElementById('amal-harga').value = '';
-          document.getElementById('amal-prog-id-edit').value = ''; document.getElementById('btn-save-prog').innerHTML = '📝 Buat Program';
+          document.getElementById('amal-judul').value = ''; 
+          document.getElementById('amal-deskripsi').value = ''; 
+          document.getElementById('amal-wa-panitia').value = ''; 
+          document.getElementById('amal-harga').value = '';
+          document.getElementById('amal-prog-id-edit').value = ''; 
+          document.getElementById('btn-save-prog').innerHTML = '📝 Buat Program';
           loadProgramAmalAdmin(); 
       }
   });
@@ -596,7 +613,18 @@ function editIndukProgram() {
   document.getElementById('amal-prog-id-edit').value = p.id;
   document.getElementById('amal-tipe').value = p.tipe; toggleHargaTarget();
   document.getElementById('amal-judul').value = p.judul;
-  document.getElementById('amal-deskripsi').value = p.deskripsi || '';
+  
+  // Memecah kembali deskripsi dan WA Panitia
+  var rawDesc = p.deskripsi || '';
+  if (rawDesc.includes('|||WA:')) {
+      var parts = rawDesc.split('|||WA:');
+      document.getElementById('amal-deskripsi').value = parts[0];
+      document.getElementById('amal-wa-panitia').value = parts[1];
+  } else {
+      document.getElementById('amal-deskripsi').value = rawDesc;
+      document.getElementById('amal-wa-panitia').value = '';
+  }
+  
   document.getElementById('amal-harga').value = p.harga_target || 0;
   
   if(p.tanggal_mulai) document.getElementById('amal-mulai').value = new Date(p.tanggal_mulai).toISOString().split('T')[0];
@@ -786,7 +814,6 @@ function loadGaleriAdmin() {
   }); 
 }
 
-// === REVISI: PENGECEKAN GALERI JIKA UPLOAD BELUM SELESAI ===
 function simpanGaleri(btn) { 
   var d = { api_key: KUNCI_RAHASIA, action: 'addGaleri', id_masjid: ID_MASJID, judul: document.getElementById('gal-judul').value, tipe: document.getElementById('gal-tipe').value, url: document.getElementById('gal-url').value }; 
   
