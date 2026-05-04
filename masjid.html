@@ -181,7 +181,6 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 <body>
 
 <div class="splash" id="splash">
-  <!-- REVISI LOGO LOADING POWER OF MASJID -->
   <img src="Logo%20Power%20of%20Masjid.png" alt="Logo Power of Masjid" style="width:120px; height:120px; object-fit:contain; margin-bottom:15px;">
   <div class="splash-text">Memuat data masjid...</div>
   <div class="splash-bar"><div class="splash-fill"></div></div>
@@ -297,7 +296,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 // LINK API BARU
 var API_URL = 'https://script.google.com/macros/s/AKfycbxgZ7lA1kLtsE1fFuHTFzq1D1ujTVsSpDsIVDbhmjrKrV3jTUUnOBu9f6_nTjSCnpNdkA/exec';
 var ID_MASJID = '';
-var CACHE_DURATION = 60000; // REVISI: Dibuat 1 Menit saja agar jamaah selalu dapat data terbaru
+var CACHE_DURATION = 60000; 
 
 function cacheSet(key, data) {
   try { localStorage.setItem(key, JSON.stringify({ data: data, time: Date.now() })); } catch(e) {}
@@ -332,6 +331,34 @@ function salin(n) {
 
 function tutupOverlay() { document.getElementById('overlay').classList.add('hide'); }
 
+// ============================================
+// MESIN PENDETEKSI & PEMBASMI FOTO GAIB GOOGLE DRIVE
+// ============================================
+function matenginLinkDrive(url) {
+    if (!url) return '';
+    var fileId = '';
+    
+    // Deteksi berbagai macam jenis link Google Drive yang rewel
+    if (url.includes('drive.google.com/file/d/')) {
+        fileId = url.split('/d/')[1].split('/')[0];
+    } else if (url.includes('drive.google.com/open?id=')) {
+        fileId = url.split('id=')[1].split('&')[0];
+    } else if (url.includes('drive.google.com/uc')) {
+        if (url.includes('id=')) {
+            fileId = url.split('id=')[1].split('&')[0];
+        }
+    }
+    
+    // Kalau terdeteksi file dari Drive, PAKSA ubah jadi format Thumbnail anti-blokir
+    if (fileId) {
+        return 'https://drive.google.com/thumbnail?id=' + fileId + '&sz=w1000';
+    }
+    
+    // Kalau bukan link Google Drive (misal dari ImgBB yang link langsung gambar .png/.jpg), biarkan saja
+    return url; 
+}
+// ============================================
+
 async function apiFetch(action, params, cacheKey) {
   if (cacheKey) {
     var cached = cacheGet(cacheKey);
@@ -361,15 +388,12 @@ async function loadMasjid(slug) {
   document.title = d.nama + ' — Power of Masjid';
 
   if (d.deskripsi) { document.getElementById('deskripsi-masjid').textContent = d.deskripsi; document.getElementById('deskripsi-masjid').style.display = 'block'; }
+  
+  // LOGO MASJID DI-MATENGIN DULU SEBELUM MUNCUL
   if (d.logo_url) {
-      // PERBAIKAN KONVERTER LOGO
-      var logoMateng = d.logo_url;
-      if (logoMateng.includes('drive.google.com/file/d/')) {
-          var fileId = logoMateng.split('/d/')[1].split('/')[0];
-          logoMateng = 'https://drive.google.com/uc?export=view&id=' + fileId;
-      }
-      document.getElementById('logo-wrap').innerHTML = '<img src="' + logoMateng + '" alt="Logo ' + d.nama + '">';
+      document.getElementById('logo-wrap').innerHTML = '<img src="' + matenginLinkDrive(d.logo_url) + '" alt="Logo ' + d.nama + '">';
   }
+  
   if (d.tema) document.body.classList.add('tema-' + d.tema);
 
   if (d.telepon_wa) {
@@ -392,14 +416,10 @@ async function loadMasjid(slug) {
     lr.innerHTML = '<div class="kosong">Info rekening belum tersedia</div>';
   }
 
+  // QRIS DI-MATENGIN DULU SEBELUM MUNCUL
   if (d.qris_url) {
-      var qrisMateng = d.qris_url;
-      if (qrisMateng.includes('drive.google.com/file/d/')) {
-          var fileId = qrisMateng.split('/d/')[1].split('/')[0];
-          qrisMateng = 'https://drive.google.com/uc?export=view&id=' + fileId;
-      }
       document.getElementById('qris-box').style.display = 'block';
-      document.getElementById('qris-img').src = qrisMateng;
+      document.getElementById('qris-img').src = matenginLinkDrive(d.qris_url);
   }
 
   if (d.latitude && d.longitude) { loadJadwalSholat(d.latitude, d.longitude); }
@@ -429,7 +449,6 @@ async function fetchDataAmal(program) {
    var res = await apiFetch(action, {id_masjid: ID_MASJID, id_program: program.id, _t: Date.now()}, null); 
    var el = document.getElementById('amal-content-'+program.id);
    
-   // HEADER PROGRAM - REVISI KETERANGAN PROGRAM
    var headerHtml = '<div style="padding:15px 15px 0;">';
    if(program.deskripsi) {
        headerHtml += '<div style="background:var(--primary-light); padding:12px; border-radius:8px; font-size:13px; color:var(--text); margin-bottom:12px; line-height:1.5; border-left:3px solid var(--primary);"><b>Keterangan Program:</b><br>' + program.deskripsi + '</div>';
@@ -447,7 +466,6 @@ async function fetchDataAmal(program) {
    var data = res.data;
    var html = headerHtml + '<div style="padding:0 1rem 1rem;">';
    
-   // LOGIKA KURBAN DENGAN PROGRESS BAR
    if(program.tipe === 'KURBAN') {
        var sapiKol = []; var sapiUtuh = []; var kambing = [];
        data.forEach(d => { 
@@ -498,7 +516,6 @@ async function fetchDataAmal(program) {
        html += '<a href="https://wa.me/?text=' + shareTextKurban + '" target="_blank" class="btn-cta btn-cta-outline">📤 Bagikan</a>';
        html += '</div>';
        
-   // LOGIKA ZAKAT
    } else if(program.tipe === 'ZAKAT') {
        var tJiwa = 0; var tUang = 0; var tBeras = 0;
        data.forEach(d => {
@@ -530,7 +547,6 @@ async function fetchDataAmal(program) {
        html += '<a href="https://wa.me/?text=' + shareTextZakat + '" target="_blank" class="btn-cta btn-cta-outline">📤 Bagikan</a>';
        html += '</div>';
        
-   // LOGIKA INFAQ KHUSUS
    } else if(program.tipe === 'INFAQ') {
        var tUang = 0; var barang = [];
        data.forEach(d => {
@@ -573,7 +589,6 @@ async function fetchDataAmal(program) {
 
        html += '</div>';
        
-       // REVISI DONATUR JADI MUNFIQ
        html += '<div style="font-size:12px; font-weight:600; margin-bottom:10px; color:var(--muted);">👥 ' + data.length + ' MUNFIQ BERPARTISIPASI:</div>';
        var listTerbaru = data.slice(0, 5); 
        listTerbaru.forEach((d, index) => {
@@ -619,12 +634,11 @@ async function loadTransaksi() {
   var el = document.getElementById('list-transaksi');
   if (json.status !== 'ok' || json.data.length === 0) { el.innerHTML = '<div class="kosong">Belum ada transaksi tercatat</div>'; return; }
   el.innerHTML = json.data.slice(0, 5).map(function(t){
-    var buktiMateng = t.bukti_url;
-    if (buktiMateng && buktiMateng.includes('drive.google.com/file/d/')) {
-        var fileId = buktiMateng.split('/d/')[1].split('/')[0];
-        buktiMateng = 'https://drive.google.com/uc?export=view&id=' + fileId;
-    }
+    
+    // BUKTI KAS JUGA DI-MATENGIN
+    var buktiMateng = matenginLinkDrive(t.bukti_url);
     var bukti = buktiMateng ? '<a href="' + buktiMateng + '" target="_blank" class="trx-bukti">Lihat bukti</a>' : '';
+    
     return '<div class="trx-item"><div class="trx-icon ' + t.jenis + '">' + (t.jenis === 'masuk' ? '↑' : '↓') + '</div><div class="trx-info"><div class="trx-name">' + t.keterangan + '</div><div class="trx-date">' + formatTglPendek(t.tanggal) + '</div></div><div class="trx-right"><div class="trx-amount ' + t.jenis + '">' + (t.jenis === 'masuk' ? '+' : '-') + ' ' + rupiah(t.jumlah) + '</div>' + bukti + '</div></div>';
   }).join('');
 }
@@ -652,7 +666,6 @@ async function loadPengumuman() {
   el.innerHTML = html;
 }
 
-// === REVISI: PENERJEMAH LINK MENTAH UNTUK GALERI ===
 async function loadGaleri() {
   var json = await apiFetch('getGaleri', {id_masjid: ID_MASJID}, 'galeri_' + ID_MASJID);
   if (json.status !== 'ok' || json.data.length === 0) return;
@@ -662,15 +675,8 @@ async function loadGaleri() {
   var fotoHtml = ''; var videoHtml = '';
 
   fotos.slice(0, 4).forEach(function(f){ 
-      var linkMateng = f.url;
-      // Konverter jaga-jaga kalau data di database masih pakai format pratinjau /view lama
-      if (linkMateng.includes('drive.google.com/file/d/')) {
-          var fileId = linkMateng.split('/d/')[1].split('/')[0];
-          linkMateng = 'https://drive.google.com/uc?export=view&id=' + fileId;
-      } else if (linkMateng.includes('drive.google.com/open?id=')) {
-          var fileId = linkMateng.split('id=')[1];
-          linkMateng = 'https://drive.google.com/uc?export=view&id=' + fileId;
-      }
+      // FOTO GALERI DI-MATENGIN DULU SEBELUM MUNCUL
+      var linkMateng = matenginLinkDrive(f.url);
       fotoHtml += '<div class="foto-item"><img src="' + linkMateng + '" alt="' + f.judul + '" loading="lazy"><div class="foto-caption">' + f.judul + '</div></div>'; 
   });
   
