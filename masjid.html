@@ -116,7 +116,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 .jadwal-detail{font-size:12px;color:var(--muted);margin-top:3px;}
 .jadwal-hari{display:inline-block;background:var(--primary-light);color:var(--primary);font-size:10px;padding:2px 6px;border-radius:4px;margin-top:4px;}
 
-/* GALERI - FIX UNTUK SAMSUNG & POCO C75 (Ketinggian Dipatenkan) */
+/* GALERI */
 .galeri-wrap{padding:1rem;}
 .foto-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:0.75rem;}
 .foto-item{border-radius:10px;overflow:hidden;height:160px;background:var(--bg);position:relative;cursor:pointer;}
@@ -167,7 +167,6 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 .overlay-iklan-sub{font-size:12px;color:var(--muted);margin-top:3px;line-height:1.5;}
 .overlay-btn{display:block;background:var(--primary);color:white;text-decoration:none;text-align:center;padding:10px;border-radius:10px;font-size:13px;font-weight:500;margin-top:0.75rem;}
 
-/* CSS TAMBAHAN KOMPROMI CHATGPT */
 .progress-wrap{background:var(--border);height:8px;border-radius:10px;overflow:hidden;margin:10px 0;}
 .progress-bar{background:var(--primary);height:100%;border-radius:10px;transition:width 1s ease-in-out;}
 .urgency-label{font-size:11px;color:var(--accent);font-weight:600;background:rgba(201,168,76,0.1);padding:3px 8px;border-radius:12px;display:inline-block;margin-bottom:8px;transition:0.3s;}
@@ -209,7 +208,11 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
   <p class="deskripsi" id="deskripsi-masjid" style="display:none"></p>
   <div class="badge-pow">✦ Power of Masjid</div>
   <br>
-  <a class="btn-wa-header" id="btn-wa-header" style="display:none" href="#" target="_blank">💬 Hubungi DKM</a>
+  <a class="btn-wa-header" id="btn-wa-header" style="display:none" href="#" target="_blank">
+    <!-- ICON WA ASLI -->
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" width="14" height="14" fill="currentColor"><path d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157.1zm-157 341.6c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3L72 359.2l-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.6-186.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7.9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z"/></svg> 
+    Hubungi DKM
+  </a>
 </div>
 
 <div class="main">
@@ -332,13 +335,10 @@ function salin(n) {
 function tutupOverlay() { document.getElementById('overlay').classList.add('hide'); }
 
 // ============================================
-// MESIN PENDETEKSI & PEMBASMI FOTO GAIB GOOGLE DRIVE
-// ============================================
 function matenginLinkDrive(url) {
     if (!url) return '';
     var fileId = '';
     
-    // Deteksi berbagai macam jenis link Google Drive yang rewel
     if (url.includes('drive.google.com/file/d/')) {
         fileId = url.split('/d/')[1].split('/')[0];
     } else if (url.includes('drive.google.com/open?id=')) {
@@ -349,12 +349,10 @@ function matenginLinkDrive(url) {
         }
     }
     
-    // Kalau terdeteksi file dari Drive, PAKSA ubah jadi format Thumbnail anti-blokir
     if (fileId) {
         return 'https://drive.google.com/thumbnail?id=' + fileId + '&sz=w1000';
     }
     
-    // Kalau bukan link Google Drive (misal dari ImgBB yang link langsung gambar .png/.jpg), biarkan saja
     return url; 
 }
 // ============================================
@@ -389,7 +387,6 @@ async function loadMasjid(slug) {
 
   if (d.deskripsi) { document.getElementById('deskripsi-masjid').textContent = d.deskripsi; document.getElementById('deskripsi-masjid').style.display = 'block'; }
   
-  // LOGO MASJID DI-MATENGIN DULU SEBELUM MUNCUL
   if (d.logo_url) {
       document.getElementById('logo-wrap').innerHTML = '<img src="' + matenginLinkDrive(d.logo_url) + '" alt="Logo ' + d.nama + '">';
   }
@@ -416,7 +413,6 @@ async function loadMasjid(slug) {
     lr.innerHTML = '<div class="kosong">Info rekening belum tersedia</div>';
   }
 
-  // QRIS DI-MATENGIN DULU SEBELUM MUNCUL
   if (d.qris_url) {
       document.getElementById('qris-box').style.display = 'block';
       document.getElementById('qris-img').src = matenginLinkDrive(d.qris_url);
@@ -426,8 +422,6 @@ async function loadMasjid(slug) {
   return d.id_masjid;
 }
 
-// ============================================
-// PROGRAM AMAL (Integrasi Psikologi & Konversi ChatGPT)
 // ============================================
 async function loadProgramAmal() {
   var json = await apiFetch('getProgramAmal', {id_masjid: ID_MASJID, _t: Date.now()}, null);
@@ -449,12 +443,31 @@ async function fetchDataAmal(program) {
    var res = await apiFetch(action, {id_masjid: ID_MASJID, id_program: program.id, _t: Date.now()}, null); 
    var el = document.getElementById('amal-content-'+program.id);
    
+   // URL BERSIH UNTUK SHARE WA
+   var urlWeb = window.location.href.split('#')[0];
+   
+   // BACA TRIK GAIB NOMOR WA PANITIA
+   var deskripsiTampil = '';
+   var waTujuan = window.WA_MASJID; // Bawaan pakai WA Masjid
+   
+   var rawDesc = program.deskripsi || '';
+   if (rawDesc.includes('|||WA:')) {
+       var parts = rawDesc.split('|||WA:');
+       deskripsiTampil = parts[0];
+       if (parts[1]) waTujuan = parts[1]; // Timpa dengan WA Panitia
+   } else {
+       deskripsiTampil = rawDesc;
+   }
+   
+   // HEADER PROGRAM
    var headerHtml = '<div style="padding:15px 15px 0;">';
-   if(program.deskripsi) {
-       headerHtml += '<div style="background:var(--primary-light); padding:12px; border-radius:8px; font-size:13px; color:var(--text); margin-bottom:12px; line-height:1.5; border-left:3px solid var(--primary);"><b>Keterangan Program:</b><br>' + program.deskripsi + '</div>';
+   if(deskripsiTampil) {
+       // Keterangan program langsung deskripsi saja
+       headerHtml += '<div style="background:var(--primary-light); padding:12px; border-radius:8px; font-size:13px; color:var(--text); margin-bottom:12px; line-height:1.5; border-left:3px solid var(--primary);">' + deskripsiTampil + '</div>';
    }
    if(program.tipe === 'KURBAN' && Number(program.harga_target) > 0) {
-       headerHtml += '<div style="font-size:11px; display:inline-block; background:var(--primary-light); color:var(--primary); padding:4px 10px; border-radius:12px; margin-bottom:12px; font-weight:600;">Harga Patokan: ' + rupiah(program.harga_target) + '</div>';
+       // Harga Patokan -> Harga
+       headerHtml += '<div style="font-size:11px; display:inline-block; background:var(--primary-light); color:var(--primary); padding:4px 10px; border-radius:12px; margin-bottom:12px; font-weight:600;">Harga: ' + rupiah(program.harga_target) + '</div>';
    }
    headerHtml += '</div>';
 
@@ -510,9 +523,9 @@ async function fetchDataAmal(program) {
        }
 
        var waTextKurban = encodeURIComponent("Assalamu'alaikum,\nSaya ingin berpartisipasi dalam program Kurban:\n*" + program.judul + "*\n\nMohon diarahkan untuk prosesnya.");
-       var shareTextKurban = encodeURIComponent("Yuk ikuti program Kurban *" + program.judul + "* di Masjid kita!");
+       var shareTextKurban = encodeURIComponent("Yuk ikuti program Kurban *" + program.judul + "* di Masjid kita! Klik link ini untuk info lengkapnya:\n" + urlWeb);
        html += '<div class="cta-group" style="margin-top:15px;">';
-       html += '<a href="https://wa.me/' + window.WA_MASJID + '?text=' + waTextKurban + '" target="_blank" class="btn-cta btn-cta-primary">🐄 Ikut Kurban</a>';
+       html += '<a href="https://wa.me/' + waTujuan + '?text=' + waTextKurban + '" target="_blank" class="btn-cta btn-cta-primary">🐄 Ikut Kurban</a>';
        html += '<a href="https://wa.me/?text=' + shareTextKurban + '" target="_blank" class="btn-cta btn-cta-outline">📤 Bagikan</a>';
        html += '</div>';
        
@@ -541,9 +554,9 @@ async function fetchDataAmal(program) {
        html += '</div>';
 
        var waTextZakat = encodeURIComponent("Assalamu'alaikum,\nSaya ingin menunaikan Zakat Fitrah untuk program:\n*" + program.judul + "*\n\nMohon diarahkan untuk proses pembayarannya.");
-       var shareTextZakat = encodeURIComponent("Mari tunaikan Zakat Fitrah *" + program.judul + "* di Masjid kita.");
+       var shareTextZakat = encodeURIComponent("Mari tunaikan Zakat Fitrah *" + program.judul + "* di Masjid kita. Klik link ini untuk info lengkapnya:\n" + urlWeb);
        html += '<div class="cta-group">';
-       html += '<a href="https://wa.me/' + window.WA_MASJID + '?text=' + waTextZakat + '" target="_blank" class="btn-cta btn-cta-primary">🌾 Tunaikan Sekarang</a>'; 
+       html += '<a href="https://wa.me/' + waTujuan + '?text=' + waTextZakat + '" target="_blank" class="btn-cta btn-cta-primary">🌾 Tunaikan Sekarang</a>'; 
        html += '<a href="https://wa.me/?text=' + shareTextZakat + '" target="_blank" class="btn-cta btn-cta-outline">📤 Bagikan</a>';
        html += '</div>';
        
@@ -581,9 +594,9 @@ async function fetchDataAmal(program) {
        }
        
        var waTextInfaq = encodeURIComponent("Assalamu'alaikum,\nSaya ingin berpartisipasi dalam program infaq:\n*" + program.judul + "*\n\nMohon diarahkan untuk proses infaqnya.");
-       var shareTextInfaq = encodeURIComponent("Yuk bantu program *" + program.judul + "* di Masjid kita. Salurkan infaq terbaikmu!");
+       var shareTextInfaq = encodeURIComponent("Yuk bantu program *" + program.judul + "* di Masjid kita. Salurkan infaq terbaikmu di link ini:\n" + urlWeb);
        html += '<div class="cta-group">';
-       html += '<a href="https://wa.me/' + window.WA_MASJID + '?text=' + waTextInfaq + '" target="_blank" class="btn-cta btn-cta-primary">💚 Infaq Sekarang</a>';
+       html += '<a href="https://wa.me/' + waTujuan + '?text=' + waTextInfaq + '" target="_blank" class="btn-cta btn-cta-primary">💚 Infaq Sekarang</a>';
        html += '<a href="https://wa.me/?text=' + shareTextInfaq + '" target="_blank" class="btn-cta btn-cta-outline">📤 Bagikan</a>';
        html += '</div>';
 
@@ -634,11 +647,8 @@ async function loadTransaksi() {
   var el = document.getElementById('list-transaksi');
   if (json.status !== 'ok' || json.data.length === 0) { el.innerHTML = '<div class="kosong">Belum ada transaksi tercatat</div>'; return; }
   el.innerHTML = json.data.slice(0, 5).map(function(t){
-    
-    // BUKTI KAS JUGA DI-MATENGIN
     var buktiMateng = matenginLinkDrive(t.bukti_url);
     var bukti = buktiMateng ? '<a href="' + buktiMateng + '" target="_blank" class="trx-bukti">Lihat bukti</a>' : '';
-    
     return '<div class="trx-item"><div class="trx-icon ' + t.jenis + '">' + (t.jenis === 'masuk' ? '↑' : '↓') + '</div><div class="trx-info"><div class="trx-name">' + t.keterangan + '</div><div class="trx-date">' + formatTglPendek(t.tanggal) + '</div></div><div class="trx-right"><div class="trx-amount ' + t.jenis + '">' + (t.jenis === 'masuk' ? '+' : '-') + ' ' + rupiah(t.jumlah) + '</div>' + bukti + '</div></div>';
   }).join('');
 }
@@ -675,13 +685,13 @@ async function loadGaleri() {
   var fotoHtml = ''; var videoHtml = '';
 
   fotos.slice(0, 4).forEach(function(f){ 
-      // FOTO GALERI DI-MATENGIN DULU SEBELUM MUNCUL
       var linkMateng = matenginLinkDrive(f.url);
       fotoHtml += '<div class="foto-item"><img src="' + linkMateng + '" alt="' + f.judul + '" loading="lazy"><div class="foto-caption">' + f.judul + '</div></div>'; 
   });
   
   videos.slice(0, 2).forEach(function(v){
     var ytId = v.url.replace('https://www.youtube.com/watch?v=','').replace('https://youtu.be/','').split('&')[0].split('?')[0];
+    // allowfullscreen sudah dipasang di iframe ini
     videoHtml += '<div class="video-item"><iframe src="https://www.youtube.com/embed/' + ytId + '" allowfullscreen loading="lazy"></iframe></div><div class="video-caption">' + v.judul + '</div>';
   });
 
