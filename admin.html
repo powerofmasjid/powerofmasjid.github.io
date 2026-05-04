@@ -53,7 +53,6 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#F7F7F5;color:#1A1A1A
 .btn-modal-cancel{background:#F3F4F6;color:#374151;}
 .btn-modal-confirm{background:#DC2626;color:white;}
 
-/* TAMPILAN STATUS UPLOAD YANG JELAS */
 .status-upload { display:none; font-size:11px; font-weight:600; color:#D97706; background:#FEF3C7; padding:10px; border-radius:8px; margin-top:8px; text-align:center; border: 1px dashed #D97706; }
 </style>
 </head>
@@ -75,7 +74,6 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#F7F7F5;color:#1A1A1A
   </div>
 </div>
 
-<!-- MODAL KONFIRMASI HAPUS -->
 <div class="modal-overlay" id="delete-modal">
   <div class="modal-card">
     <div class="modal-icon">🗑️</div>
@@ -319,7 +317,10 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#F7F7F5;color:#1A1A1A
 
 <div class="toast" id="toast">Berhasil!</div>
 
-<script>var API_URL = 'https://script.google.com/macros/s/AKfycbxAFoiDYZBYIOzPXitZcSEKsRqDAqF6xP0um_E3uqy-vwTOaM5VQQaHr7xWTKrDmd95Pg/exec';
+<script>
+// === MENGGUNAKAN API URL TERBARU BAPAK ===
+var API_URL = 'https://script.google.com/macros/s/AKfycbxgZ7lA1kLtsE1fFuHTFzq1D1ujTVsSpDsIVDbhmjrKrV3jTUUnOBu9f6_nTjSCnpNdkA/exec';
+
 var KUNCI_RAHASIA = 'POW_MASJID_SECURE_2026'; 
 var ADMIN_DATA = null, ID_MASJID = '', LAST_5_TRX = [], LIST_PROGRAM = [];
 var LIST_JADWAL = [], LIST_PENGUMUMAN = [], LIST_DATA_AMAL = [], LIST_GALERI = []; 
@@ -377,7 +378,7 @@ document.getElementById('btn-confirm-delete').addEventListener('click', function
   }).catch(() => { batalHapus(); showToast('Koneksi Terputus'); });
 });
 
-// === MESIN UPLOAD DENGAN PENGUNCI TOMBOL ===
+// === MESIN UPLOAD + KONVERTER DIRECT LINK DRIVE ===
 function uploadKeDrive(input, targetId, statusId) {
   if (!input.files || input.files.length === 0) return;
   var file = input.files[0];
@@ -385,7 +386,6 @@ function uploadKeDrive(input, targetId, statusId) {
   var statusEl = document.getElementById(statusId);
   if(statusEl) statusEl.style.display = 'block';
   
-  // MENGUNCI SEMUA TOMBOL SIMPAN AGAR USER TIDAK KESELEK
   var btns = document.querySelectorAll('.btn-submit');
   btns.forEach(b => { 
       if(!b.dataset.ori) b.dataset.ori = b.innerHTML; 
@@ -428,11 +428,20 @@ function uploadKeDrive(input, targetId, statusId) {
       fetch(API_URL, { method: 'POST', body: JSON.stringify(obj) })
       .then(r => r.json()).then(res => {
         if(statusEl) statusEl.style.display = 'none';
-        // MEMBUKA KEMBALI TOMBOL SIMPAN
         btns.forEach(b => { b.disabled = false; b.style.opacity = '1'; b.innerHTML = b.dataset.ori; });
         
         if (res.status === 'ok') { 
-            document.getElementById(targetId).value = res.url; 
+            // === KONVERTER AJAIB GOOGLE DRIVE JADI GAMBAR MENTAH ===
+            var linkMateng = res.url;
+            if (linkMateng.includes('drive.google.com/file/d/')) {
+                var fileId = linkMateng.split('/d/')[1].split('/')[0];
+                linkMateng = 'https://drive.google.com/uc?export=view&id=' + fileId;
+            } else if (linkMateng.includes('drive.google.com/open?id=')) {
+                var fileId = linkMateng.split('id=')[1];
+                linkMateng = 'https://drive.google.com/uc?export=view&id=' + fileId;
+            }
+            
+            document.getElementById(targetId).value = linkMateng; 
             showToast('Foto Siap! Silakan klik Simpan.'); 
         } else { showToast('Gagal Upload: ' + res.message); }
       }).catch(err => {
