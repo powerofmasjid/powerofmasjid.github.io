@@ -221,8 +221,9 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg-dark);
 <div class="toast" id="toast">Notifikasi</div>
 
 <script>
-// LINK API BARU
+// LINK API BARU & KUNCI RAHASIA
 const API_URL = 'https://script.google.com/macros/s/AKfycbxAFoiDYZBYIOzPXitZcSEKsRqDAqF6xP0um_E3uqy-vwTOaM5VQQaHr7xWTKrDmd95Pg/exec';
+const KUNCI_RAHASIA = 'POW_MASJID_SECURE_2026';
 
 function showToast(msg) {
   var t = document.getElementById('toast');
@@ -327,6 +328,7 @@ async function tambahMasjidBaru() {
     const res = await fetch(API_URL, {
       method: 'POST',
       body: JSON.stringify({
+        api_key: KUNCI_RAHASIA,
         action: 'addMasjidBaru',
         nama: nama,
         slug: slug,
@@ -361,7 +363,7 @@ async function simpanIklanGlobal() {
   const desc = document.getElementById('iklan-desc').value.trim();
   const link = document.getElementById('iklan-link').value.trim();
   
-  const btn = document.getElementById('btn-iklan');
+  const btn = document.getElementById('iklan');
   btn.disabled = true;
   btn.textContent = 'MENGUPDATE...';
   
@@ -369,6 +371,7 @@ async function simpanIklanGlobal() {
     const res = await fetch(API_URL, {
       method: 'POST',
       body: JSON.stringify({
+        api_key: KUNCI_RAHASIA,
         action: 'updateIklanGlobal',
         judul: judul,
         program: program,
