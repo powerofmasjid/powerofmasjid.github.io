@@ -15,99 +15,122 @@
     --border: rgba(201,168,76,0.2);
   }
   
-  /* DAFTAR TEMA OTOMATIS */
+  /* TEMA OTOMATIS */
   .tema-safir{--bg-dark:#050F1A;--panel-bg:#0F2240;--gold:#4C7AC9;--border:rgba(76,122,201,0.3);}
   .tema-emas{--bg-dark:#1A1405;--panel-bg:#4A3810;--gold:#C9A84C;--border:rgba(201,168,76,0.3);}
+  .tema-fajar{--bg-dark:#1A0F05;--panel-bg:#7C3D00;--gold:#F59E0B;--border:rgba(245,158,11,0.3);}
   .tema-langit{--bg-dark:#05141A;--panel-bg:#014F86;--gold:#38BDF8;--border:rgba(56,189,248,0.3);}
+  .tema-tembaga{--bg-dark:#1A0505;--panel-bg:#4E1A0A;--gold:#C2410C;--border:rgba(194,65,12,0.3);}
+  .tema-perak{--bg-dark:#111827;--panel-bg:#1F2937;--gold:#9CA3AF;--border:rgba(156,163,175,0.3);}
+  .tema-merahhati{--bg-dark:#1A050A;--panel-bg:#4C0519;--gold:#E11D48;--border:rgba(225,29,72,0.3);}
+  .tema-toska{--bg-dark:#051A18;--panel-bg:#094A46;--gold:#14B8A6;--border:rgba(20,184,166,0.3);}
+  .tema-malam{--bg-dark:#050A1A;--panel-bg:#0F1F35;--gold:#3B82F6;--border:rgba(59,130,246,0.3);}
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg-dark); color: var(--text); overflow: hidden; height: 100vh; display: flex; flex-direction: column; transition: all 0.5s ease; }
+  body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg-dark); color: var(--text); overflow: hidden; height: 100vh; display: flex; flex-direction: column; transition: all 0.8s ease; }
   
-  /* LOADING */
+  /* LOADING SCREEN (LOGO BESAR & ASLI) */
   #loading-screen { position: fixed; inset: 0; background: var(--bg-dark); z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity 0.8s ease; }
   #loading-screen.hide { opacity: 0; pointer-events: none; }
-  .spinner-logo { width: 120px; animation: pulse 1.5s infinite; border-radius: 50%; border: 2px solid var(--gold); padding: 10px; }
-  @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+  .spinner-logo { width: 250px; height: auto; object-fit: contain; animation: pulse 1.5s infinite; }
+  @keyframes pulse { 0% { transform: scale(1); opacity:1; } 50% { transform: scale(1.05); opacity:0.8; } 100% { transform: scale(1); opacity:1; } }
 
-  /* HEADER */
-  .header { background: var(--panel-bg); padding: 15px 40px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--border); z-index: 10; transition: all 0.8s ease; }
-  .logo-wrap { width: 70px; height: 70px; border-radius: 50%; border: 2px solid var(--gold); overflow: hidden; background: rgba(255,255,255,0.1); flex-shrink: 0; }
+  /* HEADER SIMETRIS */
+  .header { background: var(--panel-bg); padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--border); z-index: 10; transition: all 0.8s ease; }
+  .header-left { display: flex; align-items: center; gap: 20px; flex: 1; overflow: hidden; }
+  .logo-wrap { width: 80px; height: 80px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
   .logo-wrap img { width: 100%; height: 100%; object-fit: contain; }
-  .nama-masjid { font-size: 32px; font-weight: 700; color: white; }
-  .alamat-masjid { font-size: 16px; color: var(--gold); opacity: 0.8; }
-  .jam-digital { font-size: 45px; font-weight: 700; color: var(--gold); font-family: tabular-nums; }
-
-  /* SHOLAT BAR */
-  .sholat-bar { display: flex; justify-content: space-between; background: rgba(0,0,0,0.4); border-bottom: 2px solid var(--border); padding: 10px 40px; transition: all 0.8s ease; }
-  .sholat-box { flex: 1; text-align: center; padding: 5px; border-right: 1px solid rgba(255,255,255,0.05); }
-  .sholat-box.aktif { background: rgba(201,168,76,0.15); border: 1px solid var(--gold); border-radius: 8px; }
-  .sholat-name { font-size: 14px; color: rgba(255,255,255,0.6); text-transform: uppercase; letter-spacing: 1px; }
-  .sholat-time { font-size: 28px; color: var(--gold); font-weight: 700; }
-
-  /* MAIN CONTENT */
-  .main { flex: 1; display: flex; padding: 20px; gap: 20px; overflow: hidden; position: relative; }
+  .info-masjid { display: flex; flex-direction: column; justify-content: center; overflow: hidden; }
+  .nama-masjid { font-size: 35px; font-weight: 700; color: white; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 1.1; }
+  .alamat-masjid { font-size: 18px; color: var(--gold); opacity: 0.8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   
-  /* PANEL KIRI (SALDO) */
-  .left-panel { width: 30%; display: flex; flex-direction: column; transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1); }
+  .header-right { text-align: right; flex-shrink: 0; }
+  .jam-digital { font-size: 45px; font-weight: 700; color: var(--gold); font-family: tabular-nums; line-height: 1; }
+  .tanggal-digital { font-size: 18px; color: white; margin-top: 5px; }
+
+  /* 8 JADWAL SHOLAT BAR */
+  .sholat-bar { display: flex; justify-content: space-between; background: rgba(0,0,0,0.4); border-bottom: 2px solid var(--border); padding: 10px 20px; transition: all 0.8s ease; }
+  .sholat-box { flex: 1; text-align: center; padding: 5px; border-right: 1px solid rgba(255,255,255,0.05); }
+  .sholat-box:last-child { border-right: none; }
+  .sholat-box.aktif { background: rgba(201,168,76,0.15); border: 1px solid var(--gold); border-radius: 8px; transform: scale(1.05); }
+  .sholat-name { font-size: 14px; color: rgba(255,255,255,0.6); text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
+  .sholat-box.aktif .sholat-name { color: white; }
+  .sholat-time { font-size: 24px; color: var(--gold); font-weight: 700; line-height: 1.2; }
+
+  /* MAIN CONTENT (SALDO & MEDIA) */
+  .main { flex: 1; display: flex; padding: 25px; gap: 25px; overflow: hidden; position: relative; }
+  
+  .left-panel { width: 32%; display: flex; flex-direction: column; transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1); }
   .card { background: var(--panel-bg); border-radius: 20px; border: 1px solid var(--border); padding: 30px; height: 100%; display: flex; flex-direction: column; justify-content: center; text-align: center; }
-  .card-title { font-size: 20px; font-weight: 600; color: var(--gold); margin-bottom: 20px; text-transform: uppercase; letter-spacing: 2px; }
-  .saldo-value { font-family: 'Amiri', serif; font-size: 65px; font-weight: 700; color: var(--masuk); line-height: 1.2; }
+  .card-title { font-size: 22px; font-weight: 600; color: var(--gold); margin-bottom: 20px; text-transform: uppercase; letter-spacing: 2px; }
+  .saldo-value { font-family: 'Amiri', serif; font-size: 70px; font-weight: 700; color: var(--masuk); line-height: 1.2; text-shadow: 0 4px 20px rgba(74,222,128,0.2); }
 
-  /* PANEL KANAN (MEDIA) */
-  .right-panel { flex: 1; background: black; border-radius: 20px; border: 1px solid var(--border); overflow: hidden; position: relative; transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1); }
-  .media-image { width: 100%; height: 100%; object-fit: contain; opacity: 0; transition: opacity 1s ease; }
-  .media-overlay { position: absolute; inset: 0; background: linear-gradient(0deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 40%); display: flex; align-items: flex-end; padding: 30px; }
-  .media-title { font-size: 28px; font-weight: 700; color: white; text-shadow: 0 2px 10px black; }
+  .right-panel { flex: 1; background: black; border-radius: 20px; border: 1px solid var(--border); overflow: hidden; position: relative; transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1); display: flex; align-items: center; justify-content: center; }
+  .media-image { width: 100%; height: 100%; object-fit: contain; opacity: 0; transition: opacity 1s ease; position: absolute; }
+  .media-iframe { width: 100%; height: 100%; border: none; opacity: 0; transition: opacity 1s ease; position: absolute; }
+  .media-overlay { position: absolute; inset: 0; background: linear-gradient(0deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 40%); display: flex; align-items: flex-end; padding: 30px; pointer-events: none; transition: opacity 0.5s; }
+  .media-title { font-size: 32px; font-weight: 700; color: white; text-shadow: 0 2px 10px black; }
 
-  /* MODE FULLSCREEN (FOKUS MEDIA) */
-  body.mode-fokus .left-panel { width: 0; opacity: 0; margin-right: -20px; pointer-events: none; }
-  body.mode-fokus .header, body.mode-fokus .sholat-bar { transform: translateY(-110%); margin-bottom: -150px; }
+  /* MODE FOKUS (POSTER MEMBESAR) */
+  body.mode-fokus .left-panel { width: 0; opacity: 0; margin-right: -25px; pointer-events: none; }
+  body.mode-fokus .header, body.mode-fokus .sholat-bar { transform: translateY(-110%); margin-bottom: -160px; opacity: 0; }
   body.mode-fokus .main { padding: 0; gap: 0; }
   body.mode-fokus .right-panel { border-radius: 0; border: none; }
+  body.mode-youtube .media-overlay { opacity: 0; } /* Hilangkan judul jika putar Youtube */
 
-  /* FOOTER */
-  .footer { background: var(--gold); padding: 10px 0; color: var(--bg-dark); font-size: 22px; font-weight: 700; display: flex; align-items: center; z-index: 20; }
-  .footer-label { background: var(--bg-dark); color: var(--gold); padding: 10px 30px; font-size: 20px; border-right: 3px solid var(--gold); }
-  .marquee-text { display: inline-block; padding-left: 100%; animation: marquee 40s linear infinite; white-space: nowrap; }
+  /* FOOTER & RUNNING TEXT (BESAR & 1 BARIS) */
+  .footer { background: var(--gold); padding: 15px 0; color: var(--bg-dark); font-size: 30px; font-weight: 700; display: flex; align-items: center; z-index: 20; flex-shrink: 0; }
+  .footer-label { background: var(--bg-dark); color: var(--gold); padding: 15px 35px; font-size: 26px; border-right: 4px solid var(--gold); letter-spacing: 2px; }
+  .marquee-container { flex: 1; overflow: hidden; white-space: nowrap; }
+  .marquee-text { display: inline-block; padding-left: 100%; animation: marquee 35s linear infinite; white-space: nowrap; font-size: 32px; }
   @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
 </style>
 </head>
 <body>
 
   <div id="loading-screen">
-    <img src="Logo Power of Masjid.png" class="spinner-logo" onerror="this.src='https://via.placeholder.com/150?text=Power+Masjid'">
-    <div style="font-size: 18px; color: var(--gold); margin-top: 20px; letter-spacing: 2px;">MENYIAPKAN TAMPILAN...</div>
+    <img src="Logo Power of Masjid.png" class="spinner-logo" onerror="this.src='https://via.placeholder.com/250x100?text=Power+Masjid'">
+    <div style="font-size: 22px; color: var(--gold); margin-top: 25px; letter-spacing: 3px; font-weight: 600;">MENYIAPKAN TAMPILAN...</div>
   </div>
 
   <div class="header">
     <div class="header-left">
-      <div class="logo-wrap" id="tv-logo-wrap"><div style="font-size:40px; color:var(--gold); font-family:'Amiri'">م</div></div>
-      <div style="margin-left:15px">
-        <div class="nama-masjid" id="tv-nama">Memuat Masjid...</div>
-        <div class="alamat-masjid" id="tv-alamat">Sinkronisasi lokasi...</div>
+      <div class="logo-wrap" id="tv-logo-wrap"><div style="font-size:50px; color:var(--gold); font-family:'Amiri'">م</div></div>
+      <div class="info-masjid">
+        <div class="nama-masjid" id="tv-nama">Memuat...</div>
+        <div class="alamat-masjid" id="tv-alamat">Sinkronisasi data sistem...</div>
       </div>
     </div>
     <div class="header-right">
       <div class="jam-digital" id="jam">00:00:00</div>
-      <div style="font-size:18px" id="tanggal">-</div>
+      <div class="tanggal-digital" id="tanggal">-</div>
     </div>
   </div>
 
   <div class="sholat-bar" id="sholat-bar">
-    </div>
+    <div class="sholat-box"><div class="sholat-name">Imsak</div><div class="sholat-time">--:--</div></div>
+    <div class="sholat-box"><div class="sholat-name">Subuh</div><div class="sholat-time">--:--</div></div>
+    <div class="sholat-box"><div class="sholat-name">Terbit</div><div class="sholat-time">--:--</div></div>
+    <div class="sholat-box"><div class="sholat-name">Dhuha</div><div class="sholat-time">--:--</div></div>
+    <div class="sholat-box"><div class="sholat-name">Dzuhur</div><div class="sholat-time">--:--</div></div>
+    <div class="sholat-box"><div class="sholat-name">Ashar</div><div class="sholat-time">--:--</div></div>
+    <div class="sholat-box"><div class="sholat-name">Maghrib</div><div class="sholat-time">--:--</div></div>
+    <div class="sholat-box"><div class="sholat-name">Isya</div><div class="sholat-time">--:--</div></div>
+  </div>
 
   <div class="main">
     <div class="left-panel">
       <div class="card">
         <div class="card-title">Saldo Kas Umat</div>
         <div class="saldo-value" id="tv-saldo">Rp 0</div>
-        <div style="margin-top:20px; font-size:14px; opacity:0.6">Update Otomatis Real-time</div>
+        <div style="margin-top:20px; font-size:16px; opacity:0.6; font-weight:600;">Data Real-time</div>
       </div>
     </div>
     
     <div class="right-panel">
       <img src="" class="media-image" id="slide-img">
-      <div class="media-overlay">
+      <iframe src="" class="media-iframe" id="slide-iframe" allow="autoplay; fullscreen"></iframe>
+      <div class="media-overlay" id="slide-overlay">
         <div class="media-title" id="slide-title">Selamat Datang</div>
       </div>
     </div>
@@ -115,7 +138,7 @@
 
   <div class="footer">
     <div class="footer-label">INFO</div>
-    <div style="flex:1; overflow:hidden;"><div class="marquee-text" id="tv-pengumuman">Memuat info masjid...</div></div>
+    <div class="marquee-container"><div class="marquee-text" id="tv-pengumuman">Memuat pengumuman terbaru...</div></div>
   </div>
 
 <script>
@@ -124,35 +147,130 @@ let ID_MASJID = '';
 let galeriList = [];
 let slideIndex = 0;
 let isFokusMode = false;
+let adaYoutubeLive = false; 
+
+// ANTI SLEEP
+let wakeLock = null;
+async function requestWakeLock() { try { if('wakeLock' in navigator) wakeLock = await navigator.wakeLock.request('screen'); } catch (err){} }
+document.addEventListener('visibilitychange', async () => { if (wakeLock !== null && document.visibilityState === 'visible') requestWakeLock(); });
+requestWakeLock();
 
 function getSlug() {
   const params = new URLSearchParams(window.location.search);
   return params.get('masjid') || 'annuriyah-tanjungbarat';
 }
 
+// LOGIKA MATENGIN LINK GDRIVE (Anti Pecah)
 function matenginLink(url) {
-  if (!url) return ''; let fileId = '';
+  if (!url) return ''; 
+  if (url.includes('youtube.com') || url.includes('youtu.be')) return url; // Biarkan Youtube
+  let fileId = '';
   if (url.includes('drive.google.com/file/d/')) fileId = url.split('/d/')[1].split('/')[0];
   else if (url.includes('drive.google.com/open?id=')) fileId = url.split('id=')[1].split('&')[0];
-  return fileId ? 'https://drive.google.com/thumbnail?id=' + fileId + '&sz=w1920' : url; 
+  else if (url.includes('drive.google.com/uc')) if (url.includes('id=')) fileId = url.split('id=')[1].split('&')[0];
+  // Format GDrive paling sakti untuk ditampilin di web
+  return fileId ? 'https://drive.google.com/uc?export=view&id=' + fileId : url; 
 }
 
-// LOGIKA PERGANTIAN LAYAR (MODE FOKUS)
+function getYoutubeEmbed(url) {
+  let vidId = '';
+  if(url.includes('youtu.be/')) vidId = url.split('youtu.be/')[1].split('?')[0];
+  else if(url.includes('youtube.com/watch?v=')) vidId = url.split('v=')[1].split('&')[0];
+  else if(url.includes('youtube.com/live/')) vidId = url.split('live/')[1].split('?')[0];
+  return vidId ? 'https://www.youtube.com/embed/' + vidId + '?autoplay=1&mute=0' : '';
+}
+
+// LOGIKA PERGANTIAN LAYAR
 function toggleFokus() {
+  if (adaYoutubeLive) {
+    // Kalau ada Youtube, paksa diam di mode Fokus membesar terus!
+    document.body.classList.add('mode-fokus');
+    document.body.classList.add('mode-youtube');
+    return;
+  }
+  document.body.classList.remove('mode-youtube');
   isFokusMode = !isFokusMode;
   if(isFokusMode) document.body.classList.add('mode-fokus');
   else document.body.classList.remove('mode-fokus');
 }
-// Ganti mode tiap 15 detik
-setInterval(toggleFokus, 15000);
+setInterval(toggleFokus, 15000); // Ganti tiap 15 detik
 
 function updateJam() {
   const now = new Date();
   document.getElementById('jam').innerText = now.toLocaleTimeString('id-ID', {hour12: false});
+  const hari = ['Ahad','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'][now.getDay()];
   const bln = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'][now.getMonth()];
-  document.getElementById('tanggal').innerText = `${now.getDate()} ${bln} ${now.getFullYear()}`;
+  document.getElementById('tanggal').innerText = `${hari}, ${now.getDate()} ${bln} ${now.getFullYear()}`;
 }
 setInterval(updateJam, 1000);
+
+// KALKULASI 8 JADWAL SHOLAT
+function loadJadwalSholat(lat, lon) {
+  try {
+    var latNum = parseFloat(lat); var lonNum = parseFloat(lon);
+    if (isNaN(latNum) || isNaN(lonNum)) return;
+    var today = new Date(); var D2R = Math.PI / 180; var R2D = 180 / Math.PI;
+    var Y = today.getFullYear(); var M = today.getMonth() + 1; var D = today.getDate();
+    var JD = 367*Y - Math.floor(7*(Y+Math.floor((M+9)/12))/4) + Math.floor(275*M/9) + D + 1721013.5;
+    var T = (JD - 2451545) / 36525;
+    var L0 = (280.46646 + 36000.76983*T) % 360; var M0 = (357.52911 + 35999.05029*T) % 360;
+    var C = (1.914602 - 0.004817*T)*Math.sin(M0*D2R) + 0.019993*Math.sin(2*M0*D2R);
+    var sunLon = L0 + C; var obliq = 23.4393 - 0.0130*T;
+    var decl = R2D * Math.asin(Math.sin(obliq*D2R) * Math.sin(sunLon*D2R));
+    var RA = R2D * Math.atan2(Math.cos(obliq*D2R)*Math.sin(sunLon*D2R), Math.cos(sunLon*D2R));
+    var EqT = ((L0 - RA) % 360) / 15; var transit = 12 - lonNum/15 + 7 - EqT;
+
+    function ha(angle) {
+      var cosH = (Math.sin(angle*D2R) - Math.sin(latNum*D2R)*Math.sin(decl*D2R)) / (Math.cos(latNum*D2R)*Math.cos(decl*D2R));
+      if(cosH < -1) cosH = -1; if(cosH > 1) cosH = 1;
+      return R2D * Math.acos(cosH) / 15;
+    }
+    function fmt(t) {
+      t = ((t % 24) + 24) % 24; var h = Math.floor(t); var m = Math.round((t - h) * 60);
+      if(m === 60){ h++; m=0; } return String(h).padStart(2,'0') + ':' + String(m).padStart(2,'0');
+    }
+    
+    // Hitung Waktu Pokok
+    var dzuhur = transit;
+    var asarA = R2D * Math.atan(1/(1 + Math.tan(D2R*Math.abs(latNum - decl))));
+    var ashar = transit + ha(asarA);
+    var maghrib = transit + ha(-0.833);
+    var isya = transit + ha(-18);
+    var subuh = transit - ha(-20);
+    var terbit = transit - ha(-0.833);
+    
+    // Imsak (10 menit sblm Subuh) & Dhuha (20 menit stlh Terbit)
+    var imsak = subuh - (10/60);
+    var dhuha = terbit + (20/60);
+
+    var sholat = [
+      {id:'imsak', name:'Imsak', time: fmt(imsak)},
+      {id:'subuh', name:'Subuh', time: fmt(subuh)},
+      {id:'terbit', name:'Terbit', time: fmt(terbit)},
+      {id:'dhuha', name:'Dhuha', time: fmt(dhuha)},
+      {id:'dzuhur', name:'Dzuhur', time: fmt(dzuhur)},
+      {id:'ashar', name:'Ashar', time: fmt(ashar)},
+      {id:'maghrib', name:'Maghrib', time: fmt(maghrib)},
+      {id:'isya', name:'Isya', time: fmt(isya)}
+    ];
+
+    var now = today.getHours()*60 + today.getMinutes(); 
+    var aktifIdx = -1;
+    for (var i = 0; i < sholat.length; i++) { 
+       var pTime = sholat[i].time.split(':');
+       var pMinutes = parseInt(pTime[0])*60 + parseInt(pTime[1]);
+       if (now <= pMinutes) { aktifIdx = i; break; }
+    }
+    if(aktifIdx === -1) aktifIdx = 0;
+
+    var html = '';
+    sholat.forEach(function(s, idx) {
+        var aktifClass = (idx === aktifIdx) ? 'aktif' : '';
+        html += '<div class="sholat-box ' + aktifClass + '"><div class="sholat-name">' + s.name + '</div><div class="sholat-time">' + s.time + '</div></div>';
+    });
+    document.getElementById('sholat-bar').innerHTML = html;
+  } catch(e) { console.log(e); }
+}
 
 async function loadDataTV() {
   try {
@@ -174,40 +292,68 @@ async function loadDataTV() {
     ]);
 
     if(resS.status === 'ok') document.getElementById('tv-saldo').innerText = "Rp " + Number(resS.data.saldo).toLocaleString("id-ID");
-    if(resP.status === 'ok') document.getElementById('tv-pengumuman').innerText = resP.data.slice(0,5).map(p => `✦ ${p.judul}: ${p.isi}`).join(' ✦ ');
-    if(resG.status === 'ok') {
-      galeriList = resG.data.filter(g => g.tipe === 'FOTO');
-      playSlideshow();
+    
+    if(resP.status === 'ok' && resP.data.length > 0) {
+      document.getElementById('tv-pengumuman').innerText = resP.data.slice(0,5).map(p => `✦ ${p.judul}: ${p.isi}`).join(' ✦ ');
+    } else {
+      document.getElementById('tv-pengumuman').innerText = "Selamat Datang. Luruskan dan rapatkan shaf sebelum sholat dimulai.";
     }
+
+    if(resG.status === 'ok') {
+      galeriList = resG.data; // Semua media ditarik
+      if(galeriList.length > 0) playSlideshow();
+    }
+    
     document.getElementById('loading-screen').classList.add('hide');
   } catch (e) { console.log(e); }
-}
-
-function loadJadwalSholat(lat, lon) {
-  // Logika kalkulasi jadwal sholat (seperti sebelumnya)
-  // ... (disingkat untuk efisiensi kodingan)
-  const times = ["04:35", "11:52", "15:12", "17:50", "19:01"]; // Contoh dummy
-  const names = ["Subuh", "Dzuhur", "Ashar", "Maghrib", "Isya"];
-  let html = '';
-  names.forEach((n, i) => {
-    html += `<div class="sholat-box"><div class="sholat-name">${n}</div><div class="sholat-time">${times[i]}</div></div>`;
-  });
-  document.getElementById('sholat-bar').innerHTML = html;
 }
 
 function playSlideshow() {
   if(galeriList.length === 0) return;
   const imgEl = document.getElementById('slide-img');
+  const frameEl = document.getElementById('slide-iframe');
+  const titleEl = document.getElementById('slide-title');
+  const currentMedia = galeriList[slideIndex];
+  
   imgEl.style.opacity = 0;
+  frameEl.style.opacity = 0;
+
   setTimeout(() => {
-    imgEl.src = matenginLink(galeriList[slideIndex].url);
-    document.getElementById('slide-title').innerText = galeriList[slideIndex].judul;
-    imgEl.style.opacity = 1;
-    slideIndex = (slideIndex + 1) % galeriList.length;
+    let rawUrl = currentMedia.url;
+    
+    // CEK APAKAH YOUTUBE
+    if(rawUrl.includes('youtube.com') || rawUrl.includes('youtu.be')) {
+      adaYoutubeLive = true; // Kunci rotasi
+      document.body.classList.add('mode-fokus'); // Paksa Fullscreen
+      document.body.classList.add('mode-youtube');
+      
+      imgEl.style.display = 'none';
+      frameEl.style.display = 'block';
+      
+      // Load video jika belum di-load
+      let embedUrl = getYoutubeEmbed(rawUrl);
+      if(frameEl.src !== embedUrl) frameEl.src = embedUrl;
+      frameEl.style.opacity = 1;
+      
+    } else {
+      adaYoutubeLive = false; // Buka kunci rotasi
+      document.body.classList.remove('mode-youtube');
+      
+      frameEl.style.display = 'none';
+      frameEl.src = ''; // Matikan video
+      imgEl.style.display = 'block';
+      
+      imgEl.src = matenginLink(rawUrl);
+      titleEl.innerText = currentMedia.judul;
+      imgEl.style.opacity = 1;
+      
+      slideIndex = (slideIndex + 1) % galeriList.length;
+    }
   }, 1000);
 }
-setInterval(() => { if(galeriList.length > 0) playSlideshow(); }, 10000);
-setInterval(loadDataTV, 300000);
+
+setInterval(() => { if(!adaYoutubeLive && galeriList.length > 0) playSlideshow(); }, 15000); // Ganti gambar tiap 15 detik
+setInterval(loadDataTV, 300000); // Refresh data 5 menit sekali
 
 loadDataTV();
 updateJam();
