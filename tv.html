@@ -15,33 +15,27 @@
     --border: rgba(201,168,76,0.3);
   }
   
-  /* TEMA OTOMATIS */
   .tema-safir{--bg-dark:#050F1A;--panel-bg:#0F2240;--gold:#4C7AC9;}
   .tema-emas{--bg-dark:#1A1405;--panel-bg:#4A3810;--gold:#C9A84C;}
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg-dark); color: var(--text); overflow: hidden; height: 100vh; display: flex; flex-direction: column; }
+  body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg-dark); color: var(--text); overflow: hidden; height: 100vh; display: flex; flex-direction: column; transition: all 0.5s ease; }
   
-  /* LOADING */
   #loading-screen { position: fixed; inset: 0; background: var(--bg-dark); z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; }
   #loading-screen.hide { display: none; }
   .spinner-logo { width: 200px; animation: pulse 1.5s infinite; }
   @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
 
-  /* HEADER FIX: SEJAJAR KIRI KANAN */
   .header { background: var(--panel-bg); padding: 15px 30px; display: flex; align-items: center; border-bottom: 3px solid var(--gold); z-index: 100; gap: 25px; }
   .logo-wrap { width: 90px; height: 90px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.05); border-radius: 10px; padding: 5px; }
   .logo-wrap img { width: 100%; height: 100%; object-fit: contain; }
-  
   .info-masjid { flex: 1; display: flex; flex-direction: column; justify-content: center; }
   .nama-masjid { font-size: 38px; font-weight: 700; color: white; line-height: 1.2; }
   .alamat-masjid { font-size: 18px; color: var(--gold); opacity: 0.9; }
-  
   .header-right { text-align: right; flex-shrink: 0; }
   .jam-digital { font-size: 55px; font-weight: 700; color: var(--gold); font-family: tabular-nums; line-height: 1; }
   .tanggal-digital { font-size: 20px; color: white; margin-top: 5px; }
 
-  /* 8 JADWAL SHOLAT */
   .sholat-bar { display: flex; background: rgba(0,0,0,0.5); border-bottom: 2px solid var(--border); padding: 10px 10px; gap: 10px; }
   .sholat-box { flex: 1; text-align: center; padding: 8px 5px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05); }
   .sholat-box.aktif { background: var(--gold); border: 1px solid white; }
@@ -50,37 +44,28 @@
   .sholat-time { font-size: 26px; color: var(--gold); font-weight: 700; line-height: 1.1; }
   .sholat-box.aktif .sholat-time { color: var(--bg-dark); }
 
-  /* MAIN CONTENT */
   .main { flex: 1; display: flex; padding: 20px; gap: 20px; overflow: hidden; position: relative; }
-  
   .left-panel { width: 32%; display: flex; flex-direction: column; transition: all 0.6s ease-in-out; }
   .card { background: var(--panel-bg); border-radius: 20px; border: 2px solid var(--border); padding: 30px; height: 100%; display: flex; flex-direction: column; justify-content: center; text-align: center; }
   .card-title { font-size: 24px; font-weight: 600; color: var(--gold); margin-bottom: 20px; text-transform: uppercase; }
   .saldo-value { font-family: 'Amiri', serif; font-size: 80px; font-weight: 700; color: var(--masuk); line-height: 1; }
 
   .right-panel { flex: 1; background: black; border-radius: 20px; border: 2px solid var(--border); overflow: hidden; position: relative; display: flex; align-items: center; justify-content: center; transition: all 0.6s ease-in-out; }
-  .media-content { width: 100%; height: 100%; object-fit: contain; position: absolute; top:0; left:0; }
+  .media-content { width: 100%; height: 100%; border: none; object-fit: contain; position: absolute; top:0; left:0; }
   .media-overlay { position: absolute; inset: 0; background: linear-gradient(0deg, rgba(0,0,0,0.8) 0%, transparent 50%); display: flex; align-items: flex-end; padding: 30px; z-index: 5; }
   .media-title { font-size: 32px; font-weight: 700; color: white; }
 
-  /* MODE FOKUS / FULLSCREEN */
-  body.mode-fokus .left-panel { width: 0; opacity: 0; margin-left: -20px; }
+  /* MODE LIVE STREAM (FULLSCREEN) */
+  body.mode-fokus .left-panel { width: 0; opacity: 0; margin-left: -20px; display: none; }
   body.mode-fokus .header, body.mode-fokus .sholat-bar { display: none; }
   body.mode-fokus .main { padding: 0; }
   body.mode-fokus .right-panel { border-radius: 0; border: none; }
 
-  /* FOOTER & RUNNING TEXT FIX: WAJIB 1 BARIS */
+  /* FOOTER */
   .footer { background: var(--gold); height: 75px; color: var(--bg-dark); display: flex; align-items: center; overflow: hidden; z-index: 100; }
   .footer-label { background: var(--bg-dark); color: var(--gold); height: 100%; display: flex; align-items: center; padding: 0 35px; font-size: 28px; font-weight: 800; border-right: 4px solid var(--gold); flex-shrink: 0; }
   .marquee-container { flex: 1; overflow: hidden; position: relative; display: flex; align-items: center; }
-  .marquee-text { 
-    display: block; 
-    white-space: nowrap !important; /* Paksa 1 baris */
-    font-size: 36px; 
-    font-weight: 700; 
-    padding-left: 100%; 
-    animation: marquee 40s linear infinite; 
-  }
+  .marquee-text { display: inline-block; white-space: nowrap !important; font-size: 36px; font-weight: 700; padding-left: 100%; animation: marquee 35s linear infinite; }
   @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
 </style>
 </head>
@@ -92,9 +77,7 @@
   </div>
 
   <div class="header">
-    <div class="logo-wrap" id="tv-logo-wrap">
-      <div style="font-size:40px; color:var(--gold); font-family:'Amiri'">م</div>
-    </div>
+    <div class="logo-wrap" id="tv-logo-wrap"><div style="font-size:40px; color:var(--gold); font-family:'Amiri'">م</div></div>
     <div class="info-masjid">
       <div class="nama-masjid" id="tv-nama">Memuat Nama Masjid...</div>
       <div class="alamat-masjid" id="tv-alamat">Alamat sedang dimuat...</div>
@@ -114,9 +97,7 @@
         <div class="saldo-value" id="tv-saldo">Rp 0</div>
       </div>
     </div>
-    
-    <div class="right-panel" id="tv-right-panel">
-      </div>
+    <div class="right-panel" id="tv-right-panel"></div>
   </div>
 
   <div class="footer">
@@ -131,7 +112,7 @@ const API_URL = 'https://script.google.com/macros/s/AKfycbxAFoiDYZBYIOzPXitZcSEK
 let ID_MASJID = '';
 let galeriList = [];
 let slideIndex = 0;
-let isFokusMode = false;
+let rotasiTimer; 
 
 function getSlug() {
   const params = new URLSearchParams(window.location.search);
@@ -152,16 +133,8 @@ function getYoutubeEmbed(url) {
   if(url.includes('youtu.be/')) vidId = url.split('youtu.be/')[1].split('?')[0];
   else if(url.includes('v=')) vidId = url.split('v=')[1].split('&')[0];
   else if(url.includes('live/')) vidId = url.split('live/')[1].split('?')[0];
-  return vidId ? `https://www.youtube.com/embed/${vidId}?autoplay=1&mute=1&controls=0` : '';
+  return vidId ? `https://www.youtube.com/embed/${vidId}?autoplay=1&mute=0&controls=1` : '';
 }
-
-// TOGGLE LAYAR BESAR / KECIL
-function runRotation() {
-  isFokusMode = !isFokusMode;
-  if(isFokusMode) document.body.classList.add('mode-fokus');
-  else document.body.classList.remove('mode-fokus');
-}
-setInterval(runRotation, 15000);
 
 function updateTime() {
   const now = new Date();
@@ -179,18 +152,8 @@ async function loadData() {
       ID_MASJID = jM.data.id_masjid;
       document.getElementById('tv-nama').innerText = jM.data.nama;
       document.getElementById('tv-alamat').innerText = jM.data.alamat + ', ' + jM.data.kota;
-      
-      // LOGO FIX
-      if(jM.data.logo_url) {
-        document.getElementById('tv-logo-wrap').innerHTML = `<img src="${matenginLink(jM.data.logo_url)}">`;
-      }
-      
-      if(jM.data.tema) {
-        document.body.className = '';
-        document.body.classList.add('tema-' + jM.data.tema);
-      }
-      
-      // JADWAL SHOLAT 8 WAKTU
+      if(jM.data.logo_url) document.getElementById('tv-logo-wrap').innerHTML = `<img src="${matenginLink(jM.data.logo_url)}">`;
+      if(jM.data.tema) { document.body.className = ''; document.body.classList.add('tema-' + jM.data.tema); }
       if(jM.data.latitude) generateJadwal(jM.data.latitude, jM.data.longitude);
     }
 
@@ -201,50 +164,69 @@ async function loadData() {
     ]);
 
     if(resS.status === 'ok') document.getElementById('tv-saldo').innerText = "Rp " + Number(resS.data.saldo).toLocaleString("id-ID");
-    if(resP.status === 'ok') document.getElementById('tv-pengumuman').innerText = resP.data.map(p => `✦ ${p.judul}: ${p.isi}`).join(' ✦ ');
+    
+    // ANTI ENTER PADA PENGUMUMAN
+    if(resP.status === 'ok') {
+      let gabungan = resP.data.map(p => {
+        let teksBersih = p.isi.replace(/(?:\r\n|\r|\n)/g, ' '); // Ganti enter jadi spasi
+        return `✦ ${p.judul}: ${teksBersih}`;
+      }).join(' ✦ ');
+      document.getElementById('tv-pengumuman').innerText = gabungan;
+    }
     
     if(resG.status === 'ok') {
       galeriList = resG.data;
-      updateDisplay();
+      if(!rotasiTimer) jalankanRotasi(); // Mulai rotasi jika belum jalan
     }
-    
     document.getElementById('loading-screen').classList.add('hide');
   } catch(e) { console.log(e); }
 }
 
-function updateDisplay() {
+// MESIN ROTASI CERDAS
+function jalankanRotasi() {
+  clearTimeout(rotasiTimer); // Bersihkan timer lama
   if(galeriList.length === 0) return;
+  
   const media = galeriList[slideIndex];
   const container = document.getElementById('tv-right-panel');
-  let html = '';
   
-  if(media.url.includes('youtube.com') || media.url.includes('youtu.be')) {
-    html = `<iframe class="media-content" src="${getYoutubeEmbed(media.url)}" allow="autoplay; fullscreen"></iframe>`;
+  let isYoutube = media.url.includes('youtube.com') || media.url.includes('youtu.be');
+  let isLive = media.url.includes('live'); // Deteksi kata "live"
+
+  if (isYoutube) {
+    container.innerHTML = `<iframe class="media-content" src="${getYoutubeEmbed(media.url)}" allow="autoplay; fullscreen"></iframe>`;
+    
+    if (isLive) {
+      // JIKA LIVE STREAMING: Layar Penuh & Jangan ganti slide (Timer Mati)
+      document.body.classList.add('mode-fokus');
+    } else {
+      // JIKA YOUTUBE BIASA: Tetap di kotak kanan, kasih waktu nonton 3 Menit (180.000 ms)
+      document.body.classList.remove('mode-fokus');
+      slideIndex = (slideIndex + 1) % galeriList.length;
+      rotasiTimer = setTimeout(jalankanRotasi, 180000); 
+    }
   } else {
-    html = `
+    // JIKA GAMBAR/POSTER BIASA: Tetap di kotak kanan, tayang 15 Detik
+    document.body.classList.remove('mode-fokus');
+    container.innerHTML = `
       <img class="media-content" src="${matenginLink(media.url)}">
       <div class="media-overlay"><div class="media-title">${media.judul}</div></div>
     `;
+    slideIndex = (slideIndex + 1) % galeriList.length;
+    rotasiTimer = setTimeout(jalankanRotasi, 15000); 
   }
-  
-  container.innerHTML = html;
-  slideIndex = (slideIndex + 1) % galeriList.length;
 }
-setInterval(updateDisplay, 15000);
 
 function generateJadwal(lat, lon) {
-  // Logika kalkulasi jadwal sholat 8 waktu (Imsak - Isya)
-  const times = ["04:15", "04:25", "05:40", "06:15", "11:55", "15:10", "18:05", "19:15"];
+  const times = ["04:15", "04:25", "05:40", "06:15", "11:55", "15:10", "18:05", "19:15"]; // Dummy sementara
   const labels = ["Imsak", "Subuh", "Terbit", "Dhuha", "Dzuhur", "Ashar", "Maghrib", "Isya"];
   let html = '';
-  labels.forEach((l, i) => {
-    html += `<div class="sholat-box"><div class="sholat-name">${l}</div><div class="sholat-time">${times[i]}</div></div>`;
-  });
+  labels.forEach((l, i) => { html += `<div class="sholat-box"><div class="sholat-name">${l}</div><div class="sholat-time">${times[i]}</div></div>`; });
   document.getElementById('sholat-bar').innerHTML = html;
 }
 
 loadData();
-updateTime();
+setInterval(loadData, 300000); // Refresh data kas/pengumuman tiap 5 menit
 </script>
 </body>
 </html>
