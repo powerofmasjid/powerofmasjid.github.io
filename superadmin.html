@@ -83,13 +83,11 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg-dark);
 </head>
 <body>
 
-<!-- SPLASH SCREEN -->
 <div class="splash" id="splash">
   <div class="logo-icon-large">م</div>
   <div style="font-size:12px; letter-spacing:2px; color:var(--gold);">MEMUAT SISTEM PUSAT...</div>
 </div>
 
-<!-- LOGIN SUPERADMIN -->
 <div class="login-wrap" id="login-wrap">
   <div class="login-card">
     <div class="logo-icon-large">م</div>
@@ -104,7 +102,6 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg-dark);
   </div>
 </div>
 
-<!-- KONTEN SUPERADMIN -->
 <div id="superadmin-content" style="display:none;">
 
   <div class="header">
@@ -126,7 +123,6 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg-dark);
 
   <div class="content">
 
-    <!-- TAB DASHBOARD -->
     <div id="dashboard" class="tab-content active">
       <div class="card">
         <div class="card-title">Statistik Platform</div>
@@ -156,7 +152,6 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg-dark);
       </div>
     </div>
 
-    <!-- TAB KELOLA MASJID -->
     <div id="masjid" class="tab-content">
       <div class="card">
         <div class="card-title">Registrasi Masjid Baru</div>
@@ -164,12 +159,23 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg-dark);
         
         <div class="form-group">
           <label>Nama Masjid</label>
-          <input type="text" class="form-control" id="reg-nama" placeholder="Contoh: Masjid Jami' An-Nuriyah">
+          <input type="text" class="form-control" id="reg-nama" placeholder="Contoh: Masjid Jami' An-Nuriyah" oninput="generateSlug()">
         </div>
         <div class="form-group">
-          <label>Slug URL (Unik, tanpa spasi)</label>
-          <input type="text" class="form-control" id="reg-slug" placeholder="Contoh: annuriyah">
+          <label>Kelurahan</label>
+          <input type="text" class="form-control" id="reg-kelurahan" placeholder="Contoh: Tanjung Barat" oninput="generateSlug()">
         </div>
+        <div class="form-group">
+          <label>Kecamatan</label>
+          <input type="text" class="form-control" id="reg-kecamatan" placeholder="Contoh: Jagakarsa">
+        </div>
+        <div class="form-group">
+          <label>Slug URL (Unik, otomatis tanpa spasi)</label>
+          <input type="text" class="form-control" id="reg-slug" placeholder="Otomatis terisi..." style="color:var(--gold); font-weight:bold;">
+        </div>
+        
+        <div style="border-top: 1px dashed rgba(255,255,255,0.1); margin:15px 0;"></div>
+        
         <div class="form-group">
           <label>Email Pengurus DKM</label>
           <input type="email" class="form-control" id="reg-email" placeholder="dkm@gmail.com">
@@ -189,7 +195,6 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg-dark);
       </div>
     </div>
 
-    <!-- TAB IKLAN GLOBAL -->
     <div id="iklan" class="tab-content">
       <div class="card">
         <div class="card-title">Pengaturan Iklan Global</div>
@@ -221,8 +226,8 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg-dark);
 <div class="toast" id="toast">Notifikasi</div>
 
 <script>
-// LINK API BARU & KUNCI RAHASIA
-const API_URL = 'https://script.google.com/macros/s/AKfycbxAFoiDYZBYIOzPXitZcSEKsRqDAqF6xP0um_E3uqy-vwTOaM5VQQaHr7xWTKrDmd95Pg/exec';
+// SISIPAN 1: UPDATE LINK API BARU
+const API_URL = 'https://script.google.com/macros/s/AKfycbzBREZ-S0hAnp1p-MLVzW1kvIjQt_h8R8jx2fINcMvnnnk1BiyIOA88aU6zsbWoa1h4aA/exec';
 const KUNCI_RAHASIA = 'POW_MASJID_SECURE_2026';
 
 function showToast(msg) {
@@ -239,6 +244,24 @@ function bukaTab(tabId, el) {
   for (var i = 0; i < tabs.length; i++) tabs[i].classList.remove('active');
   document.getElementById(tabId).classList.add('active');
   el.classList.add('active');
+}
+
+// SISIPAN 2: MESIN AUTO-SLUG CERDAS
+function generateSlug() {
+  let nama = document.getElementById('reg-nama').value.toLowerCase();
+  let kel = document.getElementById('reg-kelurahan').value.toLowerCase();
+  
+  // Sapu Bersih Kata Masjid & Jami
+  nama = nama.replace(/masjid/g, '').replace(/jami'/g, '').replace(/jami/g, '').replace(/jamik/g, '');
+  // Bersihkan karakter aneh
+  nama = nama.replace(/[^a-z0-9\s-]/g, '').trim();
+  kel = kel.replace(/[^a-z0-9\s-]/g, '').trim();
+  
+  let slugArr = [];
+  if(nama) slugArr.push(nama.replace(/\s+/g, '-'));
+  if(kel) slugArr.push(kel.replace(/\s+/g, '-'));
+  
+  document.getElementById('reg-slug').value = slugArr.join('-');
 }
 
 // 1. LOGIN SUPERADMIN
@@ -315,10 +338,12 @@ async function loadDashboardData() {
 async function tambahMasjidBaru() {
   const nama = document.getElementById('reg-nama').value.trim();
   const slug = document.getElementById('reg-slug').value.trim();
+  const kelurahan = document.getElementById('reg-kelurahan').value.trim(); // Sisipan Kelurahan
+  const kecamatan = document.getElementById('reg-kecamatan').value.trim(); // Sisipan Kecamatan
   const email = document.getElementById('reg-email').value.trim();
   const pin = document.getElementById('reg-pin').value.trim();
   
-  if(!nama || !slug || !email || !pin) { showToast('Lengkapi semua data!'); return; }
+  if(!nama || !slug || !email || !pin) { showToast('Lengkapi semua data wajib!'); return; }
   
   const btn = document.getElementById('btn-tambah');
   btn.disabled = true;
@@ -332,6 +357,8 @@ async function tambahMasjidBaru() {
         action: 'addMasjidBaru',
         nama: nama,
         slug: slug,
+        kelurahan: kelurahan,
+        kecamatan: kecamatan,
         email: email,
         pin: pin
       })
@@ -342,6 +369,8 @@ async function tambahMasjidBaru() {
       showToast('Masjid berhasil ditambahkan!');
       document.getElementById('reg-nama').value = '';
       document.getElementById('reg-slug').value = '';
+      document.getElementById('reg-kelurahan').value = '';
+      document.getElementById('reg-kecamatan').value = '';
       document.getElementById('reg-email').value = '';
       document.getElementById('reg-pin').value = '';
       loadDashboardData(); 
@@ -363,7 +392,7 @@ async function simpanIklanGlobal() {
   const desc = document.getElementById('iklan-desc').value.trim();
   const link = document.getElementById('iklan-link').value.trim();
   
-  const btn = document.getElementById('iklan');
+  const btn = document.getElementById('btn-iklan'); // SISIPAN 4: Fix Typo target tombol agar UI tidak rusak
   btn.disabled = true;
   btn.textContent = 'MENGUPDATE...';
   
