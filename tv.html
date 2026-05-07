@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TV Display Power of Masjid — Final Smart Media</title>
+<title>TV Display Power of Masjid — High Precision Edition</title>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -46,15 +46,15 @@
   .sholat-box.aktif .sholat-name, .sholat-box.aktif .sholat-time { color: var(--bg-dark); }
 
   /* MAIN CONTENT */
-  .main { flex: 1; display: flex; padding: 20px; gap: 20px; overflow: hidden; position: relative; transition: padding 0.8s ease-in-out; }
+  .main { flex: 1; display: flex; padding: 20px; gap: 20px; overflow: hidden; position: relative; }
   
-  /* PANEL KIRI */
+  /* PANEL KIRI (SALDO & AMAL) */
   .left-panel { width: 34%; display: flex; flex-direction: column; position: relative; transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1); }
   .card-left { position: absolute; inset: 0; transition: all 0.8s ease-in-out; background: var(--panel-bg); border-radius: 20px; border: 2px solid var(--border); padding: 30px; display: flex; flex-direction: column; justify-content: center; text-align: center; opacity: 1; transform: translateX(0); }
   .card-left.hidden { opacity: 0; transform: scale(0.9); pointer-events: none; }
   .saldo-value { font-family: 'Amiri', serif; font-size: 75px; font-weight: 700; color: var(--masuk); line-height: 1; margin-top: 10px; }
 
-  /* PANEL KANAN */
+  /* PANEL KANAN (MEDIA & AGENDA) */
   .right-panel { flex: 1; background: black; border-radius: 20px; border: 2px solid var(--border); overflow: hidden; position: relative; display: flex; align-items: center; justify-content: center; transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1); }
   .content-right { position: absolute; inset: 0; transition: opacity 1s; opacity: 0; display: flex; align-items: center; justify-content: center; }
   .content-right.active { opacity: 1; }
@@ -62,7 +62,7 @@
   .media-overlay { position: absolute; inset: 0; background: linear-gradient(0deg, rgba(0,0,0,0.9) 0%, transparent 40%); display: flex; align-items: flex-end; padding: 30px; }
   .media-title { font-size: 32px; font-weight: 800; color: white; text-shadow: 0 3px 15px black; }
 
-  /* AGENDA */
+  /* AGENDA SCROLL */
   .agenda-container { background: var(--panel-bg); width: 100%; height: 100%; padding: 40px; display: flex; flex-direction: column; text-align: left; overflow: hidden; }
   .agenda-header { border-bottom: 3px solid var(--gold); padding-bottom: 15px; margin-bottom: 20px; font-size: 36px; font-weight: 800; color: var(--gold); z-index: 10; background: var(--panel-bg); }
   .agenda-scroll-wrapper { flex: 1; overflow: hidden; position: relative; }
@@ -87,12 +87,12 @@
   body.mode-amal .left-panel { width: 100%; flex: 1; }
   body.mode-amal #panel-amal { background: var(--bg-dark); border-color: var(--masuk); }
 
-  /* 2. KETIKA FLYER / YOUTUBE TAMPIL */
+  /* 2. KETIKA FLYER TAMPIL (KANAN MEMBESAR, KIRI HILANG) */
   body.mode-widescreen-kanan .header, body.mode-widescreen-kanan .sholat-bar { transform: translateY(-150%); opacity: 0; position: absolute; pointer-events: none; }
   body.mode-widescreen-kanan .left-panel { width: 0; flex: none; opacity: 0; margin-right: -20px; padding: 0; border: none; overflow: hidden; }
   body.mode-widescreen-kanan .right-panel { flex: 1; border-radius: 20px; }
 
-  /* 3. KETIKA LIVE YOUTUBE */
+  /* 3. KETIKA LIVE YOUTUBE (SAMA SEPERTI WIDESCREEN KANAN) */
   body.mode-live .header, body.mode-live .sholat-bar { transform: translateY(-150%); opacity: 0; position: absolute; pointer-events: none; }
   body.mode-live .left-panel { width: 0; flex: none; opacity: 0; margin-right: -20px; padding: 0; border: none; }
   body.mode-live .main { padding: 0; }
@@ -247,7 +247,7 @@ function updateTime() {
 setInterval(updateTime, 1000);
 
 // =================================================================
-// 🚀 SISTEM ANTRIAN PINTAR (BERGANTIAN TANPA TABRAKAN)
+// 🚀 SISTEM ANTRIAN PINTAR - PRESISI 100%
 // =================================================================
 function jalankanTV() {
   clearTimeout(masterTimer);
@@ -262,29 +262,34 @@ function jalankanTV() {
   
   let nextDelay = 15000;
   
-  // RESET KELAS FULLSCREEN SEBELUM MULAI SETIAP PUTARAN
+  // RESET SEMUA KELAS FULLSCREEN SEBELUM MULAI
   document.body.className = ''; 
   document.getElementById('panel-amal').classList.add('hidden');
   document.getElementById('panel-saldo').classList.remove('hidden');
   
   if (states[curState] === 'MEDIA') {
-     // 1. TAMPILKAN MEDIA (FOTO BIASA, FLYER, YOUTUBE)
+     // 1. TAMPILKAN MEDIA
      const m = galeriList[slideIndex];
      let isYt = m.url.includes('youtube.com') || m.url.includes('youtu.be');
      let isLive = m.url.toLowerCase().includes('live');
-     let tipeVisual = String(m.tipe).toUpperCase(); // Deteksi dari admin (FOTO atau FLYER)
+     let tipeVisual = String(m.tipe).toUpperCase();
      
      if (isLive) {
+        // YOUTUBE LIVE (FULLSCREEN TOTAL)
         document.body.classList.add('mode-live');
-        nextDelay = 3600000; // 1 Jam kalau Live
+        nextDelay = 3600000; // 1 Jam
+     } else if (isYt) {
+        // YOUTUBE BIASA (TETAP DI KOTAK KANAN)
+        // Tidak ditambahkan kelas khusus, jadi dia tetap di kanan, Saldo kelihatan.
+        nextDelay = 180000; // 3 Menit
+     } else if (tipeVisual.includes('FLYER') || tipeVisual.includes('POSTER')) {
+        // FLYER (MEMBESAR)
+        document.body.classList.add('mode-widescreen-kanan'); 
+        nextDelay = 25000; // 25 Detik
      } else {
-        // DETEKSI CERDAS FOTO VS FLYER
-        if (isYt || tipeVisual.includes('FLYER') || tipeVisual.includes('POSTER')) {
-           document.body.classList.add('mode-widescreen-kanan'); // FLYER = MEMBESAR
-        } else {
-           document.body.classList.remove('mode-widescreen-kanan'); // FOTO = TETAP DI KOTAK KANAN
-        }
-        nextDelay = isYt ? 180000 : 25000; // Youtube 3 Menit, Flyer/Foto 25 Detik
+        // FOTO GALERI BIASA (TETAP DI KOTAK KANAN)
+        // Tidak ditambahkan kelas khusus.
+        nextDelay = 25000; // 25 Detik
      }
      
      let pMedia = document.getElementById('konten-media');
@@ -305,7 +310,6 @@ function jalankanTV() {
      document.getElementById('konten-media').classList.remove('active');
      document.getElementById('konten-agenda').classList.add('active');
      
-     // HITUNG WAKTU AGAR PAS DENGAN DURASI SCROLL
      let scrollDuration = Math.max(20, kegiatanList.length * 10); 
      document.getElementById('list-agenda-full').style.animationDuration = scrollDuration + 's';
      
@@ -375,7 +379,6 @@ async function loadData() {
       let gabungan = resP.data.map(p => `✦ ${p.judul}: ${(p.isi || "").replace(/(\r\n|\n|\r)/gm, " ")}`).join(' ✦ ');
       let pengumumanEl = document.getElementById('tv-pengumuman');
       pengumumanEl.innerText = gabungan;
-      
       let kecepatanMarquee = Math.max(40, gabungan.length * 0.2); 
       pengumumanEl.style.animationDuration = kecepatanMarquee + 's';
     } else {
@@ -422,6 +425,7 @@ function calcSholat(lat, lon) {
   document.getElementById('sholat-bar').innerHTML = globalSholatList.map((s,i) => `<div class="sholat-box ${i===cur?'aktif':''}"><div class="sholat-name">${s.n}</div><div class="sholat-time">${s.t}</div></div>`).join('');
 }
 
+// MENGHEMAT KUOTA API GOOGLE (Tarik data per 15 Menit)
 loadData(); 
 setInterval(loadData, 900000); 
 </script>
