@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TV Display Power of Masjid — High Precision Edition</title>
+<title>TV Display Power of Masjid — Perfect Ratio</title>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -78,25 +78,28 @@
   @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
 
   /* =========================================================
-     MODE LAYAR LEBAR (WIDESCREEN) - FOOTER INFO TETAP AMAN!
+     MODE LAYAR LEBAR (WIDESCREEN) - UKURAN SEMUA SAMA RATA!
      ========================================================= */
   
-  /* 1. KETIKA PROGRAM AMAL TAMPIL */
-  body.mode-amal .header, body.mode-amal .sholat-bar { transform: translateY(-150%); opacity: 0; position: absolute; pointer-events: none; }
-  body.mode-amal .right-panel { width: 0; flex: none; opacity: 0; margin-left: -20px; border: none; padding: 0; }
+  /* HILANGKAN HEADER & SHOLAT BAR UNTUK SEMUA TAMPILAN MEMBESAR */
+  body.mode-amal .header, body.mode-amal .sholat-bar,
+  body.mode-widescreen-kanan .header, body.mode-widescreen-kanan .sholat-bar,
+  body.mode-live .header, body.mode-live .sholat-bar { 
+    transform: translateY(-150%); opacity: 0; position: absolute; pointer-events: none; 
+  }
+  
+  /* 1. KETIKA PROGRAM AMAL TAMPIL (KIRI MEMBESAR, KANAN HILANG) */
+  body.mode-amal .right-panel { width: 0; flex: none; opacity: 0; margin-left: -20px; border: none; padding: 0; overflow: hidden; }
   body.mode-amal .left-panel { width: 100%; flex: 1; }
   body.mode-amal #panel-amal { background: var(--bg-dark); border-color: var(--masuk); }
 
-  /* 2. KETIKA FLYER TAMPIL (KANAN MEMBESAR, KIRI HILANG) */
-  body.mode-widescreen-kanan .header, body.mode-widescreen-kanan .sholat-bar { transform: translateY(-150%); opacity: 0; position: absolute; pointer-events: none; }
-  body.mode-widescreen-kanan .left-panel { width: 0; flex: none; opacity: 0; margin-right: -20px; padding: 0; border: none; overflow: hidden; }
-  body.mode-widescreen-kanan .right-panel { flex: 1; border-radius: 20px; }
-
-  /* 3. KETIKA LIVE YOUTUBE (SAMA SEPERTI WIDESCREEN KANAN) */
-  body.mode-live .header, body.mode-live .sholat-bar { transform: translateY(-150%); opacity: 0; position: absolute; pointer-events: none; }
-  body.mode-live .left-panel { width: 0; flex: none; opacity: 0; margin-right: -20px; padding: 0; border: none; }
-  body.mode-live .main { padding: 0; }
-  body.mode-live .right-panel { border-radius: 0; border: none; flex: 1; }
+  /* 2. KETIKA FLYER & LIVE YOUTUBE TAMPIL (KANAN MEMBESAR, KIRI HILANG) */
+  /* Ukurannya sekarang dibuat 100% identik dengan panel amal */
+  body.mode-widescreen-kanan .left-panel,
+  body.mode-live .left-panel { width: 0; flex: none; opacity: 0; margin-right: -20px; padding: 0; border: none; overflow: hidden; }
+  
+  body.mode-widescreen-kanan .right-panel,
+  body.mode-live .right-panel { flex: 1; border-radius: 20px; }
 
   /* LAYAR IQOMAH */
   #iqomah-screen { position: fixed; inset: 0; background: var(--bg-dark); z-index: 10000; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; transition: opacity 1s; }
@@ -161,12 +164,10 @@ const API_URL = 'https://script.google.com/macros/s/AKfycby1DvnJDCqVxfmTHrC5720l
 
 let ID_MASJID = ''; let galeriList = []; let amalList = []; let kegiatanList = []; let globalSholatList = [];
 
-// VARIABEL SISTEM ANTRIAN (SMART QUEUE)
-let states = ['MEDIA', 'AGENDA', 'AMAL'];
-let curState = 0;
+// VARIABEL PLAYLIST CERDAS
+let playlist = [];
+let playIndex = 0;
 let masterTimer;
-let slideIndex = 0; 
-let amalIndex = 0; 
 
 let isIqomahMode = false;
 let iqomahTargetTime = null;
@@ -247,78 +248,62 @@ function updateTime() {
 setInterval(updateTime, 1000);
 
 // =================================================================
-// 🚀 SISTEM ANTRIAN PINTAR - PRESISI 100%
+// 🚀 PLAYLIST CERDAS (MENGURUTKAN SEMUA ITEM SATU PERSATU)
 // =================================================================
 function jalankanTV() {
   clearTimeout(masterTimer);
   
-  let loops = 0;
-  while(loops < 3) {
-     if (states[curState] === 'MEDIA' && galeriList.length === 0) { curState = (curState+1)%3; loops++; continue; }
-     if (states[curState] === 'AGENDA' && kegiatanList.length === 0) { curState = (curState+1)%3; loops++; continue; }
-     if (states[curState] === 'AMAL' && amalList.length === 0) { curState = (curState+1)%3; loops++; continue; }
-     break;
-  }
+  if (playlist.length === 0) return;
+  if (playIndex >= playlist.length) playIndex = 0;
   
+  let currentItem = playlist[playIndex];
   let nextDelay = 15000;
   
-  // RESET SEMUA KELAS FULLSCREEN SEBELUM MULAI
+  // RESET SEMUA KELAS FULLSCREEN
   document.body.className = ''; 
   document.getElementById('panel-amal').classList.add('hidden');
   document.getElementById('panel-saldo').classList.remove('hidden');
+  document.getElementById('konten-media').classList.remove('active');
+  document.getElementById('konten-agenda').classList.remove('active');
   
-  if (states[curState] === 'MEDIA') {
-     // 1. TAMPILKAN MEDIA
-     const m = galeriList[slideIndex];
+  if (currentItem.type === 'MEDIA') {
+     const m = currentItem.data;
      let isYt = m.url.includes('youtube.com') || m.url.includes('youtu.be');
      let isLive = m.url.toLowerCase().includes('live');
      let tipeVisual = String(m.tipe).toUpperCase();
      
      if (isLive) {
-        // YOUTUBE LIVE (FULLSCREEN TOTAL)
+        // YOUTUBE LIVE
         document.body.classList.add('mode-live');
-        nextDelay = 3600000; // 1 Jam
+        nextDelay = 3600000; 
      } else if (isYt) {
-        // YOUTUBE BIASA (TETAP DI KOTAK KANAN)
-        // Tidak ditambahkan kelas khusus, jadi dia tetap di kanan, Saldo kelihatan.
-        nextDelay = 180000; // 3 Menit
+        // YOUTUBE BIASA (TETAP KANAN)
+        nextDelay = 180000; 
      } else if (tipeVisual.includes('FLYER') || tipeVisual.includes('POSTER')) {
-        // FLYER (MEMBESAR)
+        // FLYER MEMBESAR IDENTIK DENGAN AMAL
         document.body.classList.add('mode-widescreen-kanan'); 
-        nextDelay = 25000; // 25 Detik
+        nextDelay = 25000; 
      } else {
-        // FOTO GALERI BIASA (TETAP DI KOTAK KANAN)
-        // Tidak ditambahkan kelas khusus.
-        nextDelay = 25000; // 25 Detik
+        // FOTO GALERI (TETAP KANAN)
+        nextDelay = 25000; 
      }
      
      let pMedia = document.getElementById('konten-media');
      if(isYt) pMedia.innerHTML = `<iframe class="media-img" src="${getYoutubeEmbed(m.url)}" allow="autoplay"></iframe>`;
      else pMedia.innerHTML = `<img class="media-img" src="${matenginLink(m.url)}"><div class="media-overlay"><div class="media-title">${m.judul}</div></div>`;
      
-     document.getElementById('konten-agenda').classList.remove('active');
      pMedia.classList.add('active');
-     
-     slideIndex++;
-     if (slideIndex >= galeriList.length) {
-        slideIndex = 0;
-        curState = (curState + 1) % 3; // Lanjut ke Agenda Rutin
-     }
   } 
-  else if (states[curState] === 'AGENDA') {
-     // 2. TAMPILKAN AGENDA RUTIN SCROLL
-     document.getElementById('konten-media').classList.remove('active');
+  else if (currentItem.type === 'AGENDA') {
      document.getElementById('konten-agenda').classList.add('active');
      
      let scrollDuration = Math.max(20, kegiatanList.length * 10); 
      document.getElementById('list-agenda-full').style.animationDuration = scrollDuration + 's';
      
      nextDelay = scrollDuration * 1000; 
-     curState = (curState + 1) % 3; 
   }
-  else if (states[curState] === 'AMAL') {
-     // 3. TAMPILKAN PROGRAM AMAL MEMBESAR
-     const a = amalList[amalIndex];
+  else if (currentItem.type === 'AMAL') {
+     const a = currentItem.data;
      document.getElementById('amal-judul').innerText = a.judul || "Program Infaq";
      let nominal = a.harga_target || a.target || a.terkumpul || 0;
      
@@ -332,20 +317,17 @@ function jalankanTV() {
      
      document.getElementById('amal-ket').innerText = a.keterangan || a.deskripsi || a.isi || "";
      
+     // PROGRAM AMAL MEMBESAR IDENTIK DENGAN FLYER
      document.body.classList.add('mode-amal');
      document.getElementById('panel-saldo').classList.add('hidden');
      document.getElementById('panel-amal').classList.remove('hidden');
      
-     amalIndex++;
-     if (amalIndex >= amalList.length) amalIndex = 0;
-     
-     curState = (curState + 1) % 3; 
      nextDelay = 20000; 
   }
   
+  playIndex++;
   masterTimer = setTimeout(jalankanTV, nextDelay);
 }
-// =================================================================
 
 async function loadData() {
   try {
@@ -385,12 +367,26 @@ async function loadData() {
       document.getElementById('tv-pengumuman').innerText = ""; 
     }
     
-    if(resG.status === 'ok') galeriList = resG.data; 
-    if(resA.status === 'ok') amalList = resA.data;
-    if(resK.status === 'ok') {
-      kegiatanList = resK.data;
-      document.getElementById('list-agenda-full').innerHTML = kegiatanList.map(k => `<div class="agenda-item"><div class="agenda-judul">${k.nama_kegiatan}</div><div style="color:var(--gold); font-size:22px; font-weight:600;">${k.jadwal} | ${k.lokasi}</div></div>`).join('');
+    // MENYUSUN DAFTAR PLAYLIST
+    let newPlaylist = [];
+    
+    if(resG.status === 'ok') {
+        galeriList = resG.data; 
+        galeriList.forEach(g => newPlaylist.push({ type: 'MEDIA', data: g }));
     }
+    
+    if(resK.status === 'ok') {
+        kegiatanList = resK.data;
+        if (kegiatanList.length > 0) newPlaylist.push({ type: 'AGENDA' });
+        document.getElementById('list-agenda-full').innerHTML = kegiatanList.map(k => `<div class="agenda-item"><div class="agenda-judul">${k.nama_kegiatan}</div><div style="color:var(--gold); font-size:22px; font-weight:600;">${k.jadwal} | ${k.lokasi}</div></div>`).join('');
+    }
+
+    if(resA.status === 'ok') {
+        amalList = resA.data;
+        amalList.forEach(a => newPlaylist.push({ type: 'AMAL', data: a }));
+    }
+    
+    playlist = newPlaylist;
     
     document.getElementById('loading-screen').classList.add('hide');
     
@@ -425,7 +421,6 @@ function calcSholat(lat, lon) {
   document.getElementById('sholat-bar').innerHTML = globalSholatList.map((s,i) => `<div class="sholat-box ${i===cur?'aktif':''}"><div class="sholat-name">${s.n}</div><div class="sholat-time">${s.t}</div></div>`).join('');
 }
 
-// MENGHEMAT KUOTA API GOOGLE (Tarik data per 15 Menit)
 loadData(); 
 setInterval(loadData, 900000); 
 </script>
