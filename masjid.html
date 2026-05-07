@@ -220,7 +220,6 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
   </div>
 </div>
 
-<!-- CONTAINER LIGHTBOX -->
 <div class="lightbox" id="lightbox">
   <div class="lb-header">
     <div id="lb-counter">Galeri Foto</div>
@@ -323,8 +322,8 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 <div class="toast" id="toast">Nomor rekening disalin!</div>
 
 <script>
-// LINK API TETAP AMAN
-var API_URL = 'https://script.google.com/macros/s/AKfycbxAFoiDYZBYIOzPXitZcSEKsRqDAqF6xP0um_E3uqy-vwTOaM5VQQaHr7xWTKrDmd95Pg/exec';
+// LINK API BARU
+var API_URL = 'https://script.google.com/macros/s/AKfycbzBREZ-S0hAnp1p-MLVzW1kvIjQt_h8R8jx2fINcMvnnnk1BiyIOA88aU6zsbWoa1h4aA/exec';
 var ID_MASJID = '';
 var CACHE_DURATION = 60000; 
 var PENGUMUMAN_INTERVAL = null;
@@ -385,7 +384,15 @@ async function loadMasjid(slug) {
   if (json.status !== 'ok') { document.getElementById('splash').classList.add('hide'); document.getElementById('error-wrap').classList.add('show'); return null; }
   var d = json.data; ID_MASJID = d.id_masjid; window.WA_MASJID = d.telepon_wa || '';
 
-  document.getElementById('nama-masjid').textContent = d.nama; document.getElementById('alamat-masjid').textContent = d.alamat + ', ' + d.kota;
+  document.getElementById('nama-masjid').textContent = d.nama; 
+  
+  // PENAMBAHAN TAMPILAN KELURAHAN DAN KECAMATAN
+  var teksAlamat = d.alamat;
+  if(d.kelurahan) teksAlamat += ', Kel. ' + d.kelurahan;
+  if(d.kecamatan) teksAlamat += ', Kec. ' + d.kecamatan;
+  if(d.kota) teksAlamat += ', ' + d.kota;
+  document.getElementById('alamat-masjid').textContent = teksAlamat;
+  
   document.title = d.nama + ' — Power of Masjid';
 
   if (d.deskripsi) { document.getElementById('deskripsi-masjid').textContent = d.deskripsi; document.getElementById('deskripsi-masjid').style.display = 'block'; }
@@ -761,4 +768,3 @@ init();
 </script>
 </body>
 </html>
-<!-- Pancingan Update Server -->
