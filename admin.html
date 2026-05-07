@@ -287,6 +287,12 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#F7F7F5;color:#1A1A1A
         <h3>Informasi Dasar</h3>
         <div class="form-group"><label class="form-label">Nama Masjid</label><input type="text" class="form-input" id="prof-nama" placeholder="Contoh: Masjid Agung Al-Falah"></div>
         <div class="form-group"><label class="form-label">Alamat</label><input type="text" class="form-input" id="prof-alamat" placeholder="Contoh: Jl. Raya Bogor No. 12"></div>
+        
+        <div class="form-row" style="margin-bottom:0.875rem;">
+          <div class="form-group" style="margin-bottom:0;"><label class="form-label">Kelurahan</label><input type="text" class="form-input" id="prof-kelurahan" placeholder="Contoh: Tanjung Barat"></div>
+          <div class="form-group" style="margin-bottom:0;"><label class="form-label">Kecamatan</label><input type="text" class="form-input" id="prof-kecamatan" placeholder="Contoh: Jagakarsa"></div>
+        </div>
+
         <div class="form-group"><label class="form-label">Kota</label><input type="text" class="form-input" id="prof-kota" placeholder="Contoh: Jakarta Selatan"></div>
         <div class="form-group"><label class="form-label">Deskripsi</label><textarea class="form-textarea" id="prof-deskripsi" placeholder="Contoh: Masjid kebanggaan warga..."></textarea></div>
         <div class="form-group"><label class="form-label">Nomor WA Utama Masjid</label><input type="text" class="form-input" id="prof-wa" placeholder="Contoh: 081234567890"></div>
@@ -340,6 +346,22 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#F7F7F5;color:#1A1A1A
           <input type="text" class="form-input" id="prof-lon" placeholder="Contoh: 106.8765">
         </div>
       </div>
+
+      <div class="profil-section">
+        <h3>Jeda Iqomah (Menit)</h3>
+        <div class="form-row">
+          <div class="form-group"><label class="form-label">Subuh</label><input type="number" class="form-input" id="prof-jeda-subuh" value="10"></div>
+          <div class="form-group"><label class="form-label">Dzuhur</label><input type="number" class="form-input" id="prof-jeda-dzuhur" value="10"></div>
+        </div>
+        <div class="form-row" style="margin-top:5px;">
+          <div class="form-group"><label class="form-label">Ashar</label><input type="number" class="form-input" id="prof-jeda-ashar" value="10"></div>
+          <div class="form-group"><label class="form-label">Maghrib</label><input type="number" class="form-input" id="prof-jeda-maghrib" value="7"></div>
+        </div>
+        <div class="form-row" style="margin-top:5px;">
+          <div class="form-group"><label class="form-label">Isya</label><input type="number" class="form-input" id="prof-jeda-isya" value="10"></div>
+        </div>
+      </div>
+
       <button class="btn-submit" onclick="simpanProfil(this)">💾 Simpan Perubahan Profil</button>
     </div>
   </div>
@@ -348,8 +370,8 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#F7F7F5;color:#1A1A1A
 <div class="toast" id="toast">Berhasil!</div>
 
 <script>
-// LINK API BARU (Sesuaikan jika ada yang lebih baru)
-var API_URL = 'https://script.google.com/macros/s/AKfycby1DvnJDCqVxfmTHrC5720lWfLZLOR1b5ARr9WLRrpjOpIf9-piQE3u_SMyOQwLQQOnLQ/exec';
+// SISIPAN: LINK API BARU SESUAI PERMINTAAN
+var API_URL = 'https://script.google.com/macros/s/AKfycbzBREZ-S0hAnp1p-MLVzW1kvIjQt_h8R8jx2fINcMvnnnk1BiyIOA88aU6zsbWoa1h4aA/exec';
 
 var KUNCI_RAHASIA = 'POW_MASJID_SECURE_2026'; 
 var ADMIN_DATA = null, ID_MASJID = '', LAST_5_TRX = [], LIST_PROGRAM = [];
@@ -767,12 +789,12 @@ function salinLinkWeb() { navigator.clipboard.writeText(document.getElementById(
 function loadProfilAdmin() { 
   fetch(API_URL+'?action=getMasjid&id_masjid='+ID_MASJID+'&_t='+Date.now()).then(r=>r.json()).then(j=>{ 
     var d = j.data; buatLinkWebDisplay();
-    document.getElementById('prof-nama').value=d.nama||''; document.getElementById('prof-alamat').value=d.alamat||''; document.getElementById('prof-kota').value=d.kota||''; document.getElementById('prof-deskripsi').value=d.deskripsi||''; document.getElementById('prof-wa').value=d.telepon_wa||''; document.getElementById('prof-tema').value=d.tema||''; document.getElementById('prof-logo').value=d.logo_url||''; document.getElementById('prof-qris').value=d.qris_url||''; document.getElementById('prof-rek1-bank').value=d.rek1_bank||''; document.getElementById('prof-rek1-nomor').value=d.rek1_nomor||''; document.getElementById('prof-rek2-bank').value=d.rek2_bank||''; document.getElementById('prof-rek2-nomor').value=d.rek2_nomor||''; document.getElementById('prof-rek3-bank').value=d.rek3_bank||''; document.getElementById('prof-rek3-nomor').value=d.rek3_nomor||''; document.getElementById('prof-lat').value=d.latitude||''; document.getElementById('prof-lon').value=d.longitude||''; 
+    document.getElementById('prof-nama').value=d.nama||''; document.getElementById('prof-alamat').value=d.alamat||''; document.getElementById('prof-kelurahan').value=d.kelurahan||''; document.getElementById('prof-kecamatan').value=d.kecamatan||''; document.getElementById('prof-kota').value=d.kota||''; document.getElementById('prof-deskripsi').value=d.deskripsi||''; document.getElementById('prof-wa').value=d.telepon_wa||''; document.getElementById('prof-tema').value=d.tema||''; document.getElementById('prof-logo').value=d.logo_url||''; document.getElementById('prof-qris').value=d.qris_url||''; document.getElementById('prof-rek1-bank').value=d.rek1_bank||''; document.getElementById('prof-rek1-nomor').value=d.rek1_nomor||''; document.getElementById('prof-rek2-bank').value=d.rek2_bank||''; document.getElementById('prof-rek2-nomor').value=d.rek2_nomor||''; document.getElementById('prof-rek3-bank').value=d.rek3_bank||''; document.getElementById('prof-rek3-nomor').value=d.rek3_nomor||''; document.getElementById('prof-lat').value=d.latitude||''; document.getElementById('prof-lon').value=d.longitude||''; document.getElementById('prof-jeda-subuh').value=d.jeda_subuh||10; document.getElementById('prof-jeda-dzuhur').value=d.jeda_dzuhur||10; document.getElementById('prof-jeda-ashar').value=d.jeda_ashar||10; document.getElementById('prof-jeda-maghrib').value=d.jeda_maghrib||10; document.getElementById('prof-jeda-isya').value=d.jeda_isya||10; 
   }); 
 }
 
 function simpanProfil(btn) { 
-  var d = { api_key: KUNCI_RAHASIA, action:'updateMasjid', id_masjid:ID_MASJID, slug:ADMIN_DATA.slug, nama:document.getElementById('prof-nama').value, alamat:document.getElementById('prof-alamat').value, kota:document.getElementById('prof-kota').value, deskripsi:document.getElementById('prof-deskripsi').value, telepon_wa:document.getElementById('prof-wa').value, tema:document.getElementById('prof-tema').value, logo_url:document.getElementById('prof-logo').value, qris_url:document.getElementById('prof-qris').value, rek1_bank:document.getElementById('prof-rek1-bank').value, rek1_nomor:document.getElementById('prof-rek1-nomor').value, rek2_bank:document.getElementById('prof-rek2-bank').value, rek2_nomor:document.getElementById('prof-rek2-nomor').value, rek3_bank:document.getElementById('prof-rek3-bank').value, rek3_nomor:document.getElementById('prof-rek3-nomor').value, latitude:document.getElementById('prof-lat').value, longitude:document.getElementById('prof-lon').value }; 
+  var d = { api_key: KUNCI_RAHASIA, action:'updateMasjid', id_masjid:ID_MASJID, slug:ADMIN_DATA.slug, nama:document.getElementById('prof-nama').value, alamat:document.getElementById('prof-alamat').value, kelurahan:document.getElementById('prof-kelurahan').value, kecamatan:document.getElementById('prof-kecamatan').value, kota:document.getElementById('prof-kota').value, deskripsi:document.getElementById('prof-deskripsi').value, telepon_wa:document.getElementById('prof-wa').value, tema:document.getElementById('prof-tema').value, logo_url:document.getElementById('prof-logo').value, qris_url:document.getElementById('prof-qris').value, rek1_bank:document.getElementById('prof-rek1-bank').value, rek1_nomor:document.getElementById('prof-rek1-nomor').value, rek2_bank:document.getElementById('prof-rek2-bank').value, rek2_nomor:document.getElementById('prof-rek2-nomor').value, rek3_bank:document.getElementById('prof-rek3-bank').value, rek3_nomor:document.getElementById('prof-rek3-nomor').value, latitude:document.getElementById('prof-lat').value, longitude:document.getElementById('prof-lon').value, jeda_subuh:document.getElementById('prof-jeda-subuh').value, jeda_dzuhur:document.getElementById('prof-jeda-dzuhur').value, jeda_ashar:document.getElementById('prof-jeda-ashar').value, jeda_maghrib:document.getElementById('prof-jeda-maghrib').value, jeda_isya:document.getElementById('prof-jeda-isya').value }; 
   setLoading(btn, true); fetch(API_URL,{method:'POST', body:JSON.stringify(d)}).then(r=>r.json()).then(j=>{ setLoading(btn, false); if (j.status === 'ok') showToast('Profil Tersimpan!'); }); 
 }
 
