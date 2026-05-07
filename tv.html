@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TV Display Power of Masjid — Optimal Fullscreen</title>
+<title>TV Display Power of Masjid — Smart Queue System</title>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -71,32 +71,27 @@
   .agenda-judul { font-size: 28px; font-weight: 700; color: white; margin-bottom: 5px; }
   @keyframes scrollUp { 0% { transform: translateY(100%); } 100% { transform: translateY(-100%); } }
 
-  /* FOOTER & RUNNING TEXT */
+  /* FOOTER */
   .footer { background: var(--gold); height: 80px; color: var(--bg-dark); display: flex; align-items: center; overflow: hidden; z-index: 100; border-top: 4px solid var(--bg-dark); transition: transform 0.8s; }
   .footer-label { background: var(--bg-dark); color: var(--gold); height: 100%; display: flex; align-items: center; padding: 0 35px; font-size: 28px; font-weight: 900; border-right: 5px solid var(--gold); flex-shrink: 0; }
   .marquee-text { display: inline-block; white-space: nowrap !important; font-size: 40px; font-weight: 800; padding-left: 100%; animation: marquee 40s linear infinite; line-height: 80px; }
   @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
 
-  /* =========================================================
-     MODE WIDESCREEN AMAL & YOUTUBE LIVE
-     (Menghilangkan Header & Jadwal, Melebarkan Konten, TAPI FOOTER AMAN)
-     ========================================================= */
+  /* MODE WIDESCREEN AMAL & YOUTUBE LIVE */
   body.mode-amal .header, body.mode-amal .sholat-bar,
   body.mode-live .header, body.mode-live .sholat-bar { 
     transform: translateY(-150%); opacity: 0; position: absolute; pointer-events: none; 
   }
   
-  /* Logika Melebarkan Panel Amal */
   body.mode-amal .right-panel { width: 0; flex: none; opacity: 0; margin-left: -20px; border: none; padding: 0; }
   body.mode-amal .left-panel { width: 100%; flex: 1; }
   body.mode-amal #panel-amal { background: var(--bg-dark); border-color: var(--masuk); }
 
-  /* Logika Melebarkan YouTube Live */
   body.mode-live .left-panel { width: 0; flex: none; opacity: 0; margin-right: -20px; padding: 0; }
   body.mode-live .main { padding: 0; }
   body.mode-live .right-panel { border-radius: 0; border: none; flex: 1; }
 
-  /* --- LAYAR IQOMAH --- */
+  /* LAYAR IQOMAH */
   #iqomah-screen { position: fixed; inset: 0; background: var(--bg-dark); z-index: 10000; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; transition: opacity 1s; }
   #iqomah-screen.hide { opacity: 0; pointer-events: none; }
   .iq-title { font-size: 55px; color: white; font-weight: 700; letter-spacing: 3px; margin-bottom: 5px; }
@@ -158,9 +153,15 @@
 const API_URL = 'https://script.google.com/macros/s/AKfycby1DvnJDCqVxfmTHrC5720lWfLZLOR1b5ARr9WLRrpjOpIf9-piQE3u_SMyOQwLQQOnLQ/exec';
 
 let ID_MASJID = ''; let galeriList = []; let amalList = []; let kegiatanList = []; let globalSholatList = [];
-let slideIndex = 0; let amalIndex = 0; let panelKiriState = 0; let modeKanan = 0;
-let kananTimer;
 
+// VARIABEL SISTEM ANTRIAN (MASTER QUEUE)
+let masterState = 'DASHBOARD'; 
+let masterTimer;
+let slideIndex = 0; 
+let amalIndex = 0; 
+let showAgendaNext = false; 
+
+// VARIABEL IQOMAH
 let isIqomahMode = false;
 let iqomahTargetTime = null;
 let jedaConfig = { Subuh: 10, Dzuhur: 10, Ashar: 10, Maghrib: 10, Isya: 10 };
@@ -239,25 +240,98 @@ function updateTime() {
 }
 setInterval(updateTime, 1000);
 
-// ROTASI KIRI (SALDO -> AMAL WIDESCREEN)
-setInterval(() => {
-  const pSaldo = document.getElementById('panel-saldo'); const pAmal = document.getElementById('panel-amal');
-  if (amalList.length === 0) { pAmal.classList.add('hidden'); pSaldo.classList.remove('hidden'); document.body.classList.remove('mode-amal'); return; }
-  
-  panelKiriState = (panelKiriState + 1) % 2;
-  if (panelKiriState === 0) {
-    document.body.classList.remove('mode-amal'); pAmal.classList.add('hidden'); pSaldo.classList.remove('hidden');
-  } else {
+// =================================================================
+// 🚀 SISTEM ANTRIAN PINTAR (BERGANTIAN TANPA TABRAKAN)
+// =================================================================
+function jalankanTV() {
+  clearTimeout(masterTimer);
+  let nextDelay = 15000;
+  let isLiveCurrent = false;
+
+  if (masterState === 'DASHBOARD') {
+    // 1. TAMPILKAN SALDO (KIRI)
+    document.body.classList.remove('mode-amal');
+    document.getElementById('panel-amal').classList.add('hidden');
+    document.getElementById('panel-saldo').classList.remove('hidden');
+
+    const pMedia = document.getElementById('konten-media');
+    const pAgenda = document.getElementById('konten-agenda');
+
+    if (showAgendaNext && kegiatanList.length > 0) {
+      // 2A. GILIRAN AGENDA SCROLL (Tunggu 25 Detik)
+      document.body.classList.remove('mode-live');
+      pMedia.classList.remove('active');
+      pAgenda.classList.add('active');
+      
+      showAgendaNext = false;
+      nextDelay = 25000; 
+    } else {
+      // 2B. GILIRAN MEDIA/YOUTUBE
+      if (galeriList.length === 0) {
+        if (kegiatanList.length > 0) {
+          document.body.classList.remove('mode-live'); pMedia.classList.remove('active'); pAgenda.classList.add('active'); nextDelay = 25000;
+        } else {
+          pMedia.innerHTML = '';
+        }
+      } else {
+        const m = galeriList[slideIndex];
+        let isYt = m.url.includes('youtube.com') || m.url.includes('youtu.be');
+        isLiveCurrent = m.url.toLowerCase().includes('live');
+
+        if (isLiveCurrent) {
+          document.body.classList.add('mode-live');
+          nextDelay = 3600000; // 1 Jam kalau Live
+        } else {
+          document.body.classList.remove('mode-live');
+          if (isYt) nextDelay = 180000; // 3 Menit kalau YouTube biasa
+          else nextDelay = 15000; // 15 Detik kalau Foto
+        }
+
+        if(isYt) pMedia.innerHTML = `<iframe class="media-img" src="${getYoutubeEmbed(m.url)}" allow="autoplay"></iframe>`;
+        else pMedia.innerHTML = `<img class="media-img" src="${matenginLink(m.url)}"><div class="media-overlay"><div class="media-title">${m.judul}</div></div>`;
+
+        pAgenda.classList.remove('active');
+        pMedia.classList.add('active');
+
+        slideIndex++;
+        if (slideIndex >= galeriList.length) {
+          slideIndex = 0;
+          if (kegiatanList.length > 0 && !isLiveCurrent) showAgendaNext = true; // Geser ke Agenda di putaran berikutnya
+        }
+      }
+    }
+
+    // Tentukan mau pindah ke Amal atau tetap di Dashboard
+    if (amalList.length > 0 && !isLiveCurrent) {
+      masterState = 'AMAL';
+    } else {
+      masterState = 'DASHBOARD';
+    }
+
+  } else if (masterState === 'AMAL') {
+    // 3. GILIRAN PROGRAM AMAL (Tunggu 15 Detik)
     const a = amalList[amalIndex];
     document.getElementById('amal-judul').innerText = a.judul || "Program Infaq";
     let nominal = a.harga_target || a.target || a.terkumpul || 0;
     document.getElementById('amal-nominal').innerText = "Rp " + Number(nominal).toLocaleString("id-ID");
     document.getElementById('amal-ket').innerText = a.keterangan || a.deskripsi || a.isi || "";
     
-    document.body.classList.add('mode-amal'); pSaldo.classList.add('hidden'); pAmal.classList.remove('hidden');
-    amalIndex = (amalIndex + 1) % amalList.length;
+    document.body.classList.add('mode-amal');
+    document.getElementById('panel-saldo').classList.add('hidden');
+    document.getElementById('panel-amal').classList.remove('hidden');
+
+    amalIndex++;
+    if (amalIndex >= amalList.length) amalIndex = 0;
+
+    nextDelay = 15000; // Amal tampil 15 Detik
+    masterState = 'DASHBOARD'; // Balik ke Dashboard lagi
   }
-}, 15000);
+
+  // Panggil dirinya sendiri sesuai waktu tunggunya (15s, 25s, atau 3 menit)
+  masterTimer = setTimeout(jalankanTV, nextDelay);
+}
+
+// =================================================================
 
 async function loadData() {
   try {
@@ -294,39 +368,19 @@ async function loadData() {
       document.getElementById('tv-pengumuman').innerText = ""; 
     }
     
-    if(resG.status === 'ok') { galeriList = resG.data; if(!kananTimer) updateKanan(); }
+    if(resG.status === 'ok') galeriList = resG.data; 
     if(resA.status === 'ok') amalList = resA.data;
     if(resK.status === 'ok') {
       kegiatanList = resK.data;
       document.getElementById('list-agenda-full').innerHTML = kegiatanList.map(k => `<div class="agenda-item"><div class="agenda-judul">${k.nama_kegiatan}</div><div style="color:var(--gold); font-size:20px; font-weight:600;">${k.jadwal} | ${k.lokasi}</div></div>`).join('');
     }
+    
     document.getElementById('loading-screen').classList.add('hide');
+    
+    // START MASTER QUEUE JIKA BELUM JALAN
+    if(!masterTimer) jalankanTV();
+
   } catch(e) { console.log(e); }
-}
-
-function updateKanan() {
-  clearTimeout(kananTimer); let nextDelay = 15000; 
-  const pMedia = document.getElementById('konten-media'); const pAgenda = document.getElementById('konten-agenda');
-
-  if (modeKanan === 0) {
-    if (galeriList.length === 0) { if(kegiatanList.length > 0) { modeKanan = 1; updateKanan(); } return; }
-    const m = galeriList[slideIndex];
-    let isYt = m.url.includes('youtube.com') || m.url.includes('youtu.be');
-    let isLive = m.url.toLowerCase().includes('live');
-
-    if (isLive) { document.body.classList.add('mode-live'); nextDelay = 3600000; } 
-    else { document.body.classList.remove('mode-live'); if (isYt) nextDelay = 180000; else nextDelay = 15000; }
-
-    if(isYt) pMedia.innerHTML = `<iframe class="media-img" src="${getYoutubeEmbed(m.url)}" allow="autoplay"></iframe>`;
-    else pMedia.innerHTML = `<img class="media-img" src="${matenginLink(m.url)}"><div class="media-overlay"><div class="media-title">${m.judul}</div></div>`;
-
-    pAgenda.classList.remove('active'); pMedia.classList.add('active');
-    slideIndex++;
-    if (slideIndex >= galeriList.length) { slideIndex = 0; if (kegiatanList.length > 0 && !isLive) modeKanan = 1; }
-  } else {
-    document.body.classList.remove('mode-live'); pMedia.classList.remove('active'); pAgenda.classList.add('active'); modeKanan = 0; nextDelay = 25000; 
-  }
-  kananTimer = setTimeout(updateKanan, nextDelay);
 }
 
 function calcSholat(lat, lon) {
@@ -355,6 +409,7 @@ function calcSholat(lat, lon) {
   document.getElementById('sholat-bar').innerHTML = globalSholatList.map((s,i) => `<div class="sholat-box ${i===cur?'aktif':''}"><div class="sholat-name">${s.n}</div><div class="sholat-time">${s.t}</div></div>`).join('');
 }
 
+// MENGHEMAT KUOTA API GOOGLE (Tarik data per 15 Menit)
 loadData(); 
 setInterval(loadData, 900000); 
 </script>
