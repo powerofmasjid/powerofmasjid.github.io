@@ -54,8 +54,6 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg-dark);
 .list-item { background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 15px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
 .item-info h4 { font-size: 14px; color: white; margin-bottom: 4px; }
 .item-info p { font-size: 11px; color: rgba(255,255,255,0.6); }
-.badge { font-size: 10px; padding: 4px 8px; border-radius: 6px; font-weight: 600; }
-.badge-active { background: rgba(16, 185, 129, 0.2); color: var(--success); }
 
 .btn-small { background: rgba(255,255,255,0.1); border: 1px solid var(--border); color: white; padding: 6px 12px; border-radius: 6px; font-size: 11px; cursor: pointer; }
 .btn-danger { background: rgba(220, 38, 38, 0.1); border: 1px solid #DC2626; color: #FCA5A5; }
@@ -75,10 +73,9 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg-dark);
   <div class="login-card">
     <img src="Logo%20Power%20of%20Masjid.png" style="width:80px; margin-bottom:15px;" alt="Logo">
     <h2 style="font-size:18px; margin-bottom:5px;">Otoritas Pusat</h2>
-    <p style="font-size:12px; color:rgba(255,255,255,0.6); margin-bottom:20px;">Masukkan PIN Superadmin untuk mengakses ruang kendali.</p>
+    <p style="font-size:12px; color:rgba(255,255,255,0.6); margin-bottom:20px;">Masukkan PIN Superadmin</p>
     
     <div class="form-group">
-      <label>PIN SUPERADMIN</label>
       <input type="password" class="form-control" id="pin-superadmin" placeholder="••••••" maxlength="6" style="text-align:center; letter-spacing:8px; font-size:18px;">
     </div>
     <button class="btn-primary" id="btn-login" onclick="prosesLogin()">MASUK SISTEM</button>
@@ -120,10 +117,8 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg-dark);
           </div>
         </div>
       </div>
-
       <div class="card" style="background: linear-gradient(145deg, #113F27, #0A2F1C);">
-        <div class="card-title">Ekspedisi Tracker (Target 10 Masjid)</div>
-        <p style="font-size:12px; color:rgba(255,255,255,0.8); line-height:1.5;">Target 10 Masjid terintegrasi sebelum Milad ke-10 YNJ (4 Nov 2026).</p>
+        <div class="card-title">Ekspedisi Tracker</div>
         <div class="progress-bg"><div class="progress-fill" id="ekspedisi-bar"></div></div>
         <div class="progress-info">
           <span id="ekspedisi-text">Tercapai: 0 Masjid</span>
@@ -140,8 +135,8 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg-dark);
         <div class="form-group"><label>Kecamatan</label><input type="text" class="form-control" id="reg-kecamatan" placeholder="Contoh: Jagakarsa"></div>
         <div class="form-group"><label>Slug URL</label><input type="text" class="form-control" id="reg-slug" placeholder="Otomatis terisi..." style="color:var(--gold); font-weight:bold;" readonly></div>
         <div style="border-top: 1px dashed rgba(255,255,255,0.1); margin:15px 0;"></div>
-        <div class="form-group"><label>Email Pengurus DKM</label><input type="email" class="form-control" id="reg-email" placeholder="dkm@gmail.com"></div>
-        <div class="form-group"><label>PIN DKM (6 Digit)</label><input type="number" class="form-control" id="reg-pin" placeholder="123456"></div>
+        <div class="form-group"><label>Email Pengurus</label><input type="email" class="form-control" id="reg-email" placeholder="dkm@gmail.com"></div>
+        <div class="form-group"><label>PIN DKM</label><input type="number" class="form-control" id="reg-pin" placeholder="123456"></div>
         <button class="btn-primary" id="btn-tambah" onclick="tambahMasjidBaru()">SIMPAN MASJID BARU</button>
       </div>
 
@@ -163,12 +158,12 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg-dark);
           <div class="form-group"><label>Selesai Tayang</label><input type="date" class="form-control" id="iklan-selesai"></div>
         </div>
         <div class="form-group"><label>Link WhatsApp (Opsional)</label><input type="text" class="form-control" id="iklan-wa" placeholder="08123456789"></div>
-        <div class="form-group"><label>Link Website / Sosmed (Opsional)</label><input type="text" class="form-control" id="iklan-web" placeholder="https://instagram.com/bjfarm"></div>
+        <div class="form-group"><label>Link Website / Sosmed Jualan (Opsional)</label><input type="text" class="form-control" id="iklan-web" placeholder="https://pejuangkebaikan.site/produk"></div>
         <button class="btn-primary" id="btn-simpan-iklan" onclick="simpanIklan()">PUBLIKASIKAN IKLAN</button>
       </div>
       
       <div class="card">
-        <div class="card-title">Daftar Iklan Terdaftar</div>
+        <div class="card-title">Daftar Iklan Tayang</div>
         <div id="list-iklan-container"><div style="text-align:center; font-size:12px;">Memuat...</div></div>
       </div>
     </div>
@@ -179,7 +174,7 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg-dark);
 <div class="toast" id="toast">Notifikasi</div>
 
 <script>
-// LINK API BARU BAPAK (SUDAH FIX 100%)
+// PASTIKAN LINK INI ADALAH HASIL DEPLOY "NEW DEPLOYMENT" YANG TERAKHIR!
 const API_URL = 'https://script.google.com/macros/s/AKfycbxIidVP7S1xLia50nrr0I4tLZXySchwugvqJWqOOseaZALzIEEnufq_2Bjz7hDgWhYZPQ/exec';
 const KUNCI_RAHASIA = 'POW_MASJID_SECURE_2026';
 let LIST_IKLAN = [];
@@ -277,7 +272,7 @@ async function loadDashboardData() {
           <div class="list-item">
             <div class="item-info" style="flex:1;">
               <h4>${m.nama}</h4>
-              <p>Slug: <strong style="color:var(--gold);">${m.slug}</strong> | Email: ${m.email}</p>
+              <p>Slug: <strong style="color:var(--gold);">${m.slug}</strong></p>
             </div>
             <div style="display:flex; gap:6px; align-items:center;">
               <button class="btn-small" style="color:#10B981; border-color:#10B981;" onclick="copyLink('masjid.html?masjid=${m.slug}')">🔗 Web</button>
