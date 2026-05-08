@@ -370,8 +370,10 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#F7F7F5;color:#1A1A1A
 <div class="toast" id="toast">Berhasil!</div>
 
 <script>
-// SISIPAN: LINK API BARU SESUAI PERMINTAAN
-var API_URL = 'https://script.google.com/macros/s/AKfycbzBREZ-S0hAnp1p-MLVzW1kvIjQt_h8R8jx2fINcMvnnnk1BiyIOA88aU6zsbWoa1h4aA/exec';
+// ========================================================
+// LINK API BARU BAPAK SUDAH DIPASANG DI SINI
+// ========================================================
+var API_URL = 'https://script.google.com/macros/s/AKfycbyU-iyFuimJn7veVin13LW-id98lKUeusZI_WNU0kbLTVAJa93pT-LOsydU7mq5zx9Oyg/exec';
 
 var KUNCI_RAHASIA = 'POW_MASJID_SECURE_2026'; 
 var ADMIN_DATA = null, ID_MASJID = '', LAST_5_TRX = [], LIST_PROGRAM = [];
@@ -511,11 +513,9 @@ function simpanTransaksi(btn) {
 }
 
 function loadTransaksiAdmin() {
-  // Hanya menampilkan transaksi penerimaan untuk laporan, tapi di list admin tampil semua
   fetch(API_URL + '?action=getTransaksi&id_masjid=' + ID_MASJID + '&_t=' + Date.now()).then(r => r.json()).then(j => {
     var el = document.getElementById('list-trx-admin');
     if (j.status !== 'ok' || j.data.length === 0) { el.innerHTML = '<div class="kosong">Belum ada transaksi</div>'; return; }
-    // FITUR 5 TRANSAKSI TERAKHIR SAJA
     LAST_5_TRX = j.data.slice(0, 5);
     el.innerHTML = '<div style="font-size:12px; color:#6b7280; margin-bottom:8px;">Menampilkan 5 Transaksi Terakhir</div>' + LAST_5_TRX.map((t, idx) => `
       <div class="item-card" onclick="toggleAction(this)">
@@ -537,7 +537,6 @@ function generatePDFKas() {
   var b = document.getElementById('pdf-bulan').value, t = document.getElementById('pdf-tahun').value;
   fetch(API_URL + '?action=getTransaksi&id_masjid=' + ID_MASJID + '&_t=' + Date.now()).then(r => r.json()).then(j => {
     const { jsPDF } = window.jspdf; const doc = new jsPDF();
-    // HANYA MENGAMBIL YANG "MASUK" (Penerimaan)
     var filter = j.data.filter(trx => { var d = new Date(trx.tanggal); return (d.getMonth()+1) == b && d.getFullYear() == t && trx.jenis === 'masuk'; });
     
     doc.text("Laporan Penerimaan Kas Masjid Bulan " + b + "/" + t, 10, 10);
@@ -704,8 +703,6 @@ function editJadwal(idx) {
 }
 
 function loadPengumumanAdmin() { 
-  // TV MUNGKIN FILTER TANGGAL, TAPI ADMIN MENAMPILKAN SEMUA YG ADA (BELUM DIHAPUS)
-  // Jadi pengumuman gaib bisa kelihatan lagi
   fetch(API_URL+'?action=getPengumuman&id_masjid='+ID_MASJID+'&_t='+Date.now()).then(r=>r.json()).then(j=>{ 
     if(j.data) {
       LIST_PENGUMUMAN = j.data;
@@ -734,11 +731,8 @@ function editPengumuman(idx) {
 
 function toggleGaleriForm() { 
     var t = document.getElementById('gal-tipe').value;
-    // FOTO ATAU FLYER, Keduanya upload gambar
     document.getElementById('wrap-upload-gal').style.display = (t === 'FOTO' || t === 'FLYER') ? 'block' : 'none'; 
     document.getElementById('wrap-url-gal').style.display = t === 'VIDEO_YOUTUBE' ? 'block' : 'none';
-    
-    // TANGGAL TAYANG HANYA MUNCUL JIKA FLYER
     document.getElementById('wrap-tgl-flyer').style.display = (t === 'FLYER') ? 'grid' : 'none';
 }
 
@@ -764,12 +758,11 @@ function simpanGaleri(btn) {
   if(!d.judul) { showToast('Isi judul galeri dulu!'); return; }
   if(!d.url) { showToast('URL kosong! Tunggu foto selesai di-upload / isi Link YT.'); return; }
   
-  // Jika FLYER, pastikan tanggal disisipkan ke data agar bisa dibaca nanti
   if (tipeStr === 'FLYER') {
       var tMulai = document.getElementById('gal-mulai').value;
       var tSelesai = document.getElementById('gal-selesai').value;
       if (!tMulai || !tSelesai) { showToast('Tanggal Flyer wajib diisi!'); return; }
-      d.keterangan = tMulai + '|||' + tSelesai; // Nitip tanggal di kolom keterangan
+      d.keterangan = tMulai + '|||' + tSelesai; 
   }
 
   setLoading(btn,true); fetch(API_URL,{method:'POST', body:JSON.stringify(d)}).then(()=>{ setLoading(btn,false); showToast('Ok!'); document.getElementById('gal-judul').value = ''; document.getElementById('gal-url').value = ''; loadGaleriAdmin(); }); 
