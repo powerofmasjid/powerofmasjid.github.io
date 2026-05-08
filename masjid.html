@@ -193,7 +193,16 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 .overlay-iklan-icon{font-size:32px;margin-bottom:6px;}
 .overlay-iklan-title{font-size:15px;font-weight:600;color:var(--primary);}
 .overlay-iklan-sub{font-size:12px;color:var(--muted);margin-top:3px;line-height:1.5;}
-.overlay-btn{display:block;background:var(--primary);color:white;text-decoration:none;text-align:center;padding:10px;border-radius:10px;font-size:13px;font-weight:500;margin-top:0.75rem;}
+.overlay-btn{display:block;color:white;text-decoration:none;text-align:center;padding:10px;border-radius:10px;font-size:13px;font-weight:600;margin-top:0.75rem; border:1px solid rgba(0,0,0,0.1);}
+
+/* FLOATING BADGE JUM'AT */
+.jumat-floater { position: fixed; bottom: 85px; right: 15px; background: linear-gradient(135deg, var(--masuk), var(--primary-dark)); color: white; padding: 12px 16px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); z-index: 990; display: flex; align-items: center; gap: 12px; max-width: 280px; transform: translateY(150%); transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1); border: 1px solid rgba(255,255,255,0.2); }
+.jumat-floater.show { transform: translateY(0); }
+.jf-icon { font-size: 24px; }
+.jf-text { flex: 1; }
+.jf-title { font-size: 10px; font-weight: 700; color: var(--accent); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px;}
+.jf-khatib { font-size: 12px; font-weight: 600; line-height: 1.3; }
+.jf-close { background: rgba(0,0,0,0.2); border: none; color: white; font-size: 14px; cursor: pointer; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
 </style>
 </head>
 <body>
@@ -226,6 +235,15 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
     <button class="lb-close" onclick="tutupLightbox()">✕</button>
   </div>
   <div class="lb-track" id="lb-track"></div>
+</div>
+
+<div class="jumat-floater" id="jumat-floater">
+  <div class="jf-icon">🕌</div>
+  <div class="jf-text">
+    <div class="jf-title" id="jf-title">PENGINGAT JUM'AT</div>
+    <div class="jf-khatib" id="jf-khatib">Memuat...</div>
+  </div>
+  <button class="jf-close" onclick="document.getElementById('jumat-floater').classList.remove('show')">✕</button>
 </div>
 
 <div class="header">
@@ -322,7 +340,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 <div class="toast" id="toast">Nomor rekening disalin!</div>
 
 <script>
-// LINK API BARU
+// PASTIKAN LINK INI SESUAI DENGAN API_URL SUPERADMIN BAPAK
 var API_URL = 'https://script.google.com/macros/s/AKfycbzBREZ-S0hAnp1p-MLVzW1kvIjQt_h8R8jx2fINcMvnnnk1BiyIOA88aU6zsbWoa1h4aA/exec';
 var ID_MASJID = '';
 var CACHE_DURATION = 60000; 
@@ -349,9 +367,6 @@ function salin(n) {
 
 function tutupOverlay() { document.getElementById('overlay').classList.add('hide'); }
 
-// ============================================
-// LIGHTBOX LOGIC
-// ============================================
 window.bukaLightbox = function(idx) {
     document.getElementById('lightbox').classList.add('show');
     var track = document.getElementById('lb-track');
@@ -386,7 +401,6 @@ async function loadMasjid(slug) {
 
   document.getElementById('nama-masjid').textContent = d.nama; 
   
-  // PENAMBAHAN TAMPILAN KELURAHAN DAN KECAMATAN
   var teksAlamat = d.alamat;
   if(d.kelurahan) teksAlamat += ', Kel. ' + d.kelurahan;
   if(d.kecamatan) teksAlamat += ', Kec. ' + d.kecamatan;
@@ -419,9 +433,6 @@ async function loadMasjid(slug) {
   return d.id_masjid;
 }
 
-// ============================================
-// NEW UX: PROGRAM AMAL DENGAN SWIPE & SCROLL
-// ============================================
 async function loadProgramAmal() {
   var json = await apiFetch('getProgramAmal', {id_masjid: ID_MASJID, _t: Date.now()}, null);
   var container = document.getElementById('list-program-amal');
@@ -501,7 +512,7 @@ async function fetchDataAmal(program) {
            kambing.forEach(nama => { html += '<li>' + nama + '</li>'; });
            html += '</ul></div>';
        }
-       html += '</div>'; // Tutup swipe-wrap
+       html += '</div>';
 
        var waTextKurban = encodeURIComponent("Assalamu'alaikum,\nSaya ingin berpartisipasi dalam program Kurban:\n*" + program.judul + "*\n\nMohon diarahkan untuk prosesnya.");
        var shareTextKurban = encodeURIComponent("Yuk ikuti program Kurban *" + program.judul + "* di Masjid kita! Klik link ini untuk info lengkapnya:\n" + urlWeb);
@@ -523,7 +534,7 @@ async function fetchDataAmal(program) {
        html += '<div>Uang<br><b style="font-size:14px; color:var(--primary);">' + rupiah(tUang) + '</b></div>';
        html += '</div></div>';
        
-       html += '<div class="scroll-box">'; // SCROLL INTERNAL
+       html += '<div class="scroll-box">';
        data.forEach(d => {
            html += '<div style="padding:10px 0; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center;">';
            html += '<span style="font-size:13px; font-weight:500;">' + (d.nama || '-') + '</span><span style="font-size:11px; background:var(--bg); padding:4px 8px; border-radius:12px; color:var(--muted);">' + (d.jumlah_jiwa || 0) + ' Jiwa (' + d.jenis + ')</span>';
@@ -568,7 +579,7 @@ async function fetchDataAmal(program) {
        html += '</div>';
        
        html += '<div style="font-size:12px; font-weight:600; margin-bottom:8px; color:var(--muted);">👥 ' + data.length + ' MUNFIQ BERPARTISIPASI:</div>';
-       html += '<div class="scroll-box">'; // SCROLL INTERNAL
+       html += '<div class="scroll-box">';
        data.forEach((d, index) => {
            var displayVal = Number(d.nominal) > 0 ? rupiah(d.nominal) : d.catatan;
            var badgeBaru = index === 0 ? '<span class="badge-baru">Baru</span>' : '';
@@ -588,9 +599,6 @@ async function fetchDataAmal(program) {
    el.innerHTML = html;
 }
 
-// ============================================
-// NEW UX: PENGUMUMAN CAROUSEL
-// ============================================
 async function loadPengumuman() {
   var json = await apiFetch('getPengumuman', {id_masjid: ID_MASJID}, 'pengumuman_' + ID_MASJID);
   var el = document.getElementById('list-pengumuman');
@@ -607,39 +615,32 @@ async function loadPengumuman() {
   if (json.data.length > 1) { html += '<div class="peng-hint">Geser untuk info lainnya 👉</div>'; }
   el.innerHTML = html;
 
-  // Autoplay Logic
   if(json.data.length > 1) {
       if(PENGUMUMAN_INTERVAL) clearInterval(PENGUMUMAN_INTERVAL);
       var car = document.getElementById('peng-carousel');
       var idx = 0;
       PENGUMUMAN_INTERVAL = setInterval(function() {
           idx++; if(idx >= json.data.length) idx = 0;
-          var slideWidth = car.clientWidth * 0.92 + 12; // 92% width + 12px gap
+          var slideWidth = car.clientWidth * 0.92 + 12;
           car.scrollTo({left: slideWidth * idx, behavior: 'smooth'});
-      }, 4000); // Ganti tiap 4 detik
+      }, 4000);
   }
 }
 
-// ============================================
-// NEW UX: GALERI & LIGHTBOX MAX 5
-// ============================================
 async function loadGaleri() {
   var json = await apiFetch('getGaleri', {id_masjid: ID_MASJID}, 'galeri_' + ID_MASJID);
   if (json.status !== 'ok' || json.data.length === 0) return;
 
-  // Batasi maksimal 5 foto yang diproses
   var fotos = json.data.filter(function(g){ return g.tipe === 'FOTO'; }).slice(0, 5); 
   var videos = json.data.filter(function(g){ return g.tipe === 'VIDEO_YOUTUBE'; });
   var fotoHtml = ''; var videoHtml = ''; var lbHtml = '';
 
   if(fotos.length > 0) {
-      // 1. Build Lightbox Track (Berisi maksimal 5 foto)
       lbHtml = fotos.map(function(f) {
           return '<div class="lb-slide"><img src="'+matenginLinkDrive(f.url)+'" alt=""><div class="lb-caption">'+f.judul+'</div></div>';
       }).join('');
       document.getElementById('lb-track').innerHTML = lbHtml;
 
-      // 2. Build Grid Depan (Hanya tampil 2 kotak)
       var showCount = Math.min(fotos.length, 2);
       for(var i=0; i<showCount; i++) {
           var f = fotos[i];
@@ -647,12 +648,10 @@ async function loadGaleri() {
           var sisa = fotos.length - 2;
           var overlay = isLast ? '<div class="foto-more">+' + sisa + ' Lainnya</div>' : '';
           var hideCaption = isLast ? 'style="display:none;"' : '';
-          
           fotoHtml += '<div class="foto-item" onclick="bukaLightbox('+i+')"><img src="' + matenginLinkDrive(f.url) + '" alt="' + f.judul + '" loading="lazy">' + overlay + '<div class="foto-caption" ' + hideCaption + '>' + f.judul + '</div></div>';
       }
   }
   
-  // Video tetap maksimal 2
   videos.slice(0, 2).forEach(function(v){
     var ytId = v.url.replace('https://www.youtube.com/watch?v=','').replace('https://youtu.be/','').split('&')[0].split('?')[0];
     videoHtml += '<div class="video-item"><iframe src="https://www.youtube.com/embed/' + ytId + '" allowfullscreen loading="lazy"></iframe></div><div class="video-caption">' + v.judul + '</div>';
@@ -665,9 +664,6 @@ async function loadGaleri() {
   }
 }
 
-// ============================================
-// SISANYA TETAP SAMA (JADWAL SHOLAT DLL)
-// ============================================
 async function loadSaldo() {
   var json = await apiFetch('getSaldo', {id_masjid: ID_MASJID}, 'saldo_' + ID_MASJID);
   if (json.status !== 'ok') return; var d = json.data;
@@ -688,14 +684,53 @@ async function loadTransaksi() {
   }).join('');
 }
 
+// ============================================
+// MODIFIKASI JADWAL + PENGINGAT JUM'AT
+// ============================================
 async function loadJadwal() {
   var json = await apiFetch('getJadwal', {id_masjid: ID_MASJID}, 'jadwal_' + ID_MASJID);
   var el = document.getElementById('list-jadwal');
-  if (json.status !== 'ok' || json.data.length === 0) { el.innerHTML = '<div class="kosong">Belum ada jadwal kegiatan</div>'; return; }
+  
+  if (json.status !== 'ok' || json.data.length === 0) { 
+      el.innerHTML = '<div class="kosong">Belum ada jadwal kegiatan</div>'; 
+      return; 
+  }
+  
   el.innerHTML = json.data.map(function(j){
     var hari = j.hari ? '<span class="jadwal-hari">' + j.hari + '</span>' : '';
     return '<div class="jadwal-item"><div class="jadwal-dot"></div><div><div class="jadwal-title">' + j.nama_kegiatan + '</div><div class="jadwal-detail">' + j.jadwal + (j.lokasi ? ' · ' + j.lokasi : '') + '</div>' + hari + '</div></div>';
   }).join('');
+
+  // OTOMATIS MUNCULKAN FLOATING BADGE (KAMIS & JUMAT)
+  var dNow = new Date();
+  var dHari = dNow.getDay(); // 4 = Kamis, 5 = Jumat
+  var dJam = dNow.getHours();
+  
+  if (dHari === 4 || (dHari === 5 && dJam < 11)) {
+      var jumatItem = json.data.find(function(k) {
+          var h = (k.hari || '').toLowerCase();
+          var n = (k.nama_kegiatan || '').toLowerCase();
+          var j = k.jadwal || '';
+          
+          var isHariJumat = h.includes('jumat') || h.includes("jum'at");
+          var isJamSiang = j.startsWith('11') || j.startsWith('12');
+          var isKhutbah = n.includes('khutbah') || n.includes('sholat') || n.includes('shalat');
+          var bukanMalam = !n.includes('malam') && !h.includes('malam') && !n.includes('sore') && !h.includes('sore');
+          
+          return isHariJumat && (isJamSiang || isKhutbah) && bukanMalam;
+      });
+
+      if (jumatItem) {
+          var teksHari = dHari === 5 ? "HARI INI" : "BESOK";
+          document.getElementById('jf-title').textContent = "📢 PENGINGAT JUM'AT " + teksHari;
+          document.getElementById('jf-khatib').textContent = jumatItem.keterangan || jumatItem.nama_kegiatan;
+          
+          // Munculkan secara halus setelah loading beres
+          setTimeout(function() {
+              document.getElementById('jumat-floater').classList.add('show');
+          }, 3500);
+      }
+  }
 }
 
 function loadJadwalSholat(lat, lon) {
@@ -735,13 +770,28 @@ function loadJadwalSholat(lat, lon) {
   } catch(e) {}
 }
 
+// ============================================
+// MODIFIKASI OVERLAY IKLAN 2 LINK (WA & WEB)
+// ============================================
 async function tampilOverlay() {
   try {
     var json = await apiFetch('getIklanGlobal', null, 'iklan_global');
     if (json && json.status === 'ok' && json.data) {
       var item = json.data;
       document.getElementById('overlay-title').textContent = item.judul || 'Pengumuman';
-      document.getElementById('overlay-body').innerHTML = '<div class="overlay-iklan"><div class="overlay-iklan-icon">📢</div><div class="overlay-iklan-title">' + item.program + '</div><div class="overlay-iklan-sub">' + item.deskripsi + '</div></div><a href="' + item.link + '" target="_blank" class="overlay-btn">Lihat Detail</a>';
+      
+      var btnHtml = '<div style="display:flex; gap:10px; margin-top:0.75rem;">';
+      if(item.link_wa) {
+         var waLink = item.link_wa.startsWith('http') ? item.link_wa : 'https://wa.me/' + item.link_wa;
+         btnHtml += '<a href="' + waLink + '" target="_blank" class="overlay-btn" style="flex:1; background:#10B981; border:none; margin-top:0;">💬 Hubungi WA</a>';
+      }
+      if(item.link_web) {
+         var webLink = item.link_web.startsWith('http') ? item.link_web : 'https://' + item.link_web;
+         btnHtml += '<a href="' + webLink + '" target="_blank" class="overlay-btn" style="flex:1; margin-top:0; background:white; color:var(--primary); border:1px solid var(--border);">🌐 Cek Detail</a>';
+      }
+      btnHtml += '</div>';
+
+      document.getElementById('overlay-body').innerHTML = '<div class="overlay-iklan"><div class="overlay-iklan-icon">📢</div><div class="overlay-iklan-title">' + item.program + '</div><div class="overlay-iklan-sub">' + item.deskripsi + '</div></div>' + btnHtml;
       document.getElementById('overlay').classList.remove('hide');
     }
   } catch(e) {}
