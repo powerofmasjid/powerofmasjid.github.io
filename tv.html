@@ -66,7 +66,7 @@
   .agenda-container { background: var(--panel-bg); width: 100%; height: 100%; padding: 40px; display: flex; flex-direction: column; text-align: left; overflow: hidden; }
   .agenda-header { border-bottom: 3px solid var(--gold); padding-bottom: 15px; margin-bottom: 20px; font-size: 36px; font-weight: 800; color: var(--gold); z-index: 10; background: var(--panel-bg); }
   .agenda-scroll-wrapper { flex: 1; overflow: hidden; position: relative; }
-  .agenda-scroll-content { position: absolute; width: 100%; animation: scrollUp 25s linear infinite; }
+  .agenda-scroll-content { position: absolute; width: 100%; animation: scrollUp 20s linear infinite; }
   .agenda-item { background: rgba(255,255,255,0.05); padding: 20px; border-radius: 12px; margin-bottom: 15px; border-left: 6px solid var(--gold); }
   .agenda-judul { font-size: 28px; font-weight: 700; color: white; margin-bottom: 5px; }
   @keyframes scrollUp { 0% { transform: translateY(100%); } 100% { transform: translateY(-100%); } }
@@ -77,21 +77,21 @@
   .marquee-text { display: inline-block; white-space: nowrap !important; font-size: 40px; font-weight: 800; padding-left: 100%; animation: marquee 40s linear infinite; line-height: 80px; }
   @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
 
-  /* HILANGKAN HEADER & SHOLAT BAR UNTUK TAMPILAN WIDESCREEN */
+  /* HILANGKAN HEADER & SHOLAT BAR SECARA TOTAL UNTUK TAMPILAN FULLSCREEN (SISA RUNNING TEXT SAJA) */
   body.mode-amal .header, body.mode-amal .sholat-bar,
-  body.mode-widescreen-kanan .header, body.mode-widescreen-kanan .sholat-bar,
+  body.mode-widescreen .header, body.mode-widescreen .sholat-bar,
   body.mode-live .header, body.mode-live .sholat-bar { 
-    transform: translateY(-150%); opacity: 0; position: absolute; pointer-events: none; 
+    display: none !important; 
   }
   
-  body.mode-amal .right-panel { width: 0; flex: none; opacity: 0; margin-left: -20px; border: none; padding: 0; overflow: hidden; }
-  body.mode-amal .left-panel { width: 100%; flex: 1; }
+  body.mode-amal .right-panel { display: none !important; }
+  body.mode-amal .left-panel { width: 100%; flex: 1; border: none; background: transparent; }
   body.mode-amal #panel-amal { background: var(--bg-dark); border-color: var(--masuk); }
 
-  body.mode-widescreen-kanan .left-panel,
-  body.mode-live .left-panel { width: 0; flex: none; opacity: 0; margin-right: -20px; padding: 0; border: none; overflow: hidden; }
+  body.mode-widescreen .left-panel,
+  body.mode-live .left-panel { display: none !important; }
   
-  body.mode-widescreen-kanan .right-panel,
+  body.mode-widescreen .right-panel,
   body.mode-live .right-panel { flex: 1; border-radius: 20px; }
 
   /* LAYAR IQOMAH */
@@ -243,28 +243,30 @@ function jalankanTV() {
   document.getElementById('konten-media').classList.remove('active');
   document.getElementById('konten-agenda').classList.remove('active');
   
-  if (currentItem.type === 'MEDIA') {
+  // 1. TAMPILAN SALDO & AGENDA (SESUAI KOTAK)
+  if (currentItem.type === 'SALDO') {
+     document.getElementById('konten-agenda').classList.add('active');
+     nextDelay = 20000; // Saldo 20 detik
+  }
+  // 2. TAMPILAN MEDIA (GALERI / VIDEO)
+  else if (currentItem.type === 'MEDIA') {
      const m = currentItem.data;
      let isYt = m.url.includes('youtube.com') || m.url.includes('youtu.be');
      let isLive = m.url.toLowerCase().includes('live');
      let tipeVisual = String(m.tipe).toUpperCase();
      
-     if (isLive) { document.body.classList.add('mode-live'); nextDelay = 3600000; }
-     else if (isYt) { nextDelay = 180000; }
-     else if (tipeVisual.includes('FLYER') || tipeVisual.includes('POSTER')) { document.body.classList.add('mode-widescreen-kanan'); nextDelay = 25000; }
-     else { nextDelay = 25000; }
+     // ATUR DURASI & MODE LAYAR PENUH (TANPA HEADER/SHOLAT BAR)
+     if (isLive) { document.body.classList.add('mode-widescreen'); nextDelay = 3600000; } 
+     else if (tipeVisual.includes('FLYER') || tipeVisual.includes('POSTER') || tipeVisual.includes('BROSUR')) { document.body.classList.add('mode-widescreen'); nextDelay = 30000; } // Flyer 30s
+     else if (isYt) { nextDelay = 90000; } // Video YouTube 1.5 Menit
+     else { nextDelay = 15000; } // Foto Biasa 15 Detik
      
      let pMedia = document.getElementById('konten-media');
      if(isYt) pMedia.innerHTML = `<iframe class="media-img" src="${getYoutubeEmbed(m.url)}" allow="autoplay"></iframe>`;
      else pMedia.innerHTML = `<img class="media-img" src="${matenginLink(m.url)}"><div class="media-overlay"><div class="media-title">${m.judul}</div></div>`;
      pMedia.classList.add('active');
   } 
-  else if (currentItem.type === 'AGENDA') {
-     document.getElementById('konten-agenda').classList.add('active');
-     let scrollDuration = Math.max(20, document.querySelectorAll('.agenda-item').length * 10); 
-     document.getElementById('list-agenda-full').style.animationDuration = scrollDuration + 's';
-     nextDelay = scrollDuration * 1000; 
-  }
+  // 3. TAMPILAN AMAL / KURBAN (LAYAR PENUH TANPA HEADER/SHOLAT BAR)
   else if (currentItem.type === 'AMAL') {
      const a = currentItem.data;
      const partisipan = a.partisipan || [];
@@ -342,7 +344,7 @@ function jalankanTV() {
      document.body.classList.add('mode-amal');
      document.getElementById('panel-saldo').classList.add('hidden');
      document.getElementById('panel-amal').classList.remove('hidden');
-     nextDelay = 20000; 
+     nextDelay = 30000; // Amal 30 Detik
   }
   
   playIndex++;
@@ -381,34 +383,32 @@ async function loadData() {
     if(resS.status === 'ok') document.getElementById('tv-saldo').innerText = "Rp " + Number(resS.data.saldo).toLocaleString("id-ID");
 
     let newPlaylist = [];
-    if(resG.status === 'ok') {
-        galeriList = resG.data; 
-        galeriList.forEach(g => newPlaylist.push({ type: 'MEDIA', data: g }));
-    }
-
-    if(resK.status === 'ok') {
-        kegiatanList = resK.data;
-        if (kegiatanList.length > 0) newPlaylist.push({ type: 'AGENDA' });
-        
-        let htmlAgendaLain = "";
-        htmlAgendaLain = kegiatanList.map(k => `<div class="agenda-item"><div class="agenda-judul">${k.nama_kegiatan}</div><div style="color:var(--gold); font-size:22px; font-weight:600;">${k.jadwal} | ${k.lokasi}</div></div>`).join('');
-        document.getElementById('list-agenda-full').innerHTML = htmlAgendaLain;
-    }
-
-    // TARIK DATA MUNFIQ SECARA DETAIL UNTUK TV (PROGRESS BAR & SAPI)
+    
+    // 1. URUTAN PERTAMA: PROGRAM AMAL / INFAQ / KURBAN
     if(resA.status === 'ok') {
-        amalList = resA.data;
-        let detailPromises = amalList.map(p => {
+        let detailPromises = resA.data.map(p => {
             let act = p.tipe==='KURBAN' ? 'getKurban' : (p.tipe==='ZAKAT' ? 'getZakat' : 'getInfaq');
             return fetch(API_URL + '?action=' + act + '&id_masjid=' + ID_MASJID + '&id_program=' + p.id).then(r => r.json());
         });
         
         let details = await Promise.all(detailPromises);
-        for(let i=0; i<amalList.length; i++) {
-            amalList[i].partisipan = (details[i].status === 'ok') ? details[i].data : [];
-            newPlaylist.push({ type: 'AMAL', data: amalList[i] });
+        for(let i=0; i<resA.data.length; i++) {
+            resA.data[i].partisipan = (details[i].status === 'ok') ? details[i].data : [];
+            newPlaylist.push({ type: 'AMAL', data: resA.data[i] });
         }
     }
+
+    // 2. URUTAN KEDUA: MEDIA (GALERI / YOUTUBE / FLYER)
+    if(resG.status === 'ok') {
+        resG.data.forEach(g => newPlaylist.push({ type: 'MEDIA', data: g }));
+    }
+
+    // 3. URUTAN KETIGA: TAMPILAN DEFAULT KOTAK (SALDO + AGENDA)
+    if(resK.status === 'ok') {
+        let htmlAgendaLain = resK.data.map(k => `<div class="agenda-item"><div class="agenda-judul">${k.nama_kegiatan}</div><div style="color:var(--gold); font-size:22px; font-weight:600;">${k.jadwal} | ${k.lokasi}</div></div>`).join('');
+        document.getElementById('list-agenda-full').innerHTML = htmlAgendaLain;
+    }
+    newPlaylist.push({ type: 'SALDO' }); 
     
     let gabunganPengumuman = "";
     if(resP.status === 'ok' && Array.isArray(resP.data) && resP.data.length > 0) {
