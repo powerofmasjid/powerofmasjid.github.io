@@ -133,10 +133,7 @@
       </div>
       
       <div class="card-left hidden" id="panel-amal" style="border: 4px solid var(--masuk);">
-        <div id="amal-judul" style="font-size: 55px; font-weight: 800; color: white; line-height: 1.2; text-transform: uppercase;">...</div>
-        <div id="amal-nominal" style="font-size: 85px; font-weight: 800; color: var(--gold); margin-top: 20px; font-family: 'Amiri', serif;">Rp 0</div>
-        <div id="amal-ket" style="font-size: 36px; font-weight: 600; color: white; margin-top: 30px; opacity: 0.9; white-space: pre-wrap; line-height: 1.5;"></div>
-      </div>
+        </div>
     </div>
 
     <div class="right-panel" id="tv-right-panel">
@@ -270,20 +267,77 @@ function jalankanTV() {
   }
   else if (currentItem.type === 'AMAL') {
      const a = currentItem.data;
-     document.getElementById('amal-judul').innerText = a.judul || "Program Infaq";
-     let nominal = a.harga_target || a.target || a.terkumpul || 0;
-     let judulAmalUpper = String(a.judul).toUpperCase();
+     const partisipan = a.partisipan || [];
      
-     if (a.tipe === 'KURBAN' || (nominal == 0 && (judulAmalUpper.includes('KURBAN') || judulAmalUpper.includes('SAPI')))) {
-        document.getElementById('amal-nominal').style.display = 'none';
-     } else {
-        document.getElementById('amal-nominal').style.display = 'block';
-        document.getElementById('amal-nominal').innerText = "Rp " + Number(nominal).toLocaleString("id-ID");
+     let html = `<div style="font-size: 50px; font-weight: 800; color: white; line-height: 1.2; text-transform: uppercase;">${a.judul}</div>`;
+     let targetDana = Number(a.harga_target) || Number(a.target) || 0;
+     
+     if (a.tipe === 'KURBAN') {
+         let sapiKol = []; let sapiUtuh = []; let kambing = [];
+         partisipan.forEach(d => { 
+            if(d.jenis === 'Sapi Kolektif') sapiKol.push(d); 
+            else if(d.jenis === 'Sapi Utuh' || d.jenis === 'Sapi Mandiri') sapiUtuh.push(d);
+            else kambing.push(d);
+         });
+         
+         html += `<div style="display:flex; flex-wrap:wrap; gap:15px; justify-content:center; margin-top:30px;">`;
+         let kelompok = 1;
+         for(let i=0; i<sapiKol.length; i+=7) {
+             let chunk = sapiKol.slice(i, i+7);
+             let isPenuh = chunk.length === 7;
+             let statusText = isPenuh ? 'LENGKAP' : `${chunk.length}/7 TERISI`;
+             let color = isPenuh ? 'var(--masuk)' : 'var(--gold)';
+             let bg = isPenuh ? 'rgba(74,222,128,0.1)' : 'rgba(255,255,255,0.05)';
+             html += `<div style="background:${bg}; border:2px solid ${color}; border-radius:15px; padding:15px; min-width:200px;">
+                 <div style="font-size:22px; color:white; font-weight:bold;">🐄 Sapi Ke-${kelompok}</div>
+                 <div style="font-size:28px; font-weight:900; color:${color}; margin-top:5px;">${statusText}</div>
+             </div>`;
+             kelompok++;
+         }
+         
+         if (sapiUtuh.length > 0) {
+             html += `<div style="background:rgba(255,255,255,0.05); border:2px solid var(--gold); border-radius:15px; padding:15px; min-width:200px;">
+                 <div style="font-size:22px; color:white; font-weight:bold;">🐂 Sapi Mandiri</div>
+                 <div style="font-size:28px; font-weight:900; color:var(--gold); margin-top:5px;">${sapiUtuh.length} Ekor</div>
+             </div>`;
+         }
+         if (kambing.length > 0) {
+             html += `<div style="background:rgba(255,255,255,0.05); border:2px solid var(--gold); border-radius:15px; padding:15px; min-width:200px;">
+                 <div style="font-size:22px; color:white; font-weight:bold;">🐐 Kambing/Domba</div>
+                 <div style="font-size:28px; font-weight:900; color:var(--gold); margin-top:5px;">${kambing.length} Ekor</div>
+             </div>`;
+         }
+         html += `</div>`;
+         
+     } else { 
+         let tUang = 0;
+         partisipan.forEach(d => { if(Number(d.nominal) > 0) tUang += Number(d.nominal); });
+         
+         html += `<div style="font-size: 24px; font-weight: 600; color: rgba(255,255,255,0.8); margin-top: 30px; letter-spacing:2px;">TOTAL TERKUMPUL</div>`;
+         html += `<div style="font-size: 75px; font-weight: 800; color: var(--gold); font-family: 'Amiri', serif; line-height:1.1;">Rp ${tUang.toLocaleString("id-ID")}</div>`;
+         
+         if (targetDana > 0) {
+             let progress = Math.min(Math.round((tUang / targetDana) * 100), 100);
+             html += `<div style="margin-top:25px; width:85%; margin-left:auto; margin-right:auto;">
+                         <div style="display:flex; justify-content:space-between; color:white; font-size:20px; font-weight:bold; margin-bottom:10px;">
+                             <span>Tercapai ${progress}%</span>
+                             <span>Target: Rp ${targetDana.toLocaleString("id-ID")}</span>
+                         </div>
+                         <div style="background:rgba(255,255,255,0.2); height:16px; border-radius:10px; overflow:hidden;">
+                             <div style="background:var(--masuk); height:100%; width:${progress}%; transition:width 1s ease-in-out;"></div>
+                         </div>
+                      </div>`;
+         }
+         html += `<div style="font-size: 20px; font-weight: 600; color: var(--masuk); margin-top: 20px;">DARI ${partisipan.length} MUNFIQ</div>`;
      }
      
-     // FIX KODINGAN BOCOR: Memotong bagian '|||WA:' agar tidak tampil di TV
      let teksDeskripsi = a.keterangan || a.deskripsi || a.isi || "";
-     document.getElementById('amal-ket').innerText = teksDeskripsi.split('|||')[0];
+     teksDeskripsi = teksDeskripsi.split('|||')[0]; 
+     if(teksDeskripsi) {
+         html += `<div style="font-size: 22px; font-weight: 600; color: rgba(255,255,255,0.9); margin-top: 35px; white-space: pre-wrap; line-height: 1.5; border-top: 2px dashed rgba(255,255,255,0.2); padding-top: 25px;">${teksDeskripsi}</div>`;
+     }
+     
+     document.getElementById('panel-amal').innerHTML = html;
      
      document.body.classList.add('mode-amal');
      document.getElementById('panel-saldo').classList.add('hidden');
@@ -311,7 +365,9 @@ async function loadData() {
         Ashar: parseInt(jM.data.jeda_ashar) || 10, Maghrib: parseInt(jM.data.jeda_maghrib) || 10,
         Isya: parseInt(jM.data.jeda_isya) || 10
       };
-      if(jM.data.latitude) calcSholat(jM.data.latitude, jM.data.longitude);
+      
+      // MENGGUNAKAN API ALADHAN SESUAI KEMENAG RI
+      if(jM.data.latitude && jM.data.longitude) calcSholat(jM.data.latitude, jM.data.longitude);
     }
     
     const [resS, resP, resG, resA, resK] = await Promise.all([
@@ -324,18 +380,6 @@ async function loadData() {
     
     if(resS.status === 'ok') document.getElementById('tv-saldo').innerText = "Rp " + Number(resS.data.saldo).toLocaleString("id-ID");
 
-    let isJumatMode = false;
-    let infoJumatTeks = "";
-    let jumatHTML = "";
-    
-    const dNow = new Date();
-    const dHari = dNow.getDay();
-    const dJam = dNow.getHours();
-    
-    if (dHari === 4 || (dHari === 5 && dJam < 11)) {
-      isJumatMode = true;
-    }
-
     let newPlaylist = [];
     if(resG.status === 'ok') {
         galeriList = resG.data; 
@@ -347,48 +391,23 @@ async function loadData() {
         if (kegiatanList.length > 0) newPlaylist.push({ type: 'AGENDA' });
         
         let htmlAgendaLain = "";
-        
-        if (isJumatMode) {
-            let idxJumat = kegiatanList.findIndex(k => {
-                let h = k.hari.toLowerCase();
-                let n = (k.nama_kegiatan || '').toLowerCase();
-                let j = k.jadwal || '';
-                
-                let isHariJumat = h.includes('jumat') || h.includes("jum'at");
-                let isJamSiang = j.startsWith('11') || j.startsWith('12');
-                let isKhutbah = n.includes('khutbah') || n.includes('sholat') || n.includes('shalat');
-                let bukanMalam = !n.includes('malam') && !h.includes('malam') && !n.includes('sore') && !h.includes('sore');
-                
-                return isHariJumat && (isJamSiang || isKhutbah) && bukanMalam;
-            });
-            
-            if (idxJumat !== -1) {
-                let k = kegiatanList[idxJumat];
-                let teksHari = dHari === 5 ? "HARI INI" : "BESOK";
-                
-                jumatHTML = `<div class="agenda-item" style="border-left: 8px solid var(--masuk); background: rgba(74, 222, 128, 0.15);">
-                              <div class="agenda-judul" style="color: var(--masuk);">📢 PENGINGAT JUM'AT ${teksHari}</div>
-                              <div style="color: white; font-size: 26px; font-weight: 700; margin-top: 5px;">${k.keterangan || k.nama_kegiatan}</div>
-                              <div style="color: var(--gold); font-size: 22px; font-weight: 600; margin-top: 5px;">${k.jadwal} | ${k.lokasi}</div>
-                             </div>`;
-                
-                infoJumatTeks = `📢 PENGINGAT: KHUTBAH JUM'AT ${teksHari} - ${k.keterangan || k.nama_kegiatan}`;
-                
-                let agendaLain = kegiatanList.filter((_, idx) => idx !== idxJumat);
-                htmlAgendaLain = agendaLain.map(k => `<div class="agenda-item"><div class="agenda-judul">${k.nama_kegiatan}</div><div style="color:var(--gold); font-size:22px; font-weight:600;">${k.jadwal} | ${k.lokasi}</div></div>`).join('');
-            } else {
-                htmlAgendaLain = kegiatanList.map(k => `<div class="agenda-item"><div class="agenda-judul">${k.nama_kegiatan}</div><div style="color:var(--gold); font-size:22px; font-weight:600;">${k.jadwal} | ${k.lokasi}</div></div>`).join('');
-            }
-        } else {
-            htmlAgendaLain = kegiatanList.map(k => `<div class="agenda-item"><div class="agenda-judul">${k.nama_kegiatan}</div><div style="color:var(--gold); font-size:22px; font-weight:600;">${k.jadwal} | ${k.lokasi}</div></div>`).join('');
-        }
-        
-        document.getElementById('list-agenda-full').innerHTML = jumatHTML + htmlAgendaLain;
+        htmlAgendaLain = kegiatanList.map(k => `<div class="agenda-item"><div class="agenda-judul">${k.nama_kegiatan}</div><div style="color:var(--gold); font-size:22px; font-weight:600;">${k.jadwal} | ${k.lokasi}</div></div>`).join('');
+        document.getElementById('list-agenda-full').innerHTML = htmlAgendaLain;
     }
 
+    // TARIK DATA MUNFIQ SECARA DETAIL UNTUK TV (PROGRESS BAR & SAPI)
     if(resA.status === 'ok') {
         amalList = resA.data;
-        amalList.forEach(a => newPlaylist.push({ type: 'AMAL', data: a }));
+        let detailPromises = amalList.map(p => {
+            let act = p.tipe==='KURBAN' ? 'getKurban' : (p.tipe==='ZAKAT' ? 'getZakat' : 'getInfaq');
+            return fetch(API_URL + '?action=' + act + '&id_masjid=' + ID_MASJID + '&id_program=' + p.id).then(r => r.json());
+        });
+        
+        let details = await Promise.all(detailPromises);
+        for(let i=0; i<amalList.length; i++) {
+            amalList[i].partisipan = (details[i].status === 'ok') ? details[i].data : [];
+            newPlaylist.push({ type: 'AMAL', data: amalList[i] });
+        }
     }
     
     let gabunganPengumuman = "";
@@ -396,12 +415,11 @@ async function loadData() {
       gabunganPengumuman = resP.data.map(p => `✦ ${p.judul}: ${(p.isi || "").replace(/(\r\n|\n|\r)/gm, " ")}`).join('   ✦   ');
     }
     
-    let finalMarquee = infoJumatTeks !== "" ? (infoJumatTeks + "   ✦   " + gabunganPengumuman) : gabunganPengumuman;
     let pengumumanEl = document.getElementById('tv-pengumuman');
-    pengumumanEl.innerText = finalMarquee;
+    pengumumanEl.innerText = gabunganPengumuman;
     
-    if (finalMarquee.length > 0) {
-        let kecepatanMarquee = Math.max(40, finalMarquee.length * 0.2); 
+    if (gabunganPengumuman.length > 0) {
+        let kecepatanMarquee = Math.max(40, gabunganPengumuman.length * 0.2); 
         pengumumanEl.style.animationDuration = kecepatanMarquee + 's';
     }
 
@@ -412,30 +430,35 @@ async function loadData() {
   } catch(e) { console.log(e); }
 }
 
-function calcSholat(lat, lon) {
-  const D2R = Math.PI / 180; const R2D = 180 / Math.PI; const t = new Date();
-  const Y = t.getFullYear(); const M = t.getMonth() + 1; const D = t.getDate();
-  const JD = 367*Y - Math.floor(7*(Y+Math.floor((M+9)/12))/4) + Math.floor(275*M/9) + D + 1721013.5;
-  const T = (JD - 2451545) / 36525;
-  const L0 = (280.46646 + 36000.76983*T) % 360; const M0 = (357.52911 + 35999.05029*T) % 360;
-  const C = (1.914602 - 0.004817*T)*Math.sin(M0*D2R) + 0.019993*Math.sin(2*M0*D2R);
-  const sunLon = L0 + C; const obliq = 23.4393 - 0.0130*T;
-  const decl = R2D * Math.asin(Math.sin(obliq*D2R) * Math.sin(sunLon*D2R));
-  const EqT = (((L0 + C) - (R2D * Math.atan2(Math.cos(obliq*D2R)*Math.sin(sunLon*D2R), Math.cos(sunLon*D2R)))) % 360) / 15;
-  const transit = 12 - lon/15 + 7 - EqT;
-  const ha = (a) => R2D * Math.acos((Math.sin(a*D2R) - Math.sin(lat*D2R)*Math.sin(decl*D2R)) / (Math.cos(lat*D2R)*Math.cos(decl*D2R))) / 15;
-  const fmt = (tm) => { tm = (tm+24)%24; let h = Math.floor(tm); let m = Math.round((tm-h)*60); if(m==60){h++;m=0;} return String(h).padStart(2,'0')+':'+String(m).padStart(2,'0'); };
-  
-  const sub = transit - ha(-20); const ter = transit - ha(-0.833);
-  const ims = sub - (10/60); const dhu = ter + (20/60); const dzu = transit; const mag = transit + ha(-0.833); const isy = transit + ha(-18);
-  const asrA = R2D * Math.atan(1/(1 + Math.tan(D2R*Math.abs(lat - decl)))); const asr = transit + ha(asrA);
-  
-  globalSholatList = [{n:'Imsak', t:fmt(ims)}, {n:'Subuh', t:fmt(sub)}, {n:'Terbit', t:fmt(ter)}, {n:'Dhuha', t:fmt(dhu)}, {n:'Dzuhur', t:fmt(dzu)}, {n:'Ashar', t:fmt(asr)}, {n:'Maghrib', t:fmt(mag)}, {n:'Isya', t:fmt(isy)}];
-  const now = t.getHours()*60 + t.getMinutes(); let cur = -1;
-  for(let i=0; i<globalSholatList.length; i++){ let p=globalSholatList[i].t.split(':'); if(now <= parseInt(p[0])*60 + parseInt(p[1])){ cur=i; break; } }
-  if(cur===-1) cur=0;
-  
-  document.getElementById('sholat-bar').innerHTML = globalSholatList.map((s,i) => `<div class="sholat-box ${i===cur?'aktif':''}"><div class="sholat-name">${s.n}</div><div class="sholat-time">${s.t}</div></div>`).join('');
+async function calcSholat(lat, lon) {
+  if(!lat || !lon) return;
+  var d = new Date();
+  var url = `https://api.aladhan.com/v1/timings/${d.getDate()}-${d.getMonth()+1}-${d.getFullYear()}?latitude=${lat}&longitude=${lon}&method=20`;
+  try {
+    var res = await fetch(url); var j = await res.json();
+    if(j.code === 200) {
+      var t = j.data.timings;
+      function addMins(timeStr, mins) {
+         let [h, m] = timeStr.split(':').map(Number);
+         m += mins; h += Math.floor(m / 60); m = m % 60;
+         return String(h).padStart(2,'0') + ':' + String(m).padStart(2,'0');
+      }
+      globalSholatList = [
+        {n:'Imsak', t:t.Imsak}, {n:'Subuh', t:t.Fajr}, {n:'Terbit', t:t.Sunrise},
+        {n:'Dhuha', t:addMins(t.Sunrise, 20)}, {n:'Dzuhur', t:t.Dhuhr},
+        {n:'Ashar', t:t.Asr}, {n:'Maghrib', t:t.Maghrib}, {n:'Isya', t:t.Isha}
+      ];
+      
+      const now = d.getHours()*60 + d.getMinutes(); let cur = -1;
+      for(let i=0; i<globalSholatList.length; i++){ 
+        let p=globalSholatList[i].t.split(':'); 
+        if(now <= parseInt(p[0])*60 + parseInt(p[1])){ cur=i; break; } 
+      }
+      if(cur===-1) cur=0;
+      
+      document.getElementById('sholat-bar').innerHTML = globalSholatList.map((s,i) => `<div class="sholat-box ${i===cur?'aktif':''}"><div class="sholat-name">${s.n}</div><div class="sholat-time">${s.t}</div></div>`).join('');
+    }
+  } catch(e) { console.log("Gagal sinkron sholat"); }
 }
 
 loadData(); 
