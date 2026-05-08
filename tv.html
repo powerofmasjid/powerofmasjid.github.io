@@ -153,7 +153,7 @@
 // LINK API BARU
 const API_URL = 'https://script.google.com/macros/s/AKfycbw6n1n688x2gHrvYku-AAfPWLtPpE5GOFRrEOvFNvtNph6BgvCkgVQxaFNEUSaIiEDK2g/exec';
 
-let ID_MASJID = ''; let galeriList = []; let amalList = []; let kegiatanList = []; let globalSholatList = [];
+let ID_MASJID = ''; let globalSholatList = [];
 let playlist = []; let playIndex = 0; let masterTimer;
 let isIqomahMode = false; let iqomahTargetTime = null; let jedaConfig = { Subuh: 10, Dzuhur: 10, Ashar: 10, Maghrib: 10, Isya: 10 };
 
@@ -172,6 +172,31 @@ function getYoutubeEmbed(url) {
   else if(url.includes('v=')) vidId = url.split('v=')[1].split('&')[0]; 
   else if(url.includes('live/')) vidId = url.split('live/')[1].split('?')[0];
   return vidId ? `https://www.youtube.com/embed/${vidId}?autoplay=1&mute=1&controls=0&rel=0&loop=1&playlist=${vidId}` : '';
+}
+
+// FUNGSI ALARM DIGITAL (WEB AUDIO API - 5 DETIK)
+function playAlarm() {
+  try {
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    if (!AudioContext) return;
+    const ctx = new AudioContext();
+    // Bunyi bip 5 kali (total 5 detik)
+    for(let i=0; i<5; i++) {
+      setTimeout(() => {
+        if(ctx.state === 'suspended') ctx.resume();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.type = 'sine'; // Suara jernih
+        osc.frequency.setValueAtTime(880, ctx.currentTime); // Nada tinggi (A5)
+        gain.gain.setValueAtTime(1, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.5);
+        osc.start(ctx.currentTime);
+        osc.stop(ctx.currentTime + 0.5);
+      }, i * 1000);
+    }
+  } catch(e) { console.log("Alarm Audio dilarang oleh browser. Pastikan sudah klik layar sekali."); }
 }
 
 function updateTime() {
@@ -198,6 +223,9 @@ function updateTime() {
             document.getElementById('iq-timer').style.display = 'block';
           }, 45 * 60000); 
         } else {
+          // BUNYIKAN ALARM SAAT ADZAN MASUK
+          playAlarm();
+          
           document.getElementById('iq-name').innerText = sholat.n;
           document.getElementById('iq-subtitle').innerText = "Menuju Iqomah";
           let jedaMenit = jedaConfig[sholat.n] || 10;
@@ -210,15 +238,21 @@ function updateTime() {
   if (isIqomahMode && iqomahTargetTime) {
     let diffMs = iqomahTargetTime.getTime() - n.getTime();
     if (diffMs <= 0) {
-      document.getElementById('iq-subtitle').innerText = "LURUSKAN DAN RAPATKAN SHAF";
-      document.getElementById('iq-timer').innerText = "00:00";
-      document.getElementById('iq-timer').style.color = "red";
-      iqomahTargetTime = null; 
-      setTimeout(() => { 
-        isIqomahMode = false;
-        document.getElementById('iqomah-screen').classList.add('hide');
-        document.getElementById('iq-timer').style.color = "var(--masuk)"; 
-      }, 15 * 60000); 
+      if (iqomahTargetTime !== null) {
+          // BUNYIKAN ALARM SAAT IQOMAH TIBA (TIMER 00:00)
+          playAlarm();
+          
+          document.getElementById('iq-subtitle').innerText = "LURUSKAN DAN RAPATKAN SHAF";
+          document.getElementById('iq-timer').innerText = "00:00";
+          document.getElementById('iq-timer').style.color = "red";
+          iqomahTargetTime = null; // Mencegah alarm berulang kali
+          
+          setTimeout(() => { 
+            isIqomahMode = false;
+            document.getElementById('iqomah-screen').classList.add('hide');
+            document.getElementById('iq-timer').style.color = "var(--masuk)"; 
+          }, 15 * 60000); 
+      }
     } else {
       let diffSec = Math.floor(diffMs / 1000);
       let m = Math.floor(diffSec / 60);
@@ -255,7 +289,6 @@ function jalankanTV() {
      let isLive = m.url.toLowerCase().includes('live');
      let tipeVisual = String(m.tipe).toUpperCase();
      
-     // ATUR DURASI & MODE LAYAR PENUH (TANPA HEADER/SHOLAT BAR)
      if (isLive) { document.body.classList.add('mode-widescreen'); nextDelay = 3600000; } 
      else if (tipeVisual.includes('FLYER') || tipeVisual.includes('POSTER') || tipeVisual.includes('BROSUR')) { document.body.classList.add('mode-widescreen'); nextDelay = 30000; } // Flyer 30s
      else if (isYt) { nextDelay = 90000; } // Video YouTube 1.5 Menit
@@ -266,7 +299,7 @@ function jalankanTV() {
      else pMedia.innerHTML = `<img class="media-img" src="${matenginLink(m.url)}"><div class="media-overlay"><div class="media-title">${m.judul}</div></div>`;
      pMedia.classList.add('active');
   } 
-  // 3. TAMPILAN AMAL / KURBAN (LAYAR PENUH TANPA HEADER/SHOLAT BAR)
+  // 3. TAMPILAN AMAL / KURBAN (LAYAR PENUH)
   else if (currentItem.type === 'AMAL') {
      const a = currentItem.data;
      const partisipan = a.partisipan || [];
@@ -282,31 +315,43 @@ function jalankanTV() {
             else kambing.push(d);
          });
          
-         html += `<div style="display:flex; flex-wrap:wrap; gap:15px; justify-content:center; margin-top:30px;">`;
-         let kelompok = 1;
-         for(let i=0; i<sapiKol.length; i+=7) {
-             let chunk = sapiKol.slice(i, i+7);
-             let isPenuh = chunk.length === 7;
-             let statusText = isPenuh ? 'LENGKAP' : `${chunk.length}/7 TERISI`;
-             let color = isPenuh ? 'var(--masuk)' : 'var(--gold)';
-             let bg = isPenuh ? 'rgba(74,222,128,0.1)' : 'rgba(255,255,255,0.05)';
-             html += `<div style="background:${bg}; border:2px solid ${color}; border-radius:15px; padding:15px; min-width:200px;">
-                 <div style="font-size:22px; color:white; font-weight:bold;">🐄 Sapi Ke-${kelompok}</div>
-                 <div style="font-size:28px; font-weight:900; color:${color}; margin-top:5px;">${statusText}</div>
-             </div>`;
-             kelompok++;
-         }
+         // HITUNGAN SAPI KOLEKTIF UNTUK CTA
+         let totalSapiKolPenuh = Math.floor(sapiKol.length / 7);
+         let sisaSapiKol = sapiKol.length % 7;
+         let slotTersedia = 7 - sisaSapiKol;
          
+         if (sisaSapiKol > 0) {
+             html += `<div style="margin-top:30px; background:rgba(74,222,128,0.15); border:3px solid var(--masuk); border-radius:20px; padding:25px; text-align:center;">
+                 <div style="font-size:35px; color:white; font-weight:800; margin-bottom:10px;">MARI BERGABUNG! 🐄</div>
+                 <div style="font-size:45px; color:var(--masuk); font-weight:900;">MASIH BUTUH <span style="font-size:60px; color:var(--gold);">${slotTersedia}</span> ORANG LAGI</div>
+                 <div style="font-size:25px; color:rgba(255,255,255,0.8); font-weight:600; margin-top:5px;">Untuk melengkapi Sapi Kolektif Ke-${totalSapiKolPenuh + 1}</div>
+             </div>`;
+         } else {
+             html += `<div style="margin-top:30px; background:rgba(74,222,128,0.15); border:3px solid var(--masuk); border-radius:20px; padding:25px; text-align:center;">
+                 <div style="font-size:35px; color:white; font-weight:800; margin-bottom:10px;">ALHAMDULILLAH 🐄</div>
+                 <div style="font-size:45px; color:var(--masuk); font-weight:900;">DIBUKA SAPI KOLEKTIF KE-${totalSapiKolPenuh + 1}</div>
+                 <div style="font-size:25px; color:rgba(255,255,255,0.8); font-weight:600; margin-top:5px;">Tersedia 7 Slot Kosong</div>
+             </div>`;
+         }
+
+         // INFO TAMBAHAN JUMLAH HEWAN
+         html += `<div style="display:flex; justify-content:center; gap:20px; margin-top:30px;">`;
+         if (totalSapiKolPenuh > 0) {
+             html += `<div style="background:rgba(255,255,255,0.05); border:2px solid var(--border); border-radius:15px; padding:15px; width:220px;">
+                 <div style="font-size:20px; color:var(--gold); font-weight:bold;">Sapi Kol. Penuh</div>
+                 <div style="font-size:35px; font-weight:900; color:white; margin-top:5px;">${totalSapiKolPenuh} Ekor</div>
+             </div>`;
+         }
          if (sapiUtuh.length > 0) {
-             html += `<div style="background:rgba(255,255,255,0.05); border:2px solid var(--gold); border-radius:15px; padding:15px; min-width:200px;">
-                 <div style="font-size:22px; color:white; font-weight:bold;">🐂 Sapi Mandiri</div>
-                 <div style="font-size:28px; font-weight:900; color:var(--gold); margin-top:5px;">${sapiUtuh.length} Ekor</div>
+             html += `<div style="background:rgba(255,255,255,0.05); border:2px solid var(--border); border-radius:15px; padding:15px; width:220px;">
+                 <div style="font-size:20px; color:var(--gold); font-weight:bold;">Sapi Mandiri</div>
+                 <div style="font-size:35px; font-weight:900; color:white; margin-top:5px;">${sapiUtuh.length} Ekor</div>
              </div>`;
          }
          if (kambing.length > 0) {
-             html += `<div style="background:rgba(255,255,255,0.05); border:2px solid var(--gold); border-radius:15px; padding:15px; min-width:200px;">
-                 <div style="font-size:22px; color:white; font-weight:bold;">🐐 Kambing/Domba</div>
-                 <div style="font-size:28px; font-weight:900; color:var(--gold); margin-top:5px;">${kambing.length} Ekor</div>
+             html += `<div style="background:rgba(255,255,255,0.05); border:2px solid var(--border); border-radius:15px; padding:15px; width:220px;">
+                 <div style="font-size:20px; color:var(--gold); font-weight:bold;">Kambing/Domba</div>
+                 <div style="font-size:35px; font-weight:900; color:white; margin-top:5px;">${kambing.length} Ekor</div>
              </div>`;
          }
          html += `</div>`;
@@ -368,7 +413,6 @@ async function loadData() {
         Isya: parseInt(jM.data.jeda_isya) || 10
       };
       
-      // MENGGUNAKAN API ALADHAN SESUAI KEMENAG RI
       if(jM.data.latitude && jM.data.longitude) calcSholat(jM.data.latitude, jM.data.longitude);
     }
     
@@ -382,34 +426,69 @@ async function loadData() {
     
     if(resS.status === 'ok') document.getElementById('tv-saldo').innerText = "Rp " + Number(resS.data.saldo).toLocaleString("id-ID");
 
-    let newPlaylist = [];
+    let rawPlaylist = [];
     
-    // 1. URUTAN PERTAMA: PROGRAM AMAL / INFAQ / KURBAN
     if(resA.status === 'ok') {
         let detailPromises = resA.data.map(p => {
             let act = p.tipe==='KURBAN' ? 'getKurban' : (p.tipe==='ZAKAT' ? 'getZakat' : 'getInfaq');
             return fetch(API_URL + '?action=' + act + '&id_masjid=' + ID_MASJID + '&id_program=' + p.id).then(r => r.json());
         });
-        
         let details = await Promise.all(detailPromises);
         for(let i=0; i<resA.data.length; i++) {
             resA.data[i].partisipan = (details[i].status === 'ok') ? details[i].data : [];
-            newPlaylist.push({ type: 'AMAL', data: resA.data[i] });
+            rawPlaylist.push({ type: 'AMAL', data: resA.data[i] });
         }
     }
 
-    // 2. URUTAN KEDUA: MEDIA (GALERI / YOUTUBE / FLYER)
     if(resG.status === 'ok') {
-        resG.data.forEach(g => newPlaylist.push({ type: 'MEDIA', data: g }));
+        resG.data.forEach(g => rawPlaylist.push({ type: 'MEDIA', data: g }));
     }
 
-    // 3. URUTAN KETIGA: TAMPILAN DEFAULT KOTAK (SALDO + AGENDA)
     if(resK.status === 'ok') {
         let htmlAgendaLain = resK.data.map(k => `<div class="agenda-item"><div class="agenda-judul">${k.nama_kegiatan}</div><div style="color:var(--gold); font-size:22px; font-weight:600;">${k.jadwal} | ${k.lokasi}</div></div>`).join('');
         document.getElementById('list-agenda-full').innerHTML = htmlAgendaLain;
     }
-    newPlaylist.push({ type: 'SALDO' }); 
+    rawPlaylist.push({ type: 'SALDO' }); 
     
+    // ALGORITMA SELANG-SELING (ZIPPER)
+    let fullItems = [];
+    let normItems = [];
+    
+    rawPlaylist.forEach(item => {
+        if (item.type === 'AMAL') {
+            fullItems.push(item);
+        } else if (item.type === 'MEDIA') {
+            let m = item.data;
+            let isLive = m.url.toLowerCase().includes('live');
+            let tipeVisual = String(m.tipe).toUpperCase();
+            if (isLive || tipeVisual.includes('FLYER') || tipeVisual.includes('POSTER') || tipeVisual.includes('BROSUR')) {
+                fullItems.push(item);
+            } else {
+                normItems.push(item);
+            }
+        } else {
+            normItems.push(item); // Saldo
+        }
+    });
+
+    let interleavedPlaylist = [];
+    let fIdx = 0, nIdx = 0;
+    let turnFull = true;
+    
+    while (fIdx < fullItems.length || nIdx < normItems.length) {
+        if (turnFull) {
+            if (fIdx < fullItems.length) interleavedPlaylist.push(fullItems[fIdx++]);
+            else if (nIdx < normItems.length) interleavedPlaylist.push(normItems[nIdx++]);
+            turnFull = false;
+        } else {
+            if (nIdx < normItems.length) interleavedPlaylist.push(normItems[nIdx++]);
+            else if (fIdx < fullItems.length) interleavedPlaylist.push(fullItems[fIdx++]);
+            turnFull = true;
+        }
+    }
+    
+    playlist = interleavedPlaylist;
+
     let gabunganPengumuman = "";
     if(resP.status === 'ok' && Array.isArray(resP.data) && resP.data.length > 0) {
       gabunganPengumuman = resP.data.map(p => `✦ ${p.judul}: ${(p.isi || "").replace(/(\r\n|\n|\r)/gm, " ")}`).join('   ✦   ');
@@ -417,13 +496,11 @@ async function loadData() {
     
     let pengumumanEl = document.getElementById('tv-pengumuman');
     pengumumanEl.innerText = gabunganPengumuman;
-    
     if (gabunganPengumuman.length > 0) {
         let kecepatanMarquee = Math.max(40, gabunganPengumuman.length * 0.2); 
         pengumumanEl.style.animationDuration = kecepatanMarquee + 's';
     }
 
-    playlist = newPlaylist;
     document.getElementById('loading-screen').classList.add('hide');
     if(!masterTimer) jalankanTV();
 
