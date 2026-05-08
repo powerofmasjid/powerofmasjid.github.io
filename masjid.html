@@ -195,9 +195,9 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 .overlay-iklan-sub{font-size:12px;color:var(--muted);margin-top:3px;line-height:1.5;}
 .overlay-btn{display:block;color:white;text-decoration:none;text-align:center;padding:10px;border-radius:10px;font-size:13px;font-weight:600;margin-top:0.75rem; border:1px solid rgba(0,0,0,0.1);}
 
-/* FLOATING BADGE JUM'AT */
-.jumat-floater { position: fixed; bottom: 85px; right: 15px; background: linear-gradient(135deg, var(--masuk), var(--primary-dark)); color: white; padding: 12px 16px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); z-index: 990; display: flex; align-items: center; gap: 12px; max-width: 280px; transform: translateY(150%); transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1); border: 1px solid rgba(255,255,255,0.2); }
-.jumat-floater.show { transform: translateY(0); }
+/* FLOATING BADGE JUM'AT - SEMBUNYI TOTAL SAAT TIDAK ADA DATA */
+.jumat-floater { position: fixed; bottom: 85px; right: 15px; background: linear-gradient(135deg, var(--masuk), var(--primary-dark)); color: white; padding: 12px 16px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); z-index: 990; display: none; align-items: center; gap: 12px; max-width: 280px; transform: translateY(50px); opacity: 0; transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1); border: 1px solid rgba(255,255,255,0.2); }
+.jumat-floater.show { transform: translateY(0); opacity: 1; }
 .jf-icon { font-size: 24px; }
 .jf-text { flex: 1; }
 .jf-title { font-size: 10px; font-weight: 700; color: var(--accent); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px;}
@@ -341,7 +341,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 
 <script>
 // PASTIKAN LINK INI SESUAI DENGAN API_URL SUPERADMIN BAPAK
-var API_URL = 'https://script.google.com/macros/s/AKfycbzBREZ-S0hAnp1p-MLVzW1kvIjQt_h8R8jx2fINcMvnnnk1BiyIOA88aU6zsbWoa1h4aA/exec';
+var API_URL = 'https://script.google.com/macros/s/AKfycbxIidVP7S1xLia50nrr0I4tLZXySchwugvqJWqOOseaZALzIEEnufq_2Bjz7hDgWhYZPQ/exec';
 var ID_MASJID = '';
 var CACHE_DURATION = 60000; 
 var PENGUMUMAN_INTERVAL = null;
@@ -685,7 +685,7 @@ async function loadTransaksi() {
 }
 
 // ============================================
-// MODIFIKASI JADWAL + PENGINGAT JUM'AT
+// MODIFIKASI JADWAL + PENGINGAT JUM'AT (GAIB TOTAL JIKA TIDAK ADA DATA)
 // ============================================
 async function loadJadwal() {
   var json = await apiFetch('getJadwal', {id_masjid: ID_MASJID}, 'jadwal_' + ID_MASJID);
@@ -701,7 +701,7 @@ async function loadJadwal() {
     return '<div class="jadwal-item"><div class="jadwal-dot"></div><div><div class="jadwal-title">' + j.nama_kegiatan + '</div><div class="jadwal-detail">' + j.jadwal + (j.lokasi ? ' · ' + j.lokasi : '') + '</div>' + hari + '</div></div>';
   }).join('');
 
-  // OTOMATIS MUNCULKAN FLOATING BADGE (KAMIS & JUMAT)
+  // OTOMATIS MUNCULKAN FLOATING BADGE JIKA VALID
   var dNow = new Date();
   var dHari = dNow.getDay(); // 4 = Kamis, 5 = Jumat
   var dJam = dNow.getHours();
@@ -725,9 +725,13 @@ async function loadJadwal() {
           document.getElementById('jf-title').textContent = "📢 PENGINGAT JUM'AT " + teksHari;
           document.getElementById('jf-khatib').textContent = jumatItem.keterangan || jumatItem.nama_kegiatan;
           
-          // Munculkan secara halus setelah loading beres
+          // Munculkan dari status "Gaib" (display: none -> display: flex) lalu animasi
           setTimeout(function() {
-              document.getElementById('jumat-floater').classList.add('show');
+              var floater = document.getElementById('jumat-floater');
+              floater.style.display = 'flex';
+              setTimeout(function() {
+                  floater.classList.add('show');
+              }, 50); // Jeda tipis agar animasi terbaca browser
           }, 3500);
       }
   }
@@ -771,7 +775,7 @@ function loadJadwalSholat(lat, lon) {
 }
 
 // ============================================
-// MODIFIKASI OVERLAY IKLAN 2 LINK (WA & WEB)
+// OVERLAY IKLAN GLOBAL 2 LINK (WA & WEB)
 // ============================================
 async function tampilOverlay() {
   try {
