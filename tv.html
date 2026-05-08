@@ -153,8 +153,8 @@
   <div class="footer"><div class="footer-label">INFO</div><div style="flex:1; overflow:hidden;"><div class="marquee-text" id="tv-pengumuman"></div></div></div>
 
 <script>
-// PASTIKAN LINK INI SESUAI DENGAN API_URL SUPERADMIN BAPAK
-const API_URL = 'https://script.google.com/macros/s/AKfycbxIidVP7S1xLia50nrr0I4tLZXySchwugvqJWqOOseaZALzIEEnufq_2Bjz7hDgWhYZPQ/exec';
+// LINK API BARU
+const API_URL = 'https://script.google.com/macros/s/AKfycbw6n1n688x2gHrvYku-AAfPWLtPpE5GOFRrEOvFNvtNph6BgvCkgVQxaFNEUSaIiEDK2g/exec';
 
 let ID_MASJID = ''; let galeriList = []; let amalList = []; let kegiatanList = []; let globalSholatList = [];
 let playlist = []; let playIndex = 0; let masterTimer;
@@ -280,7 +280,11 @@ function jalankanTV() {
         document.getElementById('amal-nominal').style.display = 'block';
         document.getElementById('amal-nominal').innerText = "Rp " + Number(nominal).toLocaleString("id-ID");
      }
-     document.getElementById('amal-ket').innerText = a.keterangan || a.deskripsi || a.isi || "";
+     
+     // FIX KODINGAN BOCOR: Memotong bagian '|||WA:' agar tidak tampil di TV
+     let teksDeskripsi = a.keterangan || a.deskripsi || a.isi || "";
+     document.getElementById('amal-ket').innerText = teksDeskripsi.split('|||')[0];
+     
      document.body.classList.add('mode-amal');
      document.getElementById('panel-saldo').classList.add('hidden');
      document.getElementById('panel-amal').classList.remove('hidden');
@@ -320,18 +324,14 @@ async function loadData() {
     
     if(resS.status === 'ok') document.getElementById('tv-saldo').innerText = "Rp " + Number(resS.data.saldo).toLocaleString("id-ID");
 
-    // =========================================================================
-    // 🧠 SISTEM PENGINGAT JUM'AT CANGGIH (ANTI-KAJIAN MALAM JUM'AT)
-    // =========================================================================
     let isJumatMode = false;
     let infoJumatTeks = "";
     let jumatHTML = "";
     
     const dNow = new Date();
-    const dHari = dNow.getDay(); // 4 = Kamis, 5 = Jumat
+    const dHari = dNow.getDay();
     const dJam = dNow.getHours();
     
-    // Aktif hari Kamis full, atau Jumat sebelum jam 11:00 siang
     if (dHari === 4 || (dHari === 5 && dJam < 11)) {
       isJumatMode = true;
     }
@@ -349,7 +349,6 @@ async function loadData() {
         let htmlAgendaLain = "";
         
         if (isJumatMode) {
-            // FILTER CERDAS: Harus hari Jumat, dan jamnya 11/12 ATAU ada kata "khutbah"/"sholat", DAN TIDAK ADA kata "malam" / "sore"
             let idxJumat = kegiatanList.findIndex(k => {
                 let h = k.hari.toLowerCase();
                 let n = (k.nama_kegiatan || '').toLowerCase();
@@ -367,17 +366,14 @@ async function loadData() {
                 let k = kegiatanList[idxJumat];
                 let teksHari = dHari === 5 ? "HARI INI" : "BESOK";
                 
-                // Bikin Kartu VIP
                 jumatHTML = `<div class="agenda-item" style="border-left: 8px solid var(--masuk); background: rgba(74, 222, 128, 0.15);">
                               <div class="agenda-judul" style="color: var(--masuk);">📢 PENGINGAT JUM'AT ${teksHari}</div>
                               <div style="color: white; font-size: 26px; font-weight: 700; margin-top: 5px;">${k.keterangan || k.nama_kegiatan}</div>
                               <div style="color: var(--gold); font-size: 22px; font-weight: 600; margin-top: 5px;">${k.jadwal} | ${k.lokasi}</div>
                              </div>`;
                 
-                // Tambahkan ke info berjalan (Marquee)
                 infoJumatTeks = `📢 PENGINGAT: KHUTBAH JUM'AT ${teksHari} - ${k.keterangan || k.nama_kegiatan}`;
                 
-                // Pisahkan jadwal Jumat dari jadwal rutin lainnya
                 let agendaLain = kegiatanList.filter((_, idx) => idx !== idxJumat);
                 htmlAgendaLain = agendaLain.map(k => `<div class="agenda-item"><div class="agenda-judul">${k.nama_kegiatan}</div><div style="color:var(--gold); font-size:22px; font-weight:600;">${k.jadwal} | ${k.lokasi}</div></div>`).join('');
             } else {
@@ -387,7 +383,6 @@ async function loadData() {
             htmlAgendaLain = kegiatanList.map(k => `<div class="agenda-item"><div class="agenda-judul">${k.nama_kegiatan}</div><div style="color:var(--gold); font-size:22px; font-weight:600;">${k.jadwal} | ${k.lokasi}</div></div>`).join('');
         }
         
-        // Gabungkan Kartu VIP Jumat (di atas) dengan jadwal lainnya (di bawah)
         document.getElementById('list-agenda-full').innerHTML = jumatHTML + htmlAgendaLain;
     }
 
@@ -396,7 +391,6 @@ async function loadData() {
         amalList.forEach(a => newPlaylist.push({ type: 'AMAL', data: a }));
     }
     
-    // GABUNGKAN PENGUMUMAN MARQUEE
     let gabunganPengumuman = "";
     if(resP.status === 'ok' && Array.isArray(resP.data) && resP.data.length > 0) {
       gabunganPengumuman = resP.data.map(p => `✦ ${p.judul}: ${(p.isi || "").replace(/(\r\n|\n|\r)/gm, " ")}`).join('   ✦   ');
