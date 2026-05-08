@@ -1,4 +1,4 @@
-﻿<<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="id">
 <head>
 <meta charset="UTF-8">
@@ -133,7 +133,6 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 .btn-cta{flex:1;text-align:center;padding:10px;border-radius:8px;font-size:12px;font-weight:600;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:6px;}
 .btn-cta-primary{background:var(--primary);color:white;border:1px solid var(--primary-dark);}
 .btn-cta-outline{background:white;color:var(--primary);border:1px solid var(--primary);}
-.badge-baru{font-size:9px;background:var(--accent);color:white;padding:2px 6px;border-radius:10px;margin-left:6px;}
 
 /* GALERI & LIGHTBOX (NEW UI) */
 .galeri-wrap{padding:1rem;}
@@ -171,6 +170,12 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 .rek-right{display:flex;align-items:center;gap:8px;}
 .rek-no{font-size:15px;font-weight:600;}
 .btn-salin{background:var(--primary-light);color:var(--primary);border:none;font-size:11px;padding:4px 10px;border-radius:6px;cursor:pointer;font-weight:500;font-family:inherit;}
+
+/* CSS BARU UNTUK SCROLL LIMIT & BADGE 12 JAM */
+.scroll-limit-5 { max-height: 290px; overflow-y: auto; padding-right: 4px; }
+.scroll-kurban { height: 180px; overflow-y: auto; padding-right: 5px; scrollbar-width: none; }
+.scroll-kurban::-webkit-scrollbar { display: none; }
+.badge-baru { font-size: 8px; font-weight: 800; background: #22C55E; color: white; padding: 2px 6px; border-radius: 4px; margin-left: 6px; text-transform: uppercase; vertical-align: middle; box-shadow: 0 2px 4px rgba(0,0,0,0.1); border: 1px solid rgba(255,255,255,0.2); }
 
 /* FOOTER */
 .footer{text-align:center;padding:1.5rem 1rem;font-size:12px;color:var(--muted);border-top:1px solid var(--border);background:var(--white);margin-top:1rem;}
@@ -341,13 +346,27 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 
 <script>
 // ========================================================
-// LINK API BARU BAPAK SUDAH DIPASANG DI SINI
+// LINK API BARU SESUAI PERMINTAAN
 // ========================================================
-var API_URL = 'https://script.google.com/macros/s/AKfycbyU-iyFuimJn7veVin13LW-id98lKUeusZI_WNU0kbLTVAJa93pT-LOsydU7mq5zx9Oyg/exec';
+var API_URL = 'https://script.google.com/macros/s/AKfycbw6n1n688x2gHrvYku-AAfPWLtPpE5GOFRrEOvFNvtNph6BgvCkgVQxaFNEUSaIiEDK2g/exec';
 
 var ID_MASJID = '';
 var CACHE_DURATION = 60000; 
 var PENGUMUMAN_INTERVAL = null;
+
+// FUNGSI BARU UNTUK CEK DATA (12 JAM)
+function cekDataBaru(idItem) {
+  try {
+    if (!idItem) return false;
+    var parts = idItem.split('-');
+    if (parts.length < 2) return false;
+    var hexTime = parts[parts.length - 2];
+    var waktuInput = parseInt(hexTime, 36);
+    if (isNaN(waktuInput) || waktuInput < 1700000000000) return false;
+    var selisihJam = (Date.now() - waktuInput) / (1000 * 60 * 60);
+    return selisihJam <= 12;
+  } catch(e) { return false; }
+}
 
 function cacheSet(key, data) { try { localStorage.setItem(key, JSON.stringify({ data: data, time: Date.now() })); } catch(e) {} }
 function cacheGet(key) {
@@ -475,9 +494,9 @@ async function fetchDataAmal(program) {
    if(program.tipe === 'KURBAN') {
        var sapiKol = []; var sapiUtuh = []; var kambing = [];
        data.forEach(d => { 
-           if(d.jenis === 'Sapi Kolektif') sapiKol.push(d.nama); 
-           else if(d.jenis === 'Sapi Utuh') sapiUtuh.push(d.nama);
-           else kambing.push(d.nama);
+           if(d.jenis === 'Sapi Kolektif') sapiKol.push(d); 
+           else if(d.jenis === 'Sapi Utuh') sapiUtuh.push(d);
+           else kambing.push(d);
        });
        
        html += '<div class="swipe-wrap">';
@@ -496,24 +515,33 @@ async function fetchDataAmal(program) {
            html += '</div>';
            html += '<div class="progress-wrap" style="height:6px; margin:0 0 10px 0;"><div class="progress-bar" style="width:' + progressKurban + '%"></div></div>';
            html += '<ol style="margin-left:1.5rem; font-size:12px; color:var(--text); line-height:1.8;">';
-           chunk.forEach(nama => { html += '<li>' + nama + '</li>'; });
+           chunk.forEach(d => { 
+               var badge = cekDataBaru(d.id) ? '<span class="badge-baru">Baru</span>' : '';
+               html += '<li>' + d.nama + badge + '</li>'; 
+           });
            for(var j=0; j<sisaSlot; j++) { html += '<li style="color:#A0AEC0; font-style:italic;">[ Tersedia ]</li>'; }
            html += '</ol></div>';
            kelompok++;
        }
        if(sapiUtuh.length > 0) {
            html += '<div class="swipe-card">';
-           html += '<div style="font-weight:600; font-size:12px; margin-bottom:8px; color:var(--primary); display:flex; align-items:center; gap:6px;"><span>🐂</span> Sapi Utuh (Pribadi)</div>';
-           html += '<ul style="margin-left:1.5rem; font-size:12px; color:var(--text); line-height:1.8;">';
-           sapiUtuh.forEach(nama => { html += '<li>' + nama + '</li>'; });
-           html += '</ul></div>';
+           html += '<div style="font-weight:600; font-size:12px; margin-bottom:8px; color:var(--primary); display:flex; align-items:center; gap:6px;"><span>🐂</span> Sapi Mandiri</div>';
+           html += '<div class="scroll-kurban"><ul style="margin-left:1.5rem; font-size:12px; color:var(--text); line-height:1.8;">';
+           sapiUtuh.forEach(d => { 
+               var badge = cekDataBaru(d.id) ? '<span class="badge-baru">Baru</span>' : '';
+               html += '<li>' + d.nama + badge + '</li>'; 
+           });
+           html += '</ul></div></div>';
        }
        if(kambing.length > 0) {
            html += '<div class="swipe-card">';
            html += '<div style="font-weight:600; font-size:12px; margin-bottom:8px; color:var(--primary); display:flex; align-items:center; gap:6px;"><span>🐐</span> Kambing/Domba</div>';
-           html += '<ul style="margin-left:1.5rem; font-size:12px; color:var(--text); line-height:1.8;">';
-           kambing.forEach(nama => { html += '<li>' + nama + '</li>'; });
-           html += '</ul></div>';
+           html += '<div class="scroll-kurban"><ul style="margin-left:1.5rem; font-size:12px; color:var(--text); line-height:1.8;">';
+           kambing.forEach(d => { 
+               var badge = cekDataBaru(d.id) ? '<span class="badge-baru">Baru</span>' : '';
+               html += '<li>' + d.nama + badge + '</li>'; 
+           });
+           html += '</ul></div></div>';
        }
        html += '</div>';
 
@@ -537,10 +565,11 @@ async function fetchDataAmal(program) {
        html += '<div>Uang<br><b style="font-size:14px; color:var(--primary);">' + rupiah(tUang) + '</b></div>';
        html += '</div></div>';
        
-       html += '<div class="scroll-box">';
+       html += '<div class="scroll-limit-5">';
        data.forEach(d => {
+           var badge = cekDataBaru(d.id) ? '<span class="badge-baru">Baru</span>' : '';
            html += '<div style="padding:10px 0; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center;">';
-           html += '<span style="font-size:13px; font-weight:500;">' + (d.nama || '-') + '</span><span style="font-size:11px; background:var(--bg); padding:4px 8px; border-radius:12px; color:var(--muted);">' + (d.jumlah_jiwa || 0) + ' Jiwa (' + d.jenis + ')</span>';
+           html += '<span style="font-size:13px; font-weight:500;">' + (d.nama || '-') + badge + '</span><span style="font-size:11px; background:var(--bg); padding:4px 8px; border-radius:12px; color:var(--muted);">' + (d.jumlah_jiwa || 0) + ' Jiwa (' + d.jenis + ')</span>';
            html += '</div>';
        });
        html += '</div>';
@@ -582,12 +611,12 @@ async function fetchDataAmal(program) {
        html += '</div>';
        
        html += '<div style="font-size:12px; font-weight:600; margin-bottom:8px; color:var(--muted);">👥 ' + data.length + ' MUNFIQ BERPARTISIPASI:</div>';
-       html += '<div class="scroll-box">';
+       html += '<div class="scroll-limit-5">';
        data.forEach((d, index) => {
            var displayVal = Number(d.nominal) > 0 ? rupiah(d.nominal) : d.catatan;
-           var badgeBaru = index === 0 ? '<span class="badge-baru">Baru</span>' : '';
+           var badge = cekDataBaru(d.id) ? '<span class="badge-baru">Baru</span>' : '';
            html += '<div style="padding:10px 0; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center;">';
-           html += '<span style="font-size:13px; font-weight:500;">' + (d.nama || '-') + badgeBaru + '</span><span style="font-size:13px; font-weight:600; color:var(--primary);">' + displayVal + '</span>';
+           html += '<span style="font-size:13px; font-weight:500;">' + (d.nama || '-') + badge + '</span><span style="font-size:13px; font-weight:600; color:var(--primary);">' + displayVal + '</span>';
            html += '</div>';
        });
        html += '</div>';
@@ -699,10 +728,10 @@ async function loadJadwal() {
       return; 
   }
   
-  el.innerHTML = json.data.map(function(j){
+  el.innerHTML = '<div class="scroll-limit-5">' + json.data.map(function(j){
     var hari = j.hari ? '<span class="jadwal-hari">' + j.hari + '</span>' : '';
     return '<div class="jadwal-item"><div class="jadwal-dot"></div><div><div class="jadwal-title">' + j.nama_kegiatan + '</div><div class="jadwal-detail">' + j.jadwal + (j.lokasi ? ' · ' + j.lokasi : '') + '</div>' + hari + '</div></div>';
-  }).join('');
+  }).join('') + '</div>';
 
   // OTOMATIS MUNCULKAN FLOATING BADGE JIKA VALID
   var dNow = new Date();
