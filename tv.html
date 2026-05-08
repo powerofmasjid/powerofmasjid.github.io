@@ -77,24 +77,17 @@
   .marquee-text { display: inline-block; white-space: nowrap !important; font-size: 40px; font-weight: 800; padding-left: 100%; animation: marquee 40s linear infinite; line-height: 80px; }
   @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
 
-  /* =========================================================
-     MODE LAYAR LEBAR (WIDESCREEN) - UKURAN SEMUA SAMA RATA!
-     ========================================================= */
-  
-  /* HILANGKAN HEADER & SHOLAT BAR UNTUK SEMUA TAMPILAN MEMBESAR */
+  /* HILANGKAN HEADER & SHOLAT BAR UNTUK TAMPILAN WIDESCREEN */
   body.mode-amal .header, body.mode-amal .sholat-bar,
   body.mode-widescreen-kanan .header, body.mode-widescreen-kanan .sholat-bar,
   body.mode-live .header, body.mode-live .sholat-bar { 
     transform: translateY(-150%); opacity: 0; position: absolute; pointer-events: none; 
   }
   
-  /* 1. KETIKA PROGRAM AMAL TAMPIL (KIRI MEMBESAR, KANAN HILANG) */
   body.mode-amal .right-panel { width: 0; flex: none; opacity: 0; margin-left: -20px; border: none; padding: 0; overflow: hidden; }
   body.mode-amal .left-panel { width: 100%; flex: 1; }
   body.mode-amal #panel-amal { background: var(--bg-dark); border-color: var(--masuk); }
 
-  /* 2. KETIKA FLYER & LIVE YOUTUBE TAMPIL (KANAN MEMBESAR, KIRI HILANG) */
-  /* Ukurannya sekarang dibuat 100% identik dengan panel amal */
   body.mode-widescreen-kanan .left-panel,
   body.mode-live .left-panel { width: 0; flex: none; opacity: 0; margin-right: -20px; padding: 0; border: none; overflow: hidden; }
   
@@ -160,28 +153,20 @@
   <div class="footer"><div class="footer-label">INFO</div><div style="flex:1; overflow:hidden;"><div class="marquee-text" id="tv-pengumuman"></div></div></div>
 
 <script>
-const API_URL = 'https://script.google.com/macros/s/AKfycby1DvnJDCqVxfmTHrC5720lWfLZLOR1b5ARr9WLRrpjOpIf9-piQE3u_SMyOQwLQQOnLQ/exec';
+// PASTIKAN LINK INI SESUAI DENGAN API_URL SUPERADMIN BAPAK
+const API_URL = 'https://script.google.com/macros/s/AKfycbxIidVP7S1xLia50nrr0I4tLZXySchwugvqJWqOOseaZALzIEEnufq_2Bjz7hDgWhYZPQ/exec';
 
 let ID_MASJID = ''; let galeriList = []; let amalList = []; let kegiatanList = []; let globalSholatList = [];
-
-// VARIABEL PLAYLIST CERDAS
-let playlist = [];
-let playIndex = 0;
-let masterTimer;
-
-let isIqomahMode = false;
-let iqomahTargetTime = null;
-let jedaConfig = { Subuh: 10, Dzuhur: 10, Ashar: 10, Maghrib: 10, Isya: 10 };
+let playlist = []; let playIndex = 0; let masterTimer;
+let isIqomahMode = false; let iqomahTargetTime = null; let jedaConfig = { Subuh: 10, Dzuhur: 10, Ashar: 10, Maghrib: 10, Isya: 10 };
 
 function getSlug() { const p = new URLSearchParams(window.location.search); return p.get('masjid') || 'annuriyah-tanjungbarat'; }
 
 function matenginLink(url) {
   if (!url) return ''; 
   if (url.includes('youtube.com') || url.includes('youtu.be')) return url;
-  let id = '';
-  const match = url.match(/(?:id=|v=|\/d\/|uc\?id=)([\w-]+)/);
-  if (match) id = match[1];
-  return id ? 'https://drive.google.com/thumbnail?id=' + id + '&sz=w1920' : url;
+  let id = ''; const match = url.match(/(?:id=|v=|\/d\/|uc\?id=)([\w-]+)/);
+  if (match) id = match[1]; return id ? 'https://drive.google.com/thumbnail?id=' + id + '&sz=w1920' : url;
 }
 
 function getYoutubeEmbed(url) {
@@ -247,19 +232,14 @@ function updateTime() {
 }
 setInterval(updateTime, 1000);
 
-// =================================================================
-// 🚀 PLAYLIST CERDAS (MENGURUTKAN SEMUA ITEM SATU PERSATU)
-// =================================================================
 function jalankanTV() {
   clearTimeout(masterTimer);
-  
   if (playlist.length === 0) return;
   if (playIndex >= playlist.length) playIndex = 0;
   
   let currentItem = playlist[playIndex];
   let nextDelay = 15000;
   
-  // RESET SEMUA KELAS FULLSCREEN
   document.body.className = ''; 
   document.getElementById('panel-amal').classList.add('hidden');
   document.getElementById('panel-saldo').classList.remove('hidden');
@@ -272,56 +252,38 @@ function jalankanTV() {
      let isLive = m.url.toLowerCase().includes('live');
      let tipeVisual = String(m.tipe).toUpperCase();
      
-     if (isLive) {
-        // YOUTUBE LIVE
-        document.body.classList.add('mode-live');
-        nextDelay = 3600000; 
-     } else if (isYt) {
-        // YOUTUBE BIASA (TETAP KANAN)
-        nextDelay = 180000; 
-     } else if (tipeVisual.includes('FLYER') || tipeVisual.includes('POSTER')) {
-        // FLYER MEMBESAR IDENTIK DENGAN AMAL
-        document.body.classList.add('mode-widescreen-kanan'); 
-        nextDelay = 25000; 
-     } else {
-        // FOTO GALERI (TETAP KANAN)
-        nextDelay = 25000; 
-     }
+     if (isLive) { document.body.classList.add('mode-live'); nextDelay = 3600000; }
+     else if (isYt) { nextDelay = 180000; }
+     else if (tipeVisual.includes('FLYER') || tipeVisual.includes('POSTER')) { document.body.classList.add('mode-widescreen-kanan'); nextDelay = 25000; }
+     else { nextDelay = 25000; }
      
      let pMedia = document.getElementById('konten-media');
      if(isYt) pMedia.innerHTML = `<iframe class="media-img" src="${getYoutubeEmbed(m.url)}" allow="autoplay"></iframe>`;
      else pMedia.innerHTML = `<img class="media-img" src="${matenginLink(m.url)}"><div class="media-overlay"><div class="media-title">${m.judul}</div></div>`;
-     
      pMedia.classList.add('active');
   } 
   else if (currentItem.type === 'AGENDA') {
      document.getElementById('konten-agenda').classList.add('active');
-     
-     let scrollDuration = Math.max(20, kegiatanList.length * 10); 
+     let scrollDuration = Math.max(20, document.querySelectorAll('.agenda-item').length * 10); 
      document.getElementById('list-agenda-full').style.animationDuration = scrollDuration + 's';
-     
      nextDelay = scrollDuration * 1000; 
   }
   else if (currentItem.type === 'AMAL') {
      const a = currentItem.data;
      document.getElementById('amal-judul').innerText = a.judul || "Program Infaq";
      let nominal = a.harga_target || a.target || a.terkumpul || 0;
-     
      let judulAmalUpper = String(a.judul).toUpperCase();
+     
      if (a.tipe === 'KURBAN' || (nominal == 0 && (judulAmalUpper.includes('KURBAN') || judulAmalUpper.includes('SAPI')))) {
         document.getElementById('amal-nominal').style.display = 'none';
      } else {
         document.getElementById('amal-nominal').style.display = 'block';
         document.getElementById('amal-nominal').innerText = "Rp " + Number(nominal).toLocaleString("id-ID");
      }
-     
      document.getElementById('amal-ket').innerText = a.keterangan || a.deskripsi || a.isi || "";
-     
-     // PROGRAM AMAL MEMBESAR IDENTIK DENGAN FLYER
      document.body.classList.add('mode-amal');
      document.getElementById('panel-saldo').classList.add('hidden');
      document.getElementById('panel-amal').classList.remove('hidden');
-     
      nextDelay = 20000; 
   }
   
@@ -347,6 +309,7 @@ async function loadData() {
       };
       if(jM.data.latitude) calcSholat(jM.data.latitude, jM.data.longitude);
     }
+    
     const [resS, resP, resG, resA, resK] = await Promise.all([
       fetch(API_URL + '?action=getSaldo&id_masjid=' + ID_MASJID).then(r => r.json()),
       fetch(API_URL + '?action=getPengumuman&id_masjid=' + ID_MASJID).then(r => r.json()),
@@ -356,29 +319,76 @@ async function loadData() {
     ]);
     
     if(resS.status === 'ok') document.getElementById('tv-saldo').innerText = "Rp " + Number(resS.data.saldo).toLocaleString("id-ID");
+
+    // =========================================================================
+    // 🧠 SISTEM PENGINGAT JUM'AT CANGGIH (ANTI-KAJIAN MALAM JUM'AT)
+    // =========================================================================
+    let isJumatMode = false;
+    let infoJumatTeks = "";
+    let jumatHTML = "";
     
-    if(resP.status === 'ok' && Array.isArray(resP.data) && resP.data.length > 0) {
-      let gabungan = resP.data.map(p => `✦ ${p.judul}: ${(p.isi || "").replace(/(\r\n|\n|\r)/gm, " ")}`).join(' ✦ ');
-      let pengumumanEl = document.getElementById('tv-pengumuman');
-      pengumumanEl.innerText = gabungan;
-      let kecepatanMarquee = Math.max(40, gabungan.length * 0.2); 
-      pengumumanEl.style.animationDuration = kecepatanMarquee + 's';
-    } else {
-      document.getElementById('tv-pengumuman').innerText = ""; 
+    const dNow = new Date();
+    const dHari = dNow.getDay(); // 4 = Kamis, 5 = Jumat
+    const dJam = dNow.getHours();
+    
+    // Aktif hari Kamis full, atau Jumat sebelum jam 11:00 siang
+    if (dHari === 4 || (dHari === 5 && dJam < 11)) {
+      isJumatMode = true;
     }
-    
-    // MENYUSUN DAFTAR PLAYLIST
+
     let newPlaylist = [];
-    
     if(resG.status === 'ok') {
         galeriList = resG.data; 
         galeriList.forEach(g => newPlaylist.push({ type: 'MEDIA', data: g }));
     }
-    
+
     if(resK.status === 'ok') {
         kegiatanList = resK.data;
         if (kegiatanList.length > 0) newPlaylist.push({ type: 'AGENDA' });
-        document.getElementById('list-agenda-full').innerHTML = kegiatanList.map(k => `<div class="agenda-item"><div class="agenda-judul">${k.nama_kegiatan}</div><div style="color:var(--gold); font-size:22px; font-weight:600;">${k.jadwal} | ${k.lokasi}</div></div>`).join('');
+        
+        let htmlAgendaLain = "";
+        
+        if (isJumatMode) {
+            // FILTER CERDAS: Harus hari Jumat, dan jamnya 11/12 ATAU ada kata "khutbah"/"sholat", DAN TIDAK ADA kata "malam" / "sore"
+            let idxJumat = kegiatanList.findIndex(k => {
+                let h = k.hari.toLowerCase();
+                let n = (k.nama_kegiatan || '').toLowerCase();
+                let j = k.jadwal || '';
+                
+                let isHariJumat = h.includes('jumat') || h.includes("jum'at");
+                let isJamSiang = j.startsWith('11') || j.startsWith('12');
+                let isKhutbah = n.includes('khutbah') || n.includes('sholat') || n.includes('shalat');
+                let bukanMalam = !n.includes('malam') && !h.includes('malam') && !n.includes('sore') && !h.includes('sore');
+                
+                return isHariJumat && (isJamSiang || isKhutbah) && bukanMalam;
+            });
+            
+            if (idxJumat !== -1) {
+                let k = kegiatanList[idxJumat];
+                let teksHari = dHari === 5 ? "HARI INI" : "BESOK";
+                
+                // Bikin Kartu VIP
+                jumatHTML = `<div class="agenda-item" style="border-left: 8px solid var(--masuk); background: rgba(74, 222, 128, 0.15);">
+                              <div class="agenda-judul" style="color: var(--masuk);">📢 PENGINGAT JUM'AT ${teksHari}</div>
+                              <div style="color: white; font-size: 26px; font-weight: 700; margin-top: 5px;">${k.keterangan || k.nama_kegiatan}</div>
+                              <div style="color: var(--gold); font-size: 22px; font-weight: 600; margin-top: 5px;">${k.jadwal} | ${k.lokasi}</div>
+                             </div>`;
+                
+                // Tambahkan ke info berjalan (Marquee)
+                infoJumatTeks = `📢 PENGINGAT: KHUTBAH JUM'AT ${teksHari} - ${k.keterangan || k.nama_kegiatan}`;
+                
+                // Pisahkan jadwal Jumat dari jadwal rutin lainnya
+                let agendaLain = kegiatanList.filter((_, idx) => idx !== idxJumat);
+                htmlAgendaLain = agendaLain.map(k => `<div class="agenda-item"><div class="agenda-judul">${k.nama_kegiatan}</div><div style="color:var(--gold); font-size:22px; font-weight:600;">${k.jadwal} | ${k.lokasi}</div></div>`).join('');
+            } else {
+                htmlAgendaLain = kegiatanList.map(k => `<div class="agenda-item"><div class="agenda-judul">${k.nama_kegiatan}</div><div style="color:var(--gold); font-size:22px; font-weight:600;">${k.jadwal} | ${k.lokasi}</div></div>`).join('');
+            }
+        } else {
+            htmlAgendaLain = kegiatanList.map(k => `<div class="agenda-item"><div class="agenda-judul">${k.nama_kegiatan}</div><div style="color:var(--gold); font-size:22px; font-weight:600;">${k.jadwal} | ${k.lokasi}</div></div>`).join('');
+        }
+        
+        // Gabungkan Kartu VIP Jumat (di atas) dengan jadwal lainnya (di bawah)
+        document.getElementById('list-agenda-full').innerHTML = jumatHTML + htmlAgendaLain;
     }
 
     if(resA.status === 'ok') {
@@ -386,10 +396,23 @@ async function loadData() {
         amalList.forEach(a => newPlaylist.push({ type: 'AMAL', data: a }));
     }
     
+    // GABUNGKAN PENGUMUMAN MARQUEE
+    let gabunganPengumuman = "";
+    if(resP.status === 'ok' && Array.isArray(resP.data) && resP.data.length > 0) {
+      gabunganPengumuman = resP.data.map(p => `✦ ${p.judul}: ${(p.isi || "").replace(/(\r\n|\n|\r)/gm, " ")}`).join('   ✦   ');
+    }
+    
+    let finalMarquee = infoJumatTeks !== "" ? (infoJumatTeks + "   ✦   " + gabunganPengumuman) : gabunganPengumuman;
+    let pengumumanEl = document.getElementById('tv-pengumuman');
+    pengumumanEl.innerText = finalMarquee;
+    
+    if (finalMarquee.length > 0) {
+        let kecepatanMarquee = Math.max(40, finalMarquee.length * 0.2); 
+        pengumumanEl.style.animationDuration = kecepatanMarquee + 's';
+    }
+
     playlist = newPlaylist;
-    
     document.getElementById('loading-screen').classList.add('hide');
-    
     if(!masterTimer) jalankanTV();
 
   } catch(e) { console.log(e); }
