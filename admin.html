@@ -61,6 +61,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#F7F7F5;color:#1A1A1A
 /* Tombol Amal Khusus */
 .btn-amal-action { display:flex; gap:8px; margin-top:8px; }
 .btn-amal-action button { flex:1; padding:8px; border-radius:8px; font-size:11px; font-weight:600; cursor:pointer; border:none; transition:0.3s; }
+.desc-counter { font-size: 11px; color: var(--muted); text-align: right; margin-top: 4px; font-weight: 500; }
 </style>
 </head>
 <body>
@@ -304,7 +305,12 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#F7F7F5;color:#1A1A1A
         </div>
 
         <div class="form-group"><label class="form-label">Kota</label><input type="text" class="form-input" id="prof-kota" placeholder="Contoh: Jakarta Selatan"></div>
-        <div class="form-group"><label class="form-label">Deskripsi</label><textarea class="form-textarea" id="prof-deskripsi" placeholder="Contoh: Masjid kebanggaan warga..."></textarea></div>
+        
+        <div class="form-group">
+          <label class="form-label">Deskripsi (Pendek untuk Header)</label>
+          <textarea class="form-textarea" id="prof-deskripsi" maxlength="120" oninput="updateDescCounter()" placeholder="Contoh: Masjid kebanggaan warga perumahan indah..."></textarea>
+          <div class="desc-counter" id="desc-counter">Sisa karakter: 120/120</div>
+        </div>
         <div class="form-group"><label class="form-label">Nomor WA Utama Masjid</label><input type="text" class="form-input" id="prof-wa" placeholder="Contoh: 081234567890"></div>
       </div>
       
@@ -386,6 +392,15 @@ var KUNCI_RAHASIA = 'POW_MASJID_SECURE_2026';
 var ADMIN_DATA = null, ID_MASJID = '', LAST_5_TRX = [], LIST_PROGRAM = [];
 var LIST_JADWAL = [], LIST_PENGUMUMAN = [], LIST_DATA_AMAL = [], LIST_GALERI = []; 
 var targetDelete = null; 
+
+// FUNGSI UPDATE COUNTER DESKRIPSI
+function updateDescCounter() {
+    var el = document.getElementById('prof-deskripsi');
+    if(el) {
+        var sisa = 120 - el.value.length;
+        document.getElementById('desc-counter').innerText = 'Sisa karakter: ' + sisa + '/120';
+    }
+}
 
 function showToast(m) { var el = document.getElementById('toast'); el.textContent = m; el.className = 'toast show'; setTimeout(() => el.className = 'toast', 3000); }
 function setLoading(btn, load) { if(!btn) return; if(load) { btn.dataset.ori = btn.innerHTML; btn.innerHTML = '⏳...'; btn.disabled = true; } else { btn.innerHTML = btn.dataset.ori; btn.disabled = false; } }
@@ -532,7 +547,6 @@ function editTrx(idx) {
   var t = LAST_5_TRX[idx]; document.getElementById('trx-id-edit').value = t.id; document.getElementById('trx-tanggal').value = new Date(t.tanggal).toISOString().split('T')[0]; document.getElementById('trx-jenis').value = t.jenis; document.getElementById('trx-keterangan').value = t.keterangan; document.getElementById('trx-jumlah').value = t.jumlah; document.getElementById('trx-bukti').value = t.bukti_url || ''; document.getElementById('btn-trx').innerHTML = '📝 Update Transaksi'; toggleBuktiForm(); window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-// >>> FORMAT CETAK LAPORAN KAS (TIDAK ADA PENDETEKSI) <<<
 function generatePDFKas() {
   var b = document.getElementById('pdf-bulan').value;
   var t = document.getElementById('pdf-tahun').value;
@@ -670,7 +684,6 @@ function editDataAmal(id, tipe) {
     document.getElementById('btn-simpan-data-amal').innerHTML = '📝 Update Data Jamaah'; window.scrollTo({top:0, behavior:'smooth'});
 }
 
-// >>> FORMAT CETAK LAPORAN AMAL (TIDAK ADA PENDETEKSI & RAPI) <<<
 function generatePDFProgram() {
     var sel = document.getElementById('pilih-program'); 
     var id_prog = sel.value; 
@@ -819,7 +832,9 @@ function salinLinkWeb() { navigator.clipboard.writeText(document.getElementById(
 function loadProfilAdmin() { 
   fetch(API_URL+'?action=getMasjid&id_masjid='+ID_MASJID+'&_t='+Date.now()).then(r=>r.json()).then(j=>{ 
     var d = j.data; buatLinkWebDisplay();
-    document.getElementById('prof-nama').value=d.nama||''; document.getElementById('prof-alamat').value=d.alamat||''; document.getElementById('prof-kelurahan').value=d.kelurahan||''; document.getElementById('prof-kecamatan').value=d.kecamatan||''; document.getElementById('prof-kota').value=d.kota||''; document.getElementById('prof-deskripsi').value=d.deskripsi||''; document.getElementById('prof-wa').value=d.telepon_wa||''; document.getElementById('prof-tema').value=d.tema||''; document.getElementById('prof-logo').value=d.logo_url||''; document.getElementById('prof-qris').value=d.qris_url||''; document.getElementById('prof-rek1-bank').value=d.rek1_bank||''; document.getElementById('prof-rek1-nomor').value=d.rek1_nomor||''; document.getElementById('prof-rek2-bank').value=d.rek2_bank||''; document.getElementById('prof-rek2-nomor').value=d.rek2_nomor||''; document.getElementById('prof-rek3-bank').value=d.rek3_bank||''; document.getElementById('prof-rek3-nomor').value=d.rek3_nomor||''; document.getElementById('prof-lat').value=d.latitude||''; document.getElementById('prof-lon').value=d.longitude||''; document.getElementById('prof-jeda-subuh').value=d.jeda_subuh||10; document.getElementById('prof-jeda-dzuhur').value=d.jeda_dzuhur||10; document.getElementById('prof-jeda-ashar').value=d.jeda_ashar||10; document.getElementById('prof-jeda-maghrib').value=d.jeda_maghrib||10; document.getElementById('prof-jeda-isya').value=d.jeda_isya||10; 
+    document.getElementById('prof-nama').value=d.nama||''; document.getElementById('prof-alamat').value=d.alamat||''; document.getElementById('prof-kelurahan').value=d.kelurahan||''; document.getElementById('prof-kecamatan').value=d.kecamatan||''; document.getElementById('prof-kota').value=d.kota||''; 
+    document.getElementById('prof-deskripsi').value=d.deskripsi||''; updateDescCounter(); // <-- PANGGIL COUNTER DI SINI
+    document.getElementById('prof-wa').value=d.telepon_wa||''; document.getElementById('prof-tema').value=d.tema||''; document.getElementById('prof-logo').value=d.logo_url||''; document.getElementById('prof-qris').value=d.qris_url||''; document.getElementById('prof-rek1-bank').value=d.rek1_bank||''; document.getElementById('prof-rek1-nomor').value=d.rek1_nomor||''; document.getElementById('prof-rek2-bank').value=d.rek2_bank||''; document.getElementById('prof-rek2-nomor').value=d.rek2_nomor||''; document.getElementById('prof-rek3-bank').value=d.rek3_bank||''; document.getElementById('prof-rek3-nomor').value=d.rek3_nomor||''; document.getElementById('prof-lat').value=d.latitude||''; document.getElementById('prof-lon').value=d.longitude||''; document.getElementById('prof-jeda-subuh').value=d.jeda_subuh||10; document.getElementById('prof-jeda-dzuhur').value=d.jeda_dzuhur||10; document.getElementById('prof-jeda-ashar').value=d.jeda_ashar||10; document.getElementById('prof-jeda-maghrib').value=d.jeda_maghrib||10; document.getElementById('prof-jeda-isya').value=d.jeda_isya||10; 
   }); 
 }
 
