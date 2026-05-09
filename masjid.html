@@ -45,13 +45,17 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 .header h1{font-family:'Amiri',serif;font-size:22px;color:white;font-weight:700;line-height:1.3;position:relative;z-index:1;}
 .header .alamat{font-size:12px;color:rgba(255,255,255,0.7);margin-top:4px;position:relative;z-index:1;}
 .header .deskripsi{font-size:12px;color:rgba(255,255,255,0.6);margin-top:6px;line-height:1.5;position:relative;z-index:1;}
-.badge-pow{display:inline-flex;align-items:center;gap:4px;background:rgba(201,168,76,0.2);border:1px solid rgba(201,168,76,0.4);color:var(--accent);font-size:11px;padding:4px 10px;border-radius:20px;margin-top:10px;font-weight:500;position:relative;z-index:1;}
+
+/* --- BADGE POWER OF MASJID BISA DIKLIK (HEADER) --- */
+.badge-pow{display:inline-flex;align-items:center;gap:6px;background:rgba(201,168,76,0.15);border:1px solid rgba(201,168,76,0.4);color:var(--accent);font-size:11px;padding:5px 14px;border-radius:20px;margin-top:10px;font-weight:600;position:relative;z-index:1;text-decoration:none;transition:all 0.3s ease;}
+.badge-pow:hover{background:var(--accent);color:var(--primary-dark);transform:translateY(-2px);box-shadow:0 4px 12px rgba(201,168,76,0.3);}
+
 .btn-wa-header{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);color:white;font-size:12px;padding:6px 14px;border-radius:20px;margin-top:10px;text-decoration:none;position:relative;z-index:1;}
 
 /* JADWAL SHOLAT (DIUBAH MENJADI 4 KOTAK) */
 .sholat-card{background:var(--primary);border-radius:14px;padding:1rem;margin-bottom:1rem;}
 .sholat-title{font-size:11px;color:rgba(255,255,255,0.7);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.75rem;text-align:center;}
-.sholat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;} /* Diubah menjadi 4 kolom */
+.sholat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;} 
 .sholat-item{text-align:center;background:rgba(255,255,255,0.1);border-radius:8px;padding:8px 2px;}
 .sholat-item.aktif{background:rgba(201,168,76,0.3);border:1px solid rgba(201,168,76,0.5);}
 .sholat-name{font-size:10px;color:rgba(255,255,255,0.8);}
@@ -171,16 +175,16 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 .rek-no{font-size:15px;font-weight:600;}
 .btn-salin{background:var(--primary-light);color:var(--primary);border:none;font-size:11px;padding:4px 10px;border-radius:6px;cursor:pointer;font-weight:500;font-family:inherit;}
 
-/* CSS BARU UNTUK SCROLL LIMIT & BADGE 12 JAM */
 .scroll-limit-5 { max-height: 290px; overflow-y: auto; padding-right: 4px; }
 .scroll-kurban { height: 180px; overflow-y: auto; padding-right: 5px; scrollbar-width: none; }
 .scroll-kurban::-webkit-scrollbar { display: none; }
 .badge-baru { font-size: 8px; font-weight: 800; background: #22C55E; color: white; padding: 2px 6px; border-radius: 4px; margin-left: 6px; text-transform: uppercase; vertical-align: middle; box-shadow: 0 2px 4px rgba(0,0,0,0.1); border: 1px solid rgba(255,255,255,0.2); }
 
-/* FOOTER */
-.footer{text-align:center;padding:1.5rem 1rem;font-size:12px;color:var(--muted);border-top:1px solid var(--border);background:var(--white);margin-top:1rem;}
-.footer a{color:var(--primary);text-decoration:none;font-weight:600;}
-.pow-badge{display:inline-flex;align-items:center;gap:4px;background:var(--primary-light);color:var(--primary);font-size:11px;padding:4px 10px;border-radius:20px;margin-top:8px;font-weight:500;}
+/* --- FOOTER BADGE BISA DIKLIK --- */
+.footer{text-align:center;padding:2rem 1rem;font-size:12px;color:var(--muted);border-top:1px solid var(--border);background:var(--white);margin-top:1rem;}
+.footer a.link-utama{color:var(--primary);text-decoration:none;font-weight:700;}
+.pow-badge{display:inline-flex;align-items:center;gap:6px;background:var(--primary-light);color:var(--primary);font-size:12px;padding:6px 14px;border-radius:20px;margin-top:10px;font-weight:600;text-decoration:none;border:1px solid rgba(27,107,58,0.2);transition:all 0.3s ease;}
+.pow-badge:hover{background:var(--primary);color:white;transform:translateY(-2px);box-shadow:0 4px 12px rgba(27,107,58,0.25);}
 .kosong{text-align:center;padding:2rem 1rem;color:var(--muted);font-size:13px;}
 
 /* TOAST & OVERLAY */
@@ -256,8 +260,12 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
   <h1 id="nama-masjid">Memuat...</h1>
   <p class="alamat" id="alamat-masjid"></p>
   <p class="deskripsi" id="deskripsi-masjid" style="display:none"></p>
-  <div class="badge-pow">✦ Power of Masjid</div>
+  
+  <a href="https://powerofmasjid.github.io" target="_blank" class="badge-pow" title="Pelajari Platform Ini">
+    ✦ Power of Masjid ↗
+  </a>
   <br>
+  
   <a class="btn-wa-header" id="btn-wa-header" style="display:none" href="#" target="_blank">
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" width="14" height="14" fill="currentColor"><path d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157.1zm-157 341.6c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3L72 359.2l-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.6-186.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7.9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z"/></svg> 
     Hubungi DKM
@@ -337,9 +345,12 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 </div>
 
 <div class="footer">
-  Sistem ini dipersembahkan oleh<br>
-  <a href="https://powerofmasjid.github.io" target="_blank">Power of Masjid</a> — Yayasan Nasi Jum'at<br>
-  <span class="pow-badge">✦ Platform Digital Masjid Indonesia</span>
+  Sistem ini didukung penuh oleh<br>
+  <a href="https://powerofmasjid.github.io" target="_blank" class="link-utama">Power of Masjid</a> — Yayasan Nasi Jum'at<br>
+  
+  <a href="https://powerofmasjid.github.io" target="_blank" class="pow-badge">
+    ✦ Gabung & Buat Web Gratis ↗
+  </a>
 </div>
 
 <div class="toast" id="toast">Nomor rekening disalin!</div>
@@ -760,7 +771,7 @@ async function loadJadwal() {
   }
 }
 
-// FUNGSI JADWAL SHOLAT WEB (UPDATE: METHOD 3 + 8 WAKTU DENGAN 4 KOLOM)
+// FUNGSI JADWAL SHOLAT WEB (METHOD 3 + 8 WAKTU DENGAN 4 KOLOM)
 async function loadJadwalSholat(lat, lon) {
   if(!lat || !lon) return;
   var today = new Date();
@@ -769,7 +780,7 @@ async function loadJadwalSholat(lat, lon) {
     var res = await fetch(url); var j = await res.json();
     if(j.code === 200) {
       var t = j.data.timings;
-      var KOREKSI_MENIT = +2;
+      var KOREKSI_MENIT = 0;
       function sesuaikanWaktu(timeStr, tambahLagi = 0) {
          let [h, m] = timeStr.split(':').map(Number);
          m += (KOREKSI_MENIT + tambahLagi); 
