@@ -48,20 +48,20 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 .badge-pow{display:inline-flex;align-items:center;gap:4px;background:rgba(201,168,76,0.2);border:1px solid rgba(201,168,76,0.4);color:var(--accent);font-size:11px;padding:4px 10px;border-radius:20px;margin-top:10px;font-weight:500;position:relative;z-index:1;}
 .btn-wa-header{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);color:white;font-size:12px;padding:6px 14px;border-radius:20px;margin-top:10px;text-decoration:none;position:relative;z-index:1;}
 
-/* JADWAL SHOLAT */
+/* JADWAL SHOLAT (DIUBAH MENJADI 4 KOTAK) */
 .sholat-card{background:var(--primary);border-radius:14px;padding:1rem;margin-bottom:1rem;}
 .sholat-title{font-size:11px;color:rgba(255,255,255,0.7);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.75rem;text-align:center;}
-.sholat-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;}
-.sholat-item{text-align:center;background:rgba(255,255,255,0.1);border-radius:8px;padding:6px 2px;}
+.sholat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;} /* Diubah menjadi 4 kolom */
+.sholat-item{text-align:center;background:rgba(255,255,255,0.1);border-radius:8px;padding:8px 2px;}
 .sholat-item.aktif{background:rgba(201,168,76,0.3);border:1px solid rgba(201,168,76,0.5);}
 .sholat-name{font-size:10px;color:rgba(255,255,255,0.8);}
-.sholat-time{font-size:13px;font-weight:600;color:white;margin-top:2px;}
+.sholat-time{font-size:14px;font-weight:600;color:white;margin-top:2px;}
 .sholat-date{font-size:10px;color:rgba(255,255,255,0.5);text-align:center;margin-top:6px;}
 
 /* MAIN */
 .main{padding:0 1rem 2rem;margin-top:-1.5rem;position:relative;z-index:1;}
 
-/* PENGUMUMAN CAROUSEL (NEW UI) */
+/* PENGUMUMAN CAROUSEL */
 .peng-wrap{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:12px;padding-bottom:5px;scrollbar-width:none;scroll-behavior:smooth;}
 .peng-wrap::-webkit-scrollbar{display:none;}
 .peng-slide{flex:0 0 92%;scroll-snap-align:center;position:relative;}
@@ -120,7 +120,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 .jadwal-detail{font-size:12px;color:var(--muted);margin-top:3px;}
 .jadwal-hari{display:inline-block;background:var(--primary-light);color:var(--primary);font-size:10px;padding:2px 6px;border-radius:4px;margin-top:4px;}
 
-/* PROGRAM AMAL UX (NEW UI) */
+/* PROGRAM AMAL UX */
 .swipe-wrap { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 12px; padding-bottom: 5px; margin: 0 -1rem; padding-left: 1rem; padding-right: 1rem; scrollbar-width: none; }
 .swipe-wrap::-webkit-scrollbar { display: none; }
 .swipe-card { flex: 0 0 88%; scroll-snap-align: center; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 12px; }
@@ -134,7 +134,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 .btn-cta-primary{background:var(--primary);color:white;border:1px solid var(--primary-dark);}
 .btn-cta-outline{background:white;color:var(--primary);border:1px solid var(--primary);}
 
-/* GALERI & LIGHTBOX (NEW UI) */
+/* GALERI & LIGHTBOX */
 .galeri-wrap{padding:1rem;}
 .foto-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:0.75rem;}
 .foto-item{border-radius:10px;overflow:hidden;height:160px;background:var(--bg);position:relative;cursor:pointer;}
@@ -200,7 +200,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 .overlay-iklan-sub{font-size:12px;color:var(--muted);margin-top:3px;line-height:1.5;}
 .overlay-btn{display:block;color:white;text-decoration:none;text-align:center;padding:10px;border-radius:10px;font-size:13px;font-weight:600;margin-top:0.75rem; border:1px solid rgba(0,0,0,0.1);}
 
-/* FLOATING BADGE JUM'AT - SEMBUNYI TOTAL SAAT TIDAK ADA DATA */
+/* FLOATING BADGE JUM'AT */
 .jumat-floater { position: fixed; bottom: 85px; right: 15px; background: linear-gradient(135deg, var(--masuk), var(--primary-dark)); color: white; padding: 12px 16px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); z-index: 990; display: none; align-items: center; gap: 12px; max-width: 280px; transform: translateY(50px); opacity: 0; transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1); border: 1px solid rgba(255,255,255,0.2); }
 .jumat-floater.show { transform: translateY(0); opacity: 1; }
 .jf-icon { font-size: 24px; }
@@ -267,7 +267,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 <div class="main">
 
   <div class="sholat-card" id="sholat-card" style="display:none">
-    <div class="sholat-title" id="sholat-date">Jadwal Sholat Hari Ini</div>
+    <div class="sholat-title" id="sholat-date">Jadwal Waktu Sholat</div>
     <div class="sholat-grid" id="sholat-grid"></div>
   </div>
 
@@ -345,16 +345,12 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 <div class="toast" id="toast">Nomor rekening disalin!</div>
 
 <script>
-// ========================================================
-// LINK API BARU SESUAI PERMINTAAN
-// ========================================================
 var API_URL = 'https://script.google.com/macros/s/AKfycbw6n1n688x2gHrvYku-AAfPWLtPpE5GOFRrEOvFNvtNph6BgvCkgVQxaFNEUSaIiEDK2g/exec';
 
 var ID_MASJID = '';
 var CACHE_DURATION = 60000; 
 var PENGUMUMAN_INTERVAL = null;
 
-// FUNGSI BARU UNTUK CEK DATA (12 JAM)
 function cekDataBaru(idItem) {
   try {
     if (!idItem) return false;
@@ -764,19 +760,32 @@ async function loadJadwal() {
   }
 }
 
+// FUNGSI JADWAL SHOLAT WEB (UPDATE: METHOD 3 + 8 WAKTU DENGAN 4 KOLOM)
 async function loadJadwalSholat(lat, lon) {
   if(!lat || !lon) return;
   var today = new Date();
-  // method=20 adalah standar resmi Kemenag RI
-  var url = `https://api.aladhan.com/v1/timings/${today.getDate()}-${today.getMonth()+1}-${today.getFullYear()}?latitude=${lat}&longitude=${lon}&method=20`;
+  var url = `https://api.aladhan.com/v1/timings/${today.getDate()}-${today.getMonth()+1}-${today.getFullYear()}?latitude=${lat}&longitude=${lon}&method=3`;
   try {
     var res = await fetch(url); var j = await res.json();
     if(j.code === 200) {
       var t = j.data.timings;
+      var KOREKSI_MENIT = 0;
+      function sesuaikanWaktu(timeStr, tambahLagi = 0) {
+         let [h, m] = timeStr.split(':').map(Number);
+         m += (KOREKSI_MENIT + tambahLagi); 
+         h += Math.floor(m / 60); 
+         m = ((m % 60) + 60) % 60;
+         h = ((h % 24) + 24) % 24;
+         return String(h).padStart(2,'0') + ':' + String(m).padStart(2,'0');
+      }
+      
       var sholat = [
-        {name:'Subuh', time: t.Fajr}, {name:'Dzuhur', time: t.Dhuhr}, 
-        {name:'Ashar', time: t.Asr}, {name:'Maghrib', time: t.Maghrib}, {name:'Isya', time: t.Isha}
+        {name:'Imsak', time: sesuaikanWaktu(t.Imsak)}, {name:'Subuh', time: sesuaikanWaktu(t.Fajr)},
+        {name:'Terbit', time: sesuaikanWaktu(t.Sunrise)}, {name:'Dhuha', time: sesuaikanWaktu(t.Sunrise, 20)},
+        {name:'Dzuhur', time: sesuaikanWaktu(t.Dhuhr)}, {name:'Ashar', time: sesuaikanWaktu(t.Asr)}, 
+        {name:'Maghrib', time: sesuaikanWaktu(t.Maghrib)}, {name:'Isya', time: sesuaikanWaktu(t.Isha)}
       ];
+      
       function toMenit(str) { var p = str.split(':'); return parseInt(p[0])*60 + parseInt(p[1]); }
       var now = today.getHours()*60 + today.getMinutes(); var aktifIdx = 0;
       for (var i = 0; i < sholat.length; i++) { if (now >= toMenit(sholat[i].time)) aktifIdx = i; }
