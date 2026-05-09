@@ -510,20 +510,26 @@ async function loadData() {
 async function calcSholat(lat, lon) {
   if(!lat || !lon) return;
   var d = new Date();
-  var url = `https://api.aladhan.com/v1/timings/${d.getDate()}-${d.getMonth()+1}-${d.getFullYear()}?latitude=${lat}&longitude=${lon}&method=20`;
+  var url = `https://api.aladhan.com/v1/timings/${d.getDate()}-${d.getMonth()+1}-${d.getFullYear()}?latitude=${lat}&longitude=${lon}&method=3`;
   try {
     var res = await fetch(url); var j = await res.json();
     if(j.code === 200) {
       var t = j.data.timings;
-      function addMins(timeStr, mins) {
+
+      var KOREKSI_MENIT = 0;
+      function sesuaikanWaktu(timeStr, tambahLagi = 0) {
          let [h, m] = timeStr.split(':').map(Number);
-         m += mins; h += Math.floor(m / 60); m = m % 60;
+         m += (KOREKSI_MENIT + tambahLagi);
+         h += Math.floor(m / 60);
+         m = ((m % 60) + 60) % 60;
+         h = ((h % 24) + 24) % 24;
          return String(h).padStart(2,'0') + ':' + String(m).padStart(2,'0');
       }
+
       globalSholatList = [
-        {n:'Imsak', t:t.Imsak}, {n:'Subuh', t:t.Fajr}, {n:'Terbit', t:t.Sunrise},
-        {n:'Dhuha', t:addMins(t.Sunrise, 20)}, {n:'Dzuhur', t:t.Dhuhr},
-        {n:'Ashar', t:t.Asr}, {n:'Maghrib', t:t.Maghrib}, {n:'Isya', t:t.Isha}
+        {n:'Imsak', t:sesuaikanWaktu(t.Imsak)}, {n:'Subuh', t:sesuaikanWaktu(t.Fajr)}, {n:'Terbit', t:sesuaikanWaktu(t.Sunrise)},
+        {n:'Dhuha', t:sesuaikanWaktu(t.Sunrise, 20)}, {n:'Dzuhur', t:sesuaikanWaktu(t.Dhuhr)},
+        {n:'Ashar', t:sesuaikanWaktu(t.Asr)}, {n:'Maghrib', t:sesuaikanWaktu(t.Maghrib)}, {n:'Isya', t:sesuaikanWaktu(t.Isha)}
       ];
       
       const now = d.getHours()*60 + d.getMinutes(); let cur = -1;
