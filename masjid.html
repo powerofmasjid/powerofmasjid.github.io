@@ -769,7 +769,7 @@ async function loadJadwalSholat(lat, lon) {
     var res = await fetch(url); var j = await res.json();
     if(j.code === 200) {
       var t = j.data.timings;
-      var KOREKSI_MENIT = +3;
+      var KOREKSI_MENIT = +2;
       function sesuaikanWaktu(timeStr, tambahLagi = 0) {
          let [h, m] = timeStr.split(':').map(Number);
          m += (KOREKSI_MENIT + tambahLagi); 
