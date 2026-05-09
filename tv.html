@@ -516,7 +516,7 @@ async function calcSholat(lat, lon) {
     if(j.code === 200) {
       var t = j.data.timings;
 
-      var KOREKSI_MENIT = 0;
+      var KOREKSI_MENIT = +2;
       function sesuaikanWaktu(timeStr, tambahLagi = 0) {
          let [h, m] = timeStr.split(':').map(Number);
          m += (KOREKSI_MENIT + tambahLagi);
