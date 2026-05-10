@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Power of Masjid</title>
 <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&text=0123456789:jm%20lagi&display=swap" rel="stylesheet">
 
 <style>
 :root{--primary:#1B6B3A;--primary-dark:#0F4228;--primary-light:#E8F5EE;--accent:#C9A84C;--accent-light:#FBF3E0;--bg:#F7F7F5;--white:#FFFFFF;--text:#1A1A1A;--muted:#6B7280;--border:#E5E7EB;--masuk:#1B6B3A;--keluar:#DC2626;}
@@ -52,15 +53,33 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 
 .btn-wa-header{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);color:white;font-size:12px;padding:6px 14px;border-radius:20px;margin-top:10px;text-decoration:none;position:relative;z-index:1;}
 
-/* JADWAL SHOLAT (DIUBAH MENJADI 4 KOTAK) */
-.sholat-card{background:var(--primary);border-radius:14px;padding:1rem;margin-bottom:1rem;}
+/* JADWAL SHOLAT UPGRADE */
+.sholat-card{background:var(--primary);border-radius:14px;padding:1rem;margin-bottom:1rem; position:relative; overflow:hidden;}
 .sholat-title{font-size:11px;color:rgba(255,255,255,0.7);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.75rem;text-align:center;}
-.sholat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;} 
-.sholat-item{text-align:center;background:rgba(255,255,255,0.1);border-radius:8px;padding:8px 2px;}
-.sholat-item.aktif{background:rgba(201,168,76,0.3);border:1px solid rgba(201,168,76,0.5);}
-.sholat-name{font-size:10px;color:rgba(255,255,255,0.8);}
-.sholat-time{font-size:14px;font-weight:600;color:white;margin-top:2px;}
-.sholat-date{font-size:10px;color:rgba(255,255,255,0.5);text-align:center;margin-top:6px;}
+.sholat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;} 
+.sholat-item{text-align:center;background:rgba(255,255,255,0.1);border-radius:10px;padding:10px 4px; transition:all 0.3s ease;}
+
+/* Efek Glowing dan Gradien pada Card Aktif */
+.sholat-item.aktif{
+  background:linear-gradient(135deg, var(--accent), #FDE68A);
+  border:1px solid rgba(255,255,255,0.6);
+  box-shadow:0 0 15px rgba(201,168,76,0.5);
+  transform:scale(1.05);
+  position:relative;
+  z-index:2;
+}
+
+.sholat-name{font-size:10px;color:rgba(255,255,255,0.8); font-weight:600;}
+
+/* Penggunaan Font Digital */
+.sholat-time{font-family:'Orbitron', sans-serif; font-size:14px; font-weight:700; color:white; margin-top:4px; letter-spacing:1px;}
+
+/* Penyesuaian warna teks saat kartu aktif */
+.sholat-item.aktif .sholat-name{color:var(--primary-dark); font-weight:700;}
+.sholat-item.aktif .sholat-time{color:var(--primary-dark); font-weight:800;}
+
+/* Animasi & Desain Badge Countdown */
+.countdown-badge{display:inline-block; font-size:9px; font-weight:700; color:var(--primary-dark); background:rgba(255,255,255,0.6); padding:2px 6px; border-radius:10px; margin-top:6px; letter-spacing:0.5px;}
 
 /* MAIN */
 .main{padding:0 1rem 2rem;margin-top:-1.5rem;position:relative;z-index:1;}
@@ -78,8 +97,18 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 .banner-judul{font-size:14px;font-weight:600;color:var(--primary);margin-bottom:3px;padding-right:30px;}
 .banner-isi{font-size:12px;color:var(--muted);line-height:1.6;}
 
-/* SALDO */
-.saldo-card{background:var(--white);border-radius:16px;padding:1.5rem;box-shadow:0 4px 24px rgba(0,0,0,0.06);border:1px solid var(--border);margin-bottom:1rem;text-align:center;}
+/* SALDO (UPGRADE GLASSMORPHISM) */
+.saldo-card{
+  background:rgba(255, 255, 255, 0.85);
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+  border-radius:16px;
+  padding:1.5rem;
+  box-shadow:0 8px 32px rgba(0,0,0,0.05);
+  border:1px solid rgba(255,255,255,0.4);
+  margin-bottom:1rem;
+  text-align:center;
+}
 .saldo-label{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;font-weight:500;}
 .saldo-amount{font-family:'Amiri',serif;font-size:34px;color:var(--primary);font-weight:700;margin:6px 0 4px;}
 .saldo-update{font-size:11px;color:var(--muted);}
@@ -99,8 +128,16 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 .section-head .dot{width:8px;height:8px;border-radius:50%;background:var(--accent);}
 .section-head h2{font-size:13px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;}
 
-/* CARD & LIST */
-.card{background:var(--white);border-radius:14px;border:1px solid var(--border);overflow:hidden;}
+/* CARD & LIST (UPGRADE GLASSMORPHISM) */
+.card{
+  background:rgba(255, 255, 255, 0.85);
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,0.4);
+  overflow:hidden;
+  box-shadow:0 8px 32px rgba(0,0,0,0.04);
+}
 
 /* TRANSAKSI & JADWAL */
 .trx-item{display:flex;align-items:center;justify-content:space-between;padding:0.875rem 1rem;border-bottom:1px solid var(--border);gap:12px;}
@@ -133,8 +170,11 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 .progress-wrap{background:var(--border);height:8px;border-radius:10px;overflow:hidden;margin:10px 0;}
 .progress-bar{background:var(--primary);height:100%;border-radius:10px;transition:width 1s ease-in-out;}
 .urgency-label{font-size:11px;color:var(--accent);font-weight:600;background:rgba(201,168,76,0.1);padding:3px 8px;border-radius:12px;display:inline-block;margin-bottom:8px;}
+
+/* MICRO INTERACTION TOMBOL */
 .cta-group{display:flex;gap:8px;margin-top:12px;}
-.btn-cta{flex:1;text-align:center;padding:10px;border-radius:8px;font-size:12px;font-weight:600;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:6px;}
+.btn-cta{flex:1;text-align:center;padding:10px;border-radius:8px;font-size:12px;font-weight:600;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:6px; transition:transform 0.2s ease, box-shadow 0.2s ease;}
+.btn-cta:hover{transform:scale(1.02); box-shadow:0 4px 12px rgba(0,0,0,0.1);}
 .btn-cta-primary{background:var(--primary);color:white;border:1px solid var(--primary-dark);}
 .btn-cta-outline{background:white;color:var(--primary);border:1px solid var(--primary);}
 
@@ -771,7 +811,7 @@ async function loadJadwal() {
   }
 }
 
-// FUNGSI JADWAL SHOLAT WEB (METHOD 3 + 8 WAKTU DENGAN 4 KOLOM)
+// LOGIKA JADWAL SHOLAT & COUNTDOWN TERBARU
 async function loadJadwalSholat(lat, lon) {
   if(!lat || !lon) return;
   var today = new Date();
@@ -804,7 +844,35 @@ async function loadJadwalSholat(lat, lon) {
       document.getElementById('sholat-card').style.display = 'block';
       var namaHariArr = ['Ahad','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
       document.getElementById('sholat-date').textContent = namaHariArr[today.getDay()] + ', ' + today.toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'});
-      document.getElementById('sholat-grid').innerHTML = sholat.map(function(s,idx){ return '<div class="sholat-item'+(idx===aktifIdx?' aktif':'')+'"><div class="sholat-name">'+s.name+'</div><div class="sholat-time">'+s.time+'</div></div>'; }).join('');
+      
+      // Hitung Mundur Aktif
+      let htmlJadwal = '';
+      sholat.forEach(function(s, idx) {
+        let isAktif = idx === aktifIdx;
+        let extraHtml = '';
+        
+        if (isAktif) {
+          let nextIdx = (idx + 1) % sholat.length;
+          let waktuBerikutnya = toMenit(sholat[nextIdx].time);
+          
+          let sisaMenit = waktuBerikutnya - now;
+          if (sisaMenit <= 0) sisaMenit += 1440; // Jika lewat tengah malam
+          
+          let jamCountdown = Math.floor(sisaMenit / 60);
+          let menitCountdown = sisaMenit % 60;
+          
+          let teksSisa = jamCountdown > 0 ? `${jamCountdown}j ${menitCountdown}m lagi` : `${menitCountdown}m lagi`;
+          extraHtml = `<div class="countdown-badge">⏳ ${teksSisa}</div>`;
+        }
+        
+        htmlJadwal += `<div class="sholat-item${isAktif ? ' aktif' : ''}">
+          <div class="sholat-name">${s.name}</div>
+          <div class="sholat-time">${s.time}</div>
+          ${extraHtml}
+        </div>`;
+      });
+      
+      document.getElementById('sholat-grid').innerHTML = htmlJadwal;
     }
   } catch(e) {}
 }
