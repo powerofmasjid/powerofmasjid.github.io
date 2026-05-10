@@ -102,7 +102,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#F7F7F5;color:#1A1A1A
     <div style="display:flex; flex-direction:column; gap:10px;">
       <button class="btn-submit" style="margin-top:0;" onclick="unduhPdf()">📥 Download File ke Perangkat</button>
       <button class="btn-submit" style="background:#25D366; margin-top:0;" onclick="sharePdfKeWA()">📲 Kirim File ke WhatsApp</button>
-      <button class="btn-modal btn-modal-cancel" style="margin-top:4px;" onclick="document.getElementById('pdf-modal').classList.remove('show')">Batal</button>
+      <button class="btn-modal btn-modal-cancel" style="margin-top:4px;" onclick="document.getElementById('pdf-modal').classList.remove('show')">Tutup</button>
     </div>
   </div>
 </div>
@@ -428,6 +428,25 @@ function toggleAction(element) {
   element.classList.toggle('expanded');
 }
 
+// ==== FUNGSI PENGGAMBAR KOP SURAT ====
+function gambarKopSurat(doc) {
+    var namaMasjid = document.getElementById('prof-nama').value || 'NAMA MASJID BELUM DIATUR';
+    var alamat = document.getElementById('prof-alamat').value || '';
+    var kota = document.getElementById('prof-kota').value || '';
+    var teksAlamat = alamat + (kota ? ', ' + kota : '');
+    
+    doc.setFontSize(16);
+    doc.setFont("helvetica", "bold");
+    doc.text(namaMasjid.toUpperCase(), 105, 16, { align: "center" });
+    
+    doc.setFontSize(10);
+    doc.setFont("helvetica", "normal");
+    doc.text(teksAlamat, 105, 22, { align: "center" });
+    
+    doc.setLineWidth(0.5);
+    doc.line(14, 26, 196, 26);
+}
+
 // ==== SISTEM PDF ANTI HILANG & SHARE WA ====
 function tampilkanModalPdf(doc, filename) {
   globalPdfBlob = doc.output('blob');
@@ -568,7 +587,9 @@ function prosesLogin() {
 
 function tampilAdmin() {
   document.getElementById('login-wrap').classList.remove('show'); document.getElementById('admin-content').style.display = 'block';
-  document.getElementById('admin-nama-display').textContent = ADMIN_DATA.nama; loadTransaksiAdmin();
+  document.getElementById('admin-nama-display').textContent = ADMIN_DATA.nama; 
+  loadProfilAdmin(); // DI-LOAD DIAM-DIAM UNTUK KEBUTUHAN KOP SURAT
+  loadTransaksiAdmin();
 }
 
 // ----------------------------------------------------
@@ -636,9 +657,17 @@ function generatePDFKas() {
     });
 
     const { jsPDF } = window.jspdf; const doc = new jsPDF();
-    doc.text("Buku Kas Digital Masjid - " + namaBulan + " " + t, 14, 15);
+    
+    // PANGGIL FUNGSI KOP SURAT
+    gambarKopSurat(doc);
+
+    doc.setFontSize(11);
+    doc.setFont("helvetica", "bold");
+    doc.text("BUKU KAS DIGITAL - " + namaBulan.toUpperCase() + " " + t, 14, 34);
+    
     doc.setFontSize(10);
-    doc.text("Saldo Awal: Rp " + saldoAwal.toLocaleString('id-ID'), 14, 22);
+    doc.setFont("helvetica", "normal");
+    doc.text("Saldo Awal: Rp " + saldoAwal.toLocaleString('id-ID'), 14, 40);
     
     let currentSaldo = saldoAwal;
     let bodyData = [];
@@ -661,7 +690,7 @@ function generatePDFKas() {
     });
 
     doc.autoTable({ 
-        startY: 26,
+        startY: 44,
         head: [['No', 'Tanggal', 'Keterangan', 'Pemasukan', 'Pengeluaran', 'Saldo Akhir']], 
         body: bodyData,
         headStyles: { fillColor: [27, 107, 58] }
@@ -729,13 +758,18 @@ function gantiFormAmal() {
   document.getElementById('amal-jamaah-id-edit').value = ''; document.getElementById('btn-simpan-data-amal').innerHTML = '💾 Simpan Data Jamaah';
   document.getElementById('list-data-amal').innerHTML = '';
   
+  // KUNCI TOMBOL CETAK SAAT GANTI PROGRAM
+  var btnCetak = document.getElementById('btn-cetak-pdf');
+  if(btnCetak) { btnCetak.disabled = true; btnCetak.innerHTML = '⏳ Menyiapkan Data...'; }
+  
   if(!sel.value) return; 
   document.getElementById('wrap-amal-action').style.display = 'flex';
   
   var tipe = sel.options[sel.selectedIndex].getAttribute('data-tipe');
   if(tipe === 'KURBAN') document.getElementById('form-kurban').style.display = 'block'; else if(tipe === 'ZAKAT') { document.getElementById('form-zakat').style.display = 'block'; toggleZakatNominal(); } else if(tipe === 'INFAQ') { document.getElementById('form-infaq').style.display = 'block'; toggleInfaqBarang(); }
   
-  document.getElementById('btn-simpan-data-amal').style.display = 'block'; loadDataAmalAdmin(sel.value, tipe);
+  document.getElementById('btn-simpan-data-amal').style.display = 'block'; 
+  loadDataAmalAdmin(sel.value, tipe);
 }
 
 function simpanDataAmal(btn) {
@@ -753,9 +787,12 @@ function loadDataAmalAdmin(id_prog, tipe) {
   if(!id_prog) { document.getElementById('list-data-amal').innerHTML = ''; return; }
   var actionStr = tipe === 'KURBAN' ? 'getKurban' : (tipe === 'ZAKAT' ? 'getZakat' : 'getInfaq');
   fetch(API_URL + `?action=${actionStr}&id_masjid=${ID_MASJID}&id_program=${id_prog}&_t=`+Date.now()).then(r => r.json()).then(j => {
+      // BUKA KUNCI TOMBOL CETAK SETELAH DATA BERHASIL DIMUAT
+      var btnCetak = document.getElementById('btn-cetak-pdf');
+      if(btnCetak) { btnCetak.disabled = false; btnCetak.innerHTML = '📄 Cetak Laporan'; }
+
       if(j.status === 'ok' && j.data.length > 0) {
           LIST_DATA_AMAL = j.data; 
-
           document.getElementById('list-data-amal').innerHTML = j.data.reverse().map((i, idx) => {
               var detail = tipe === 'KURBAN' ? i.jenis : (tipe === 'ZAKAT' ? `${i.jumlah_jiwa} Jiwa (${i.jenis})` : (Number(i.nominal) > 0 ? `Rp ${Number(i.nominal).toLocaleString()}` : i.catatan));
               return `<div class="item-card" onclick="toggleAction(this)">
@@ -777,7 +814,6 @@ function editDataAmal(id, tipe) {
     document.getElementById('btn-simpan-data-amal').innerHTML = '📝 Update Data Jamaah'; window.scrollTo({top:0, behavior:'smooth'});
 }
 
-// >>> UPDATE: SISTEM CETAK KURBAN TERPISAH (SAPI KOLEKTIF, MANDIRI, KAMBING) <<<
 function generatePDFProgram() {
     var sel = document.getElementById('pilih-program'); 
     var id_prog = sel.value; 
@@ -787,20 +823,27 @@ function generatePDFProgram() {
     if(!id_prog) { showToast("Pilih program terlebih dahulu!"); return; }
 
     const { jsPDF } = window.jspdf; const doc = new jsPDF();
-    doc.text("Laporan Data " + nama_prog, 14, 15);
+    
+    // PANGGIL FUNGSI KOP SURAT
+    gambarKopSurat(doc);
+
+    doc.setFontSize(11);
+    doc.setFont("helvetica", "bold");
+    doc.text("LAPORAN DATA: " + nama_prog.toUpperCase(), 14, 34);
     
     if (tipe === 'KURBAN') {
-        let sapiKolektif = LIST_DATA_AMAL.filter(d => d.jenis === 'Sapi Kolektif');
-        let sapiUtuh = LIST_DATA_AMAL.filter(d => d.jenis.includes('Sapi Utuh'));
-        let kambing = LIST_DATA_AMAL.filter(d => d.jenis.includes('Kambing'));
+        // FILTER BAJA: Membaca kata kunci secara fleksibel tanpa error huruf besar/kecil
+        let sapiKolektif = LIST_DATA_AMAL.filter(d => d.jenis && d.jenis.toLowerCase().includes('kolektif'));
+        let sapiUtuh = LIST_DATA_AMAL.filter(d => d.jenis && d.jenis.toLowerCase().includes('utuh') && !d.jenis.toLowerCase().includes('kambing'));
+        let kambing = LIST_DATA_AMAL.filter(d => d.jenis && (d.jenis.toLowerCase().includes('kambing') || d.jenis.toLowerCase().includes('domba')));
         
-        let currentY = 22;
+        let currentY = 40;
 
         if (sapiKolektif.length > 0) {
             let kelompok = 1;
             for (let i = 0; i < sapiKolektif.length; i += 7) {
                 let chunk = sapiKolektif.slice(i, i + 7);
-                doc.setFontSize(11);
+                doc.setFontSize(10);
                 doc.text("🐄 SAPI KE-" + kelompok + " (Kolektif)", 14, currentY);
                 
                 let bodyData = chunk.map((c, idx) => [idx + 1, c.nama, c.telepon || '-']);
@@ -818,7 +861,7 @@ function generatePDFProgram() {
         }
 
         if (sapiUtuh.length > 0) {
-            doc.setFontSize(11);
+            doc.setFontSize(10);
             doc.text("🐂 SAPI UTUH (Mandiri / Keluarga)", 14, currentY);
             doc.autoTable({
                 startY: currentY + 3,
@@ -830,7 +873,7 @@ function generatePDFProgram() {
         }
 
         if (kambing.length > 0) {
-            doc.setFontSize(11);
+            doc.setFontSize(10);
             doc.text("🐐 KAMBING / DOMBA (Utuh)", 14, currentY);
             doc.autoTable({
                 startY: currentY + 3,
@@ -842,14 +885,14 @@ function generatePDFProgram() {
         
     } else if (tipe === 'ZAKAT') {
         doc.autoTable({ 
-            startY: 20, 
+            startY: 40, 
             head: [['No', 'Tanggal', 'Nama Kepala Keluarga', 'Jml Jiwa', 'Bentuk', 'Keterangan']], 
             body: LIST_DATA_AMAL.map((i, idx) => [ idx + 1, new Date(i.tanggal).toLocaleDateString('id-ID'), i.nama, i.jumlah_jiwa, i.jenis, i.jenis === 'UANG' ? 'Rp ' + Number(i.nominal).toLocaleString('id-ID') : i.nominal + ' Liter' ]),
             headStyles: { fillColor: [27, 107, 58] }
         });
     } else if (tipe === 'INFAQ') {
         doc.autoTable({ 
-            startY: 20, 
+            startY: 40, 
             head: [['No', 'Tanggal', 'Nama Donatur', 'Sumbangan', 'Nominal / Keterangan']], 
             body: LIST_DATA_AMAL.map((i, idx) => [ idx + 1, new Date(i.tanggal).toLocaleDateString('id-ID'), i.nama, Number(i.nominal) > 0 ? 'Uang Tunai' : 'Barang', Number(i.nominal) > 0 ? 'Rp ' + Number(i.nominal).toLocaleString('id-ID') : i.catatan ]),
             headStyles: { fillColor: [27, 107, 58] }
