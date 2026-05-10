@@ -46,11 +46,8 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 .header h1{font-family:'Amiri',serif;font-size:22px;color:white;font-weight:700;line-height:1.3;position:relative;z-index:1;}
 .header .alamat{font-size:12px;color:rgba(255,255,255,0.7);margin-top:4px;position:relative;z-index:1;}
 .header .deskripsi{font-size:12px;color:rgba(255,255,255,0.6);margin-top:6px;line-height:1.5;position:relative;z-index:1;}
-
-/* --- BADGE POWER OF MASJID BISA DIKLIK (HEADER) --- */
 .badge-pow{display:inline-flex;align-items:center;gap:6px;background:rgba(201,168,76,0.15);border:1px solid rgba(201,168,76,0.4);color:var(--accent);font-size:11px;padding:5px 14px;border-radius:20px;margin-top:10px;font-weight:600;position:relative;z-index:1;text-decoration:none;transition:all 0.3s ease;}
 .badge-pow:hover{background:var(--accent);color:var(--primary-dark);transform:translateY(-2px);box-shadow:0 4px 12px rgba(201,168,76,0.3);}
-
 .btn-wa-header{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);color:white;font-size:12px;padding:6px 14px;border-radius:20px;margin-top:10px;text-decoration:none;position:relative;z-index:1;}
 
 /* JADWAL SHOLAT UPGRADE */
@@ -58,8 +55,6 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 .sholat-title{font-size:11px;color:rgba(255,255,255,0.7);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.75rem;text-align:center;}
 .sholat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;} 
 .sholat-item{text-align:center;background:rgba(255,255,255,0.1);border-radius:10px;padding:10px 4px; transition:all 0.3s ease;}
-
-/* Efek Glowing dan Gradien pada Card Aktif */
 .sholat-item.aktif{
   background:linear-gradient(135deg, var(--accent), #FDE68A);
   border:1px solid rgba(255,255,255,0.6);
@@ -68,17 +63,10 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
   position:relative;
   z-index:2;
 }
-
 .sholat-name{font-size:10px;color:rgba(255,255,255,0.8); font-weight:600;}
-
-/* Penggunaan Font Digital */
 .sholat-time{font-family:'Orbitron', sans-serif; font-size:14px; font-weight:700; color:white; margin-top:4px; letter-spacing:1px;}
-
-/* Penyesuaian warna teks saat kartu aktif */
 .sholat-item.aktif .sholat-name{color:var(--primary-dark); font-weight:700;}
 .sholat-item.aktif .sholat-time{color:var(--primary-dark); font-weight:800;}
-
-/* Animasi & Desain Badge Countdown */
 .countdown-badge{display:inline-block; font-size:9px; font-weight:700; color:var(--primary-dark); background:rgba(255,255,255,0.6); padding:2px 6px; border-radius:10px; margin-top:6px; letter-spacing:0.5px;}
 
 /* MAIN */
@@ -128,7 +116,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 .section-head .dot{width:8px;height:8px;border-radius:50%;background:var(--accent);}
 .section-head h2{font-size:13px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;}
 
-/* CARD & LIST (UPGRADE GLASSMORPHISM) */
+/* CARD (UPGRADE GLASSMORPHISM) */
 .card{
   background:rgba(255, 255, 255, 0.85);
   backdrop-filter:blur(12px);
@@ -161,14 +149,31 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 .jadwal-detail{font-size:12px;color:var(--muted);margin-top:3px;}
 .jadwal-hari{display:inline-block;background:var(--primary-light);color:var(--primary);font-size:10px;padding:2px 6px;border-radius:4px;margin-top:4px;}
 
-/* PROGRAM AMAL UX */
+/* PROGRAM AMAL UX & UPGRADE SHIMMER */
 .swipe-wrap { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 12px; padding-bottom: 5px; margin: 0 -1rem; padding-left: 1rem; padding-right: 1rem; scrollbar-width: none; }
 .swipe-wrap::-webkit-scrollbar { display: none; }
 .swipe-card { flex: 0 0 88%; scroll-snap-align: center; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 12px; }
 .scroll-box { max-height: 250px; overflow-y: auto; padding-right: 5px; margin-bottom: 15px; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
 
+/* PROGRESS BAR SHIMMER UPGRADE */
 .progress-wrap{background:var(--border);height:8px;border-radius:10px;overflow:hidden;margin:10px 0;}
-.progress-bar{background:var(--primary);height:100%;border-radius:10px;transition:width 1s ease-in-out;}
+.progress-bar{
+  background:var(--primary);
+  height:100%;
+  border-radius:10px;
+  transition:width 1.5s cubic-bezier(0.25, 1, 0.5, 1);
+  position:relative;
+  overflow:hidden;
+}
+.progress-bar::after{
+  content:'';
+  position:absolute;
+  top:0; left:-100%; width:60%; height:100%;
+  background:linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+  animation:shimmer 2s infinite linear;
+}
+@keyframes shimmer{ 100% { left:200%; } }
+
 .urgency-label{font-size:11px;color:var(--accent);font-weight:600;background:rgba(201,168,76,0.1);padding:3px 8px;border-radius:12px;display:inline-block;margin-bottom:8px;}
 
 /* MICRO INTERACTION TOMBOL */
@@ -220,7 +225,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 .scroll-kurban::-webkit-scrollbar { display: none; }
 .badge-baru { font-size: 8px; font-weight: 800; background: #22C55E; color: white; padding: 2px 6px; border-radius: 4px; margin-left: 6px; text-transform: uppercase; vertical-align: middle; box-shadow: 0 2px 4px rgba(0,0,0,0.1); border: 1px solid rgba(255,255,255,0.2); }
 
-/* --- FOOTER BADGE BISA DIKLIK --- */
+/* --- FOOTER BADGE --- */
 .footer{text-align:center;padding:2rem 1rem;font-size:12px;color:var(--muted);border-top:1px solid var(--border);background:var(--white);margin-top:1rem;}
 .footer a.link-utama{color:var(--primary);text-decoration:none;font-weight:700;}
 .pow-badge{display:inline-flex;align-items:center;gap:6px;background:var(--primary-light);color:var(--primary);font-size:12px;padding:6px 14px;border-radius:20px;margin-top:10px;font-weight:600;text-decoration:none;border:1px solid rgba(27,107,58,0.2);transition:all 0.3s ease;}
@@ -402,6 +407,52 @@ var ID_MASJID = '';
 var CACHE_DURATION = 60000; 
 var PENGUMUMAN_INTERVAL = null;
 
+// ==========================================
+// FUNGSI ANIMASI ANGKA & OBSERVER (TAHAP 2)
+// ==========================================
+function animateValue(obj, start, end, duration, prefix = '', suffix = '') {
+    let startTimestamp = null;
+    const step = (timestamp) => {
+        if (!startTimestamp) startTimestamp = timestamp;
+        const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+        const easeOut = 1 - Math.pow(1 - progress, 4); // Efek melambat di akhir
+        const current = Math.floor(easeOut * (end - start) + start);
+        obj.innerHTML = prefix + current.toLocaleString('id-ID') + suffix;
+        if (progress < 1) {
+            window.requestAnimationFrame(step);
+        } else {
+            obj.innerHTML = prefix + end.toLocaleString('id-ID') + suffix;
+        }
+    };
+    window.requestAnimationFrame(step);
+}
+
+const powObserver = new IntersectionObserver((entries, obs) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            const el = entry.target;
+            // Animasi untuk angka count-up
+            if (el.classList.contains('obs-num')) {
+                let val = Number(el.getAttribute('data-val')) || 0;
+                let pre = el.getAttribute('data-pre') || '';
+                let suf = el.getAttribute('data-suf') || '';
+                animateValue(el, 0, val, 1500, pre, suf);
+                el.classList.remove('obs-num');
+                obs.unobserve(el);
+            }
+            // Animasi untuk lebar progress bar
+            if (el.classList.contains('obs-bar')) {
+                let w = el.getAttribute('data-w') || '0';
+                el.style.width = w + '%';
+                el.classList.remove('obs-bar');
+                obs.unobserve(el);
+            }
+        }
+    });
+}, { threshold: 0.1 });
+// ==========================================
+
+
 function cekDataBaru(idItem) {
   try {
     if (!idItem) return false;
@@ -560,7 +611,10 @@ async function fetchDataAmal(program) {
            html += '<div style="font-weight:600; font-size:12px; color:var(--primary); display:flex; align-items:center; gap:6px;"><span>🐄</span> Sapi Ke-' + kelompok + '</div>';
            html += '<div style="font-size:10px; font-weight:600;">' + statusLabel + '</div>';
            html += '</div>';
-           html += '<div class="progress-wrap" style="height:6px; margin:0 0 10px 0;"><div class="progress-bar" style="width:' + progressKurban + '%"></div></div>';
+           
+           // IMPLEMENTASI OBSERVER PROGRESS BAR KURBAN
+           html += `<div class="progress-wrap"><div class="progress-bar obs-bar" data-w="${progressKurban}" style="width:0%"></div></div>`;
+           
            html += '<ol style="margin-left:1.5rem; font-size:12px; color:var(--text); line-height:1.8;">';
            chunk.forEach(d => { 
                var badge = cekDataBaru(d.id) ? '<span class="badge-baru">Baru</span>' : '';
@@ -607,9 +661,12 @@ async function fetchDataAmal(program) {
        html += '<div style="background:var(--primary-light); padding:12px; border-radius:10px; margin-bottom:12px; text-align:center;">';
        html += '<div style="font-size:11px; color:var(--primary); font-weight:600; letter-spacing:1px; margin-bottom:8px;">📊 REKAPITULASI SEMENTARA</div>';
        html += '<div style="display:flex; justify-content:space-between; font-size:12px; color:var(--text);">';
-       html += '<div>Muzakki<br><b style="font-size:14px; color:var(--primary);">' + tJiwa + ' Jiwa</b></div>';
-       html += '<div>Beras<br><b style="font-size:14px; color:var(--primary);">' + tBeras + ' Liter</b></div>';
-       html += '<div>Uang<br><b style="font-size:14px; color:var(--primary);">' + rupiah(tUang) + '</b></div>';
+       
+       // IMPLEMENTASI OBSERVER COUNT-UP ZAKAT
+       html += `<div>Muzakki<br><b style="font-size:14px; color:var(--primary);"><span class="obs-num" data-val="${tJiwa}" data-suf=" Jiwa">0 Jiwa</span></b></div>`;
+       html += `<div>Beras<br><b style="font-size:14px; color:var(--primary);"><span class="obs-num" data-val="${tBeras}" data-suf=" Liter">0 Liter</span></b></div>`;
+       html += `<div>Uang<br><b style="font-size:14px; color:var(--primary);"><span class="obs-num" data-val="${tUang}" data-pre="Rp ">0</span></b></div>`;
+       
        html += '</div></div>';
        
        html += '<div class="scroll-limit-5">';
@@ -647,10 +704,13 @@ async function fetchDataAmal(program) {
        }
 
        html += '<div style="font-size:11px; color:var(--primary); font-weight:600; margin-bottom:4px; letter-spacing:1px;">TOTAL TERKUMPUL</div>';
-       html += '<div style="font-family:\'Amiri\',serif; font-size:28px; font-weight:700; color:var(--primary);">' + rupiah(tUang) + '</div>';
+       
+       // IMPLEMENTASI OBSERVER COUNT-UP INFAQ
+       html += `<div style="font-family:'Amiri',serif; font-size:28px; font-weight:700; color:var(--primary);"><span class="obs-num" data-val="${tUang}" data-pre="Rp ">0</span></div>`;
        
        if(targetDana > 0) {
-           html += '<div class="progress-wrap"><div class="progress-bar" style="width:' + progressBerapa + '%"></div></div>';
+           // IMPLEMENTASI OBSERVER PROGRESS BAR INFAQ
+           html += `<div class="progress-wrap"><div class="progress-bar obs-bar" data-w="${progressBerapa}" style="width:0%"></div></div>`;
            html += '<div style="display:flex; justify-content:space-between; font-size:10px; color:var(--muted); font-weight:500;"><span>' + progressBerapa + '% Tercapai</span><span>Target: ' + rupiah(targetDana) + '</span></div>';
        }
 
@@ -675,7 +735,13 @@ async function fetchDataAmal(program) {
        html += '<a href="https://wa.me/?text=' + shareTextInfaq + '" target="_blank" class="btn-cta btn-cta-outline">📤 Bagikan</a>';
        html += '</div></div>';
    }
+   
    el.innerHTML = html;
+   
+   // Panggil Observer setelah elemen selesai disuntikkan ke HTML
+   setTimeout(() => {
+       el.querySelectorAll('.obs-num, .obs-bar').forEach(node => powObserver.observe(node));
+   }, 50);
 }
 
 async function loadPengumuman() {
@@ -746,9 +812,14 @@ async function loadGaleri() {
 async function loadSaldo() {
   var json = await apiFetch('getSaldo', {id_masjid: ID_MASJID}, 'saldo_' + ID_MASJID);
   if (json.status !== 'ok') return; var d = json.data;
-  document.getElementById('saldo-total').textContent = rupiah(d.saldo);
-  document.getElementById('total-masuk').textContent = rupiah(d.masuk_bulan_ini);
-  document.getElementById('total-keluar').textContent = rupiah(d.keluar_bulan_ini);
+  
+  // IMPLEMENTASI OBSERVER COUNT-UP SALDO KAS
+  document.getElementById('saldo-total').innerHTML = `<span class="obs-num" data-val="${d.saldo || 0}" data-pre="Rp ">0</span>`;
+  document.getElementById('total-masuk').innerHTML = `<span class="obs-num" data-val="${d.masuk_bulan_ini || 0}" data-pre="Rp ">0</span>`;
+  document.getElementById('total-keluar').innerHTML = `<span class="obs-num" data-val="${d.keluar_bulan_ini || 0}" data-pre="Rp ">0</span>`;
+  
+  document.querySelectorAll('.obs-num').forEach(node => powObserver.observe(node));
+  
   var now = new Date(); document.getElementById('tgl-update').textContent = 'Diperbarui: ' + namaHari(now.getDay()) + ', ' + now.toLocaleDateString('id-ID', {day:'numeric', month:'long', year:'numeric'});
 }
 
@@ -811,7 +882,6 @@ async function loadJadwal() {
   }
 }
 
-// LOGIKA JADWAL SHOLAT & COUNTDOWN TERBARU
 async function loadJadwalSholat(lat, lon) {
   if(!lat || !lon) return;
   var today = new Date();
@@ -845,7 +915,6 @@ async function loadJadwalSholat(lat, lon) {
       var namaHariArr = ['Ahad','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
       document.getElementById('sholat-date').textContent = namaHariArr[today.getDay()] + ', ' + today.toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'});
       
-      // Hitung Mundur Aktif
       let htmlJadwal = '';
       sholat.forEach(function(s, idx) {
         let isAktif = idx === aktifIdx;
@@ -856,7 +925,7 @@ async function loadJadwalSholat(lat, lon) {
           let waktuBerikutnya = toMenit(sholat[nextIdx].time);
           
           let sisaMenit = waktuBerikutnya - now;
-          if (sisaMenit <= 0) sisaMenit += 1440; // Jika lewat tengah malam
+          if (sisaMenit <= 0) sisaMenit += 1440; 
           
           let jamCountdown = Math.floor(sisaMenit / 60);
           let menitCountdown = sisaMenit % 60;
