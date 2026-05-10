@@ -133,7 +133,8 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#F7F7F5;color:#1A1A1A
       
       <div class="divider"></div>
       
-      <div class="section-title">Cetak Laporan Kas (Penerimaan Saja)</div>
+      <div class="section-title">Buku Kas Digital (Bulanan)</div>
+      <div class="info-hint" style="margin-bottom: 10px;">Pilih bulan untuk melihat rincian Pemasukan, Pengeluaran & Saldo Akhir.</div>
       <div class="form-row">
         <select class="form-select" id="pdf-bulan">
             <option value="1">Januari</option><option value="2">Februari</option><option value="3">Maret</option>
@@ -143,7 +144,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#F7F7F5;color:#1A1A1A
         </select>
         <input type="number" class="form-input" id="pdf-tahun" value="2026">
       </div>
-      <button class="btn-submit" id="btn-cetak-kas" style="background:#1B6B3A; color:white; margin-top:8px" onclick="generatePDFKas()">📄 Download Laporan PDF</button>
+      <button class="btn-submit" id="btn-cetak-kas" style="background:#1B6B3A; color:white; margin-top:8px" onclick="generatePDFKas()">📄 Buka Laporan Buku Kas</button>
       
       <div class="divider"></div>
       <div id="list-trx-admin"></div>
@@ -183,7 +184,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#F7F7F5;color:#1A1A1A
           <div class="btn-amal-action" id="wrap-amal-action" style="display:none;">
             <button style="background:#f3f4f6; color:#374151; border:1px solid #d1d5db;" onclick="editIndukProgram()">✏️ Edit Info</button>
             <button style="background:#FEF2F2; color:#DC2626; border:1px solid #FCA5A5;" onclick="hapusIndukProgram()">🗑️ Hapus Program</button>
-            <button id="btn-cetak-pdf" style="background:#1B6B3A; color:white;" onclick="generatePDFProgram()">📄 Cetak Laporan</button>
+            <button id="btn-cetak-pdf" style="background:#1B6B3A; color:white;" onclick="generatePDFProgram()">📄 Buka Laporan</button>
           </div>
         </div>
 
@@ -256,11 +257,11 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#F7F7F5;color:#1A1A1A
       <div class="form-group">
         <label class="form-label">Tipe Media</label>
         <select class="form-select" id="gal-tipe" onchange="toggleGaleriForm()">
-          <option value="FOTO">📷 Foto Dokumentasi (Biasa)</option>
-          <option value="FLYER">🖼️ Poster / Flyer Kajian (Fullscreen)</option>
+          <option value="FOTO">📷 Foto Dokumentasi</option>
+          <option value="FLYER">🖼️ Poster / Flyer</option>
           <option value="VIDEO_YOUTUBE">▶️ Video YouTube</option>
         </select>
-        <span class="info-hint">Pilih "Poster/Flyer" agar gambar otomatis memenuhi layar TV.</span>
+        <span class="info-hint" id="hint-galeri">Pilih "Poster / Flyer" agar gambar tampil memenuhi layar TV Masjid.</span>
       </div>
       <div class="form-group"><label class="form-label">Judul Media</label><input type="text" class="form-input" id="gal-judul" placeholder="Contoh: Poster Kajian Ustadz Abdul Somad"></div>
       
@@ -285,8 +286,9 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#F7F7F5;color:#1A1A1A
       <div class="section-title">Profil & Pengaturan</div>
       
       <div class="profil-section">
-        <h3>Tautan Website (Link Jamaah)</h3>
-        <div class="form-group"><label class="form-label">Link Resmi Masjid Anda</label>
+        <h3>Tautan Website</h3>
+        <div class="info-hint" style="margin-bottom: 8px;">Gunakan link ini untuk dibagikan ke seluruh jamaah.</div>
+        <div class="form-group">
           <div class="form-row" style="grid-template-columns: 1fr auto;">
             <input type="text" class="form-input" id="link-web" readonly style="background:#f3f4f6; color:#6b7280; font-size:12px; font-weight:500;">
             <button class="btn-submit" style="margin-top:0; padding:10px; background:var(--accent); color:#4A3810;" onclick="salinLinkWeb()">📄 Salin Link</button>
@@ -307,10 +309,11 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#F7F7F5;color:#1A1A1A
         <div class="form-group"><label class="form-label">Kota</label><input type="text" class="form-input" id="prof-kota" placeholder="Contoh: Jakarta Selatan"></div>
         
         <div class="form-group">
-          <label class="form-label">Deskripsi (Pendek untuk Header)</label>
+          <label class="form-label">Deskripsi</label>
           <textarea class="form-textarea" id="prof-deskripsi" maxlength="120" oninput="updateDescCounter()" placeholder="Contoh: Masjid kebanggaan warga perumahan indah..."></textarea>
           <div class="desc-counter" id="desc-counter">Sisa karakter: 120/120</div>
         </div>
+        
         <div class="form-group"><label class="form-label">Nomor WA Utama Masjid</label><input type="text" class="form-input" id="prof-wa" placeholder="Contoh: 081234567890"></div>
       </div>
       
@@ -386,6 +389,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#F7F7F5;color:#1A1A1A
 <div class="toast" id="toast">Berhasil!</div>
 
 <script>
+// --- LINK API BARU BAPAK ---
 var API_URL = 'https://script.google.com/macros/s/AKfycbzdDj9Ifaic7LEBBXU-8Wa3zfeaW32lq1qEl2N7LXcKvqHBbt8axrwAs92Fevno0U2Sqw/exec';
 
 var KUNCI_RAHASIA = 'POW_MASJID_SECURE_2026'; 
@@ -547,9 +551,10 @@ function editTrx(idx) {
   var t = LAST_5_TRX[idx]; document.getElementById('trx-id-edit').value = t.id; document.getElementById('trx-tanggal').value = new Date(t.tanggal).toISOString().split('T')[0]; document.getElementById('trx-jenis').value = t.jenis; document.getElementById('trx-keterangan').value = t.keterangan; document.getElementById('trx-jumlah').value = t.jumlah; document.getElementById('trx-bukti').value = t.bukti_url || ''; document.getElementById('btn-trx').innerHTML = '📝 Update Transaksi'; toggleBuktiForm(); window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
+// >>> UPDATE: BUKU KAS LENGKAP & SISTEM PREVIEW PDF <<<
 function generatePDFKas() {
-  var b = document.getElementById('pdf-bulan').value;
-  var t = document.getElementById('pdf-tahun').value;
+  var b = parseInt(document.getElementById('pdf-bulan').value);
+  var t = parseInt(document.getElementById('pdf-tahun').value);
   var namaBulan = document.getElementById('pdf-bulan').options[document.getElementById('pdf-bulan').selectedIndex].text;
   var btn = document.getElementById('btn-cetak-kas');
   
@@ -558,24 +563,70 @@ function generatePDFKas() {
   fetch(API_URL + '?action=getTransaksi&id_masjid=' + ID_MASJID + '&_t=' + Date.now()).then(r => r.json()).then(j => {
     setLoading(btn, false);
 
-    var filter = (j.data || []).filter(trx => { var d = new Date(trx.tanggal); return (d.getMonth()+1) == b && d.getFullYear() == t && trx.jenis === 'masuk'; });
-    
+    var allTrx = j.data || [];
+    allTrx.sort((a,b) => new Date(a.tanggal) - new Date(b.tanggal));
+
+    var saldoAwal = 0;
+    var filterBulanIni = [];
+
+    allTrx.forEach(trx => {
+       var d = new Date(trx.tanggal);
+       var trxMonth = d.getMonth() + 1;
+       var trxYear = d.getFullYear();
+       var val = Number(trx.jumlah);
+
+       if (trxYear < t || (trxYear === t && trxMonth < b)) {
+           if (trx.jenis === 'masuk') saldoAwal += val;
+           else if (trx.jenis === 'keluar') saldoAwal -= val;
+       } else if (trxYear === t && trxMonth === b) {
+           filterBulanIni.push(trx);
+       }
+    });
+
     const { jsPDF } = window.jspdf; const doc = new jsPDF();
-    doc.text("Laporan Penerimaan Kas Masjid - " + namaBulan + " " + t, 14, 15);
+    doc.text("Buku Kas Digital Masjid - " + namaBulan + " " + t, 14, 15);
     
-    doc.autoTable({ 
-        startY: 20,
-        head: [['No', 'Tanggal', 'Keterangan Penerimaan', 'Jumlah']], 
-        body: filter.map((i, idx) => [
+    doc.setFontSize(10);
+    doc.text("Saldo Awal: Rp " + saldoAwal.toLocaleString('id-ID'), 14, 22);
+    
+    let currentSaldo = saldoAwal;
+    let bodyData = [];
+    
+    filterBulanIni.forEach((i, idx) => {
+        var val = Number(i.jumlah);
+        var masuk = i.jenis === 'masuk' ? val : 0;
+        var keluar = i.jenis === 'keluar' ? val : 0;
+        currentSaldo += masuk;
+        currentSaldo -= keluar;
+        
+        bodyData.push([
             idx + 1,
-            new Date(i.tanggal).toLocaleDateString('id-ID'), 
-            i.keterangan, 
-            'Rp ' + Number(i.jumlah).toLocaleString('id-ID')
-        ]) 
+            new Date(i.tanggal).toLocaleDateString('id-ID'),
+            i.keterangan,
+            masuk > 0 ? 'Rp ' + masuk.toLocaleString('id-ID') : '-',
+            keluar > 0 ? 'Rp ' + keluar.toLocaleString('id-ID') : '-',
+            'Rp ' + currentSaldo.toLocaleString('id-ID')
+        ]);
+    });
+
+    doc.autoTable({ 
+        startY: 26,
+        head: [['No', 'Tanggal', 'Keterangan', 'Pemasukan', 'Pengeluaran', 'Saldo Akhir']], 
+        body: bodyData 
     });
     
-    doc.save(`Laporan_Kas_Penerimaan_${namaBulan}_${t}.pdf`);
-    showToast('Laporan PDF Berhasil Diunduh!');
+    // SISTEM PREVIEW PDF BLOB ANTI-HILANG DI HP
+    const pdfBlob = doc.output('blob');
+    const pdfUrl = URL.createObjectURL(pdfBlob);
+    
+    const link = document.createElement('a');
+    link.href = pdfUrl;
+    link.target = '_blank';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    showToast('Pratinjau PDF Berhasil Dibuka!');
     
   }).catch(() => { setLoading(btn, false); showToast('Gagal memuat data PDF'); });
 }
@@ -684,6 +735,7 @@ function editDataAmal(id, tipe) {
     document.getElementById('btn-simpan-data-amal').innerHTML = '📝 Update Data Jamaah'; window.scrollTo({top:0, behavior:'smooth'});
 }
 
+// >>> UPDATE: SISTEM PREVIEW PDF PROGRAM AMAL <<<
 function generatePDFProgram() {
     var sel = document.getElementById('pilih-program'); 
     var id_prog = sel.value; 
@@ -727,8 +779,19 @@ function generatePDFProgram() {
     }
 
     doc.autoTable({ startY: 20, head: head, body: body });
-    doc.save(`Laporan_${tipe}_${Date.now()}.pdf`);
-    showToast('Laporan PDF Berhasil Diunduh!');
+    
+    // SISTEM PREVIEW PDF BLOB ANTI-HILANG DI HP
+    const pdfBlob = doc.output('blob');
+    const pdfUrl = URL.createObjectURL(pdfBlob);
+    
+    const link = document.createElement('a');
+    link.href = pdfUrl;
+    link.target = '_blank';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    showToast('Pratinjau PDF Berhasil Dibuka!');
 }
 
 // ----------------------------------------------------
@@ -833,7 +896,7 @@ function loadProfilAdmin() {
   fetch(API_URL+'?action=getMasjid&id_masjid='+ID_MASJID+'&_t='+Date.now()).then(r=>r.json()).then(j=>{ 
     var d = j.data; buatLinkWebDisplay();
     document.getElementById('prof-nama').value=d.nama||''; document.getElementById('prof-alamat').value=d.alamat||''; document.getElementById('prof-kelurahan').value=d.kelurahan||''; document.getElementById('prof-kecamatan').value=d.kecamatan||''; document.getElementById('prof-kota').value=d.kota||''; 
-    document.getElementById('prof-deskripsi').value=d.deskripsi||''; updateDescCounter(); // <-- PANGGIL COUNTER DI SINI
+    document.getElementById('prof-deskripsi').value=d.deskripsi||''; updateDescCounter();
     document.getElementById('prof-wa').value=d.telepon_wa||''; document.getElementById('prof-tema').value=d.tema||''; document.getElementById('prof-logo').value=d.logo_url||''; document.getElementById('prof-qris').value=d.qris_url||''; document.getElementById('prof-rek1-bank').value=d.rek1_bank||''; document.getElementById('prof-rek1-nomor').value=d.rek1_nomor||''; document.getElementById('prof-rek2-bank').value=d.rek2_bank||''; document.getElementById('prof-rek2-nomor').value=d.rek2_nomor||''; document.getElementById('prof-rek3-bank').value=d.rek3_bank||''; document.getElementById('prof-rek3-nomor').value=d.rek3_nomor||''; document.getElementById('prof-lat').value=d.latitude||''; document.getElementById('prof-lon').value=d.longitude||''; document.getElementById('prof-jeda-subuh').value=d.jeda_subuh||10; document.getElementById('prof-jeda-dzuhur').value=d.jeda_dzuhur||10; document.getElementById('prof-jeda-ashar').value=d.jeda_ashar||10; document.getElementById('prof-jeda-maghrib').value=d.jeda_maghrib||10; document.getElementById('prof-jeda-isya').value=d.jeda_isya||10; 
   }); 
 }
