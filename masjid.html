@@ -50,13 +50,11 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 .badge-pow:hover{background:var(--accent);color:var(--primary-dark);transform:translateY(-2px);box-shadow:0 4px 12px rgba(201,168,76,0.3);}
 .btn-wa-header{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);color:white;font-size:12px;padding:6px 14px;border-radius:20px;margin-top:10px;text-decoration:none;position:relative;z-index:1;}
 
-/* JADWAL SHOLAT UPGRADE */
+/* JADWAL SHOLAT DEFAULT (MODERN) */
 .sholat-card{background:var(--primary);border-radius:14px;padding:1rem;margin-bottom:1rem; position:relative; overflow:hidden;}
 .sholat-title{font-size:11px;color:rgba(255,255,255,0.7);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.75rem;text-align:center;}
 .sholat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;} 
 .sholat-item{text-align:center;background:rgba(255,255,255,0.1);border-radius:10px;padding:10px 4px; transition:all 0.3s ease;}
-
-/* Efek Glowing dan Gradien pada Card Aktif (Sudah Support Semua Tema) */
 .sholat-item.aktif{
   background:linear-gradient(135deg, var(--accent), var(--primary-light));
   border:1px solid var(--accent);
@@ -87,7 +85,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 .banner-judul{font-size:14px;font-weight:600;color:var(--primary);margin-bottom:3px;padding-right:30px;}
 .banner-isi{font-size:12px;color:var(--muted);line-height:1.6;}
 
-/* SALDO (UPGRADE GLASSMORPHISM) */
+/* SALDO DEFAULT (MODERN / GLASSMORPHISM) */
 .saldo-card{
   background:rgba(255, 255, 255, 0.85);
   backdrop-filter:blur(12px);
@@ -111,14 +109,14 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 .s-val.masuk{color:var(--masuk);}
 .s-val.keluar{color:var(--keluar);}
 
-/* SECTION */
+/* SECTION DEFAULT */
 .section{margin-bottom:1rem;}
 .section-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem;}
 .section-head-left{display:flex;align-items:center;gap:8px;}
 .section-head .dot{width:8px;height:8px;border-radius:50%;background:var(--accent);}
 .section-head h2{font-size:13px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;}
 
-/* CARD (UPGRADE GLASSMORPHISM) */
+/* CARD DEFAULT (MODERN) */
 .card{
   background:rgba(255, 255, 255, 0.85);
   backdrop-filter:blur(12px);
@@ -159,21 +157,8 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 
 /* PROGRESS BAR SHIMMER UPGRADE */
 .progress-wrap{background:var(--border);height:8px;border-radius:10px;overflow:hidden;margin:10px 0;}
-.progress-bar{
-  background:var(--primary);
-  height:100%;
-  border-radius:10px;
-  transition:width 1.5s cubic-bezier(0.25, 1, 0.5, 1);
-  position:relative;
-  overflow:hidden;
-}
-.progress-bar::after{
-  content:'';
-  position:absolute;
-  top:0; left:-100%; width:60%; height:100%;
-  background:linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-  animation:shimmer 2s infinite linear;
-}
+.progress-bar{background:var(--primary); height:100%; border-radius:10px; transition:width 1.5s cubic-bezier(0.25, 1, 0.5, 1); position:relative; overflow:hidden;}
+.progress-bar::after{content:''; position:absolute; top:0; left:-100%; width:60%; height:100%; background:linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent); animation:shimmer 2s infinite linear;}
 @keyframes shimmer{ 100% { left:200%; } }
 
 .urgency-label{font-size:11px;color:var(--accent);font-weight:600;background:var(--primary-light);padding:3px 8px;border-radius:12px;display:inline-block;margin-bottom:8px;}
@@ -192,7 +177,6 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 .foto-item img{width:100%;height:100%;object-fit:cover;display:block;}
 .foto-more{position:absolute;inset:0;background:rgba(0,0,0,0.6);display:flex;align-items:center;justify-content:center;color:white;font-size:18px;font-weight:700;}
 .foto-caption{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,0.6));color:white;font-size:10px;padding:12px 6px 4px;}
-
 .video-item{border-radius:10px;overflow:hidden;height:200px;margin-bottom:8px;background:black;}
 .video-item iframe{width:100%;height:100%;border:none;display:block;}
 .video-caption{font-size:12px;color:var(--muted);text-align:center;margin-bottom:10px;}
@@ -259,6 +243,47 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 .jf-title { font-size: 10px; font-weight: 700; color: var(--accent); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px;}
 .jf-khatib { font-size: 12px; font-weight: 600; line-height: 1.3; }
 .jf-close { background: rgba(0,0,0,0.2); border: none; color: white; font-size: 14px; cursor: pointer; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+
+/* ====================================================
+   TEMA DESAIN: KLASIK (Gaya Timur Tengah)
+   ==================================================== */
+.desain-klasik .card, .desain-klasik .saldo-card {
+  background: var(--white);
+  border: 2px solid var(--accent);
+  border-radius: 16px 0 16px 0; /* Sudut lengkung ala timur tengah */
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+.desain-klasik .section-head h2 { font-family: 'Amiri', serif; font-size: 18px; text-transform: capitalize; color: var(--primary-dark); font-weight: 700; }
+.desain-klasik .header { background: var(--primary-dark); border-bottom: 4px solid var(--accent); }
+.desain-klasik .logo-wrap { border-radius: 12px 0 12px 0; border: 2px solid var(--accent); }
+.desain-klasik .sholat-card { border-radius: 16px 0 16px 0; border: 2px solid var(--accent); }
+
+/* ====================================================
+   TEMA DESAIN: MINIMALIS (Gaya Flat & Bersih)
+   ==================================================== */
+.desain-minimalis body { background: #F3F4F6; }
+.desain-minimalis .card, .desain-minimalis .saldo-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+.desain-minimalis .header { background: var(--primary); padding-bottom: 2rem; border-bottom: none; }
+.desain-minimalis .header::before, .desain-minimalis .header::after { display: none; }
+.desain-minimalis .logo-wrap { border: none; box-shadow: 0 4px 10px rgba(0,0,0,0.1); border-radius: 50%; }
+.desain-minimalis .section-head h2 { font-size: 12px; letter-spacing: 1px; color: var(--muted); }
+.desain-minimalis .sholat-card { border-radius: 8px; box-shadow: none; border: 1px solid var(--border); background: var(--white); }
+.desain-minimalis .sholat-title { color: var(--muted); }
+.desain-minimalis .sholat-item { background: var(--bg); border: 1px solid transparent; }
+.desain-minimalis .sholat-name { color: var(--muted); }
+.desain-minimalis .sholat-time { color: var(--primary); }
+.desain-minimalis .sholat-item.aktif { background: var(--primary-light); border: 1px solid var(--primary); box-shadow: none; transform: none; }
+.desain-minimalis .sholat-item.aktif .sholat-name { color: var(--primary); }
+.desain-minimalis .sholat-item.aktif .sholat-time { color: var(--primary-dark); }
 </style>
 </head>
 <body>
@@ -403,7 +428,8 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 <div class="toast" id="toast">Nomor rekening disalin!</div>
 
 <script>
-var API_URL = 'https://script.google.com/macros/s/AKfycbzdDj9Ifaic7LEBBXU-8Wa3zfeaW32lq1qEl2N7LXcKvqHBbt8axrwAs92Fevno0U2Sqw/exec';
+// PASTIKAN MENGGUNAKAN LINK API BARU
+var API_URL = 'https://script.google.com/macros/s/AKfycbzJhB3_-IqLJPSQOSNReTK5YAL7T1FdPGuMJjVIKf6MyO6v5NlFvpHEqM-yFWPs1hRe8A/exec';
 
 var ID_MASJID = '';
 var CACHE_DURATION = 60000; 
@@ -533,7 +559,14 @@ async function loadMasjid(slug) {
 
   if (d.deskripsi) { document.getElementById('deskripsi-masjid').textContent = d.deskripsi; document.getElementById('deskripsi-masjid').style.display = 'block'; }
   if (d.logo_url) { document.getElementById('logo-wrap').innerHTML = '<img src="' + matenginLinkDrive(d.logo_url) + '" alt="Logo ' + d.nama + '">'; }
+  
+  // LOGIKA PEMBACAAN TEMA WARNA & TEMA DESAIN LAYOUT
   if (d.tema) document.body.classList.add('tema-' + d.tema);
+  if (d.tema_desain_web) {
+      document.body.classList.add('desain-' + d.tema_desain_web);
+  } else {
+      document.body.classList.add('desain-modern'); // Default
+  }
 
   if (d.telepon_wa) {
     var btnWa = document.getElementById('btn-wa-header');
