@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>TV Display Power of Masjid — Perfect Ratio</title>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800&text=0123456789:&display=swap" rel="stylesheet">
 <style>
   :root {
     --bg-dark: #051A0F;
@@ -34,16 +35,18 @@
   .nama-masjid { font-size: 34px; font-weight: 800; color: white; line-height: 1.1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .alamat-masjid { font-size: 17px; color: var(--gold); opacity: 0.9; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .header-right { text-align: right; flex-shrink: 0; }
-  .jam-digital { font-size: 48px; font-weight: 700; color: var(--gold); font-family: tabular-nums; line-height: 1; }
+  
+  /* UPGRADE: JAM DIGITAL */
+  .jam-digital { font-size: 50px; font-weight: 700; color: var(--gold); font-family: 'Orbitron', sans-serif; line-height: 1; letter-spacing: 2px;}
   .tanggal-digital { font-size: 18px; color: white; margin-top: 5px; }
 
-  /* SHOLAT BAR */
+  /* SHOLAT BAR UPGRADE GLOWING */
   .sholat-bar { display: flex; background: rgba(0,0,0,0.5); border-bottom: 2px solid var(--border); height: 95px; align-items: center; padding: 0 5px; flex-shrink: 0; gap: 4px; transition: transform 0.8s; }
   .sholat-box { flex: 1; text-align: center; padding: 8px 0; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05); transition: all 0.3s; }
-  .sholat-box.aktif { background: var(--gold); border: 2px solid white; transform: scale(1.05); box-shadow: 0 0 15px rgba(201,168,76,0.4); }
+  .sholat-box.aktif { background: var(--gold); border: 2px solid white; transform: scale(1.05); box-shadow: 0 0 25px var(--gold); z-index:2; position: relative;}
   .sholat-name { font-size: 13px; color: rgba(255,255,255,0.6); text-transform: uppercase; font-weight: 800; letter-spacing: 1px; }
-  .sholat-time { font-size: 34px; color: var(--gold); font-weight: 800; line-height: 1.1; }
-  .sholat-box.aktif .sholat-name, .sholat-box.aktif .sholat-time { color: var(--bg-dark); }
+  .sholat-time { font-size: 34px; color: var(--gold); font-weight: 800; line-height: 1.1; font-family: 'Orbitron', sans-serif; letter-spacing: 1px;}
+  .sholat-box.aktif .sholat-name, .sholat-box.aktif .sholat-time { color: var(--bg-dark); text-shadow: none; }
 
   /* MAIN CONTENT */
   .main { flex: 1; display: flex; padding: 20px; gap: 20px; overflow: hidden; position: relative; }
@@ -77,30 +80,27 @@
   .marquee-text { display: inline-block; white-space: nowrap !important; font-size: 40px; font-weight: 800; padding-left: 100%; animation: marquee 40s linear infinite; line-height: 80px; }
   @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
 
-  /* HILANGKAN HEADER & SHOLAT BAR SECARA TOTAL UNTUK TAMPILAN FULLSCREEN (SISA RUNNING TEXT SAJA) */
+  /* FULLSCREEN MODES */
   body.mode-amal .header, body.mode-amal .sholat-bar,
   body.mode-widescreen .header, body.mode-widescreen .sholat-bar,
   body.mode-live .header, body.mode-live .sholat-bar { 
     display: none !important; 
   }
-  
   body.mode-amal .right-panel { display: none !important; }
   body.mode-amal .left-panel { width: 100%; flex: 1; border: none; background: transparent; }
   body.mode-amal #panel-amal { background: var(--bg-dark); border-color: var(--masuk); }
-
   body.mode-widescreen .left-panel,
   body.mode-live .left-panel { display: none !important; }
-  
   body.mode-widescreen .right-panel,
   body.mode-live .right-panel { flex: 1; border-radius: 20px; }
 
-  /* LAYAR IQOMAH */
+  /* LAYAR IQOMAH UPGRADE */
   #iqomah-screen { position: fixed; inset: 0; background: var(--bg-dark); z-index: 10000; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; transition: opacity 1s; }
   #iqomah-screen.hide { opacity: 0; pointer-events: none; }
   .iq-title { font-size: 55px; color: white; font-weight: 700; letter-spacing: 3px; margin-bottom: 5px; }
-  .iq-name { font-size: 110px; color: var(--gold); font-weight: 800; text-transform: uppercase; line-height: 1; margin-bottom: 20px; text-shadow: 0 5px 20px rgba(201,168,76,0.3); }
+  .iq-name { font-size: 110px; color: var(--gold); font-weight: 800; text-transform: uppercase; line-height: 1; margin-bottom: 20px; text-shadow: 0 0 35px var(--gold); }
   .iq-subtitle { font-size: 40px; color: rgba(255,255,255,0.9); margin-bottom: 10px; }
-  .iq-timer { font-size: 280px; font-weight: 800; color: var(--masuk); font-family: tabular-nums; line-height: 1; text-shadow: 0 10px 40px rgba(74,222,128,0.3); }
+  .iq-timer { font-size: 280px; font-weight: 800; color: var(--masuk); font-family: 'Orbitron', sans-serif; line-height: 1; text-shadow: 0 0 60px var(--masuk); letter-spacing: 5px;}
 </style>
 </head>
 <body>
@@ -516,7 +516,7 @@ async function calcSholat(lat, lon) {
     if(j.code === 200) {
       var t = j.data.timings;
 
-      var KOREKSI_MENIT = +2;
+      var KOREKSI_MENIT = 0;
       function sesuaikanWaktu(timeStr, tambahLagi = 0) {
          let [h, m] = timeStr.split(':').map(Number);
          m += (KOREKSI_MENIT + tambahLagi);
