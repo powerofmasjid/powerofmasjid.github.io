@@ -51,7 +51,7 @@
   /* TATA LETAK BARU (PERSEGI PANJANG) */
   .main { flex: 1; display: flex; padding: 20px; gap: 20px; overflow: hidden; position: relative; }
   
-  /* PANEL KIRI (35% - Saldo & Info) */
+  /* PANEL KIRI (38% - Saldo & Info) */
   .left-panel { width: 38%; display: flex; flex-direction: column; gap: 20px; transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1); z-index: 2; }
   
   /* SALDO HORIZONTAL */
@@ -371,7 +371,6 @@ setInterval(updateTime, 1000);
 function jalankanTV() {
   clearTimeout(masterTimer);
   if (playlist.length === 0) {
-      // Tampilan Default Jika Kosong
       document.getElementById('konten-media').innerHTML = `<div style="text-align:center; color:white; opacity:0.3;"><img src="Logo Power of Masjid.png" style="width:200px;"><div style="font-size:30px; font-weight:800; margin-top:20px;">POWER OF MASJID</div></div>`;
       document.getElementById('konten-media').classList.add('active');
       return;
@@ -462,7 +461,7 @@ function jalankanTV() {
      
      document.getElementById('panel-amal').innerHTML = html;
      document.body.classList.add('mode-amal');
-     nextDelay = 30000; 
+     nextDelay = 15000; // DIUBAH MENJADI 15 DETIK SESUAI KESEPAKATAN
   }
   
   playIndex++;
@@ -500,13 +499,12 @@ async function loadData() {
     if(resS.status === 'ok') {
         let saldoStr = Number(resS.data.saldo).toLocaleString("id-ID");
         document.getElementById('tv-saldo').innerText = "Rp " + saldoStr;
-        // Jika angka terlalu panjang, kecilkan sedikit ukurannya agar muat
         if(saldoStr.length > 10) document.getElementById('tv-saldo').style.fontSize = "55px";
     }
 
     if(resK.status === 'ok') {
         LIST_JADWAL = resK.data;
-        rotateInfoPanel(); // Panggil manual pertama kali
+        rotateInfoPanel(); 
     }
 
     let rawPlaylist = [];
@@ -526,10 +524,7 @@ async function loadData() {
     if(resG.status === 'ok') {
         resG.data.forEach(g => rawPlaylist.push({ type: 'MEDIA', data: g }));
     }
-
-    // Saldo tidak perlu dimasukkan ke rawPlaylist lagi karena sudah permanen di kiri
     
-    // ALGORITMA ZIPPER
     let fullItems = []; let normItems = [];
     rawPlaylist.forEach(item => {
         if (item.type === 'AMAL') { fullItems.push(item); } 
@@ -568,7 +563,15 @@ async function loadData() {
     }
 
     document.getElementById('loading-screen').classList.add('hide');
-    if(!masterTimer) jalankanTV();
+    
+    // LOGIKA TAHAN DI LAYAR NORMAL 30 DETIK SAAT PERTAMA KALI DIBUKA
+    if(!masterTimer) {
+        document.body.className = ''; 
+        document.getElementById('konten-media').innerHTML = `<div style="text-align:center; color:white; opacity:0.3;"><img src="Logo Power of Masjid.png" style="width:200px;"><div style="font-size:30px; font-weight:800; margin-top:20px;">POWER OF MASJID</div></div>`;
+        document.getElementById('konten-media').classList.add('active');
+        
+        masterTimer = setTimeout(jalankanTV, 30000); 
+    }
 
   } catch(e) { console.log(e); }
 }
