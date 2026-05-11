@@ -94,33 +94,51 @@
   .media-overlay { position: absolute; inset: 0; background: linear-gradient(0deg, rgba(0,0,0,0.9) 0%, transparent 40%); display: flex; align-items: flex-end; padding: 30px; }
   .media-title { font-size: 32px; font-weight: 800; color: white; text-shadow: 0 3px 15px black; }
 
-  /* TEMA DESAIN KLASIK TV */
+  /* ---------------------------------------------------- */
+  /* TEMA DESAIN KHUSUS (KLASIK & MINIMALIS) UNTUK NORMAL */
+  /* ---------------------------------------------------- */
   .desain-klasik .header { border-bottom: 5px solid var(--gold); }
   .desain-klasik .logo-wrap { border-radius: 15px 0 15px 0; border: 2px solid var(--gold); }
   .desain-klasik .card-saldo, .desain-klasik .card-info, .desain-klasik .right-panel { border-radius: 25px 0 25px 0; border: 2px solid var(--gold); background: var(--panel-bg); }
   .desain-klasik .info-header { font-family: 'Amiri', serif; }
   .desain-klasik .sholat-box { border-radius: 10px 0 10px 0; }
   
-  /* TEMA DESAIN MINIMALIS TV */
   .desain-minimalis .header { border-bottom: 1px solid rgba(255,255,255,0.1); background: var(--bg-dark); }
   .desain-minimalis .card-saldo, .desain-minimalis .card-info, .desain-minimalis .right-panel { border-radius: 10px; border: 1px solid rgba(255,255,255,0.1); box-shadow: none; background: transparent; }
   .desain-minimalis .sholat-bar { background: transparent; border-bottom: 1px solid rgba(255,255,255,0.1); }
   .desain-minimalis .sholat-box { border: none; border-radius: 5px; }
   .desain-minimalis .sholat-box.aktif { background: rgba(255,255,255,0.1); box-shadow: none; border: 1px solid var(--gold); }
 
-  /* FULLSCREEN LAYOUTS */
-  body.mode-widescreen .left-panel,
-  body.mode-live .left-panel { display: none !important; }
-  body.mode-widescreen .right-panel,
-  body.mode-live .right-panel { flex: 1; border-radius: 20px; }
+  /* ---------------------------------------------------- */
+  /* MODE FULLSCREEN (AMAL & WIDESCREEN FLYER) - DIPERBAIKI */
+  /* ---------------------------------------------------- */
+  body.mode-widescreen .left-panel, body.mode-live .left-panel { display: none !important; }
+  body.mode-widescreen .right-panel, body.mode-live .right-panel { flex: 1; border-radius: 20px; }
 
+  /* Timpa (Override) Desain Fullscreen untuk Klasik & Minimalis */
+  body.desain-klasik.mode-widescreen .right-panel, body.desain-klasik.mode-live .right-panel { border-radius: 40px 0 40px 0 !important; border: 4px solid var(--gold) !important; }
+  body.desain-minimalis.mode-widescreen .right-panel, body.desain-minimalis.mode-live .right-panel { border-radius: 0 !important; border: none !important; background: transparent !important; }
+
+  /* Mode Program Amal Fullscreen */
   body.mode-amal .header, body.mode-amal .sholat-bar { display: none !important; }
   body.mode-amal .right-panel { display: none !important; }
   body.mode-amal .left-panel { width: 100%; flex: 1; border: none; background: transparent; }
   body.mode-amal .card-saldo, body.mode-amal .card-info { display: none !important; }
   
-  #panel-amal { display: none; width: 100%; height: 100%; background: var(--bg-dark); border-radius: 20px; border: 4px solid var(--masuk); padding: 40px; flex-direction: column; justify-content: center; text-align: center; }
+  #panel-amal { display: none; width: 100%; height: 100%; background: var(--bg-dark); border-radius: 20px; border: 4px solid var(--gold); padding: 40px; flex-direction: column; justify-content: center; text-align: center; }
   body.mode-amal #panel-amal { display: flex !important; animation: fadeIn 1s; }
+  
+  /* Timpa (Override) Kotak Amal Fullscreen untuk Klasik & Minimalis */
+  body.desain-klasik.mode-amal #panel-amal { border-radius: 40px 0 40px 0 !important; border: 4px solid var(--gold) !important; }
+  body.desain-minimalis.mode-amal #panel-amal { border-radius: 0 !important; border: none !important; background: var(--panel-bg) !important; }
+
+  /* Box Dinamis di dalam Program Amal */
+  .amal-cta-box { border-radius: 20px; }
+  .amal-stat-box { border-radius: 15px; }
+  .desain-klasik .amal-cta-box { border-radius: 30px 0 30px 0 !important; border-color: var(--gold) !important; }
+  .desain-klasik .amal-stat-box { border-radius: 20px 0 20px 0 !important; border-color: var(--gold) !important; }
+  .desain-minimalis .amal-cta-box { border-radius: 8px !important; border: 1px solid rgba(255,255,255,0.2) !important; }
+  .desain-minimalis .amal-stat-box { border-radius: 8px !important; border: 1px solid rgba(255,255,255,0.2) !important; }
 
   /* FOOTER */
   .footer { background: var(--gold); height: 80px; color: var(--bg-dark); display: flex; align-items: center; overflow: hidden; z-index: 100; border-top: 4px solid var(--bg-dark); transition: transform 0.8s; }
@@ -134,7 +152,7 @@
   .iq-title { font-size: 55px; color: white; font-weight: 700; letter-spacing: 3px; margin-bottom: 5px; }
   .iq-name { font-size: 110px; color: var(--gold); font-weight: 800; text-transform: uppercase; line-height: 1; margin-bottom: 20px; text-shadow: 0 0 35px var(--gold); }
   .iq-subtitle { font-size: 40px; color: rgba(255,255,255,0.9); margin-bottom: 10px; transition: color 0.3s; }
-  .iq-timer { font-size: 280px; font-weight: 800; color: var(--masuk); font-family: 'Orbitron', sans-serif; line-height: 1; text-shadow: 0 0 60px var(--masuk); letter-spacing: 5px;}
+  .iq-timer { font-size: 280px; font-weight: 800; color: #4ADE80; font-family: 'Orbitron', sans-serif; line-height: 1; text-shadow: 0 0 60px #4ADE80; letter-spacing: 5px;}
   @keyframes blinkRed { 0%, 100% { color: #EF4444; text-shadow: 0 0 60px rgba(239,68,68,0.6); } 50% { color: #B91C1C; text-shadow: none; } }
   .iq-timer.warning { animation: blinkRed 1s infinite; }
 </style>
@@ -330,7 +348,7 @@ function updateTime() {
                       document.getElementById('iq-subtitle').innerText = "MENUJU IQOMAH";
                       document.getElementById('iq-subtitle').style.color = "rgba(255,255,255,0.9)";
                       document.getElementById('iq-timer').style.display = 'block';
-                      document.getElementById('iq-timer').style.color = "var(--masuk)";
+                      document.getElementById('iq-timer').style.color = "#4ADE80";
                       let jedaMenit = jedaConfig[namaSholat] || 10;
                       let sisaIqomah = jedaMenit - 4; if (sisaIqomah < 1) sisaIqomah = 1; 
                       iqomahTargetTime = new Date(Date.now() + (sisaIqomah * 60000));
@@ -352,7 +370,7 @@ function updateTime() {
                   isIqomahMode = false; phase = "NORMAL";
                   document.getElementById('iqomah-screen').classList.add('hide');
                   document.getElementById('iq-timer').classList.remove('warning');
-                  document.getElementById('iq-timer').style.color = "var(--masuk)"; 
+                  document.getElementById('iq-timer').style.color = "#4ADE80"; 
               }, 15 * 60000); 
           } else {
               let diffSec = Math.ceil(diffMs / 1000);
@@ -386,7 +404,7 @@ function jalankanTV() {
   if (currentItem.type === 'DEFAULT') {
      document.getElementById('konten-media').innerHTML = `<div style="text-align:center; color:white; opacity:0.3;"><img src="Logo Power of Masjid.png" style="width:200px;"><div style="font-size:30px; font-weight:800; margin-top:20px;">POWER OF MASJID</div></div>`;
      document.getElementById('konten-media').classList.add('active');
-     nextDelay = 15000; // Standby layar kanan selama 15 detik
+     nextDelay = 15000; 
   }
   else if (currentItem.type === 'MEDIA') {
      const m = currentItem.data;
@@ -395,9 +413,9 @@ function jalankanTV() {
      let tipeVisual = String(m.tipe).toUpperCase();
      
      if (isLive) { document.body.classList.add('mode-live'); nextDelay = 3600000; } 
-     else if (tipeVisual.includes('FLYER') || tipeVisual.includes('POSTER') || tipeVisual.includes('BROSUR')) { document.body.classList.add('mode-widescreen'); nextDelay = 15000; } // Flyer 15 detik
+     else if (tipeVisual.includes('FLYER') || tipeVisual.includes('POSTER') || tipeVisual.includes('BROSUR')) { document.body.classList.add('mode-widescreen'); nextDelay = 15000; } 
      else if (isYt) { nextDelay = 90000; } 
-     else { nextDelay = 15000; } // Foto biasa 15 detik
+     else { nextDelay = 15000; } 
      
      let pMedia = document.getElementById('konten-media');
      if(isYt) pMedia.innerHTML = `<iframe class="media-img" src="${getYoutubeEmbed(m.url)}" allow="autoplay"></iframe>`;
@@ -423,23 +441,23 @@ function jalankanTV() {
          let slotTersedia = 7 - sisaSapiKol;
          
          if (sisaSapiKol > 0) {
-             html += `<div style="margin-top:30px; background:rgba(74,222,128,0.15); border:3px solid var(--masuk); border-radius:20px; padding:25px; text-align:center;">
+             html += `<div class="amal-cta-box" style="margin-top:30px; background:rgba(255,255,255,0.05); border:3px solid var(--gold); padding:25px; text-align:center;">
                  <div style="font-size:35px; color:white; font-weight:800; margin-bottom:10px;">MARI BERGABUNG! 🐄</div>
-                 <div style="font-size:45px; color:var(--masuk); font-weight:900;">MASIH BUTUH <span style="font-size:60px; color:var(--gold);">${slotTersedia}</span> ORANG LAGI</div>
+                 <div style="font-size:45px; color:var(--gold); font-weight:900;">MASIH BUTUH <span style="font-size:60px; color:white;">${slotTersedia}</span> ORANG LAGI</div>
                  <div style="font-size:25px; color:rgba(255,255,255,0.8); font-weight:600; margin-top:5px;">Untuk melengkapi Sapi Kolektif Ke-${totalSapiKolPenuh + 1}</div>
              </div>`;
          } else {
-             html += `<div style="margin-top:30px; background:rgba(74,222,128,0.15); border:3px solid var(--masuk); border-radius:20px; padding:25px; text-align:center;">
+             html += `<div class="amal-cta-box" style="margin-top:30px; background:rgba(255,255,255,0.05); border:3px solid var(--gold); padding:25px; text-align:center;">
                  <div style="font-size:35px; color:white; font-weight:800; margin-bottom:10px;">ALHAMDULILLAH 🐄</div>
-                 <div style="font-size:45px; color:var(--masuk); font-weight:900;">DIBUKA SAPI KOLEKTIF KE-${totalSapiKolPenuh + 1}</div>
+                 <div style="font-size:45px; color:var(--gold); font-weight:900;">DIBUKA SAPI KOLEKTIF KE-${totalSapiKolPenuh + 1}</div>
                  <div style="font-size:25px; color:rgba(255,255,255,0.8); font-weight:600; margin-top:5px;">Tersedia 7 Slot Kosong</div>
              </div>`;
          }
 
          html += `<div style="display:flex; justify-content:center; gap:20px; margin-top:30px;">`;
-         if (totalSapiKolPenuh > 0) html += `<div style="background:rgba(255,255,255,0.05); border:2px solid var(--border); border-radius:15px; padding:15px; width:220px;"><div style="font-size:20px; color:var(--gold); font-weight:bold;">Sapi Kol. Penuh</div><div style="font-size:35px; font-weight:900; color:white; margin-top:5px;">${totalSapiKolPenuh} Ekor</div></div>`;
-         if (sapiUtuh.length > 0) html += `<div style="background:rgba(255,255,255,0.05); border:2px solid var(--border); border-radius:15px; padding:15px; width:220px;"><div style="font-size:20px; color:var(--gold); font-weight:bold;">Sapi Mandiri</div><div style="font-size:35px; font-weight:900; color:white; margin-top:5px;">${sapiUtuh.length} Ekor</div></div>`;
-         if (kambing.length > 0) html += `<div style="background:rgba(255,255,255,0.05); border:2px solid var(--border); border-radius:15px; padding:15px; width:220px;"><div style="font-size:20px; color:var(--gold); font-weight:bold;">Kambing/Domba</div><div style="font-size:35px; font-weight:900; color:white; margin-top:5px;">${kambing.length} Ekor</div></div>`;
+         if (totalSapiKolPenuh > 0) html += `<div class="amal-stat-box" style="background:rgba(255,255,255,0.05); border:2px solid var(--border); padding:15px; width:220px;"><div style="font-size:20px; color:var(--gold); font-weight:bold;">Sapi Kol. Penuh</div><div style="font-size:35px; font-weight:900; color:white; margin-top:5px;">${totalSapiKolPenuh} Ekor</div></div>`;
+         if (sapiUtuh.length > 0) html += `<div class="amal-stat-box" style="background:rgba(255,255,255,0.05); border:2px solid var(--border); padding:15px; width:220px;"><div style="font-size:20px; color:var(--gold); font-weight:bold;">Sapi Mandiri</div><div style="font-size:35px; font-weight:900; color:white; margin-top:5px;">${sapiUtuh.length} Ekor</div></div>`;
+         if (kambing.length > 0) html += `<div class="amal-stat-box" style="background:rgba(255,255,255,0.05); border:2px solid var(--border); padding:15px; width:220px;"><div style="font-size:20px; color:var(--gold); font-weight:bold;">Kambing/Domba</div><div style="font-size:35px; font-weight:900; color:white; margin-top:5px;">${kambing.length} Ekor</div></div>`;
          html += `</div>`;
          
      } else { 
@@ -451,10 +469,10 @@ function jalankanTV() {
              let progress = Math.min(Math.round((tUang / targetDana) * 100), 100);
              html += `<div style="margin-top:25px; width:85%; margin-left:auto; margin-right:auto;">
                          <div style="display:flex; justify-content:space-between; color:white; font-size:20px; font-weight:bold; margin-bottom:10px;"><span>Tercapai ${progress}%</span><span>Target: Rp ${targetDana.toLocaleString("id-ID")}</span></div>
-                         <div style="background:rgba(255,255,255,0.2); height:16px; border-radius:10px; overflow:hidden;"><div style="background:var(--masuk); height:100%; width:${progress}%; transition:width 1s ease-in-out;"></div></div>
+                         <div style="background:rgba(255,255,255,0.2); height:16px; border-radius:10px; overflow:hidden;"><div style="background:var(--gold); height:100%; width:${progress}%; transition:width 1s ease-in-out;"></div></div>
                       </div>`;
          }
-         html += `<div style="font-size: 20px; font-weight: 600; color: var(--masuk); margin-top: 20px;">DARI ${partisipan.length} MUNFIQ</div>`;
+         html += `<div style="font-size: 20px; font-weight: 600; color: var(--gold); margin-top: 20px;">DARI ${partisipan.length} MUNFIQ</div>`;
      }
      
      let teksDeskripsi = a.keterangan || a.deskripsi || a.isi || "";
@@ -463,7 +481,7 @@ function jalankanTV() {
      
      document.getElementById('panel-amal').innerHTML = html;
      document.body.classList.add('mode-amal');
-     nextDelay = 15000; // Program Amal dikembalikan ke 15 detik 
+     nextDelay = 15000; 
   }
   
   playIndex++;
