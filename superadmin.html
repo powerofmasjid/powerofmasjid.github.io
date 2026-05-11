@@ -51,12 +51,25 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg-dark);
 .btn-primary { width: 100%; background: var(--gold); color: var(--bg-dark); border: none; padding: 14px; border-radius: 10px; font-weight: 700; font-size: 14px; cursor: pointer; font-family: inherit; margin-top: 10px; }
 .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
 
+/* MODIFIKASI: LIST DAN SCROLL UNTUK DATA BANYAK */
+.scroll-list { max-height: 380px; overflow-y: auto; padding-right: 5px; }
+.scroll-list::-webkit-scrollbar { width: 4px; }
+.scroll-list::-webkit-scrollbar-thumb { background: rgba(201,168,76,0.3); border-radius: 4px; }
+
 .list-item { background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 15px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
 .item-info h4 { font-size: 14px; color: white; margin-bottom: 4px; }
 .item-info p { font-size: 11px; color: rgba(255,255,255,0.6); }
 
+/* MODIFIKASI: ITEM CARD EXPANDABLE UNTUK IKLAN (SEPERTI DI ADMIN.HTML) */
+.item-card { background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 15px; margin-bottom: 10px; cursor: pointer; transition: background 0.2s; }
+.item-card:hover { background: rgba(0,0,0,0.3); border-color: var(--gold); }
+.action-buttons { display: none; margin-top: 10px; gap: 8px; padding-top: 10px; border-top: 1px dashed rgba(255,255,255,0.1); }
+.item-card.expanded .action-buttons { display: flex; }
+.btn-action { flex: 1; padding: 8px; border-radius: 6px; font-size: 11px; font-weight: 600; cursor: pointer; border: none; text-align: center; }
+.btn-edit { background: rgba(201,168,76,0.1); color: var(--gold); border: 1px solid rgba(201,168,76,0.3); }
+.btn-del { background: rgba(220, 38, 38, 0.1); color: #FCA5A5; border: 1px solid #DC2626; }
+
 .btn-small { background: rgba(255,255,255,0.1); border: 1px solid var(--border); color: white; padding: 6px 12px; border-radius: 6px; font-size: 11px; cursor: pointer; }
-.btn-danger { background: rgba(220, 38, 38, 0.1); border: 1px solid #DC2626; color: #FCA5A5; }
 
 .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(100px);background:white;color:var(--bg-dark);font-size:13px;font-weight:600;padding:12px 24px;border-radius:20px;transition:transform 0.3s;z-index:9999;}
 .toast.show{transform:translateX(-50%) translateY(0);}
@@ -174,8 +187,8 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg-dark);
 <div class="toast" id="toast">Notifikasi</div>
 
 <script>
-// PASTIKAN LINK INI ADALAH HASIL DEPLOY "NEW DEPLOYMENT" YANG TERAKHIR!
-const API_URL = 'https://script.google.com/macros/s/AKfycbzdDj9Ifaic7LEBBXU-8Wa3zfeaW32lq1qEl2N7LXcKvqHBbt8axrwAs92Fevno0U2Sqw/exec';
+// PASTIKAN MENGGUNAKAN LINK API ANDA YANG AKTIF
+const API_URL = 'https://script.google.com/macros/s/AKfycbzJhB3_-IqLJPSQOSNReTK5YAL7T1FdPGuMJjVIKf6MyO6v5NlFvpHEqM-yFWPs1hRe8A/exec';
 const KUNCI_RAHASIA = 'POW_MASJID_SECURE_2026';
 let LIST_IKLAN = [];
 
@@ -217,6 +230,13 @@ function copyLink(p) {
   let b = window.location.href.split('?')[0];
   b = b.substring(0, b.lastIndexOf("/"));
   navigator.clipboard.writeText(b + "/" + p).then(() => showToast('Link berhasil disalin!'));
+}
+
+// Fungsi Expand/Collapse Iklan (Sama seperti admin.html)
+function toggleAction(element) {
+  var cards = document.querySelectorAll('.item-card');
+  cards.forEach(c => { if(c !== element) c.classList.remove('expanded'); });
+  element.classList.toggle('expanded');
 }
 
 function prosesLogin() {
@@ -268,18 +288,19 @@ async function loadDashboardData() {
       
       const listContainer = document.getElementById('list-masjid-container');
       if(data.list_masjid && data.list_masjid.length > 0) {
-        listContainer.innerHTML = data.list_masjid.map(m => `
+        // SCROLL LIST MASJID
+        listContainer.innerHTML = '<div class="scroll-list">' + data.list_masjid.reverse().map(m => `
           <div class="list-item">
             <div class="item-info" style="flex:1;">
               <h4>${m.nama}</h4>
               <p>Slug: <strong style="color:var(--gold);">${m.slug}</strong></p>
             </div>
-            <div style="display:flex; gap:6px; align-items:center;">
-              <button class="btn-small" style="color:#10B981; border-color:#10B981;" onclick="copyLink('masjid.html?masjid=${m.slug}')">🔗 Web</button>
-              <button class="btn-small" style="color:#38BDF8; border-color:#38BDF8;" onclick="copyLink('tv.html?masjid=${m.slug}')">📺 TV</button>
+            <div style="display:flex; gap:6px; align-items:center; flex-wrap:wrap;">
+              <button class="btn-small" style="color:#38BDF8; border-color:#38BDF8;" onclick="copyLink('masjid.html?masjid=${m.slug}')">🔗 Web</button>
+              <button class="btn-small" style="color:#C9A84C; border-color:#C9A84C;" onclick="copyLink('tv.html?masjid=${m.slug}')">📺 TV</button>
             </div>
           </div>
-        `).join('');
+        `).join('') + '</div>';
       } else {
         listContainer.innerHTML = '<div style="text-align:center; font-size:12px; color:rgba(255,255,255,0.5);">Belum ada masjid terdaftar</div>';
       }
@@ -345,20 +366,21 @@ async function loadIklanData() {
     const json = await res.json();
     
     if (json.status === 'ok' && json.data && json.data.length > 0) {
-      LIST_IKLAN = json.data;
-      document.getElementById('list-iklan-container').innerHTML = json.data.map((ik, idx) => `
-        <div class="list-item">
+      LIST_IKLAN = json.data.reverse();
+      // SCROLL LIST IKLAN DAN EXPANDABLE CARD
+      document.getElementById('list-iklan-container').innerHTML = '<div class="scroll-list">' + LIST_IKLAN.map((ik, idx) => `
+        <div class="item-card" onclick="toggleAction(this)">
           <div style="flex:1;">
-            <h4 style="color:var(--gold);">${ik.judul}</h4>
+            <h4 style="color:var(--gold); font-size:14px; margin-bottom:4px;">${ik.judul}</h4>
             <p style="font-size:12px; color:white;">${ik.program}</p>
             <p style="font-size:10px; margin-top:4px;"><span style="color:#10B981;">Tampil: ${new Date(ik.tgl_mulai).toLocaleDateString('id-ID')} s/d ${new Date(ik.tgl_selesai).toLocaleDateString('id-ID')}</span></p>
           </div>
-          <div style="display:flex; gap:6px;">
-            <button class="btn-small" onclick="editIklan(${idx})">✏️ Edit</button>
-            <button class="btn-small btn-danger" onclick="hapusIklan('${ik.id}')">🗑️</button>
+          <div class="action-buttons">
+            <button class="btn-action btn-edit" onclick="event.stopPropagation(); editIklan(${idx})">✏️ Edit</button>
+            <button class="btn-action btn-del" onclick="event.stopPropagation(); hapusIklan('${ik.id}')">🗑️ Hapus</button>
           </div>
         </div>
-      `).join('');
+      `).join('') + '</div>';
     } else {
       document.getElementById('list-iklan-container').innerHTML = '<div style="text-align:center; font-size:12px; color:rgba(255,255,255,0.5);">Belum ada data iklan</div>';
     }
