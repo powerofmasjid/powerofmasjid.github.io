@@ -333,7 +333,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#F7F7F5;color:#1A1A1A
       <div class="profil-section">
         <h3>Tema & Tampilan</h3>
         <div class="form-group">
-          <label class="form-label">Tema Warna Layar (Pilih 1 dari 10)</label>
+          <label class="form-label">1. Tema Warna (Suasana Layar)</label>
           <select class="form-select" id="prof-tema">
             <option value="">Zamrud (Default)</option>
             <option value="safir">Safir — Biru Elegan</option>
@@ -347,6 +347,25 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#F7F7F5;color:#1A1A1A
             <option value="malam">Malam — Biru Premium</option>
           </select>
         </div>
+        
+        <div class="form-group">
+          <label class="form-label">2. Desain Layout Website (HP Jamaah)</label>
+          <select class="form-select" id="prof-desain-web">
+            <option value="modern">Modern (Default)</option>
+            <option value="klasik">Klasik Timur Tengah</option>
+            <option value="minimalis">Minimalis Bersih</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">3. Desain Layout Layar TV</label>
+          <select class="form-select" id="prof-desain-tv">
+            <option value="modern">Modern (Layout Persegi Panjang)</option>
+            <option value="klasik">Klasik (Mandala Ornament)</option>
+            <option value="minimalis">Minimalis (Full Visual)</option>
+          </select>
+        </div>
+        
         <div class="form-group">
           <label class="form-label">Upload Logo</label>
           <input type="file" accept="image/*" onchange="uploadKeDrive(this, 'prof-logo', 'sl')">
@@ -402,7 +421,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#F7F7F5;color:#1A1A1A
 <div class="toast" id="toast">Berhasil!</div>
 
 <script>
-var API_URL = 'https://script.google.com/macros/s/AKfycbzdDj9Ifaic7LEBBXU-8Wa3zfeaW32lq1qEl2N7LXcKvqHBbt8axrwAs92Fevno0U2Sqw/exec';
+var API_URL = 'https://script.google.com/macros/s/AKfycbzJhB3_-IqLJPSQOSNReTK5YAL7T1FdPGuMJjVIKf6MyO6v5NlFvpHEqM-yFWPs1hRe8A/exec';
 
 var KUNCI_RAHASIA = 'POW_MASJID_SECURE_2026'; 
 var ADMIN_DATA = null, ID_MASJID = '', LAST_5_TRX = [], LIST_PROGRAM = [];
@@ -588,7 +607,7 @@ function prosesLogin() {
 function tampilAdmin() {
   document.getElementById('login-wrap').classList.remove('show'); document.getElementById('admin-content').style.display = 'block';
   document.getElementById('admin-nama-display').textContent = ADMIN_DATA.nama; 
-  loadProfilAdmin(); // DI-LOAD DIAM-DIAM UNTUK KEBUTUHAN KOP SURAT
+  loadProfilAdmin(); 
   loadTransaksiAdmin();
 }
 
@@ -658,7 +677,6 @@ function generatePDFKas() {
 
     const { jsPDF } = window.jspdf; const doc = new jsPDF();
     
-    // PANGGIL FUNGSI KOP SURAT
     gambarKopSurat(doc);
 
     doc.setFontSize(11);
@@ -758,7 +776,6 @@ function gantiFormAmal() {
   document.getElementById('amal-jamaah-id-edit').value = ''; document.getElementById('btn-simpan-data-amal').innerHTML = '💾 Simpan Data Jamaah';
   document.getElementById('list-data-amal').innerHTML = '';
   
-  // KUNCI TOMBOL CETAK SAAT GANTI PROGRAM
   var btnCetak = document.getElementById('btn-cetak-pdf');
   if(btnCetak) { btnCetak.disabled = true; btnCetak.innerHTML = '⏳ Menyiapkan Data...'; }
   
@@ -787,7 +804,6 @@ function loadDataAmalAdmin(id_prog, tipe) {
   if(!id_prog) { document.getElementById('list-data-amal').innerHTML = ''; return; }
   var actionStr = tipe === 'KURBAN' ? 'getKurban' : (tipe === 'ZAKAT' ? 'getZakat' : 'getInfaq');
   fetch(API_URL + `?action=${actionStr}&id_masjid=${ID_MASJID}&id_program=${id_prog}&_t=`+Date.now()).then(r => r.json()).then(j => {
-      // BUKA KUNCI TOMBOL CETAK SETELAH DATA BERHASIL DIMUAT
       var btnCetak = document.getElementById('btn-cetak-pdf');
       if(btnCetak) { btnCetak.disabled = false; btnCetak.innerHTML = '📄 Cetak Laporan'; }
 
@@ -823,8 +839,6 @@ function generatePDFProgram() {
     if(!id_prog) { showToast("Pilih program terlebih dahulu!"); return; }
 
     const { jsPDF } = window.jspdf; const doc = new jsPDF();
-    
-    // PANGGIL FUNGSI KOP SURAT
     gambarKopSurat(doc);
 
     doc.setFontSize(11);
@@ -832,7 +846,6 @@ function generatePDFProgram() {
     doc.text("LAPORAN DATA: " + nama_prog.toUpperCase(), 14, 34);
     
     if (tipe === 'KURBAN') {
-        // FILTER BAJA: Membaca kata kunci secara fleksibel tanpa error huruf besar/kecil
         let sapiKolektif = LIST_DATA_AMAL.filter(d => d.jenis && d.jenis.toLowerCase().includes('kolektif'));
         let sapiUtuh = LIST_DATA_AMAL.filter(d => d.jenis && d.jenis.toLowerCase().includes('utuh') && !d.jenis.toLowerCase().includes('kambing'));
         let kambing = LIST_DATA_AMAL.filter(d => d.jenis && (d.jenis.toLowerCase().includes('kambing') || d.jenis.toLowerCase().includes('domba')));
@@ -1006,13 +1019,54 @@ function loadProfilAdmin() {
     var d = j.data; buatLinkWebDisplay();
     document.getElementById('prof-nama').value=d.nama||''; document.getElementById('prof-alamat').value=d.alamat||''; document.getElementById('prof-kelurahan').value=d.kelurahan||''; document.getElementById('prof-kecamatan').value=d.kecamatan||''; document.getElementById('prof-kota').value=d.kota||''; 
     document.getElementById('prof-deskripsi').value=d.deskripsi||''; updateDescCounter();
-    document.getElementById('prof-wa').value=d.telepon_wa||''; document.getElementById('prof-tema').value=d.tema||''; document.getElementById('prof-logo').value=d.logo_url||''; document.getElementById('prof-qris').value=d.qris_url||''; document.getElementById('prof-rek1-bank').value=d.rek1_bank||''; document.getElementById('prof-rek1-nomor').value=d.rek1_nomor||''; document.getElementById('prof-rek2-bank').value=d.rek2_bank||''; document.getElementById('prof-rek2-nomor').value=d.rek2_nomor||''; document.getElementById('prof-rek3-bank').value=d.rek3_bank||''; document.getElementById('prof-rek3-nomor').value=d.rek3_nomor||''; document.getElementById('prof-lat').value=d.latitude||''; document.getElementById('prof-lon').value=d.longitude||''; document.getElementById('prof-jeda-subuh').value=d.jeda_subuh||10; document.getElementById('prof-jeda-dzuhur').value=d.jeda_dzuhur||10; document.getElementById('prof-jeda-ashar').value=d.jeda_ashar||10; document.getElementById('prof-jeda-maghrib').value=d.jeda_maghrib||10; document.getElementById('prof-jeda-isya').value=d.jeda_isya||10; 
+    document.getElementById('prof-wa').value=d.telepon_wa||''; 
+    document.getElementById('prof-tema').value=d.tema||''; 
+    
+    // FETCH DATA DESAIN (FITUR BARU)
+    document.getElementById('prof-desain-web').value=d.tema_desain_web||'modern'; 
+    document.getElementById('prof-desain-tv').value=d.tema_desain_tv||'modern'; 
+    
+    document.getElementById('prof-logo').value=d.logo_url||''; document.getElementById('prof-qris').value=d.qris_url||''; document.getElementById('prof-rek1-bank').value=d.rek1_bank||''; document.getElementById('prof-rek1-nomor').value=d.rek1_nomor||''; document.getElementById('prof-rek2-bank').value=d.rek2_bank||''; document.getElementById('prof-rek2-nomor').value=d.rek2_nomor||''; document.getElementById('prof-rek3-bank').value=d.rek3_bank||''; document.getElementById('prof-rek3-nomor').value=d.rek3_nomor||''; document.getElementById('prof-lat').value=d.latitude||''; document.getElementById('prof-lon').value=d.longitude||''; document.getElementById('prof-jeda-subuh').value=d.jeda_subuh||10; document.getElementById('prof-jeda-dzuhur').value=d.jeda_dzuhur||10; document.getElementById('prof-jeda-ashar').value=d.jeda_ashar||10; document.getElementById('prof-jeda-maghrib').value=d.jeda_maghrib||10; document.getElementById('prof-jeda-isya').value=d.jeda_isya||10; 
   }); 
 }
 
 function simpanProfil(btn) { 
-  var d = { api_key: KUNCI_RAHASIA, action:'updateMasjid', id_masjid:ID_MASJID, slug:ADMIN_DATA.slug, nama:document.getElementById('prof-nama').value, alamat:document.getElementById('prof-alamat').value, kelurahan:document.getElementById('prof-kelurahan').value, kecamatan:document.getElementById('prof-kecamatan').value, kota:document.getElementById('prof-kota').value, deskripsi:document.getElementById('prof-deskripsi').value, telepon_wa:document.getElementById('prof-wa').value, tema:document.getElementById('prof-tema').value, logo_url:document.getElementById('prof-logo').value, qris_url:document.getElementById('prof-qris').value, rek1_bank:document.getElementById('prof-rek1-bank').value, rek1_nomor:document.getElementById('prof-rek1-nomor').value, rek2_bank:document.getElementById('prof-rek2-bank').value, rek2_nomor:document.getElementById('prof-rek2-nomor').value, rek3_bank:document.getElementById('prof-rek3-bank').value, rek3_nomor:document.getElementById('prof-rek3-nomor').value, latitude:document.getElementById('prof-lat').value, longitude:document.getElementById('prof-lon').value, jeda_subuh:document.getElementById('prof-jeda-subuh').value, jeda_dzuhur:document.getElementById('prof-jeda-dzuhur').value, jeda_ashar:document.getElementById('prof-jeda-ashar').value, jeda_maghrib:document.getElementById('prof-jeda-maghrib').value, jeda_isya:document.getElementById('prof-jeda-isya').value }; 
-  setLoading(btn, true); fetch(API_URL,{method:'POST', body:JSON.stringify(d)}).then(r=>r.json()).then(j=>{ setLoading(btn, false); if (j.status === 'ok') showToast('Profil Tersimpan!'); }); 
+  var d = { 
+    api_key: KUNCI_RAHASIA, 
+    action:'updateMasjid', 
+    id_masjid:ID_MASJID, 
+    slug:ADMIN_DATA.slug, 
+    nama:document.getElementById('prof-nama').value, 
+    alamat:document.getElementById('prof-alamat').value, 
+    kelurahan:document.getElementById('prof-kelurahan').value, 
+    kecamatan:document.getElementById('prof-kecamatan').value, 
+    kota:document.getElementById('prof-kota').value, 
+    deskripsi:document.getElementById('prof-deskripsi').value, 
+    telepon_wa:document.getElementById('prof-wa').value, 
+    tema:document.getElementById('prof-tema').value, 
+    
+    // SIMPAN DATA DESAIN (FITUR BARU)
+    tema_desain_web:document.getElementById('prof-desain-web').value, 
+    tema_desain_tv:document.getElementById('prof-desain-tv').value, 
+    
+    logo_url:document.getElementById('prof-logo').value, 
+    qris_url:document.getElementById('prof-qris').value, 
+    rek1_bank:document.getElementById('prof-rek1-bank').value, 
+    rek1_nomor:document.getElementById('prof-rek1-nomor').value, 
+    rek2_bank:document.getElementById('prof-rek2-bank').value, 
+    rek2_nomor:document.getElementById('prof-rek2-nomor').value, 
+    rek3_bank:document.getElementById('prof-rek3-bank').value, 
+    rek3_nomor:document.getElementById('prof-rek3-nomor').value, 
+    latitude:document.getElementById('prof-lat').value, 
+    longitude:document.getElementById('prof-lon').value, 
+    jeda_subuh:document.getElementById('prof-jeda-subuh').value, 
+    jeda_dzuhur:document.getElementById('prof-jeda-dzuhur').value, 
+    jeda_ashar:document.getElementById('prof-jeda-ashar').value, 
+    jeda_maghrib:document.getElementById('prof-jeda-maghrib').value, 
+    jeda_isya:document.getElementById('prof-jeda-isya').value 
+  }; 
+  setLoading(btn, true); 
+  fetch(API_URL,{method:'POST', body:JSON.stringify(d)}).then(r=>r.json()).then(j=>{ setLoading(btn, false); if (j.status === 'ok') showToast('Profil Tersimpan!'); }); 
 }
 
 function logout() { localStorage.removeItem('pow_admin'); location.reload(); }
