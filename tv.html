@@ -186,7 +186,6 @@
   <div class="footer"><div class="footer-label">INFO</div><div style="flex:1; overflow:hidden;"><div class="marquee-text" id="tv-pengumuman"></div></div></div>
 
 <script>
-// PASTIKAN MENGGUNAKAN LINK API BARU
 const API_URL = 'https://script.google.com/macros/s/AKfycbzJhB3_-IqLJPSQOSNReTK5YAL7T1FdPGuMJjVIKf6MyO6v5NlFvpHEqM-yFWPs1hRe8A/exec';
 
 let ID_MASJID = ''; let globalSholatList = []; let LIST_JADWAL = [];
@@ -195,7 +194,6 @@ let isIqomahMode = false; let iqomahTargetTime = null; let adzanTargetTime = nul
 let phase = "NORMAL"; 
 let jedaConfig = { Subuh: 10, Dzuhur: 10, Ashar: 10, Maghrib: 10, Isya: 10 };
 
-// VARIABEL GLOBAL UNTUK MENGINGAT TEMA LAYAR SECARA PERMANEN
 let CURRENT_TEMA = '';
 let CURRENT_DESAIN = 'desain-modern';
 
@@ -382,20 +380,24 @@ function jalankanTV() {
   let currentItem = playlist[playIndex];
   let nextDelay = 15000;
   
-  // LOGIKA PERBAIKAN: Terapkan ulang tema secara paksa, hindari me-reset semuanya
   document.body.className = `${CURRENT_TEMA} ${CURRENT_DESAIN}`; 
   document.getElementById('konten-media').classList.remove('active');
   
-  if (currentItem.type === 'MEDIA') {
+  if (currentItem.type === 'DEFAULT') {
+     document.getElementById('konten-media').innerHTML = `<div style="text-align:center; color:white; opacity:0.3;"><img src="Logo Power of Masjid.png" style="width:200px;"><div style="font-size:30px; font-weight:800; margin-top:20px;">POWER OF MASJID</div></div>`;
+     document.getElementById('konten-media').classList.add('active');
+     nextDelay = 15000; // Standby layar kanan selama 15 detik
+  }
+  else if (currentItem.type === 'MEDIA') {
      const m = currentItem.data;
      let isYt = m.url.includes('youtube.com') || m.url.includes('youtu.be');
      let isLive = m.url.toLowerCase().includes('live');
      let tipeVisual = String(m.tipe).toUpperCase();
      
      if (isLive) { document.body.classList.add('mode-live'); nextDelay = 3600000; } 
-     else if (tipeVisual.includes('FLYER') || tipeVisual.includes('POSTER') || tipeVisual.includes('BROSUR')) { document.body.classList.add('mode-widescreen'); nextDelay = 30000; } 
+     else if (tipeVisual.includes('FLYER') || tipeVisual.includes('POSTER') || tipeVisual.includes('BROSUR')) { document.body.classList.add('mode-widescreen'); nextDelay = 15000; } // Flyer 15 detik
      else if (isYt) { nextDelay = 90000; } 
-     else { nextDelay = 15000; } 
+     else { nextDelay = 15000; } // Foto biasa 15 detik
      
      let pMedia = document.getElementById('konten-media');
      if(isYt) pMedia.innerHTML = `<iframe class="media-img" src="${getYoutubeEmbed(m.url)}" allow="autoplay"></iframe>`;
@@ -461,7 +463,7 @@ function jalankanTV() {
      
      document.getElementById('panel-amal').innerHTML = html;
      document.body.classList.add('mode-amal');
-     nextDelay = 15000; 
+     nextDelay = 15000; // Program Amal dikembalikan ke 15 detik 
   }
   
   playIndex++;
@@ -470,7 +472,7 @@ function jalankanTV() {
 
 async function loadData() {
   try {
-    const rM = await fetch(API_URL + '?action=getMasjidBySlug&slug=' + getSlug());
+    const rM = await fetch(API_URL + '?action=getMasjidBySlug&slug=' + getSlug() + '&_t=' + Date.now());
     const jM = await rM.json();
     if(jM.status === 'ok') {
       ID_MASJID = jM.data.id_masjid;
@@ -478,7 +480,6 @@ async function loadData() {
       document.getElementById('tv-alamat').innerText = jM.data.alamat + ', ' + jM.data.kota;
       if(jM.data.logo_url) document.getElementById('tv-logo-wrap').innerHTML = `<img src="${matenginLink(jM.data.logo_url)}">`;
       
-      // LOGIKA PERBAIKAN: SIMPAN TEMA DI VARIABEL GLOBAL DULU!
       CURRENT_TEMA = jM.data.tema ? 'tema-' + jM.data.tema : '';
       CURRENT_DESAIN = jM.data.tema_desain_tv ? 'desain-' + jM.data.tema_desain_tv : 'desain-modern';
       document.body.className = `${CURRENT_TEMA} ${CURRENT_DESAIN}`;
@@ -539,17 +540,19 @@ async function loadData() {
         }
     });
 
-    let interleavedPlaylist = []; let fIdx = 0, nIdx = 0; let turnFull = true;
-    while (fIdx < fullItems.length || nIdx < normItems.length) {
-        if (turnFull) {
-            if (fIdx < fullItems.length) interleavedPlaylist.push(fullItems[fIdx++]);
-            else if (nIdx < normItems.length) interleavedPlaylist.push(normItems[nIdx++]);
-            turnFull = false;
-        } else {
-            if (nIdx < normItems.length) interleavedPlaylist.push(normItems[nIdx++]);
-            else if (fIdx < fullItems.length) interleavedPlaylist.push(fullItems[fIdx++]);
-            turnFull = true;
-        }
+    if (normItems.length === 0) { normItems.push({ type: 'DEFAULT' }); }
+
+    let interleavedPlaylist = []; 
+    let nIdx = 0;
+    
+    for (let i = 0; i < fullItems.length; i++) {
+        interleavedPlaylist.push(normItems[nIdx % normItems.length]);
+        nIdx++;
+        interleavedPlaylist.push(fullItems[i]);
+    }
+    while (nIdx < normItems.length) {
+        interleavedPlaylist.push(normItems[nIdx]);
+        nIdx++;
     }
     
     playlist = interleavedPlaylist;
@@ -568,7 +571,6 @@ async function loadData() {
 
     document.getElementById('loading-screen').classList.add('hide');
     
-    // TAHAN DI LAYAR NORMAL 30 DETIK SAAT PERTAMA KALI DIBUKA
     if(!masterTimer) {
         document.body.className = `${CURRENT_TEMA} ${CURRENT_DESAIN}`; 
         document.getElementById('konten-media').innerHTML = `<div style="text-align:center; color:white; opacity:0.3;"><img src="Logo Power of Masjid.png" style="width:200px;"><div style="font-size:30px; font-weight:800; margin-top:20px;">POWER OF MASJID</div></div>`;
