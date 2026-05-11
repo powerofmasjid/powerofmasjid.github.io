@@ -16,8 +16,16 @@
     --border: rgba(201,168,76,0.3);
   }
   
+  /* DAFTAR WARNA TEMA (10 TEMA) */
   .tema-safir{--bg-dark:#050F1A;--panel-bg:#0F2240;--gold:#4C7AC9;}
   .tema-emas{--bg-dark:#1A1405;--panel-bg:#4A3810;--gold:#C9A84C;}
+  .tema-fajar{--bg-dark:#1A0A00;--panel-bg:#3A1A00;--gold:#F59E0B;}
+  .tema-langit{--bg-dark:#001A2C;--panel-bg:#003355;--gold:#38BDF8;}
+  .tema-tembaga{--bg-dark:#1A0500;--panel-bg:#3A1100;--gold:#C2410C;}
+  .tema-perak{--bg-dark:#1A1A1A;--panel-bg:#2D2D2D;--gold:#9CA3AF;}
+  .tema-merahhati{--bg-dark:#1A0005;--panel-bg:#3A0011;--gold:#E11D48;}
+  .tema-toska{--bg-dark:#001A18;--panel-bg:#003A35;--gold:#14B8A6;}
+  .tema-malam{--bg-dark:#050A1A;--panel-bg:#111A3A;--gold:#3B82F6;}
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg-dark); color: var(--text); overflow: hidden; height: 100vh; display: flex; flex-direction: column; transition: all 0.5s ease; }
@@ -86,6 +94,20 @@
   .media-overlay { position: absolute; inset: 0; background: linear-gradient(0deg, rgba(0,0,0,0.9) 0%, transparent 40%); display: flex; align-items: flex-end; padding: 30px; }
   .media-title { font-size: 32px; font-weight: 800; color: white; text-shadow: 0 3px 15px black; }
 
+  /* TEMA DESAIN KLASIK TV */
+  .desain-klasik .header { border-bottom: 5px solid var(--gold); }
+  .desain-klasik .logo-wrap { border-radius: 15px 0 15px 0; border: 2px solid var(--gold); }
+  .desain-klasik .card-saldo, .desain-klasik .card-info, .desain-klasik .right-panel { border-radius: 25px 0 25px 0; border: 2px solid var(--gold); background: var(--panel-bg); }
+  .desain-klasik .info-header { font-family: 'Amiri', serif; }
+  .desain-klasik .sholat-box { border-radius: 10px 0 10px 0; }
+  
+  /* TEMA DESAIN MINIMALIS TV */
+  .desain-minimalis .header { border-bottom: 1px solid rgba(255,255,255,0.1); background: var(--bg-dark); }
+  .desain-minimalis .card-saldo, .desain-minimalis .card-info, .desain-minimalis .right-panel { border-radius: 10px; border: 1px solid rgba(255,255,255,0.1); box-shadow: none; background: transparent; }
+  .desain-minimalis .sholat-bar { background: transparent; border-bottom: 1px solid rgba(255,255,255,0.1); }
+  .desain-minimalis .sholat-box { border: none; border-radius: 5px; }
+  .desain-minimalis .sholat-box.aktif { background: rgba(255,255,255,0.1); box-shadow: none; border: 1px solid var(--gold); }
+
   /* FULLSCREEN LAYOUTS */
   body.mode-widescreen .left-panel,
   body.mode-live .left-panel { display: none !important; }
@@ -113,8 +135,6 @@
   .iq-name { font-size: 110px; color: var(--gold); font-weight: 800; text-transform: uppercase; line-height: 1; margin-bottom: 20px; text-shadow: 0 0 35px var(--gold); }
   .iq-subtitle { font-size: 40px; color: rgba(255,255,255,0.9); margin-bottom: 10px; transition: color 0.3s; }
   .iq-timer { font-size: 280px; font-weight: 800; color: var(--masuk); font-family: 'Orbitron', sans-serif; line-height: 1; text-shadow: 0 0 60px var(--masuk); letter-spacing: 5px;}
-  
-  /* Animasi kedip untuk Iqomah */
   @keyframes blinkRed { 0%, 100% { color: #EF4444; text-shadow: 0 0 60px rgba(239,68,68,0.6); } 50% { color: #B91C1C; text-shadow: none; } }
   .iq-timer.warning { animation: blinkRed 1s infinite; }
 </style>
@@ -172,10 +192,13 @@ const API_URL = 'https://script.google.com/macros/s/AKfycbzJhB3_-IqLJPSQOSNReTK5
 let ID_MASJID = ''; let globalSholatList = []; let LIST_JADWAL = [];
 let playlist = []; let playIndex = 0; let masterTimer;
 let isIqomahMode = false; let iqomahTargetTime = null; let adzanTargetTime = null; 
-let phase = "NORMAL"; // NORMAL, PRA_ADZAN, ADZAN, PRA_IQOMAH, IQOMAH
+let phase = "NORMAL"; 
 let jedaConfig = { Subuh: 10, Dzuhur: 10, Ashar: 10, Maghrib: 10, Isya: 10 };
 
-// KOLEKSI MUTIARA HIKMAH (AYAT & HADITS)
+// VARIABEL GLOBAL UNTUK MENGINGAT TEMA LAYAR SECARA PERMANEN
+let CURRENT_TEMA = '';
+let CURRENT_DESAIN = 'desain-modern';
+
 const MUTIARA_HIKMAH = [
   { judul: "Q.S. Al-Baqarah: 261", isi: "Perumpamaan orang yang menginfakkan hartanya di jalan Allah seperti sebutir biji yang menumbuhkan tujuh tangkai, pada setiap tangkai ada seratus biji." },
   { judul: "H.R. Muslim", isi: "Barangsiapa yang menunjuki kepada kebaikan maka dia akan mendapatkan pahala seperti pahala orang yang mengerjakannya." },
@@ -186,12 +209,10 @@ const MUTIARA_HIKMAH = [
   { judul: "H.R. Tirmidzi", isi: "Senyummu di hadapan saudaramu (sesama muslim) adalah sedekah bagimu." }
 ];
 
-// FUNGSI ROTASI PANEL KIRI BAWAH
 let showingAgenda = true;
 function rotateInfoPanel() {
    const panel = document.getElementById('panel-info');
    if (showingAgenda && LIST_JADWAL.length > 0) {
-       // TAMPILKAN AGENDA
        let htmlAgendaLain = LIST_JADWAL.map(k => `<div class="agenda-item"><div class="agenda-judul">${k.nama_kegiatan}</div><div style="color:var(--gold); font-size:20px; font-weight:600;">${k.jadwal} | ${k.lokasi}</div></div>`).join('');
        panel.innerHTML = `
           <div class="info-header">AGENDA MASJID RUTIN</div>
@@ -199,7 +220,6 @@ function rotateInfoPanel() {
              <div class="agenda-scroll-wrapper"><div class="agenda-scroll-content">${htmlAgendaLain}</div></div>
           </div>`;
    } else {
-       // TAMPILKAN HADITS RANDOM
        let rand = MUTIARA_HIKMAH[Math.floor(Math.random() * MUTIARA_HIKMAH.length)];
        panel.innerHTML = `
           <div class="info-body" style="display:flex;">
@@ -210,14 +230,10 @@ function rotateInfoPanel() {
               </div>
           </div>`;
    }
-   // Tukar status untuk rotasi berikutnya
    if(LIST_JADWAL.length > 0) { showingAgenda = !showingAgenda; } else { showingAgenda = false; }
 }
-// Rotasi setiap 25 detik
 setInterval(rotateInfoPanel, 25000);
 
-
-// AUDIO CONTEXT UNTUK BUZZER ALARM
 let audioCtx;
 function initAudio() { if(!audioCtx) { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } if(audioCtx.state === 'suspended') { audioCtx.resume(); } }
 document.body.addEventListener('click', initAudio, { once: true }); 
@@ -267,17 +283,13 @@ function updateTime() {
     const curTimeMs = n.getHours()*3600 + n.getMinutes()*60 + n.getSeconds();
     let sholatMendatang = null; let sisaKeAdzan = 0;
 
-    // CEK PRA-ADZAN 5 DETIK
     for (let i=0; i<globalSholatList.length; i++) {
         let s = globalSholatList[i];
         if (['Subuh', 'Dzuhur', 'Ashar', 'Maghrib', 'Isya'].includes(s.n)) {
             let [h, m] = s.t.split(':').map(Number);
             let sholatTimeMs = h*3600 + m*60;
             let diff = sholatTimeMs - curTimeMs;
-            
-            if (diff > 0 && diff <= 5) {
-                sholatMendatang = s; sisaKeAdzan = diff; break;
-            }
+            if (diff > 0 && diff <= 5) { sholatMendatang = s; sisaKeAdzan = diff; break; }
         }
     }
 
@@ -290,12 +302,10 @@ function updateTime() {
       document.getElementById('iq-timer').innerText = sisaKeAdzan;
       document.getElementById('iq-timer').classList.remove('warning');
       document.getElementById('iq-timer').style.color = "white";
-      
       adzanTargetTime = new Date(n.getTime() + (sisaKeAdzan * 1000));
     }
   }
 
-  // ALUR LAYAR PENUH (ADZAN & IQOMAH)
   if (isIqomahMode) {
       if (phase === "PRA_ADZAN") {
           let diffMs = adzanTargetTime.getTime() - n.getTime();
@@ -317,18 +327,14 @@ function updateTime() {
                   document.getElementById('iq-subtitle').style.color = "var(--gold)";
                   document.getElementById('iq-timer').style.display = 'none';
                   
-                  // TAHAN 4 MENIT UNTUK ADZAN
                   setTimeout(() => {
                       phase = "PRA_IQOMAH";
                       document.getElementById('iq-subtitle').innerText = "MENUJU IQOMAH";
                       document.getElementById('iq-subtitle').style.color = "rgba(255,255,255,0.9)";
                       document.getElementById('iq-timer').style.display = 'block';
                       document.getElementById('iq-timer').style.color = "var(--masuk)";
-                      
                       let jedaMenit = jedaConfig[namaSholat] || 10;
-                      let sisaIqomah = jedaMenit - 4; 
-                      if (sisaIqomah < 1) sisaIqomah = 1; 
-                      
+                      let sisaIqomah = jedaMenit - 4; if (sisaIqomah < 1) sisaIqomah = 1; 
                       iqomahTargetTime = new Date(Date.now() + (sisaIqomah * 60000));
                   }, 4 * 60000); 
               }
@@ -336,7 +342,6 @@ function updateTime() {
               document.getElementById('iq-timer').innerText = Math.ceil(diffMs / 1000);
           }
       } 
-      
       else if (phase === "PRA_IQOMAH") {
           let diffMs = iqomahTargetTime.getTime() - n.getTime();
           if (diffMs <= 0) {
@@ -345,8 +350,6 @@ function updateTime() {
               document.getElementById('iq-subtitle').innerText = "LURUSKAN DAN RAPATKAN SHAF";
               document.getElementById('iq-timer').innerText = "00:00";
               document.getElementById('iq-timer').classList.add('warning'); 
-              
-              // TAHAN 15 MENIT UNTUK SHOLAT
               setTimeout(() => { 
                   isIqomahMode = false; phase = "NORMAL";
                   document.getElementById('iqomah-screen').classList.add('hide');
@@ -357,7 +360,6 @@ function updateTime() {
               let diffSec = Math.ceil(diffMs / 1000);
               let m = Math.floor(diffSec / 60); let s = diffSec % 60;
               document.getElementById('iq-timer').innerText = String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
-              
               if (diffSec <= 10 && diffSec > 0) {
                   initAudio(); playBeepPendek();
                   document.getElementById('iq-timer').style.color = "#F59E0B"; 
@@ -380,7 +382,8 @@ function jalankanTV() {
   let currentItem = playlist[playIndex];
   let nextDelay = 15000;
   
-  document.body.className = ''; 
+  // LOGIKA PERBAIKAN: Terapkan ulang tema secara paksa, hindari me-reset semuanya
+  document.body.className = `${CURRENT_TEMA} ${CURRENT_DESAIN}`; 
   document.getElementById('konten-media').classList.remove('active');
   
   if (currentItem.type === 'MEDIA') {
@@ -389,7 +392,7 @@ function jalankanTV() {
      let isLive = m.url.toLowerCase().includes('live');
      let tipeVisual = String(m.tipe).toUpperCase();
      
-     if (isLive) { document.body.classList.add('mode-widescreen'); nextDelay = 3600000; } 
+     if (isLive) { document.body.classList.add('mode-live'); nextDelay = 3600000; } 
      else if (tipeVisual.includes('FLYER') || tipeVisual.includes('POSTER') || tipeVisual.includes('BROSUR')) { document.body.classList.add('mode-widescreen'); nextDelay = 30000; } 
      else if (isYt) { nextDelay = 90000; } 
      else { nextDelay = 15000; } 
@@ -402,7 +405,6 @@ function jalankanTV() {
   else if (currentItem.type === 'AMAL') {
      const a = currentItem.data;
      const partisipan = a.partisipan || [];
-     
      let html = `<div style="font-size: 50px; font-weight: 800; color: white; line-height: 1.2; text-transform: uppercase;">${a.judul}</div>`;
      let targetDana = Number(a.harga_target) || Number(a.target) || 0;
      
@@ -441,10 +443,8 @@ function jalankanTV() {
      } else { 
          let tUang = 0;
          partisipan.forEach(d => { if(Number(d.nominal) > 0) tUang += Number(d.nominal); });
-         
          html += `<div style="font-size: 24px; font-weight: 600; color: rgba(255,255,255,0.8); margin-top: 30px; letter-spacing:2px;">TOTAL TERKUMPUL</div>`;
          html += `<div style="font-size: 75px; font-weight: 800; color: var(--gold); font-family: 'Amiri', serif; line-height:1.1;">Rp ${tUang.toLocaleString("id-ID")}</div>`;
-         
          if (targetDana > 0) {
              let progress = Math.min(Math.round((tUang / targetDana) * 100), 100);
              html += `<div style="margin-top:25px; width:85%; margin-left:auto; margin-right:auto;">
@@ -461,7 +461,7 @@ function jalankanTV() {
      
      document.getElementById('panel-amal').innerHTML = html;
      document.body.classList.add('mode-amal');
-     nextDelay = 15000; // DIUBAH MENJADI 15 DETIK SESUAI KESEPAKATAN
+     nextDelay = 15000; 
   }
   
   playIndex++;
@@ -477,7 +477,11 @@ async function loadData() {
       document.getElementById('tv-nama').innerText = jM.data.nama;
       document.getElementById('tv-alamat').innerText = jM.data.alamat + ', ' + jM.data.kota;
       if(jM.data.logo_url) document.getElementById('tv-logo-wrap').innerHTML = `<img src="${matenginLink(jM.data.logo_url)}">`;
-      if(jM.data.tema) { document.body.className = ''; document.body.classList.add('tema-' + jM.data.tema); }
+      
+      // LOGIKA PERBAIKAN: SIMPAN TEMA DI VARIABEL GLOBAL DULU!
+      CURRENT_TEMA = jM.data.tema ? 'tema-' + jM.data.tema : '';
+      CURRENT_DESAIN = jM.data.tema_desain_tv ? 'desain-' + jM.data.tema_desain_tv : 'desain-modern';
+      document.body.className = `${CURRENT_TEMA} ${CURRENT_DESAIN}`;
       
       jedaConfig = {
         Subuh: parseInt(jM.data.jeda_subuh) || 10, Dzuhur: parseInt(jM.data.jeda_dzuhur) || 10,
@@ -564,9 +568,9 @@ async function loadData() {
 
     document.getElementById('loading-screen').classList.add('hide');
     
-    // LOGIKA TAHAN DI LAYAR NORMAL 30 DETIK SAAT PERTAMA KALI DIBUKA
+    // TAHAN DI LAYAR NORMAL 30 DETIK SAAT PERTAMA KALI DIBUKA
     if(!masterTimer) {
-        document.body.className = ''; 
+        document.body.className = `${CURRENT_TEMA} ${CURRENT_DESAIN}`; 
         document.getElementById('konten-media').innerHTML = `<div style="text-align:center; color:white; opacity:0.3;"><img src="Logo Power of Masjid.png" style="width:200px;"><div style="font-size:30px; font-weight:800; margin-top:20px;">POWER OF MASJID</div></div>`;
         document.getElementById('konten-media').classList.add('active');
         
