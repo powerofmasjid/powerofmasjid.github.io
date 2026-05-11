@@ -55,10 +55,12 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 .sholat-title{font-size:11px;color:rgba(255,255,255,0.7);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.75rem;text-align:center;}
 .sholat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;} 
 .sholat-item{text-align:center;background:rgba(255,255,255,0.1);border-radius:10px;padding:10px 4px; transition:all 0.3s ease;}
+
+/* Efek Glowing dan Gradien pada Card Aktif (Sudah Support Semua Tema) */
 .sholat-item.aktif{
-  background:linear-gradient(135deg, var(--accent), #FDE68A);
-  border:1px solid rgba(255,255,255,0.6);
-  box-shadow:0 0 15px rgba(201,168,76,0.5);
+  background:linear-gradient(135deg, var(--accent), var(--primary-light));
+  border:1px solid var(--accent);
+  box-shadow:0 0 15px var(--accent);
   transform:scale(1.05);
   position:relative;
   z-index:2;
@@ -174,7 +176,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 }
 @keyframes shimmer{ 100% { left:200%; } }
 
-.urgency-label{font-size:11px;color:var(--accent);font-weight:600;background:rgba(201,168,76,0.1);padding:3px 8px;border-radius:12px;display:inline-block;margin-bottom:8px;}
+.urgency-label{font-size:11px;color:var(--accent);font-weight:600;background:var(--primary-light);padding:3px 8px;border-radius:12px;display:inline-block;margin-bottom:8px;}
 
 /* MICRO INTERACTION TOMBOL */
 .cta-group{display:flex;gap:8px;margin-top:12px;}
@@ -882,6 +884,7 @@ async function loadJadwal() {
   }
 }
 
+// LOGIKA JADWAL SHOLAT & COUNTDOWN TERBARU
 async function loadJadwalSholat(lat, lon) {
   if(!lat || !lon) return;
   var today = new Date();
@@ -915,6 +918,7 @@ async function loadJadwalSholat(lat, lon) {
       var namaHariArr = ['Ahad','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
       document.getElementById('sholat-date').textContent = namaHariArr[today.getDay()] + ', ' + today.toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'});
       
+      // Hitung Mundur Aktif
       let htmlJadwal = '';
       sholat.forEach(function(s, idx) {
         let isAktif = idx === aktifIdx;
@@ -925,7 +929,7 @@ async function loadJadwalSholat(lat, lon) {
           let waktuBerikutnya = toMenit(sholat[nextIdx].time);
           
           let sisaMenit = waktuBerikutnya - now;
-          if (sisaMenit <= 0) sisaMenit += 1440; 
+          if (sisaMenit <= 0) sisaMenit += 1440; // Jika lewat tengah malam
           
           let jamCountdown = Math.floor(sisaMenit / 60);
           let menitCountdown = sisaMenit % 60;
