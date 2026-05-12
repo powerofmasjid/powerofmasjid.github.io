@@ -352,13 +352,13 @@
             <div class="profil-section">
                 <h3>Layout & Tema</h3>
                 <div class="form-group">
-                    <label class="form-label">Warna Tema</label>
+                    <label class="form-label">Warna Tema (Muted/Pastel)</label>
                     <select class="form-select" id="prof-tema">
-                        <option value="">Zamrud (Default)</option><option value="safir">Safir</option>
-                        <option value="emas">Emas</option><option value="fajar">Fajar</option>
-                        <option value="langit">Langit</option><option value="tembaga">Tembaga</option>
-                        <option value="perak">Perak</option><option value="merahhati">Merah Hati</option>
-                        <option value="toska">Toska</option><option value="malam">Malam</option>
+                        <option value="">Zamrud (Hijau Elegan - Default)</option>
+                        <option value="emas">Emas (Klasik Mewah)</option>
+                        <option value="safir">Safir (Biru Profesional)</option>
+                        <option value="tembaga">Tembaga (Maroon Hangat)</option>
+                        <option value="perak">Perak (Hitam Monokrom)</option>
                     </select>
                 </div>
                 <div class="form-group">
@@ -391,7 +391,6 @@
 <div class="toast" id="toast">Berhasil!</div>
 
 <script>
-    // URL API BARU SESUAI HASIL KERJA TERAKHIR
     var API_URL = 'https://script.google.com/macros/s/AKfycbzJhB3_-IqLJPSQOSNReTK5YAL7T1FdPGuMJjVIKf6MyO6v5NlFvpHEqM-yFWPs1hRe8A/exec';
     var KUNCI_RAHASIA = 'POW_MASJID_SECURE_2026'; 
     var ADMIN_DATA = null, ID_MASJID = '', LAST_5_TRX = [], LIST_PROGRAM = [];
@@ -480,9 +479,6 @@
 
     function tampilAdmin() { document.getElementById('login-wrap').classList.remove('show'); document.getElementById('admin-content').style.display = 'block'; document.getElementById('admin-nama-display').textContent = ADMIN_DATA.nama; loadProfilAdmin(); loadTransaksiAdmin(); cekOnboarding(); }
 
-    // ----------------------------------------------------
-    // CEK MISI KELENGKAPAN (ONBOARDING) - LOGIKA ASLI
-    // ----------------------------------------------------
     function cekOnboarding() {
         Promise.all([
             fetch(API_URL + '?action=getTransaksi&id_masjid=' + ID_MASJID).then(r=>r.json()),
