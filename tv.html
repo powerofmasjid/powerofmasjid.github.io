@@ -7,25 +7,52 @@
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800&text=0123456789:&display=swap" rel="stylesheet">
 <style>
+  /* 5 WARNA PREMIUM EKSKLUSIF (MUTED/PASTEL) */
   :root {
+    /* 1. Zamrud (Default) - Hijau Gelap Elegan */
     --bg-dark: #051A0F;
     --panel-bg: #0A2F1C;
     --gold: #C9A84C;
     --text: #E8F5EE;
-    --masuk: #4ADE80;
+    --masuk: #6EE7B7; /* Emerald Pastel (Tidak Ngejreng) */
     --border: rgba(201,168,76,0.3);
   }
   
-  /* DAFTAR WARNA TEMA (10 TEMA) */
-  .tema-safir{--bg-dark:#050F1A;--panel-bg:#0F2240;--gold:#4C7AC9;}
-  .tema-emas{--bg-dark:#1A1405;--panel-bg:#4A3810;--gold:#C9A84C;}
-  .tema-fajar{--bg-dark:#1A0A00;--panel-bg:#3A1A00;--gold:#F59E0B;}
-  .tema-langit{--bg-dark:#001A2C;--panel-bg:#003355;--gold:#38BDF8;}
-  .tema-tembaga{--bg-dark:#1A0500;--panel-bg:#3A1100;--gold:#C2410C;}
-  .tema-perak{--bg-dark:#1A1A1A;--panel-bg:#2D2D2D;--gold:#9CA3AF;}
-  .tema-merahhati{--bg-dark:#1A0005;--panel-bg:#3A0011;--gold:#E11D48;}
-  .tema-toska{--bg-dark:#001A18;--panel-bg:#003A35;--gold:#14B8A6;}
-  .tema-malam{--bg-dark:#050A1A;--panel-bg:#111A3A;--gold:#3B82F6;}
+  /* 2. Emas - Klasik Mewah */
+  .tema-emas { 
+      --bg-dark: #111111; 
+      --panel-bg: #222222; 
+      --gold: #FBBF24; 
+      --masuk: #FDE68A; 
+      --border: rgba(251,191,36,0.3);
+  }
+  
+  /* 3. Safir - Biru Profesional */
+  .tema-safir { 
+      --bg-dark: #050F1A; 
+      --panel-bg: #0F2240; 
+      --gold: #60A5FA; 
+      --masuk: #93C5FD; 
+      --border: rgba(96,165,250,0.3);
+  }
+
+  /* 4. Tembaga - Maroon Hangat (Pengganti Merah Hati yang menabrak) */
+  .tema-tembaga { 
+      --bg-dark: #2A0A0A; 
+      --panel-bg: #451A1A; 
+      --gold: #FCA5A5; 
+      --masuk: #FECACA; 
+      --border: rgba(252,165,165,0.3);
+  }
+
+  /* 5. Perak - Hitam Monokrom (Sangat cocok untuk desain Minimalis) */
+  .tema-perak { 
+      --bg-dark: #171717; 
+      --panel-bg: #262626; 
+      --gold: #D1D5DB; 
+      --masuk: #F3F4F6; 
+      --border: rgba(209,213,219,0.3);
+  }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg-dark); color: var(--text); overflow: hidden; height: 100vh; display: flex; flex-direction: column; transition: all 0.5s ease; }
@@ -104,8 +131,7 @@
   .desain-minimalis .sholat-box { border: none; border-radius: 5px; }
   .desain-minimalis .sholat-box.aktif { background: rgba(255,255,255,0.1); box-shadow: none; border: 1px solid var(--gold); }
   
-  /* PERBAIKAN BUG WARNA TABRAKAN DI SINI */
-  /* Teks jadwal aktif di Minimalis dikembalikan ke warna terang (Emas) agar tidak nyaru dengan background gelap */
+  /* Teks jadwal aktif di Minimalis dikembalikan ke warna terang (Emas) agar tidak menabrak warna gelap */
   .desain-minimalis .sholat-box.aktif .sholat-name, 
   .desain-minimalis .sholat-box.aktif .sholat-time { color: var(--gold); text-shadow: none; }
 
@@ -148,7 +174,7 @@
   .iq-title { font-size: 55px; color: white; font-weight: 700; letter-spacing: 3px; margin-bottom: 5px; }
   .iq-name { font-size: 110px; color: var(--gold); font-weight: 800; text-transform: uppercase; line-height: 1; margin-bottom: 20px; text-shadow: 0 0 35px var(--gold); }
   .iq-subtitle { font-size: 40px; color: rgba(255,255,255,0.9); margin-bottom: 10px; transition: color 0.3s; }
-  .iq-timer { font-size: 280px; font-weight: 800; color: #4ADE80; font-family: 'Orbitron', sans-serif; line-height: 1; text-shadow: 0 0 60px #4ADE80; letter-spacing: 5px;}
+  .iq-timer { font-size: 280px; font-weight: 800; color: var(--masuk); font-family: 'Orbitron', sans-serif; line-height: 1; text-shadow: 0 0 60px var(--masuk); letter-spacing: 5px;}
   @keyframes blinkRed { 0%, 100% { color: #EF4444; text-shadow: 0 0 60px rgba(239,68,68,0.6); } 50% { color: #B91C1C; text-shadow: none; } }
   .iq-timer.warning { animation: blinkRed 1s infinite; }
 </style>
@@ -344,7 +370,7 @@ function updateTime() {
                       document.getElementById('iq-subtitle').innerText = "MENUJU IQOMAH";
                       document.getElementById('iq-subtitle').style.color = "rgba(255,255,255,0.9)";
                       document.getElementById('iq-timer').style.display = 'block';
-                      document.getElementById('iq-timer').style.color = "#4ADE80";
+                      document.getElementById('iq-timer').style.color = "var(--masuk)";
                       let jedaMenit = jedaConfig[namaSholat] || 10;
                       let sisaIqomah = jedaMenit - 4; if (sisaIqomah < 1) sisaIqomah = 1; 
                       iqomahTargetTime = new Date(Date.now() + (sisaIqomah * 60000));
@@ -366,7 +392,7 @@ function updateTime() {
                   isIqomahMode = false; phase = "NORMAL";
                   document.getElementById('iqomah-screen').classList.add('hide');
                   document.getElementById('iq-timer').classList.remove('warning');
-                  document.getElementById('iq-timer').style.color = "#4ADE80"; 
+                  document.getElementById('iq-timer').style.color = "var(--masuk)"; 
               }, 15 * 60000); 
           } else {
               let diffSec = Math.ceil(diffMs / 1000);
@@ -465,10 +491,10 @@ function jalankanTV() {
              let progress = Math.min(Math.round((tUang / targetDana) * 100), 100);
              html += `<div style="margin-top:25px; width:85%; margin-left:auto; margin-right:auto;">
                          <div style="display:flex; justify-content:space-between; color:white; font-size:20px; font-weight:bold; margin-bottom:10px;"><span>Tercapai ${progress}%</span><span>Target: Rp ${targetDana.toLocaleString("id-ID")}</span></div>
-                         <div style="background:rgba(255,255,255,0.2); height:16px; border-radius:10px; overflow:hidden;"><div style="background:var(--gold); height:100%; width:${progress}%; transition:width 1s ease-in-out;"></div></div>
+                         <div style="background:rgba(255,255,255,0.2); height:16px; border-radius:10px; overflow:hidden;"><div style="background:var(--masuk); height:100%; width:${progress}%; transition:width 1s ease-in-out;"></div></div>
                       </div>`;
          }
-         html += `<div style="font-size: 20px; font-weight: 600; color: var(--gold); margin-top: 20px;">DARI ${partisipan.length} MUNFIQ</div>`;
+         html += `<div style="font-size: 20px; font-weight: 600; color: var(--masuk); margin-top: 20px;">DARI ${partisipan.length} MUNFIQ</div>`;
      }
      
      let teksDeskripsi = a.keterangan || a.deskripsi || a.isi || "";
