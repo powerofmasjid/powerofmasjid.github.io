@@ -54,39 +54,34 @@
   .sholat-box.aktif { background: var(--gold); border: 2px solid white; transform: scale(1.05); box-shadow: 0 0 25px var(--gold); z-index:2; position: relative;}
   .sholat-name { font-size: 13px; color: rgba(255,255,255,0.6); text-transform: uppercase; font-weight: 800; letter-spacing: 1px; }
   .sholat-time { font-size: 34px; color: var(--gold); font-weight: 800; line-height: 1.1; font-family: 'Orbitron', sans-serif; letter-spacing: 1px;}
+  
+  /* Warna teks saat jadwal aktif (Normal & Klasik) */
   .sholat-box.aktif .sholat-name, .sholat-box.aktif .sholat-time { color: var(--bg-dark); text-shadow: none; }
 
-  /* TATA LETAK BARU (PERSEGI PANJANG) */
+  /* TATA LETAK UTAMA */
   .main { flex: 1; display: flex; padding: 20px; gap: 20px; overflow: hidden; position: relative; }
-  
-  /* PANEL KIRI (38% - Saldo & Info) */
   .left-panel { width: 38%; display: flex; flex-direction: column; gap: 20px; transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1); z-index: 2; }
   
-  /* SALDO HORIZONTAL */
   .card-saldo { background: var(--panel-bg); border-radius: 20px; border: 2px solid var(--border); padding: 20px; display: flex; flex-direction: column; justify-content: center; align-items: center; height: 32%; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
   .saldo-title { font-size: 24px; font-weight: 800; color: var(--gold); margin-bottom: 5px; letter-spacing: 1px; }
   .saldo-value { font-family: 'Amiri', serif; font-size: 65px; font-weight: 700; color: var(--masuk); line-height: 1.1; white-space: nowrap; }
 
-  /* INFO ROTASI (AGENDA / HADITS) */
   .card-info { background: var(--panel-bg); border-radius: 20px; border: 2px solid var(--border); flex: 1; display: flex; flex-direction: column; overflow: hidden; position: relative; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
   .info-header { border-bottom: 3px solid var(--gold); padding: 20px; font-size: 26px; font-weight: 800; color: var(--gold); background: rgba(0,0,0,0.2); text-align: center; z-index: 10; flex-shrink: 0; }
   .info-body { flex: 1; overflow: hidden; position: relative; }
   
-  /* AGENDA SCROLL */
   .agenda-scroll-wrapper { width: 100%; height: 100%; position: relative; overflow: hidden; padding: 20px; }
   .agenda-scroll-content { position: absolute; width: calc(100% - 40px); animation: scrollUp 20s linear infinite; }
   .agenda-item { background: rgba(255,255,255,0.05); padding: 20px; border-radius: 12px; margin-bottom: 15px; border-left: 6px solid var(--gold); }
   .agenda-judul { font-size: 26px; font-weight: 700; color: white; margin-bottom: 5px; line-height: 1.2; }
   @keyframes scrollUp { 0% { transform: translateY(100%); } 100% { transform: translateY(-100%); } }
 
-  /* AYAT & HADITS */
   .hikmah-wrap { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; padding: 30px; text-align: center; animation: fadeIn 1s ease-in-out; }
   .hikmah-icon { font-size: 60px; color: var(--gold); margin-bottom: 15px; opacity: 0.4; line-height: 1; }
   .hikmah-isi { font-size: 26px; font-weight: 600; color: white; line-height: 1.6; margin-bottom: 25px; font-style: italic; }
   .hikmah-sumber { font-size: 18px; color: var(--gold); font-weight: 800; letter-spacing: 2px; text-transform: uppercase; background: rgba(201,168,76,0.1); padding: 5px 15px; border-radius: 20px; border: 1px solid rgba(201,168,76,0.3); }
   @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
 
-  /* PANEL KANAN (MEDIA) */
   .right-panel { flex: 1; background: black; border-radius: 20px; border: 2px solid var(--border); overflow: hidden; position: relative; display: flex; align-items: center; justify-content: center; transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1); }
   .content-right { position: absolute; inset: 0; transition: opacity 1s; opacity: 0; display: flex; align-items: center; justify-content: center; }
   .content-right.active { opacity: 1; }
@@ -108,18 +103,21 @@
   .desain-minimalis .sholat-bar { background: transparent; border-bottom: 1px solid rgba(255,255,255,0.1); }
   .desain-minimalis .sholat-box { border: none; border-radius: 5px; }
   .desain-minimalis .sholat-box.aktif { background: rgba(255,255,255,0.1); box-shadow: none; border: 1px solid var(--gold); }
+  
+  /* PERBAIKAN BUG WARNA TABRAKAN DI SINI */
+  /* Teks jadwal aktif di Minimalis dikembalikan ke warna terang (Emas) agar tidak nyaru dengan background gelap */
+  .desain-minimalis .sholat-box.aktif .sholat-name, 
+  .desain-minimalis .sholat-box.aktif .sholat-time { color: var(--gold); text-shadow: none; }
 
   /* ---------------------------------------------------- */
-  /* MODE FULLSCREEN (AMAL & WIDESCREEN FLYER) - DIPERBAIKI */
+  /* MODE FULLSCREEN (AMAL & WIDESCREEN FLYER)            */
   /* ---------------------------------------------------- */
   body.mode-widescreen .left-panel, body.mode-live .left-panel { display: none !important; }
   body.mode-widescreen .right-panel, body.mode-live .right-panel { flex: 1; border-radius: 20px; }
 
-  /* Timpa (Override) Desain Fullscreen untuk Klasik & Minimalis */
   body.desain-klasik.mode-widescreen .right-panel, body.desain-klasik.mode-live .right-panel { border-radius: 40px 0 40px 0 !important; border: 4px solid var(--gold) !important; }
   body.desain-minimalis.mode-widescreen .right-panel, body.desain-minimalis.mode-live .right-panel { border-radius: 0 !important; border: none !important; background: transparent !important; }
 
-  /* Mode Program Amal Fullscreen */
   body.mode-amal .header, body.mode-amal .sholat-bar { display: none !important; }
   body.mode-amal .right-panel { display: none !important; }
   body.mode-amal .left-panel { width: 100%; flex: 1; border: none; background: transparent; }
@@ -128,11 +126,9 @@
   #panel-amal { display: none; width: 100%; height: 100%; background: var(--bg-dark); border-radius: 20px; border: 4px solid var(--gold); padding: 40px; flex-direction: column; justify-content: center; text-align: center; }
   body.mode-amal #panel-amal { display: flex !important; animation: fadeIn 1s; }
   
-  /* Timpa (Override) Kotak Amal Fullscreen untuk Klasik & Minimalis */
   body.desain-klasik.mode-amal #panel-amal { border-radius: 40px 0 40px 0 !important; border: 4px solid var(--gold) !important; }
   body.desain-minimalis.mode-amal #panel-amal { border-radius: 0 !important; border: none !important; background: var(--panel-bg) !important; }
 
-  /* Box Dinamis di dalam Program Amal */
   .amal-cta-box { border-radius: 20px; }
   .amal-stat-box { border-radius: 15px; }
   .desain-klasik .amal-cta-box { border-radius: 30px 0 30px 0 !important; border-color: var(--gold) !important; }
