@@ -208,8 +208,8 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg-dark);
 <div class="toast" id="toast">Notifikasi</div>
 
 <script>
-// PASTIKAN LINK INI SESUAI DENGAN API_URL MILIK BAPAK YANG ASLI
-const API_URL = 'https://script.google.com/macros/s/AKfycbyNHmoesLPeHbgIe_8p4Vh-ULiqBbXh6JDL8po-oDFwSF51zjvHaMiVh4Hu7WjfXdZD9Q/exec';
+// SUDAH DIGANTI DENGAN LINK API BARU BAPAK
+const API_URL = 'https://script.google.com/macros/s/AKfycbzpDWIUBbPqDU9354NnKl86EoSmviic8wSECVXJhxzP8jL_rliUD5Nr-Cf6oGhkPnUaVg/exec';
 const KUNCI_RAHASIA = 'POW_MASJID_SECURE_2026';
 let LIST_IKLAN = [];
 
@@ -289,7 +289,7 @@ function masukSistem() {
     loadDashboardData();
 }
 
-// LOGIKA 14 HARI (TIDAK MENGUBAH GS)
+// LOGIKA PELACAK UMUR MASJID DARI ID (TIDAK MENGUBAH GS)
 function extractDateFromId(idMasjid) {
     try {
         let parts = idMasjid.split('-');
@@ -304,6 +304,7 @@ function extractDateFromId(idMasjid) {
     return Date.now() - (15 * 24 * 60 * 60 * 1000); 
 }
 
+// --- BAGIAN INI SAJA YANG DIMODIFIKASI LOGIKA PECUTNYA ---
 async function loadDashboardData() {
     try {
         document.getElementById('loading').style.display = 'block';
@@ -329,32 +330,55 @@ async function loadDashboardData() {
                 const isJdw = jdw.data && jdw.data.length > 0;
                 const isGal = gal.data && gal.data.length > 0;
 
-                const isMasjidAktif = isKas || isJdw || isGal; 
-                if (isMasjidAktif) masjidAktifTotal++;
+                // LOGIKA PECUT WAJIB 3 CENTANG & UPDATE
+                const criteriaCount = (isKas ? 1 : 0) + (isJdw ? 1 : 0) + (isGal ? 1 : 0);
+                if (criteriaCount === 3) masjidAktifTotal++;
 
-                const createdAt = extractDateFromId(m.id);
-                const ageInDays = (Date.now() - createdAt) / (1000 * 60 * 60 * 24);
+                const createdAtMs = extractDateFromId(m.id);
+                let lastUpdateMs = createdAtMs;
+
+                if (isKas) {
+                    let d = new Date(trx.data[0].tanggal).getTime();
+                    if (!isNaN(d) && d > lastUpdateMs) lastUpdateMs = d;
+                }
+                if (isGal) {
+                    let d = new Date(gal.data[0].tanggal).getTime();
+                    if (!isNaN(d) && d > lastUpdateMs) lastUpdateMs = d;
+                }
+
+                const ageInDays = (Date.now() - createdAtMs) / (1000 * 60 * 60 * 24);
+                const daysSinceUpdate = (Date.now() - lastUpdateMs) / (1000 * 60 * 60 * 24);
 
                 let cardClass = '';
                 let badge = '';
                 let showWarningBtn = false;
+                let pesanWA = '';
 
-                if (isMasjidAktif) {
-                    cardClass = 'card-aktif';
-                    badge = '<span class="status-badge badge-aktif">Telah Aktif</span>';
-                } else {
-                    if (ageInDays <= 14) {
+                if (criteriaCount < 3) {
+                    // Kalau belum lengkap 3 centang
+                    if (ageInDays > 14) {
+                        cardClass = 'card-pasif'; 
+                        badge = '<span class="status-badge badge-pasif">MACET (> 14 HARI)</span>';
+                        showWarningBtn = true;
+                        // Ini pesan WA yang asli dari kodingan Bapak untuk 14 Hari
+                        pesanWA = `Assalamu'alaikum Ustadz. Semoga selalu dalam lindungan Allah.\n\nKami dari tim pusat *Power of Masjid* memperhatikan bahwa sistem Layar TV dan Website untuk masjid Anda sudah didaftarkan lebih dari 14 hari, namun terpantau belum ada pergerakan kelengkapan data dasar (Kas/Jadwal/Galeri).\n\nMengingat kapasitas server kami saat ini dibatasi sangat eksklusif *hanya untuk 10 Masjid*, kami mohon konfirmasinya. Apabila sistem ini belum akan dimaksimalkan penggunaannya dalam waktu dekat, mohon izin akun Anda akan kami cabut/bekukan sementara waktu. Slot servernya akan kami berikan kepada masjid lain yang kebetulan sedang mengantre.\n\nKami tunggu pergerakan datanya atau konfirmasinya dalam 2x24 jam ya, Ustadz. Jika ada kendala teknis dalam pengisian, silakan sampaikan ke kami. Terima kasih atas pengertiannya. 🙏`;
+                    } else {
                         cardClass = 'card-belajar'; 
                         let sisaHari = Math.max(1, Math.ceil(14 - ageInDays));
                         badge = `<span class="status-badge badge-belajar">Masa Belajar (${sisaHari} Hari Lagi)</span>`;
-                    } else {
+                    }
+                } else {
+                    // Kalau sudah lengkap 3 centang, periksa rajin update atau tidak
+                    if (daysSinceUpdate > 7) {
                         cardClass = 'card-pasif'; 
-                        badge = '<span class="status-badge badge-pasif">Pasif (Lebih dari 14 Hari)</span>';
+                        badge = '<span class="status-badge badge-pasif">Perlu Diingatkan (> 7 Hari)</span>';
                         showWarningBtn = true;
+                        pesanWA = `Assalamu'alaikum Ustadz. Semoga selalu dalam lindungan Allah.\n\nSekadar mengingatkan, sistem mendeteksi sudah lebih dari sepekan data transparansi masjid belum diperbarui. Mari rutin melakukan update minimal sepekan sekali demi menjaga kepercayaan jamaah. Terima kasih. 🙏`;
+                    } else {
+                        cardClass = 'card-aktif'; 
+                        badge = '<span class="status-badge badge-aktif">Telah Aktif</span>';
                     }
                 }
-                
-                const pesanWA = `Assalamu'alaikum Ustadz. Semoga selalu dalam lindungan Allah.\n\nKami dari tim pusat *Power of Masjid* memperhatikan bahwa sistem Layar TV dan Website untuk masjid Anda sudah didaftarkan lebih dari 14 hari, namun terpantau belum ada pergerakan kelengkapan data dasar (Kas/Jadwal/Galeri).\n\nMengingat kapasitas server kami saat ini dibatasi sangat eksklusif *hanya untuk 10 Masjid*, kami mohon konfirmasinya. Apabila sistem ini belum akan dimaksimalkan penggunaannya dalam waktu dekat, mohon izin akun Anda akan kami cabut/bekukan sementara waktu. Slot servernya akan kami berikan kepada masjid lain yang kebetulan sedang mengantre.\n\nKami tunggu pergerakan datanya atau konfirmasinya dalam 2x24 jam ya, Ustadz. Jika ada kendala teknis dalam pengisian, silakan sampaikan ke kami. Terima kasih atas pengertiannya. 🙏`;
 
                 html += `
                     <div class="masjid-card ${cardClass}">
