@@ -7,7 +7,6 @@
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800&text=0123456789:&display=swap" rel="stylesheet">
 <style>
-  /* 5 WARNA PREMIUM EKSKLUSIF (GELAP / DARK MODE) */
   :root {
     --bg-dark: #051A0F; --panel-bg: #0A2F1C; --gold: #C9A84C; --text: #E8F5EE; --masuk: #6EE7B7; --border: rgba(201,168,76,0.3);
   }
@@ -16,7 +15,6 @@
   .tema-tembaga { --bg-dark: #2A0404; --panel-bg: #450A0A; --gold: #FDBA74; --masuk: #FEE2E2; --border: rgba(253,186,116,0.2); }
   .tema-perak { --bg-dark: #09090B; --panel-bg: #18181B; --gold: #E5E7EB; --masuk: #10B981; --border: rgba(229,231,235,0.15); }
 
-  /* 2 WARNA PREMIUM EKSKLUSIF (TERANG / LIGHT MODE) */
   .tema-putih { 
       --bg-dark: #E2E8F0; --panel-bg: #FFFFFF; --gold: #059669; --masuk: #D97706; --text: #1F2937; --border: rgba(0,0,0,0.05);
   }
@@ -26,7 +24,6 @@
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
   
-  /* POLESAN 1: BACKGROUND BERDIMENSI GRADASI */
   body { 
       font-family: 'Plus Jakarta Sans', sans-serif; 
       background: radial-gradient(circle at center top, var(--panel-bg) 0%, var(--bg-dark) 100%); 
@@ -43,7 +40,6 @@
   .spinner-logo { width: 180px; animation: pulse 1.5s infinite; }
   @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
 
-  /* POLESAN 2 & 3: GLASSMORPHISM PADA KOTAK DAN HEADER */
   .header { 
       background: rgba(0, 0, 0, 0.25); 
       backdrop-filter: blur(15px); 
@@ -64,15 +60,12 @@
   .alamat-masjid { font-size: 17px; color: var(--gold); opacity: 0.9; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .header-right { text-align: right; flex-shrink: 0; text-shadow: 0 2px 10px rgba(0,0,0,0.5); }
   
-  /* POLESAN 3: GLOW EFEK PADA TEKS PENTING */
   .jam-digital { font-size: 50px; font-weight: 700; color: var(--gold); font-family: 'Orbitron', sans-serif; line-height: 1; letter-spacing: 2px; text-shadow: 0 0 20px rgba(201,168,76,0.5); }
   .tanggal-digital { font-size: 18px; color: white; margin-top: 5px; }
 
-  /* SHOLAT BAR (KACA BURAM GELAP) */
   .sholat-bar { display: flex; background: rgba(0,0,0,0.4); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(255,255,255,0.05); height: 95px; align-items: center; padding: 0 5px; flex-shrink: 0; gap: 6px; }
   .sholat-box { flex: 1; text-align: center; padding: 10px 0; border-radius: 12px; border: 1px solid transparent; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
   
-  /* KOTAK SHOLAT AKTIF LEBIH BERCAHAYA */
   .sholat-box.aktif { 
       background: linear-gradient(135deg, var(--gold) 0%, #FFF 100%); 
       border: none; 
@@ -86,11 +79,9 @@
   .sholat-box.aktif .sholat-name { color: var(--panel-bg); text-shadow: none; }
   .sholat-box.aktif .sholat-time { color: var(--bg-dark); text-shadow: none; }
 
-  /* TATA LETAK UTAMA */
   .main { flex: 1; display: flex; padding: 20px; gap: 20px; overflow: hidden; position: relative; }
   .left-panel { width: 38%; display: flex; flex-direction: column; gap: 20px; transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1); z-index: 2; }
   
-  /* GLASSMORPHISM CARD UMUM */
   .card-saldo, .card-info, .right-panel, #panel-amal { 
       background: rgba(0, 0, 0, 0.25); 
       backdrop-filter: blur(15px); 
@@ -127,7 +118,6 @@
   .media-overlay { position: absolute; inset: 0; background: linear-gradient(0deg, rgba(0,0,0,0.9) 0%, transparent 50%); display: flex; align-items: flex-end; padding: 40px; }
   .media-title { font-size: 36px; font-weight: 800; color: white; text-shadow: 0 4px 20px black; }
 
-  /* TEMA KHUSUS (KLASIK & MINIMALIS) TETAP DIPERTAHANKAN */
   .desain-klasik .header { border-bottom: 3px solid var(--gold); }
   .desain-klasik .logo-wrap { border-radius: 20px 0 20px 0; border: 2px solid var(--gold); }
   .desain-klasik .card-saldo, .desain-klasik .card-info, .desain-klasik .right-panel { border-radius: 40px 0 40px 0; border: 2px solid var(--gold); }
@@ -141,16 +131,8 @@
   .desain-minimalis .sholat-box.aktif { background: rgba(255,255,255,0.1); box-shadow: 0 0 20px rgba(255,255,255,0.1); border: 1px solid var(--gold); }
   .desain-minimalis .sholat-box.aktif .sholat-name, .desain-minimalis .sholat-box.aktif .sholat-time { color: var(--gold); text-shadow: none; }
 
-  /* ==================================================== */
-  /* OVERRIDE CSS KHUSUS LIGHT MODE (PUTIH / ABU TERANG)  */
-  /* ==================================================== */
+  body.tema-putih, body.tema-abuterang { background: var(--bg-dark) !important; }
 
-  /* Latar belakang terang solid, hapus gradien gelap */
-  body.tema-putih, body.tema-abuterang { 
-      background: var(--bg-dark) !important; 
-  }
-
-  /* Kotak putih bersih dengan bayangan gelap lembut */
   .tema-putih .header, .tema-abuterang .header, 
   .tema-putih .sholat-bar, .tema-abuterang .sholat-bar, 
   .tema-putih .card-saldo, .tema-abuterang .card-saldo, 
@@ -163,12 +145,8 @@
       backdrop-filter: blur(10px);
   }
 
-  /* Background panel kanan (media) agar tidak hitam pekat */
-  .tema-putih .content-right, .tema-abuterang .content-right { 
-      background: #F3F4F6 !important; 
-  }
+  .tema-putih .content-right, .tema-abuterang .content-right { background: #F3F4F6 !important; }
 
-  /* Matikan efek glow tulisan dan ubah teks jadi gelap */
   .tema-putih .nama-masjid, .tema-abuterang .nama-masjid,
   .tema-putih .tanggal-digital, .tema-abuterang .tanggal-digital,
   .tema-putih .agenda-judul, .tema-abuterang .agenda-judul,
@@ -183,46 +161,27 @@
 
   .tema-putih .jam-digital, .tema-abuterang .jam-digital,
   .tema-putih .sholat-time, .tema-abuterang .sholat-time,
-  .tema-putih .saldo-value, .tema-abuterang .saldo-value {
-      text-shadow: none !important;
-  }
+  .tema-putih .saldo-value, .tema-abuterang .saldo-value { text-shadow: none !important; }
 
   .tema-putih .sholat-name, .tema-abuterang .sholat-name,
-  .tema-putih .iq-subtitle, .tema-abuterang .iq-subtitle {
-      color: rgba(0,0,0,0.6) !important;
-  }
+  .tema-putih .iq-subtitle, .tema-abuterang .iq-subtitle { color: rgba(0,0,0,0.6) !important; }
 
-  .tema-putih .logo-wrap, .tema-abuterang .logo-wrap {
-      background: white; border-color: rgba(0,0,0,0.1); box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-  }
+  .tema-putih .logo-wrap, .tema-abuterang .logo-wrap { background: white; border-color: rgba(0,0,0,0.1); box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
 
-  .tema-putih .info-header, .tema-abuterang .info-header {
-      background: rgba(0,0,0,0.03); color: var(--gold); border-bottom: 1px solid rgba(0,0,0,0.05); text-shadow: none;
-  }
+  .tema-putih .info-header, .tema-abuterang .info-header { background: rgba(0,0,0,0.03); color: var(--gold); border-bottom: 1px solid rgba(0,0,0,0.05); text-shadow: none; }
 
-  .tema-putih .agenda-item, .tema-abuterang .agenda-item {
-      background: white; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px solid rgba(0,0,0,0.05); border-left: 5px solid var(--gold);
-  }
+  .tema-putih .agenda-item, .tema-abuterang .agenda-item { background: white; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px solid rgba(0,0,0,0.05); border-left: 5px solid var(--gold); }
 
-  /* Di Light Mode, teks kotak aktif wajib PUTIH karena backgroundnya solid (Emas/Biru/Hijau Tua) */
   .tema-putih .sholat-box.aktif .sholat-name, .tema-abuterang .sholat-box.aktif .sholat-name,
-  .tema-putih .sholat-box.aktif .sholat-time, .tema-abuterang .sholat-box.aktif .sholat-time {
-      color: #FFFFFF !important;
-  }
+  .tema-putih .sholat-box.aktif .sholat-time, .tema-abuterang .sholat-box.aktif .sholat-time { color: #FFFFFF !important; }
 
   .tema-putih .amal-cta-box, .tema-abuterang .amal-cta-box,
-  .tema-putih .amal-stat-box, .tema-abuterang .amal-stat-box { 
-      background: white !important; border-color: rgba(0,0,0,0.1) !important; box-shadow: 0 4px 10px rgba(0,0,0,0.03);
-  }
+  .tema-putih .amal-stat-box, .tema-abuterang .amal-stat-box { background: white !important; border-color: rgba(0,0,0,0.1) !important; box-shadow: 0 4px 10px rgba(0,0,0,0.03); }
 
-  /* Footer dibuat terang */
   .tema-putih .footer, .tema-abuterang .footer { background: white; border-top: 1px solid rgba(0,0,0,0.1); box-shadow:none; }
   .tema-putih .footer-label, .tema-abuterang .footer-label { background: var(--gold); color: white; border-right: none;}
   .tema-putih .marquee-text, .tema-abuterang .marquee-text { color: var(--text); }
 
-  /* ---------------------------------------------------- */
-  /* MODE FULLSCREEN (AMAL & WIDESCREEN FLYER)            */
-  /* ---------------------------------------------------- */
   body.mode-widescreen .left-panel, body.mode-live .left-panel { display: none !important; }
   body.mode-widescreen .right-panel, body.mode-live .right-panel { flex: 1; }
 
@@ -248,13 +207,11 @@
   .tema-putih.desain-minimalis .amal-cta-box, .tema-abuterang.desain-minimalis .amal-cta-box,
   .tema-putih.desain-minimalis .amal-stat-box, .tema-abuterang.desain-minimalis .amal-stat-box { border-color: rgba(0,0,0,0.1) !important; }
 
-  /* FOOTER */
   .footer { background: var(--gold); height: 80px; color: var(--bg-dark); display: flex; align-items: center; overflow: hidden; z-index: 100; transition: transform 0.8s; box-shadow: 0 -5px 20px rgba(0,0,0,0.3); }
   .footer-label { background: var(--bg-dark); color: var(--gold); height: 100%; display: flex; align-items: center; padding: 0 35px; font-size: 28px; font-weight: 900; border-right: 5px solid var(--gold); flex-shrink: 0; }
   .marquee-text { display: inline-block; white-space: nowrap !important; font-size: 40px; font-weight: 800; padding-left: 100%; animation: marquee 40s linear infinite; line-height: 80px; }
   @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
 
-  /* LAYAR ADZAN & IQOMAH */
   #iqomah-screen { position: fixed; inset: 0; background: var(--bg-dark); z-index: 10000; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; transition: opacity 0.5s; }
   #iqomah-screen.hide { opacity: 0; pointer-events: none; }
   .iq-title { font-size: 55px; font-weight: 700; letter-spacing: 3px; margin-bottom: 5px; }
@@ -312,8 +269,7 @@
   <div class="footer"><div class="footer-label">INFO</div><div style="flex:1; overflow:hidden;"><div class="marquee-text" id="tv-pengumuman"></div></div></div>
 
 <script>
-// LINK API BARU BAPAK SUDAH DIAMANKAN & TERKUNCI DI SINI
-const API_URL = 'https://script.google.com/macros/s/AKfycbwuIV7umLZ-uc-NtYY6fqqByuklyGeH2rXqUFgaKc1V2ufdp2Udf83PP-Y6PEPUl2T01A/exec';
+const API_URL = 'https://script.google.com/macros/s/AKfycbwSLQ9TX6ZftGZrVu9dFH0g8oRvKoI3fzdDIjmpuE-TpEnXUqKPLQKMumSM9hCt1QjoMQ/exec';
 
 let ID_MASJID = ''; let globalSholatList = []; let LIST_JADWAL = [];
 let playlist = []; let playIndex = 0; let masterTimer;
@@ -620,12 +576,14 @@ async function loadData() {
       if(jM.data.latitude && jM.data.longitude) calcSholat(jM.data.latitude, jM.data.longitude);
     }
     
-    const [resS, resP, resG, resA, resK] = await Promise.all([
-      fetch(API_URL + '?action=getSaldo&id_masjid=' + ID_MASJID).then(r => r.json()),
-      fetch(API_URL + '?action=getPengumuman&id_masjid=' + ID_MASJID).then(r => r.json()),
-      fetch(API_URL + '?action=getGaleri&id_masjid=' + ID_MASJID).then(r => r.json()),
-      fetch(API_URL + '?action=getProgramAmal&id_masjid=' + ID_MASJID).then(r => r.json()),
-      fetch(API_URL + '?action=getJadwal&id_masjid=' + ID_MASJID).then(r => r.json())
+    // PERBAIKAN: SEMUA FETCH WAJIB PAKAI PENANGKAL CACHE & MEMANGGIL resSpoTV
+    const [resS, resP, resG, resA, resK, resSpoTV] = await Promise.all([
+      fetch(API_URL + '?action=getSaldo&id_masjid=' + ID_MASJID + '&_t=' + Date.now()).then(r => r.json()),
+      fetch(API_URL + '?action=getPengumuman&id_masjid=' + ID_MASJID + '&_t=' + Date.now()).then(r => r.json()),
+      fetch(API_URL + '?action=getGaleri&id_masjid=' + ID_MASJID + '&_t=' + Date.now()).then(r => r.json()),
+      fetch(API_URL + '?action=getProgramAmal&id_masjid=' + ID_MASJID + '&_t=' + Date.now()).then(r => r.json()),
+      fetch(API_URL + '?action=getJadwal&id_masjid=' + ID_MASJID + '&_t=' + Date.now()).then(r => r.json()),
+      fetch(API_URL + '?action=getSponsorTV&_t=' + Date.now()).then(r => r.json())
     ]);
     
     if(resS.status === 'ok') {
@@ -644,7 +602,7 @@ async function loadData() {
     if(resA.status === 'ok') {
         let detailPromises = resA.data.map(p => {
             let act = p.tipe==='KURBAN' ? 'getKurban' : (p.tipe==='ZAKAT' ? 'getZakat' : 'getInfaq');
-            return fetch(API_URL + '?action=' + act + '&id_masjid=' + ID_MASJID + '&id_program=' + p.id).then(r => r.json());
+            return fetch(API_URL + '?action=' + act + '&id_masjid=' + ID_MASJID + '&id_program=' + p.id + '&_t=' + Date.now()).then(r => r.json());
         });
         let details = await Promise.all(detailPromises);
         for(let i=0; i<resA.data.length; i++) {
@@ -655,6 +613,13 @@ async function loadData() {
 
     if(resG.status === 'ok') {
         resG.data.forEach(g => rawPlaylist.push({ type: 'MEDIA', data: g }));
+    }
+
+    // PERBAIKAN: MENYUNTIKKAN SPONSOR TV KE DALAM ANTRIAN SLIDE LAYAR TV
+    if(resSpoTV && resSpoTV.status === 'ok' && resSpoTV.data.length > 0) {
+        resSpoTV.data.forEach(spo => {
+            rawPlaylist.push({ type: 'MEDIA', data: { url: spo.url, judul: spo.nama, tipe: 'FLYER' } });
+        });
     }
     
     let fullItems = []; let normItems = [];

@@ -16,19 +16,16 @@
 .tema-toska{--primary:#0F766E;--primary-dark:#094A46;--primary-light:#E8FAF8;--accent:#14B8A6;}
 .tema-malam{--primary:#1E3A5F;--primary-dark:#0F1F35;--primary-light:#E8EEF5;--accent:#3B82F6;}
 
-/* 3 TEMA SULTAN BARU */
 .tema-safir{--primary:#0F172A;--primary-dark:#020617;--primary-light:#FEF9C3;--accent:#FDE047;}
 .tema-tembaga{--primary:#450A0A;--primary-dark:#2A0404;--primary-light:#FFEDD5;--accent:#FDBA74;}
 .tema-perak{--primary:#18181B;--primary-dark:#09090B;--primary-light:#ECFDF5;--accent:#10B981;}
 
-/* TEMA LIGHT MODE */
 .tema-putih{--primary:#059669;--primary-dark:#047857;--primary-light:#ECFDF5;--accent:#D97706;--bg:#F3F4F6;--white:#FFFFFF;--text:#1F2937;--muted:#6B7280;--masuk:#059669;--keluar:#DC2626;}
 .tema-abuterang{--primary:#2563EB;--primary-dark:#1D4ED8;--primary-light:#EFF6FF;--accent:#EA580C;--bg:#E5E7EB;--white:#FFFFFF;--text:#111827;--muted:#6B7280;--masuk:#2563EB;--keluar:#DC2626;}
 
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--text);}
 
-/* SPLASH */
 .splash{position:fixed;inset:0;background:var(--primary-dark);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity 0.5s;}
 .splash.hide{opacity:0;pointer-events:none;}
 .splash-text{color:rgba(255,255,255,0.7);font-size:13px;margin-bottom:2rem;}
@@ -36,14 +33,12 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 .splash-fill{height:100%;background:var(--accent);border-radius:3px;animation:load 1.5s ease forwards;}
 @keyframes load{from{width:0}to{width:100%}}
 
-/* ERROR */
 .error-wrap{display:none;position:fixed;inset:0;background:var(--primary-dark);align-items:center;justify-content:center;flex-direction:column;z-index:9998;}
 .error-wrap.show{display:flex;}
 .error-icon{font-size:48px;margin-bottom:1rem;}
 .error-text{color:white;font-size:16px;text-align:center;padding:0 2rem;}
 .error-sub{color:rgba(255,255,255,0.6);font-size:13px;margin-top:8px;}
 
-/* HEADER */
 .header{background:linear-gradient(160deg,var(--primary-dark) 0%,var(--primary) 100%);padding:2rem 1.25rem 3rem;text-align:center;position:relative;overflow:hidden;}
 .header::before{content:'';position:absolute;top:-40px;right:-40px;width:180px;height:180px;border-radius:50%;border:1px solid rgba(201,168,76,0.2);}
 .header::after{content:'';position:absolute;bottom:-60px;left:-30px;width:220px;height:220px;border-radius:50%;border:1px solid rgba(255,255,255,0.05);}
@@ -57,7 +52,6 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 .badge-pow:hover{background:var(--accent);color:var(--primary-dark);transform:translateY(-2px);box-shadow:0 4px 12px rgba(201,168,76,0.3);}
 .btn-wa-header{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);color:white;font-size:12px;padding:6px 14px;border-radius:20px;margin-top:10px;text-decoration:none;position:relative;z-index:1;}
 
-/* JADWAL SHOLAT DEFAULT (MODERN) */
 .sholat-card{background:var(--primary);border-radius:14px;padding:1rem;margin-bottom:1rem; position:relative; overflow:hidden;}
 .sholat-title{font-size:11px;color:rgba(255,255,255,0.7);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.75rem;text-align:center;}
 .sholat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;} 
@@ -76,10 +70,8 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 .sholat-item.aktif .sholat-time{color:var(--primary-dark); font-weight:800;}
 .countdown-badge{display:inline-block; font-size:9px; font-weight:700; color:var(--primary-dark); background:rgba(255,255,255,0.6); padding:2px 6px; border-radius:10px; margin-top:6px; letter-spacing:0.5px;}
 
-/* MAIN */
 .main{padding:0 1rem 2rem;margin-top:-1.5rem;position:relative;z-index:1;}
 
-/* PENGUMUMAN CAROUSEL */
 .peng-wrap{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:12px;padding-bottom:5px;scrollbar-width:none;scroll-behavior:smooth;}
 .peng-wrap::-webkit-scrollbar{display:none;}
 .peng-slide{flex:0 0 92%;scroll-snap-align:center;position:relative;}
@@ -92,7 +84,6 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 .banner-judul{font-size:14px;font-weight:600;color:var(--primary);margin-bottom:3px;padding-right:30px;}
 .banner-isi{font-size:12px;color:var(--muted);line-height:1.6;}
 
-/* SALDO DEFAULT (MODERN / GLASSMORPHISM) */
 .saldo-card{
   background:rgba(255, 255, 255, 0.85);
   backdrop-filter:blur(12px);
@@ -116,14 +107,12 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 .s-val.masuk{color:var(--masuk);}
 .s-val.keluar{color:var(--keluar);}
 
-/* SECTION DEFAULT */
 .section{margin-bottom:1rem;}
 .section-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem;}
 .section-head-left{display:flex;align-items:center;gap:8px;}
 .section-head .dot{width:8px;height:8px;border-radius:50%;background:var(--accent);}
 .section-head h2{font-size:13px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;}
 
-/* CARD DEFAULT (MODERN) */
 .card{
   background:rgba(255, 255, 255, 0.85);
   backdrop-filter:blur(12px);
@@ -134,7 +123,6 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
   box-shadow:0 8px 32px rgba(0,0,0,0.04);
 }
 
-/* TRANSAKSI & JADWAL */
 .trx-item{display:flex;align-items:center;justify-content:space-between;padding:0.875rem 1rem;border-bottom:1px solid var(--border);gap:12px;}
 .trx-item:last-child{border-bottom:none;}
 .trx-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
@@ -156,13 +144,11 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 .jadwal-detail{font-size:12px;color:var(--muted);margin-top:3px;}
 .jadwal-hari{display:inline-block;background:var(--primary-light);color:var(--primary);font-size:10px;padding:2px 6px;border-radius:4px;margin-top:4px;}
 
-/* PROGRAM AMAL UX & UPGRADE SHIMMER */
 .swipe-wrap { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 12px; padding-bottom: 5px; margin: 0 -1rem; padding-left: 1rem; padding-right: 1rem; scrollbar-width: none; }
 .swipe-wrap::-webkit-scrollbar { display: none; }
 .swipe-card { flex: 0 0 88%; scroll-snap-align: center; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 12px; }
 .scroll-box { max-height: 250px; overflow-y: auto; padding-right: 5px; margin-bottom: 15px; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
 
-/* PROGRESS BAR SHIMMER UPGRADE */
 .progress-wrap{background:var(--border);height:8px;border-radius:10px;overflow:hidden;margin:10px 0;}
 .progress-bar{background:var(--primary); height:100%; border-radius:10px; transition:width 1.5s cubic-bezier(0.25, 1, 0.5, 1); position:relative; overflow:hidden;}
 .progress-bar::after{content:''; position:absolute; top:0; left:-100%; width:60%; height:100%; background:linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent); animation:shimmer 2s infinite linear;}
@@ -170,14 +156,12 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 
 .urgency-label{font-size:11px;color:var(--accent);font-weight:600;background:var(--primary-light);padding:3px 8px;border-radius:12px;display:inline-block;margin-bottom:8px;}
 
-/* MICRO INTERACTION TOMBOL */
 .cta-group{display:flex;gap:8px;margin-top:12px;}
 .btn-cta{flex:1;text-align:center;padding:10px;border-radius:8px;font-size:12px;font-weight:600;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:6px; transition:transform 0.2s ease, box-shadow 0.2s ease;}
 .btn-cta:hover{transform:scale(1.02); box-shadow:0 4px 12px rgba(0,0,0,0.1);}
 .btn-cta-primary{background:var(--primary);color:white;border:1px solid var(--primary-dark);}
 .btn-cta-outline{background:white;color:var(--primary);border:1px solid var(--primary);}
 
-/* GALERI & LIGHTBOX */
 .galeri-wrap{padding:1rem;}
 .foto-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:0.75rem;}
 .foto-item{border-radius:10px;overflow:hidden;height:160px;background:var(--bg);position:relative;cursor:pointer;}
@@ -198,7 +182,6 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 .lb-slide img{max-width:100%;max-height:75vh;object-fit:contain;transition:transform 0.3s;}
 .lb-caption{color:white;font-size:13px;margin-top:15px;text-align:center;padding:0 20px;}
 
-/* INFAQ & QRIS */
 .infaq-wrap{padding:1rem;}
 .qris-box{background:var(--accent-light);border:1px solid rgba(201,168,76,0.3);border-radius:12px;padding:1.25rem;text-align:center;margin-bottom:1rem;}
 .qris-img{width:170px;height:170px;background:white;border-radius:10px;margin:0 auto 0.75rem;display:flex;align-items:center;justify-content:center;border:1px solid var(--border);overflow:hidden;}
@@ -218,14 +201,12 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 .scroll-kurban::-webkit-scrollbar { display: none; }
 .badge-baru { font-size: 8px; font-weight: 800; background: #22C55E; color: white; padding: 2px 6px; border-radius: 4px; margin-left: 6px; text-transform: uppercase; vertical-align: middle; box-shadow: 0 2px 4px rgba(0,0,0,0.1); border: 1px solid rgba(255,255,255,0.2); }
 
-/* --- FOOTER BADGE --- */
 .footer{text-align:center;padding:2rem 1rem;font-size:12px;color:var(--muted);border-top:1px solid var(--border);background:var(--white);margin-top:1rem;}
 .footer a.link-utama{color:var(--primary);text-decoration:none;font-weight:700;}
 .pow-badge{display:inline-flex;align-items:center;gap:6px;background:var(--primary-light);color:var(--primary);font-size:12px;padding:6px 14px;border-radius:20px;margin-top:10px;font-weight:600;text-decoration:none;border:1px solid rgba(27,107,58,0.2);transition:all 0.3s ease;}
 .pow-badge:hover{background:var(--primary);color:white;transform:translateY(-2px);box-shadow:0 4px 12px rgba(27,107,58,0.25);}
 .kosong{text-align:center;padding:2rem 1rem;color:var(--muted);font-size:13px;}
 
-/* TOAST & OVERLAY */
 .toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%) translateY(80px);background:var(--text);color:white;font-size:13px;padding:10px 20px;border-radius:20px;transition:transform 0.3s;z-index:999;white-space:nowrap;}
 .toast.show{transform:translateX(-50%) translateY(0);}
 
@@ -242,7 +223,6 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 .overlay-iklan-sub{font-size:12px;color:var(--muted);margin-top:3px;line-height:1.5;}
 .overlay-btn{display:block;color:white;text-decoration:none;text-align:center;padding:10px;border-radius:10px;font-size:13px;font-weight:600;margin-top:0.75rem; border:1px solid rgba(0,0,0,0.1);}
 
-/* FLOATING BADGE JUM'AT */
 .jumat-floater { position: fixed; bottom: 85px; right: 15px; background: linear-gradient(135deg, var(--masuk), var(--primary-dark)); color: white; padding: 12px 16px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); z-index: 990; display: none; align-items: center; gap: 12px; max-width: 280px; transform: translateY(50px); opacity: 0; transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1); border: 1px solid rgba(255,255,255,0.2); }
 .jumat-floater.show { transform: translateY(0); opacity: 1; }
 .jf-icon { font-size: 24px; }
@@ -251,34 +231,14 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 .jf-khatib { font-size: 12px; font-weight: 600; line-height: 1.3; }
 .jf-close { background: rgba(0,0,0,0.2); border: none; color: white; font-size: 14px; cursor: pointer; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
 
-/* ====================================================
-   TEMA DESAIN: KLASIK (Gaya Timur Tengah)
-   ==================================================== */
-.desain-klasik .card, .desain-klasik .saldo-card {
-  background: var(--white);
-  border: 2px solid var(--accent);
-  border-radius: 16px 0 16px 0; /* Sudut lengkung ala timur tengah */
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-}
+.desain-klasik .card, .desain-klasik .saldo-card { background: var(--white); border: 2px solid var(--accent); border-radius: 16px 0 16px 0; backdrop-filter: none; -webkit-backdrop-filter: none; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
 .desain-klasik .section-head h2 { font-family: 'Amiri', serif; font-size: 18px; text-transform: capitalize; color: var(--primary-dark); font-weight: 700; }
 .desain-klasik .header { background: var(--primary-dark); border-bottom: 4px solid var(--accent); }
 .desain-klasik .logo-wrap { border-radius: 12px 0 12px 0; border: 2px solid var(--accent); }
 .desain-klasik .sholat-card { border-radius: 16px 0 16px 0; border: 2px solid var(--accent); }
 
-/* ====================================================
-   TEMA DESAIN: MINIMALIS (Gaya Flat & Bersih)
-   ==================================================== */
 .desain-minimalis body { background: #F3F4F6; }
-.desain-minimalis .card, .desain-minimalis .saldo-card {
-  background: var(--white);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-}
+.desain-minimalis .card, .desain-minimalis .saldo-card { background: var(--white); border: 1px solid var(--border); border-radius: 8px; backdrop-filter: none; -webkit-backdrop-filter: none; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
 .desain-minimalis .header { background: var(--primary); padding-bottom: 2rem; border-bottom: none; }
 .desain-minimalis .header::before, .desain-minimalis .header::after { display: none; }
 .desain-minimalis .logo-wrap { border: none; box-shadow: 0 4px 10px rgba(0,0,0,0.1); border-radius: 50%; }
@@ -423,6 +383,8 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 
 </div>
 
+<div id="sponsor-web-container" style="background:var(--accent); color:var(--primary-dark); text-align:center; padding:8px 15px; font-size:12px; font-weight:700; letter-spacing:1px; display:none;"></div>
+
 <div class="footer">
   Sistem ini didukung penuh oleh<br>
   <a href="https://powerofmasjid.github.io" target="_blank" class="link-utama">Power of Masjid</a> — Yayasan Nasi Jum'at<br>
@@ -435,29 +397,23 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 <div class="toast" id="toast">Nomor rekening disalin!</div>
 
 <script>
-// PASTIKAN MENGGUNAKAN LINK API BARU
-var API_URL = 'https://script.google.com/macros/s/AKfycbwuIV7umLZ-uc-NtYY6fqqByuklyGeH2rXqUFgaKc1V2ufdp2Udf83PP-Y6PEPUl2T01A/exec';
+// LINK API BARU BAPAK
+var API_URL = 'https://script.google.com/macros/s/AKfycbwSLQ9TX6ZftGZrVu9dFH0g8oRvKoI3fzdDIjmpuE-TpEnXUqKPLQKMumSM9hCt1QjoMQ/exec';
 
 var ID_MASJID = '';
 var CACHE_DURATION = 60000; 
 var PENGUMUMAN_INTERVAL = null;
 
-// ==========================================
-// FUNGSI ANIMASI ANGKA & OBSERVER (TAHAP 2)
-// ==========================================
 function animateValue(obj, start, end, duration, prefix = '', suffix = '') {
     let startTimestamp = null;
     const step = (timestamp) => {
         if (!startTimestamp) startTimestamp = timestamp;
         const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-        const easeOut = 1 - Math.pow(1 - progress, 4); // Efek melambat di akhir
+        const easeOut = 1 - Math.pow(1 - progress, 4); 
         const current = Math.floor(easeOut * (end - start) + start);
         obj.innerHTML = prefix + current.toLocaleString('id-ID') + suffix;
-        if (progress < 1) {
-            window.requestAnimationFrame(step);
-        } else {
-            obj.innerHTML = prefix + end.toLocaleString('id-ID') + suffix;
-        }
+        if (progress < 1) { window.requestAnimationFrame(step); } 
+        else { obj.innerHTML = prefix + end.toLocaleString('id-ID') + suffix; }
     };
     window.requestAnimationFrame(step);
 }
@@ -466,38 +422,29 @@ const powObserver = new IntersectionObserver((entries, obs) => {
     entries.forEach(entry => {
         if (entry.isIntersecting) {
             const el = entry.target;
-            // Animasi untuk angka count-up
             if (el.classList.contains('obs-num')) {
                 let val = Number(el.getAttribute('data-val')) || 0;
                 let pre = el.getAttribute('data-pre') || '';
                 let suf = el.getAttribute('data-suf') || '';
                 animateValue(el, 0, val, 1500, pre, suf);
-                el.classList.remove('obs-num');
-                obs.unobserve(el);
+                el.classList.remove('obs-num'); obs.unobserve(el);
             }
-            // Animasi untuk lebar progress bar
             if (el.classList.contains('obs-bar')) {
                 let w = el.getAttribute('data-w') || '0';
                 el.style.width = w + '%';
-                el.classList.remove('obs-bar');
-                obs.unobserve(el);
+                el.classList.remove('obs-bar'); obs.unobserve(el);
             }
         }
     });
 }, { threshold: 0.1 });
-// ==========================================
-
 
 function cekDataBaru(idItem) {
   try {
     if (!idItem) return false;
-    var parts = idItem.split('-');
-    if (parts.length < 2) return false;
-    var hexTime = parts[parts.length - 2];
-    var waktuInput = parseInt(hexTime, 36);
+    var parts = idItem.split('-'); if (parts.length < 2) return false;
+    var hexTime = parts[parts.length - 2]; var waktuInput = parseInt(hexTime, 36);
     if (isNaN(waktuInput) || waktuInput < 1700000000000) return false;
-    var selisihJam = (Date.now() - waktuInput) / (1000 * 60 * 60);
-    return selisihJam <= 12;
+    var selisihJam = (Date.now() - waktuInput) / (1000 * 60 * 60); return selisihJam <= 12;
   } catch(e) { return false; }
 }
 
@@ -513,23 +460,12 @@ function rupiah(n) { return 'Rp ' + Number(n).toLocaleString('id-ID'); }
 function formatTglPendek(t) { var d = new Date(t); return isNaN(d) ? t : d.toLocaleDateString('id-ID', {day:'numeric', month:'short', year:'numeric'}); }
 function namaHari(idx) { return ['Ahad','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'][idx]; }
 
-function salin(n) {
-  navigator.clipboard.writeText(n).then(function(){
-    var t = document.getElementById('toast');
-    t.classList.add('show'); setTimeout(function(){ t.classList.remove('show'); }, 2000);
-  });
-}
+function salin(n) { navigator.clipboard.writeText(n).then(function(){ var t = document.getElementById('toast'); t.classList.add('show'); setTimeout(function(){ t.classList.remove('show'); }, 2000); }); }
 
 function tutupOverlay() { document.getElementById('overlay').classList.add('hide'); }
 
-window.bukaLightbox = function(idx) {
-    document.getElementById('lightbox').classList.add('show');
-    var track = document.getElementById('lb-track');
-    setTimeout(() => { track.scrollTo({left: track.clientWidth * idx, behavior: 'instant'}); }, 10);
-};
-window.tutupLightbox = function() {
-    document.getElementById('lightbox').classList.remove('show');
-};
+window.bukaLightbox = function(idx) { document.getElementById('lightbox').classList.add('show'); var track = document.getElementById('lb-track'); setTimeout(() => { track.scrollTo({left: track.clientWidth * idx, behavior: 'instant'}); }, 10); };
+window.tutupLightbox = function() { document.getElementById('lightbox').classList.remove('show'); };
 
 function matenginLinkDrive(url) {
     if (!url) return ''; var fileId = '';
@@ -555,40 +491,23 @@ async function loadMasjid(slug) {
   var d = json.data; ID_MASJID = d.id_masjid; window.WA_MASJID = d.telepon_wa || '';
 
   document.getElementById('nama-masjid').textContent = d.nama; 
-  
-  var teksAlamat = d.alamat;
-  if(d.kelurahan) teksAlamat += ', Kel. ' + d.kelurahan;
-  if(d.kecamatan) teksAlamat += ', Kec. ' + d.kecamatan;
-  if(d.kota) teksAlamat += ', ' + d.kota;
+  var teksAlamat = d.alamat; if(d.kelurahan) teksAlamat += ', Kel. ' + d.kelurahan; if(d.kecamatan) teksAlamat += ', Kec. ' + d.kecamatan; if(d.kota) teksAlamat += ', ' + d.kota;
   document.getElementById('alamat-masjid').textContent = teksAlamat;
-  
   document.title = d.nama + ' — Power of Masjid';
 
   if (d.deskripsi) { document.getElementById('deskripsi-masjid').textContent = d.deskripsi; document.getElementById('deskripsi-masjid').style.display = 'block'; }
   if (d.logo_url) { document.getElementById('logo-wrap').innerHTML = '<img src="' + matenginLinkDrive(d.logo_url) + '" alt="Logo ' + d.nama + '">'; }
   
-  // LOGIKA PEMBACAAN TEMA WARNA & TEMA DESAIN LAYOUT
   if (d.tema) document.body.classList.add('tema-' + d.tema);
-  if (d.tema_desain_web) {
-      document.body.classList.add('desain-' + d.tema_desain_web);
-  } else {
-      document.body.classList.add('desain-modern'); // Default
-  }
+  if (d.tema_desain_web) { document.body.classList.add('desain-' + d.tema_desain_web); } else { document.body.classList.add('desain-modern'); }
 
-  if (d.telepon_wa) {
-    var btnWa = document.getElementById('btn-wa-header');
-    btnWa.href = 'https://wa.me/' + d.telepon_wa; btnWa.style.display = 'inline-flex';
-  }
+  if (d.telepon_wa) { var btnWa = document.getElementById('btn-wa-header'); btnWa.href = 'https://wa.me/' + d.telepon_wa; btnWa.style.display = 'inline-flex'; }
 
   var reks = [];
-  if (d.rek1_bank && d.rek1_nomor) reks.push({bank: d.rek1_bank, nomor: d.rek1_nomor});
-  if (d.rek2_bank && d.rek2_nomor) reks.push({bank: d.rek2_bank, nomor: d.rek2_nomor});
-  if (d.rek3_bank && d.rek3_nomor) reks.push({bank: d.rek3_bank, nomor: d.rek3_nomor});
+  if (d.rek1_bank && d.rek1_nomor) reks.push({bank: d.rek1_bank, nomor: d.rek1_nomor}); if (d.rek2_bank && d.rek2_nomor) reks.push({bank: d.rek2_bank, nomor: d.rek2_nomor}); if (d.rek3_bank && d.rek3_nomor) reks.push({bank: d.rek3_bank, nomor: d.rek3_nomor});
 
   var lr = document.getElementById('list-rekening');
-  if (reks.length > 0) {
-    lr.innerHTML = reks.map(function(r){ return '<div class="rek-item"><div class="rek-left"><div class="rek-bank">' + r.bank + '</div><div class="rek-an">a.n. ' + d.nama + '</div></div><div class="rek-right"><div class="rek-no">' + r.nomor + '</div><button class="btn-salin" onclick="salin(\'' + r.nomor + '\')">Salin</button></div></div>'; }).join('');
-  } else { lr.innerHTML = '<div class="kosong">Info rekening belum tersedia</div>'; }
+  if (reks.length > 0) { lr.innerHTML = reks.map(function(r){ return '<div class="rek-item"><div class="rek-left"><div class="rek-bank">' + r.bank + '</div><div class="rek-an">a.n. ' + d.nama + '</div></div><div class="rek-right"><div class="rek-no">' + r.nomor + '</div><button class="btn-salin" onclick="salin(\'' + r.nomor + '\')">Salin</button></div></div>'; }).join(''); } else { lr.innerHTML = '<div class="kosong">Info rekening belum tersedia</div>'; }
 
   if (d.qris_url) { document.getElementById('qris-box').style.display = 'block'; document.getElementById('qris-img').src = matenginLinkDrive(d.qris_url); }
   if (d.latitude && d.longitude) { loadJadwalSholat(d.latitude, d.longitude); }
@@ -601,7 +520,6 @@ async function loadProgramAmal() {
   if (json.status !== 'ok' || json.data.length === 0) { container.innerHTML = ''; return; }
   
   var html = '<div style="text-align:center; font-size:13px; color:var(--primary); font-weight:600; margin-bottom:15px; padding:10px; background:var(--primary-light); border-radius:10px;">Mari ambil bagian dalam kebaikan hari ini 🤲</div>';
-  
   for (var i = 0; i < json.data.length; i++) {
      var p = json.data[i];
      html += '<div class="section"><div class="section-head"><div class="section-head-left"><div class="dot"></div><h2>' + p.judul + '</h2></div></div><div class="card" id="amal-content-'+p.id+'"><div class="kosong">Memuat data...</div></div></div>';
@@ -628,19 +546,13 @@ async function fetchDataAmal(program) {
 
    if(res.status !== 'ok' || res.data.length === 0) { el.innerHTML = headerHtml + '<div class="kosong" style="padding-top:0;">Belum ada partisipan yang tercatat.</div>'; return; }
    
-   var data = res.data;
-   var html = headerHtml;
+   var data = res.data; var html = headerHtml;
    
    if(program.tipe === 'KURBAN') {
        var sapiKol = []; var sapiUtuh = []; var kambing = [];
-       data.forEach(d => { 
-           if(d.jenis === 'Sapi Kolektif') sapiKol.push(d); 
-           else if(d.jenis === 'Sapi Utuh') sapiUtuh.push(d);
-           else kambing.push(d);
-       });
+       data.forEach(d => { if(d.jenis === 'Sapi Kolektif') sapiKol.push(d); else if(d.jenis === 'Sapi Utuh') sapiUtuh.push(d); else kambing.push(d); });
        
        html += '<div class="swipe-wrap">';
-       
        var kelompok = 1;
        for(var i=0; i<sapiKol.length; i+=7) {
            var chunk = sapiKol.slice(i, i+7);
@@ -648,84 +560,50 @@ async function fetchDataAmal(program) {
            var sisaSlot = 7 - chunk.length;
            var statusLabel = chunk.length === 7 ? '<span style="color:#10B981;">✅ Penuh</span>' : `<span style="color:var(--accent);">${chunk.length}/7 Terisi</span>`;
            
-           html += '<div class="swipe-card">';
-           html += '<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">';
-           html += '<div style="font-weight:600; font-size:12px; color:var(--primary); display:flex; align-items:center; gap:6px;"><span>🐄</span> Sapi Ke-' + kelompok + '</div>';
-           html += '<div style="font-size:10px; font-weight:600;">' + statusLabel + '</div>';
-           html += '</div>';
-           
-           // IMPLEMENTASI OBSERVER PROGRESS BAR KURBAN
+           html += '<div class="swipe-card"><div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;"><div style="font-weight:600; font-size:12px; color:var(--primary); display:flex; align-items:center; gap:6px;"><span>🐄</span> Sapi Ke-' + kelompok + '</div><div style="font-size:10px; font-weight:600;">' + statusLabel + '</div></div>';
            html += `<div class="progress-wrap"><div class="progress-bar obs-bar" data-w="${progressKurban}" style="width:0%"></div></div>`;
-           
            html += '<ol style="margin-left:1.5rem; font-size:12px; color:var(--text); line-height:1.8;">';
-           chunk.forEach(d => { 
-               var badge = cekDataBaru(d.id) ? '<span class="badge-baru">Baru</span>' : '';
-               html += '<li>' + d.nama + badge + '</li>'; 
-           });
+           chunk.forEach(d => { var badge = cekDataBaru(d.id) ? '<span class="badge-baru">Baru</span>' : ''; html += '<li>' + d.nama + badge + '</li>'; });
            for(var j=0; j<sisaSlot; j++) { html += '<li style="color:#A0AEC0; font-style:italic;">[ Tersedia ]</li>'; }
-           html += '</ol></div>';
-           kelompok++;
+           html += '</ol></div>'; kelompok++;
        }
        if(sapiUtuh.length > 0) {
-           html += '<div class="swipe-card">';
-           html += '<div style="font-weight:600; font-size:12px; margin-bottom:8px; color:var(--primary); display:flex; align-items:center; gap:6px;"><span>🐂</span> Sapi Mandiri</div>';
-           html += '<div class="scroll-kurban"><ul style="margin-left:1.5rem; font-size:12px; color:var(--text); line-height:1.8;">';
-           sapiUtuh.forEach(d => { 
-               var badge = cekDataBaru(d.id) ? '<span class="badge-baru">Baru</span>' : '';
-               html += '<li>' + d.nama + badge + '</li>'; 
-           });
+           html += '<div class="swipe-card"><div style="font-weight:600; font-size:12px; margin-bottom:8px; color:var(--primary); display:flex; align-items:center; gap:6px;"><span>🐂</span> Sapi Mandiri</div><div class="scroll-kurban"><ul style="margin-left:1.5rem; font-size:12px; color:var(--text); line-height:1.8;">';
+           sapiUtuh.forEach(d => { var badge = cekDataBaru(d.id) ? '<span class="badge-baru">Baru</span>' : ''; html += '<li>' + d.nama + badge + '</li>'; });
            html += '</ul></div></div>';
        }
        if(kambing.length > 0) {
-           html += '<div class="swipe-card">';
-           html += '<div style="font-weight:600; font-size:12px; margin-bottom:8px; color:var(--primary); display:flex; align-items:center; gap:6px;"><span>🐐</span> Kambing/Domba</div>';
-           html += '<div class="scroll-kurban"><ul style="margin-left:1.5rem; font-size:12px; color:var(--text); line-height:1.8;">';
-           kambing.forEach(d => { 
-               var badge = cekDataBaru(d.id) ? '<span class="badge-baru">Baru</span>' : '';
-               html += '<li>' + d.nama + badge + '</li>'; 
-           });
+           html += '<div class="swipe-card"><div style="font-weight:600; font-size:12px; margin-bottom:8px; color:var(--primary); display:flex; align-items:center; gap:6px;"><span>🐐</span> Kambing/Domba</div><div class="scroll-kurban"><ul style="margin-left:1.5rem; font-size:12px; color:var(--text); line-height:1.8;">';
+           kambing.forEach(d => { var badge = cekDataBaru(d.id) ? '<span class="badge-baru">Baru</span>' : ''; html += '<li>' + d.nama + badge + '</li>'; });
            html += '</ul></div></div>';
        }
        html += '</div>';
 
        var waTextKurban = encodeURIComponent("Assalamu'alaikum,\nSaya ingin berpartisipasi dalam program Kurban:\n*" + program.judul + "*\n\nMohon diarahkan untuk prosesnya.");
        var shareTextKurban = encodeURIComponent("Yuk ikuti program Kurban *" + program.judul + "* di Masjid kita! Klik link ini untuk info lengkapnya:\n" + urlWeb);
-       html += '<div style="padding:0 15px 15px;"><div class="cta-group">';
-       html += '<a href="https://wa.me/' + waTujuan + '?text=' + waTextKurban + '" target="_blank" class="btn-cta btn-cta-primary">🐄 Ikut Kurban</a>';
-       html += '<a href="https://wa.me/?text=' + shareTextKurban + '" target="_blank" class="btn-cta btn-cta-outline">📤 Bagikan</a>';
-       html += '</div></div>';
+       html += '<div style="padding:0 15px 15px;"><div class="cta-group"><a href="https://wa.me/' + waTujuan + '?text=' + waTextKurban + '" target="_blank" class="btn-cta btn-cta-primary">🐄 Ikut Kurban</a><a href="https://wa.me/?text=' + shareTextKurban + '" target="_blank" class="btn-cta btn-cta-outline">📤 Bagikan</a></div></div>';
        
    } else if(program.tipe === 'ZAKAT') {
        var tJiwa = 0; var tUang = 0; var tBeras = 0;
        data.forEach(d => { tJiwa += Number(d.jumlah_jiwa) || 0; if(d.jenis === 'UANG') tUang += Number(d.nominal) || 0; if(d.jenis === 'BERAS') tBeras += Number(d.nominal) || 0; });
        
-       html += '<div style="padding:0 15px;">';
-       html += '<div style="background:var(--primary-light); padding:12px; border-radius:10px; margin-bottom:12px; text-align:center;">';
+       html += '<div style="padding:0 15px;"><div style="background:var(--primary-light); padding:12px; border-radius:10px; margin-bottom:12px; text-align:center;">';
        html += '<div style="font-size:11px; color:var(--primary); font-weight:600; letter-spacing:1px; margin-bottom:8px;">📊 REKAPITULASI SEMENTARA</div>';
        html += '<div style="display:flex; justify-content:space-between; font-size:12px; color:var(--text);">';
-       
-       // IMPLEMENTASI OBSERVER COUNT-UP ZAKAT
        html += `<div>Muzakki<br><b style="font-size:14px; color:var(--primary);"><span class="obs-num" data-val="${tJiwa}" data-suf=" Jiwa">0 Jiwa</span></b></div>`;
        html += `<div>Beras<br><b style="font-size:14px; color:var(--primary);"><span class="obs-num" data-val="${tBeras}" data-suf=" Liter">0 Liter</span></b></div>`;
        html += `<div>Uang<br><b style="font-size:14px; color:var(--primary);"><span class="obs-num" data-val="${tUang}" data-pre="Rp ">0</span></b></div>`;
-       
-       html += '</div></div>';
-       
-       html += '<div class="scroll-limit-5">';
+       html += '</div></div><div class="scroll-limit-5">';
        data.forEach(d => {
            var badge = cekDataBaru(d.id) ? '<span class="badge-baru">Baru</span>' : '';
            html += '<div style="padding:10px 0; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center;">';
-           html += '<span style="font-size:13px; font-weight:500;">' + (d.nama || '-') + badge + '</span><span style="font-size:11px; background:var(--bg); padding:4px 8px; border-radius:12px; color:var(--muted);">' + (d.jumlah_jiwa || 0) + ' Jiwa (' + d.jenis + ')</span>';
-           html += '</div>';
+           html += '<span style="font-size:13px; font-weight:500;">' + (d.nama || '-') + badge + '</span><span style="font-size:11px; background:var(--bg); padding:4px 8px; border-radius:12px; color:var(--muted);">' + (d.jumlah_jiwa || 0) + ' Jiwa (' + d.jenis + ')</span></div>';
        });
        html += '</div>';
 
        var waTextZakat = encodeURIComponent("Assalamu'alaikum,\nSaya ingin menunaikan Zakat Fitrah untuk program:\n*" + program.judul + "*\n\nMohon diarahkan untuk proses pembayarannya.");
        var shareTextZakat = encodeURIComponent("Mari tunaikan Zakat Fitrah *" + program.judul + "* di Masjid kita. Klik link ini untuk info lengkapnya:\n" + urlWeb);
-       html += '<div class="cta-group" style="margin-bottom:15px;">';
-       html += '<a href="https://wa.me/' + waTujuan + '?text=' + waTextZakat + '" target="_blank" class="btn-cta btn-cta-primary">🌾 Tunaikan Sekarang</a>'; 
-       html += '<a href="https://wa.me/?text=' + shareTextZakat + '" target="_blank" class="btn-cta btn-cta-outline">📤 Bagikan</a>';
-       html += '</div></div>';
+       html += '<div class="cta-group" style="margin-bottom:15px;"><a href="https://wa.me/' + waTujuan + '?text=' + waTextZakat + '" target="_blank" class="btn-cta btn-cta-primary">🌾 Tunaikan Sekarang</a><a href="https://wa.me/?text=' + shareTextZakat + '" target="_blank" class="btn-cta btn-cta-outline">📤 Bagikan</a></div></div>';
        
    } else if(program.tipe === 'INFAQ') {
        var tUang = 0; var barang = [];
@@ -735,55 +613,37 @@ async function fetchDataAmal(program) {
        var progressBerapa = targetDana > 0 ? Math.min(Math.round((tUang / targetDana) * 100), 100) : 0;
        var urgencyStyle = progressBerapa >= 80 && progressBerapa < 100 ? 'box-shadow: 0 0 15px rgba(201,168,76,0.3); border-color:var(--accent);' : '';
        
-       html += '<div style="padding:0 15px;">';
-       html += '<div style="background:var(--accent-light); border:1px solid rgba(201,168,76,0.3); padding:15px; border-radius:10px; margin-bottom:15px; text-align:center; ' + urgencyStyle + '">';
-       
+       html += '<div style="padding:0 15px;"><div style="background:var(--accent-light); border:1px solid rgba(201,168,76,0.3); padding:15px; border-radius:10px; margin-bottom:15px; text-align:center; ' + urgencyStyle + '">';
        if(targetDana > 0 && tUang < targetDana) {
            var hampirTercapai = progressBerapa >= 80 ? ' 🔥 Hampir Tercapai!' : '';
            html += '<div class="urgency-label">⏳ Dibutuhkan ' + rupiah(targetDana - tUang) + hampirTercapai + '</div>';
-       } else if (targetDana > 0 && tUang >= targetDana) {
-           html += '<div class="urgency-label" style="background:#E8F5EE; color:#1B6B3A;">✅ Target Dana Terpenuhi!</div>';
-       }
+       } else if (targetDana > 0 && tUang >= targetDana) { html += '<div class="urgency-label" style="background:#E8F5EE; color:#1B6B3A;">✅ Target Dana Terpenuhi!</div>'; }
 
        html += '<div style="font-size:11px; color:var(--primary); font-weight:600; margin-bottom:4px; letter-spacing:1px;">TOTAL TERKUMPUL</div>';
-       
-       // IMPLEMENTASI OBSERVER COUNT-UP INFAQ
        html += `<div style="font-family:'Amiri',serif; font-size:28px; font-weight:700; color:var(--primary);"><span class="obs-num" data-val="${tUang}" data-pre="Rp ">0</span></div>`;
        
        if(targetDana > 0) {
-           // IMPLEMENTASI OBSERVER PROGRESS BAR INFAQ
            html += `<div class="progress-wrap"><div class="progress-bar obs-bar" data-w="${progressBerapa}" style="width:0%"></div></div>`;
            html += '<div style="display:flex; justify-content:space-between; font-size:10px; color:var(--muted); font-weight:500;"><span>' + progressBerapa + '% Tercapai</span><span>Target: ' + rupiah(targetDana) + '</span></div>';
        }
 
        if(barang.length > 0) { html += '<div style="font-size:11px; color:var(--text); margin-top:8px; padding-top:8px; border-top:1px dashed rgba(201,168,76,0.4);"><b>Material Diterima:</b><br>' + barang.join(', ') + '</div>'; }
-       html += '</div>';
+       html += '</div><div style="font-size:12px; font-weight:600; margin-bottom:8px; color:var(--muted);">👥 ' + data.length + ' MUNFIQ BERPARTISIPASI:</div><div class="scroll-limit-5">';
        
-       html += '<div style="font-size:12px; font-weight:600; margin-bottom:8px; color:var(--muted);">👥 ' + data.length + ' MUNFIQ BERPARTISIPASI:</div>';
-       html += '<div class="scroll-limit-5">';
        data.forEach((d, index) => {
            var displayVal = Number(d.nominal) > 0 ? rupiah(d.nominal) : d.catatan;
            var badge = cekDataBaru(d.id) ? '<span class="badge-baru">Baru</span>' : '';
            html += '<div style="padding:10px 0; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center;">';
-           html += '<span style="font-size:13px; font-weight:500;">' + (d.nama || '-') + badge + '</span><span style="font-size:13px; font-weight:600; color:var(--primary);">' + displayVal + '</span>';
-           html += '</div>';
+           html += '<span style="font-size:13px; font-weight:500;">' + (d.nama || '-') + badge + '</span><span style="font-size:13px; font-weight:600; color:var(--primary);">' + displayVal + '</span></div>';
        });
        html += '</div>';
 
        var waTextInfaq = encodeURIComponent("Assalamu'alaikum,\nSaya ingin berpartisipasi dalam program infaq:\n*" + program.judul + "*\n\nMohon diarahkan untuk proses infaqnya.");
        var shareTextInfaq = encodeURIComponent("Yuk bantu program *" + program.judul + "* di Masjid kita. Salurkan infaq terbaikmu di link ini:\n" + urlWeb);
-       html += '<div class="cta-group" style="margin-bottom:15px;">';
-       html += '<a href="https://wa.me/' + waTujuan + '?text=' + waTextInfaq + '" target="_blank" class="btn-cta btn-cta-primary">💚 Infaq Sekarang</a>';
-       html += '<a href="https://wa.me/?text=' + shareTextInfaq + '" target="_blank" class="btn-cta btn-cta-outline">📤 Bagikan</a>';
-       html += '</div></div>';
+       html += '<div class="cta-group" style="margin-bottom:15px;"><a href="https://wa.me/' + waTujuan + '?text=' + waTextInfaq + '" target="_blank" class="btn-cta btn-cta-primary">💚 Infaq Sekarang</a><a href="https://wa.me/?text=' + shareTextInfaq + '" target="_blank" class="btn-cta btn-cta-outline">📤 Bagikan</a></div></div>';
    }
-   
    el.innerHTML = html;
-   
-   // Panggil Observer setelah elemen selesai disuntikkan ke HTML
-   setTimeout(() => {
-       el.querySelectorAll('.obs-num, .obs-bar').forEach(node => powObserver.observe(node));
-   }, 50);
+   setTimeout(() => { el.querySelectorAll('.obs-num, .obs-bar').forEach(node => powObserver.observe(node)); }, 50);
 }
 
 async function loadPengumuman() {
@@ -804,8 +664,7 @@ async function loadPengumuman() {
 
   if(json.data.length > 1) {
       if(PENGUMUMAN_INTERVAL) clearInterval(PENGUMUMAN_INTERVAL);
-      var car = document.getElementById('peng-carousel');
-      var idx = 0;
+      var car = document.getElementById('peng-carousel'); var idx = 0;
       PENGUMUMAN_INTERVAL = setInterval(function() {
           idx++; if(idx >= json.data.length) idx = 0;
           var slideWidth = car.clientWidth * 0.92 + 12;
@@ -823,15 +682,12 @@ async function loadGaleri() {
   var fotoHtml = ''; var videoHtml = ''; var lbHtml = '';
 
   if(fotos.length > 0) {
-      lbHtml = fotos.map(function(f) {
-          return '<div class="lb-slide"><img src="'+matenginLinkDrive(f.url)+'" alt=""><div class="lb-caption">'+f.judul+'</div></div>';
-      }).join('');
+      lbHtml = fotos.map(function(f) { return '<div class="lb-slide"><img src="'+matenginLinkDrive(f.url)+'" alt=""><div class="lb-caption">'+f.judul+'</div></div>'; }).join('');
       document.getElementById('lb-track').innerHTML = lbHtml;
 
       var showCount = Math.min(fotos.length, 2);
       for(var i=0; i<showCount; i++) {
-          var f = fotos[i];
-          var isLast = (i === 1 && fotos.length > 2);
+          var f = fotos[i]; var isLast = (i === 1 && fotos.length > 2);
           var sisa = fotos.length - 2;
           var overlay = isLast ? '<div class="foto-more">+' + sisa + ' Lainnya</div>' : '';
           var hideCaption = isLast ? 'style="display:none;"' : '';
@@ -855,11 +711,9 @@ async function loadSaldo() {
   var json = await apiFetch('getSaldo', {id_masjid: ID_MASJID}, 'saldo_' + ID_MASJID);
   if (json.status !== 'ok') return; var d = json.data;
   
-  // IMPLEMENTASI OBSERVER COUNT-UP SALDO KAS
   document.getElementById('saldo-total').innerHTML = `<span class="obs-num" data-val="${d.saldo || 0}" data-pre="Rp ">0</span>`;
   document.getElementById('total-masuk').innerHTML = `<span class="obs-num" data-val="${d.masuk_bulan_ini || 0}" data-pre="Rp ">0</span>`;
   document.getElementById('total-keluar').innerHTML = `<span class="obs-num" data-val="${d.keluar_bulan_ini || 0}" data-pre="Rp ">0</span>`;
-  
   document.querySelectorAll('.obs-num').forEach(node => powObserver.observe(node));
   
   var now = new Date(); document.getElementById('tgl-update').textContent = 'Diperbarui: ' + namaHari(now.getDay()) + ', ' + now.toLocaleDateString('id-ID', {day:'numeric', month:'long', year:'numeric'});
@@ -879,52 +733,28 @@ async function loadTransaksi() {
 async function loadJadwal() {
   var json = await apiFetch('getJadwal', {id_masjid: ID_MASJID}, 'jadwal_' + ID_MASJID);
   var el = document.getElementById('list-jadwal');
-  
-  if (json.status !== 'ok' || json.data.length === 0) { 
-      el.innerHTML = '<div class="kosong">Belum ada jadwal kegiatan</div>'; 
-      return; 
-  }
+  if (json.status !== 'ok' || json.data.length === 0) { el.innerHTML = '<div class="kosong">Belum ada jadwal kegiatan</div>'; return; }
   
   el.innerHTML = '<div class="scroll-limit-5">' + json.data.map(function(j){
     var hari = j.hari ? '<span class="jadwal-hari">' + j.hari + '</span>' : '';
     return '<div class="jadwal-item"><div class="jadwal-dot"></div><div><div class="jadwal-title">' + j.nama_kegiatan + '</div><div class="jadwal-detail">' + j.jadwal + (j.lokasi ? ' · ' + j.lokasi : '') + '</div>' + hari + '</div></div>';
   }).join('') + '</div>';
 
-  var dNow = new Date();
-  var dHari = dNow.getDay(); 
-  var dJam = dNow.getHours();
-  
+  var dNow = new Date(); var dHari = dNow.getDay();  var dJam = dNow.getHours();
   if (dHari === 4 || (dHari === 5 && dJam < 11)) {
       var jumatItem = json.data.find(function(k) {
-          var h = (k.hari || '').toLowerCase();
-          var n = (k.nama_kegiatan || '').toLowerCase();
-          var j = k.jadwal || '';
-          
-          var isHariJumat = h.includes('jumat') || h.includes("jum'at");
-          var isJamSiang = j.startsWith('11') || j.startsWith('12');
-          var isKhutbah = n.includes('khutbah') || n.includes('sholat') || n.includes('shalat');
-          var bukanMalam = !n.includes('malam') && !h.includes('malam') && !n.includes('sore') && !h.includes('sore');
-          
-          return isHariJumat && (isJamSiang || isKhutbah) && bukanMalam;
+          var h = (k.hari || '').toLowerCase(); var n = (k.nama_kegiatan || '').toLowerCase(); var j = k.jadwal || '';
+          return (h.includes('jumat') || h.includes("jum'at")) && (j.startsWith('11') || j.startsWith('12') || n.includes('khutbah') || n.includes('sholat')) && !n.includes('malam') && !h.includes('malam');
       });
-
       if (jumatItem) {
           var teksHari = dHari === 5 ? "HARI INI" : "BESOK";
           document.getElementById('jf-title').textContent = "📢 PENGINGAT JUM'AT " + teksHari;
           document.getElementById('jf-khatib').textContent = jumatItem.keterangan || jumatItem.nama_kegiatan;
-          
-          setTimeout(function() {
-              var floater = document.getElementById('jumat-floater');
-              floater.style.display = 'flex';
-              setTimeout(function() {
-                  floater.classList.add('show');
-              }, 50); 
-          }, 3500);
+          setTimeout(function() { var floater = document.getElementById('jumat-floater'); floater.style.display = 'flex'; setTimeout(function() { floater.classList.add('show'); }, 50); }, 3500);
       }
   }
 }
 
-// LOGIKA JADWAL SHOLAT & COUNTDOWN TERBARU
 async function loadJadwalSholat(lat, lon) {
   if(!lat || !lon) return;
   var today = new Date();
@@ -932,14 +762,10 @@ async function loadJadwalSholat(lat, lon) {
   try {
     var res = await fetch(url); var j = await res.json();
     if(j.code === 200) {
-      var t = j.data.timings;
-      var KOREKSI_MENIT = 0;
+      var t = j.data.timings; var KOREKSI_MENIT = 0;
       function sesuaikanWaktu(timeStr, tambahLagi = 0) {
-         let [h, m] = timeStr.split(':').map(Number);
-         m += (KOREKSI_MENIT + tambahLagi); 
-         h += Math.floor(m / 60); 
-         m = ((m % 60) + 60) % 60;
-         h = ((h % 24) + 24) % 24;
+         let [h, m] = timeStr.split(':').map(Number); m += (KOREKSI_MENIT + tambahLagi); 
+         h += Math.floor(m / 60); m = ((m % 60) + 60) % 60; h = ((h % 24) + 24) % 24;
          return String(h).padStart(2,'0') + ':' + String(m).padStart(2,'0');
       }
       
@@ -958,33 +784,18 @@ async function loadJadwalSholat(lat, lon) {
       var namaHariArr = ['Ahad','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
       document.getElementById('sholat-date').textContent = namaHariArr[today.getDay()] + ', ' + today.toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'});
       
-      // Hitung Mundur Aktif
       let htmlJadwal = '';
       sholat.forEach(function(s, idx) {
-        let isAktif = idx === aktifIdx;
-        let extraHtml = '';
-        
+        let isAktif = idx === aktifIdx; let extraHtml = '';
         if (isAktif) {
-          let nextIdx = (idx + 1) % sholat.length;
-          let waktuBerikutnya = toMenit(sholat[nextIdx].time);
-          
-          let sisaMenit = waktuBerikutnya - now;
-          if (sisaMenit <= 0) sisaMenit += 1440; // Jika lewat tengah malam
-          
-          let jamCountdown = Math.floor(sisaMenit / 60);
-          let menitCountdown = sisaMenit % 60;
-          
+          let nextIdx = (idx + 1) % sholat.length; let waktuBerikutnya = toMenit(sholat[nextIdx].time);
+          let sisaMenit = waktuBerikutnya - now; if (sisaMenit <= 0) sisaMenit += 1440; 
+          let jamCountdown = Math.floor(sisaMenit / 60); let menitCountdown = sisaMenit % 60;
           let teksSisa = jamCountdown > 0 ? `${jamCountdown}j ${menitCountdown}m lagi` : `${menitCountdown}m lagi`;
           extraHtml = `<div class="countdown-badge">⏳ ${teksSisa}</div>`;
         }
-        
-        htmlJadwal += `<div class="sholat-item${isAktif ? ' aktif' : ''}">
-          <div class="sholat-name">${s.name}</div>
-          <div class="sholat-time">${s.time}</div>
-          ${extraHtml}
-        </div>`;
+        htmlJadwal += `<div class="sholat-item${isAktif ? ' aktif' : ''}"><div class="sholat-name">${s.name}</div><div class="sholat-time">${s.time}</div>${extraHtml}</div>`;
       });
-      
       document.getElementById('sholat-grid').innerHTML = htmlJadwal;
     }
   } catch(e) {}
@@ -994,8 +805,7 @@ async function tampilOverlay() {
   try {
     var json = await apiFetch('getIklanGlobal', null, 'iklan_global');
     if (json && json.status === 'ok' && json.data) {
-      var item = json.data;
-      document.getElementById('overlay-title').textContent = item.judul || 'Pengumuman';
+      var item = json.data; document.getElementById('overlay-title').textContent = item.judul || 'Pengumuman';
       
       var btnHtml = '<div style="display:flex; gap:10px; margin-top:0.75rem;">';
       if(item.link_wa) {
@@ -1024,6 +834,15 @@ async function init() {
     if (splash) { splash.classList.add('hide'); setTimeout(function(){ splash.style.display = 'none'; }, 600); }
 
     await Promise.all([ loadSaldo(), loadTransaksi(), loadProgramAmal(), loadJadwal(), loadPengumuman(), loadGaleri() ]);
+    
+    // PERBAIKAN: MEMANGGIL TEKS SPONSOR WEB DENGAN PENANGKAL CACHE
+    var resSponsor = await apiFetch('getSponsorWeb', {_t: Date.now()}, null);
+    if(resSponsor && resSponsor.status === 'ok' && resSponsor.data.length > 0) {
+       var sponsorTeks = resSponsor.data.map(s => s.teks).join(' &nbsp;✦&nbsp; ');
+       document.getElementById('sponsor-web-container').innerHTML = sponsorTeks;
+       document.getElementById('sponsor-web-container').style.display = 'block';
+    }
+
   } catch(e) {
     var splash = document.getElementById('splash');
     if (splash) { splash.classList.add('hide'); setTimeout(function(){ splash.style.display = 'none'; }, 600); }
