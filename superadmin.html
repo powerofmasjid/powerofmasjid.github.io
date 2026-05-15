@@ -56,9 +56,7 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg-dark);
 .scroll-list::-webkit-scrollbar { width: 4px; }
 .scroll-list::-webkit-scrollbar-thumb { background: rgba(201,168,76,0.3); border-radius: 4px; }
 
-/* ================================================== */
-/* DESAIN KARTU MASJID DENGAN 3 WARNA (FITUR BARU)    */
-/* ================================================== */
+/* DESAIN KARTU MASJID DENGAN 3 WARNA */
 .masjid-card { background: white; border-radius: 12px; padding: 15px; margin-bottom: 15px; color: #1F2937; position: relative; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
 .card-aktif { border-left: 6px solid #10B981; }
 .card-pasif { border-left: 6px solid #EF4444; }
@@ -82,7 +80,7 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg-dark);
 .btn-small { background: rgba(255,255,255,0.1); border: 1px solid var(--border); color: white; padding: 6px 12px; border-radius: 6px; font-size: 11px; cursor: pointer; }
 .btn-small.dark { background: white; color: #1F2937; border: 1px solid #D1D5DB; }
 
-/* CSS IKLAN */
+/* CSS IKLAN & SPONSOR */
 .item-card { background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 15px; margin-bottom: 10px; cursor: pointer; transition: background 0.2s; }
 .item-card:hover { background: rgba(0,0,0,0.3); border-color: var(--gold); }
 .action-buttons { display: none; margin-top: 10px; gap: 8px; padding-top: 10px; border-top: 1px dashed rgba(255,255,255,0.1); }
@@ -132,6 +130,7 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg-dark);
     <div class="nav-tab active" onclick="bukaTab('dashboard', this)">DASHBOARD</div>
     <div class="nav-tab" onclick="bukaTab('masjid', this)">KELOLA MASJID</div>
     <div class="nav-tab" onclick="bukaTab('iklan', this)">IKLAN GLOBAL</div>
+    <div class="nav-tab" onclick="bukaTab('sponsor', this)">KELOLA SPONSOR</div>
   </div>
 
   <div class="content">
@@ -202,14 +201,49 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg-dark);
       </div>
     </div>
 
+    <div id="sponsor" class="tab-content">
+      <div class="card">
+        <div class="card-title">Tambah Flyer Sponsor TV Masjid</div>
+        <div class="form-group"><label>Nama Sponsor</label><input type="text" class="form-control" id="spo-tv-nama" placeholder="Contoh: Madu Pak Haji"></div>
+        <div class="form-group"><label>Upload Flyer (Format 16:9)</label><input type="file" class="form-control" id="spo-tv-file" accept="image/*"></div>
+        <div class="form-row">
+          <div class="form-group"><label>Mulai Tayang</label><input type="date" class="form-control" id="spo-tv-mulai"></div>
+          <div class="form-group"><label>Selesai Tayang</label><input type="date" class="form-control" id="spo-tv-selesai"></div>
+        </div>
+        <button class="btn-primary" id="btn-spo-tv" onclick="tambahSponsorTV()">UPLOAD & SIMPAN TV</button>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Daftar Tayang TV</div>
+        <div id="list-spo-tv" class="scroll-list"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Tambah Teks Sponsor Website</div>
+        <div class="form-group"><label>Nama Sponsor</label><input type="text" class="form-control" id="spo-web-nama" placeholder="Contoh: BJ Grup"></div>
+        <div class="form-group"><label>Teks Tampilan di Web</label><input type="text" class="form-control" id="spo-web-teks" placeholder="Contoh: Ekosistem ini didukung oleh BJ Grup"></div>
+        <button class="btn-primary" id="btn-spo-web" onclick="tambahSponsorWeb()">SIMPAN TEKS WEB</button>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Daftar Tayang Website</div>
+        <div id="list-spo-web" class="scroll-list"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Live Tracking Scan Voucher Botol</div>
+        <div id="list-voucher" class="scroll-list"></div>
+      </div>
+    </div>
+
   </div>
 </div>
 
 <div class="toast" id="toast">Notifikasi</div>
 
 <script>
-// SUDAH DIGANTI DENGAN LINK API BARU BAPAK
-const API_URL = 'https://script.google.com/macros/s/AKfycbwHSs_c09f6Lw5EHBFchBXzUB_fZVaklW5QSMCvPg4xYAHZjqcpR6BDpHTIuT68Mb0Vgw/exec';
+// API URL BARU BAPAK
+const API_URL = 'https://script.google.com/macros/s/AKfycbzokK_ZumAqtuV8Izcm_oYkIUGLsxstm5DuDVVBwew-do7Ye9VSxpKV30zQd5OvUpNP1g/exec';
 const KUNCI_RAHASIA = 'POW_MASJID_SECURE_2026';
 let LIST_IKLAN = [];
 
@@ -230,6 +264,7 @@ function bukaTab(tabId, el) {
     el.classList.add('active');
     
     if(tabId === 'iklan') loadIklanData();
+    if(tabId === 'sponsor') loadSponsorData(); // Trigger load sponsor
 }
 
 function generateSlug() {
@@ -289,7 +324,6 @@ function masukSistem() {
     loadDashboardData();
 }
 
-// LOGIKA PELACAK UMUR MASJID DARI ID (TIDAK MENGUBAH GS)
 function extractDateFromId(idMasjid) {
     try {
         let parts = idMasjid.split('-');
@@ -304,7 +338,6 @@ function extractDateFromId(idMasjid) {
     return Date.now() - (15 * 24 * 60 * 60 * 1000); 
 }
 
-// --- BAGIAN INI SAJA YANG DIMODIFIKASI LOGIKA PECUTNYA ---
 async function loadDashboardData() {
     try {
         document.getElementById('loading').style.display = 'block';
@@ -330,7 +363,6 @@ async function loadDashboardData() {
                 const isJdw = jdw.data && jdw.data.length > 0;
                 const isGal = gal.data && gal.data.length > 0;
 
-                // LOGIKA PECUT WAJIB 3 CENTANG & UPDATE
                 const criteriaCount = (isKas ? 1 : 0) + (isJdw ? 1 : 0) + (isGal ? 1 : 0);
                 if (criteriaCount === 3) masjidAktifTotal++;
 
@@ -355,12 +387,10 @@ async function loadDashboardData() {
                 let pesanWA = '';
 
                 if (criteriaCount < 3) {
-                    // Kalau belum lengkap 3 centang
                     if (ageInDays > 14) {
                         cardClass = 'card-pasif'; 
                         badge = '<span class="status-badge badge-pasif">MACET (> 14 HARI)</span>';
                         showWarningBtn = true;
-                        // Ini pesan WA yang asli dari kodingan Bapak untuk 14 Hari
                         pesanWA = `Assalamu'alaikum Ustadz. Semoga selalu dalam lindungan Allah.\n\nKami dari tim pusat *Power of Masjid* memperhatikan bahwa sistem Layar TV dan Website untuk masjid Anda sudah didaftarkan lebih dari 14 hari, namun terpantau belum ada pergerakan kelengkapan data dasar (Kas/Jadwal/Galeri).\n\nMengingat kapasitas server kami saat ini dibatasi sangat eksklusif *hanya untuk 10 Masjid*, kami mohon konfirmasinya. Apabila sistem ini belum akan dimaksimalkan penggunaannya dalam waktu dekat, mohon izin akun Anda akan kami cabut/bekukan sementara waktu. Slot servernya akan kami berikan kepada masjid lain yang kebetulan sedang mengantre.\n\nKami tunggu pergerakan datanya atau konfirmasinya dalam 2x24 jam ya, Ustadz. Jika ada kendala teknis dalam pengisian, silakan sampaikan ke kami. Terima kasih atas pengertiannya. 🙏`;
                     } else {
                         cardClass = 'card-belajar'; 
@@ -368,7 +398,6 @@ async function loadDashboardData() {
                         badge = `<span class="status-badge badge-belajar">Masa Belajar (${sisaHari} Hari Lagi)</span>`;
                     }
                 } else {
-                    // Kalau sudah lengkap 3 centang, periksa rajin update atau tidak
                     if (daysSinceUpdate > 7) {
                         cardClass = 'card-pasif'; 
                         badge = '<span class="status-badge badge-pasif">Perlu Diingatkan (> 7 Hari)</span>';
@@ -425,9 +454,6 @@ function copyWarning(encodedText) {
     });
 }
 
-// ----------------------------------------------------
-// FUNGSI KELOLA MASJID (REGISTRASI) - ASLI MILIK BAPAK
-// ----------------------------------------------------
 async function tambahMasjidBaru() {
     const nama = document.getElementById('reg-nama').value.trim();
     const slug = document.getElementById('reg-slug').value.trim();
@@ -473,9 +499,6 @@ async function tambahMasjidBaru() {
     btn.textContent = 'SIMPAN MASJID BARU';
 }
 
-// ----------------------------------------------------
-// FUNGSI KELOLA IKLAN GLOBAL - ASLI MILIK BAPAK
-// ----------------------------------------------------
 async function loadIklanData() {
     try {
         const res = await fetch(API_URL + '?action=getIklanSuperadmin');
@@ -589,6 +612,153 @@ async function hapusIklan(id) {
     } catch(e) {
         showToast('Koneksi terputus!');
     }
+}
+
+// ----------------------------------------------------
+// FUNGSI SPONSOR BARU (TAHAP 3)
+// ----------------------------------------------------
+async function loadSponsorData() {
+    document.getElementById('list-spo-tv').innerHTML = '<div style="text-align:center; font-size:12px;">Memuat...</div>';
+    document.getElementById('list-spo-web').innerHTML = '<div style="text-align:center; font-size:12px;">Memuat...</div>';
+    document.getElementById('list-voucher').innerHTML = '<div style="text-align:center; font-size:12px;">Memuat...</div>';
+
+    try {
+        let [resTv, resWeb, resVch] = await Promise.all([
+            fetch(API_URL + '?action=getSponsorTV').then(r => r.json()),
+            fetch(API_URL + '?action=getSponsorWeb').then(r => r.json()),
+            fetch(API_URL + '?action=getVoucherList').then(r => r.json())
+        ]);
+
+        if(resTv.status === 'ok') {
+            document.getElementById('list-spo-tv').innerHTML = resTv.data.map(ik => `
+                <div class="item-card">
+                    <img src="${ik.url}" style="width:100%; height:120px; object-fit:cover; border-radius:8px; margin-bottom:8px; border:1px solid rgba(255,255,255,0.1);">
+                    <h4 style="color:var(--gold); font-size:14px;">${ik.nama}</h4>
+                    <button class="btn-action btn-del" style="width:100%; margin-top:8px; display:block;" onclick="hapusSponsorTV('${ik.id}')">🗑️ Hapus</button>
+                </div>
+            `).join('') || '<div style="text-align:center;font-size:12px;color:rgba(255,255,255,0.5);">Belum ada flyer sponsor TV</div>';
+        }
+
+        if(resWeb.status === 'ok') {
+            document.getElementById('list-spo-web').innerHTML = resWeb.data.map(ik => `
+                <div class="item-card">
+                    <h4 style="color:var(--gold); font-size:14px; margin-bottom:4px;">${ik.nama}</h4>
+                    <p style="font-size:12px; color:rgba(255,255,255,0.8);">${ik.teks}</p>
+                    <button class="btn-action btn-del" style="width:100%; margin-top:8px; display:block;" onclick="hapusSponsorWeb('${ik.id}')">🗑️ Hapus</button>
+                </div>
+            `).join('') || '<div style="text-align:center;font-size:12px;color:rgba(255,255,255,0.5);">Belum ada teks sponsor Web</div>';
+        }
+
+        if(resVch.status === 'ok') {
+            document.getElementById('list-voucher').innerHTML = resVch.data.map(v => `
+                <div style="background:rgba(0,0,0,0.3); padding:10px; border-radius:8px; margin-bottom:8px; border-left:4px solid ${v.status==='TERPAKAI'?'#10B981':'#F59E0B'}">
+                    <div style="font-size:12px; color:var(--gold); font-weight:bold; display:flex; justify-content:space-between;">
+                        <span>KODE: ${v.kode}</span>
+                        <span style="color:${v.status==='TERPAKAI'?'#10B981':'#F59E0B'}">${v.status}</span>
+                    </div>
+                    <div style="font-size:13px; color:white; margin:4px 0;">👤 ${v.nama} - 📱 ${v.wa}</div>
+                    <div style="font-size:10px; color:rgba(255,255,255,0.6);">📍 Lokasi: ${v.masjid} <br> 🤝 Sponsor: ${v.sponsor}</div>
+                </div>
+            `).join('') || '<div style="text-align:center;font-size:12px;color:rgba(255,255,255,0.5);">Belum ada jamaah yang scan botol</div>';
+        }
+    } catch(e) {
+        showToast('Gagal memuat data sponsor');
+    }
+}
+
+async function tambahSponsorTV() {
+    let nama = document.getElementById('spo-tv-nama').value;
+    let mulai = document.getElementById('spo-tv-mulai').value;
+    let selesai = document.getElementById('spo-tv-selesai').value;
+    let fileInput = document.getElementById('spo-tv-file');
+
+    if(!nama || !mulai || !selesai || !fileInput.files[0]) {
+        return showToast('Lengkapi form & upload flyer!');
+    }
+
+    let btn = document.getElementById('btn-spo-tv');
+    btn.disabled = true;
+    btn.textContent = 'MENGUPLOAD FLYER... (JANGAN TUTUP)';
+
+    let file = fileInput.files[0];
+    let reader = new FileReader();
+    reader.onload = async function(e) {
+        let base64str = e.target.result.split(',')[1];
+        let mimeType = file.type;
+        let filename = file.name;
+
+        try {
+            let resUpload = await fetch(API_URL, {
+                method: 'POST',
+                body: JSON.stringify({ api_key: KUNCI_RAHASIA, action: 'uploadMedia', base64: base64str, mimeType: mimeType, filename: filename })
+            });
+            let jUpload = await resUpload.json();
+
+            if(jUpload.status !== 'ok') {
+                showToast('Gagal upload flyer!');
+                btn.disabled = false; btn.textContent = 'UPLOAD & SIMPAN TV';
+                return;
+            }
+
+            btn.textContent = 'MENYIMPAN DATA...';
+            let resData = await fetch(API_URL, {
+                method: 'POST',
+                body: JSON.stringify({ api_key: KUNCI_RAHASIA, action: 'addSponsorTV', nama: nama, url: jUpload.url, mulai: mulai, selesai: selesai })
+            });
+            let jData = await resData.json();
+
+            if(jData.status === 'ok') {
+                showToast('Sponsor TV tersimpan!');
+                document.getElementById('spo-tv-nama').value = '';
+                document.getElementById('spo-tv-mulai').value = '';
+                document.getElementById('spo-tv-selesai').value = '';
+                document.getElementById('spo-tv-file').value = '';
+                loadSponsorData();
+            } else {
+                showToast(jData.message);
+            }
+        } catch(err) {
+            showToast('Koneksi terputus');
+        }
+        btn.disabled = false; btn.textContent = 'UPLOAD & SIMPAN TV';
+    };
+    reader.readAsDataURL(file);
+}
+
+async function hapusSponsorTV(id) {
+    if(!confirm('Hapus flyer sponsor ini dari TV Masjid?')) return;
+    try {
+        let r = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ api_key: KUNCI_RAHASIA, action: 'deleteSponsorTV', id: id }) });
+        if((await r.json()).status === 'ok') { showToast('Dihapus'); loadSponsorData(); }
+    } catch(e) {}
+}
+
+async function tambahSponsorWeb() {
+    let nama = document.getElementById('spo-web-nama').value;
+    let teks = document.getElementById('spo-web-teks').value;
+    if(!nama || !teks) return showToast('Lengkapi nama dan teks!');
+    
+    let btn = document.getElementById('btn-spo-web');
+    btn.disabled = true; btn.textContent = 'MENYIMPAN...';
+    
+    try {
+        let r = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ api_key: KUNCI_RAHASIA, action: 'addSponsorWeb', nama: nama, teks: teks }) });
+        if((await r.json()).status === 'ok') {
+            showToast('Teks tersimpan!');
+            document.getElementById('spo-web-nama').value = '';
+            document.getElementById('spo-web-teks').value = '';
+            loadSponsorData();
+        }
+    } catch(e) {}
+    btn.disabled = false; btn.textContent = 'SIMPAN TEKS WEB';
+}
+
+async function hapusSponsorWeb(id) {
+    if(!confirm('Hapus teks sponsor ini dari Website Masjid?')) return;
+    try {
+        let r = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ api_key: KUNCI_RAHASIA, action: 'deleteSponsorWeb', id: id }) });
+        if((await r.json()).status === 'ok') { showToast('Dihapus'); loadSponsorData(); }
+    } catch(e) {}
 }
 
 window.onload = function() {
