@@ -109,9 +109,9 @@
     <div class="login-card">
         <img src="Logo%20Power%20of%20Masjid.png" class="logo-pow-img">
         <div class="login-title">Panel Admin Masjid</div>
-        <div class="login-sub">Masuk menggunakan Gmail dan PIN masjid Anda.</div>
+        <div class="login-sub">Masuk menggunakan Email dan PIN masjid Anda.</div>
         <div class="form-group" style="text-align:left;">
-            <label class="form-label">Alamat Gmail</label>
+            <label class="form-label">Alamat Email</label>
             <input type="email" class="form-input" id="login-gmail" placeholder="Contoh: pengurus@gmail.com">
         </div>
         <div class="form-group" style="text-align:left;">
@@ -498,7 +498,6 @@
 <div class="toast" id="toast">Berhasil!</div>
 
 <script>
-    // URL API BARU SESUAI HASIL KERJA KITA
     var API_URL = 'https://script.google.com/macros/s/AKfycbwuIV7umLZ-uc-NtYY6fqqByuklyGeH2rXqUFgaKc1V2ufdp2Udf83PP-Y6PEPUl2T01A/exec';
     
     var KUNCI_RAHASIA = 'POW_MASJID_SECURE_2026'; 
@@ -705,6 +704,7 @@
         if(t === 'profil') loadProfilAdmin();
     }
 
+    // PERBAIKAN: Fungsi prosesLogin sekarang menunjuk action=login dan email=g
     function prosesLogin() {
         var g = document.getElementById('login-gmail').value;
         var p = document.getElementById('login-pin').value;
@@ -712,7 +712,7 @@
         
         setLoading(btn, true);
         
-        fetch(API_URL + '?action=cekAdmin&gmail=' + encodeURIComponent(g) + '&pin=' + p)
+        fetch(API_URL + '?action=login&email=' + encodeURIComponent(g) + '&pin=' + p)
         .then(r => r.json())
         .then(j => {
             setLoading(btn, false); 
