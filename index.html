@@ -3,7 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Power of Masjid - Platform Digital Masjid Indonesia</title>
+<meta name="description" content="Website Gratis untuk Masjid Tanpa Ribet. DKM tidak perlu paham teknologi, kami bantu buatkan website masjid yang rapi, transparan, dan siap menerima donasi.">
+<meta property="og:title" content="Power of Masjid - Ekosistem Digital Masjid">
+<meta property="og:description" content="Mari jadikan pengelolaan masjid lebih rapi dan transparan. Dapatkan website dan sistem TV Display gratis untuk masjid Anda.">
+<meta property="og:image" content="https://powerofmasjid.github.io/Logo%20Power%20of%20Masjid.png">
+<meta property="og:url" content="https://powerofmasjid.github.io/">
+<meta property="og:type" content="website">
+
 <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{--primary:#1B6B3A;--primary-dark:#0F4228;--primary-light:#E8F5EE;--accent:#C9A84C;--accent-light:#FBF3E0;--bg:#F7F7F5;--white:#FFFFFF;--text:#1A1A1A;--muted:#6B7280;--border:#E5E7EB;}
@@ -103,10 +111,10 @@ a{text-decoration:none;}
     
     <div class="hero-cta">
       <a href="https://wa.me/628211043809?text=Assalamu'alaikum,%20saya%20pengurus%20masjid.%20Ingin%20dibantu%20dibuatkan%20website%20gratis%20dari%20Power%20of%20Masjid." target="_blank" class="btn btn-primary">
-        💬 Daftarkan Masjid (Kami Bantu Sampai Aktif)
+        💬 Daftarkan Masjid (Kami Bantu)
       </a>
-      <a href="https://powerofmasjid.github.io/masjid.html?masjid=contoh-tanjungbarat" target="_blank" class="btn btn-outline">
-        👀 Lihat Contoh Website Masjid
+      <a href="masjid.html?masjid=contoh-tanjungbarat" target="_blank" class="btn btn-outline">
+        👀 Lihat Contoh Website
       </a>
     </div>
   </div>
@@ -141,7 +149,7 @@ a{text-decoration:none;}
 
 <section class="section" style="background:var(--white);">
   <div class="container">
-    <h2 class="section-title">Program Pembinaan Masjid (Bertahap)</h2>
+    <h2 class="section-title">Program Pembinaan Masjid</h2>
     <div class="grid-3">
       <div class="card-kampanye">
         <div class="kampanye-icon">🕌</div>
@@ -165,7 +173,7 @@ a{text-decoration:none;}
 <section class="social-proof">
   <div class="container">
     <h2>Telah Bergabung Bersama Kami</h2>
-    <p>Silakan klik nama masjid untuk berkunjung.</p>
+    <p>Silakan klik nama masjid untuk berkunjung ke website mereka.</p>
     
     <div class="masjid-grid" id="daftar-masjid">
        <div style="grid-column: 1/-1; text-align:center; padding:2rem; color:var(--muted);">
@@ -178,7 +186,7 @@ a{text-decoration:none;}
 <section class="cta-bottom">
   <div class="container">
     <h2>Mulai Dari Masjid Anda</h2>
-    <p>Mari jadikan pengelolaan masjid lebih rapi, transparan, dan dipercaya jamaah. Tidak perlu ribet, tim kami yang akan melakukan *setup* dari nol hingga aktif.</p>
+    <p>Mari jadikan pengelolaan masjid lebih rapi, transparan, dan dipercaya jamaah. Tidak perlu ribet, tim kami yang akan melakukan setup dari nol hingga aktif.</p>
     
     <div class="check-list-cta">
       <span>✓ Gratis Selamanya</span>
@@ -214,7 +222,8 @@ const API_URL = 'https://script.google.com/macros/s/AKfycbwuIV7umLZ-uc-NtYY6fqqB
 async function loadDaftarMasjid() {
   const container = document.getElementById('daftar-masjid');
   try {
-    const res = await fetch(API_URL + '?action=getAllMasjid');
+    // PERBAIKAN: Menambahkan &_t=Date.now() agar selalu refresh data terbaru
+    const res = await fetch(API_URL + '?action=getAllMasjid&_t=' + Date.now());
     const json = await res.json();
     
     if (json.status === 'ok' && json.data.length > 0) {
@@ -239,7 +248,7 @@ async function loadDaftarMasjid() {
       container.innerHTML = '<div style="grid-column: 1/-1; text-align:center; color:var(--muted); padding: 2rem; border: 1px dashed var(--border); border-radius: 12px;">Belum ada masjid yang terdaftar.</div>';
     }
   } catch(e) {
-    container.innerHTML = '<div style="grid-column: 1/-1; text-align:center; color:#DC2626; padding: 2rem;">Gagal memuat daftar masjid. Pastikan Google Script sudah di-deploy dengan benar.</div>';
+    container.innerHTML = '<div style="grid-column: 1/-1; text-align:center; color:#DC2626; padding: 2rem;">Gagal memuat daftar masjid. Pastikan koneksi internet stabil.</div>';
   }
 }
 
