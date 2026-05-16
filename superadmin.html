@@ -234,8 +234,10 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg-dark);
 
 <script>
 const API_URL = 'https://script.google.com/macros/s/AKfycbzmrlLwmTFnV_yJ31McDRHu0zfjNgw2ldJiGpXhICxuOeDQUDEEob5WSaA94jkxDSo2cQ/exec';
-const KUNCI_RAHASIA = 'POW_MASJID_SECURE_2026';
 let LIST_IKLAN = [];
+
+// Helper Ambil Token
+function getToken() { return localStorage.getItem('pow_super_token'); }
 
 function showToast(msg) {
     var t = document.getElementById('toast');
@@ -290,26 +292,35 @@ function toggleAction(element) {
     element.classList.toggle('expanded');
 }
 
-function prosesLogin() {
+async function prosesLogin() {
     var pin = document.getElementById('pin-superadmin').value.trim();
     if (!pin) { showToast('Masukkan PIN!'); return; }
     
     var btn = document.getElementById('btn-login');
     btn.disabled = true; btn.textContent = 'MEMVERIFIKASI...';
 
-    if (pin === "999999") { 
-        localStorage.setItem('is_superadmin', 'true');
-        masukSistem();
-    } else {
-        showToast('PIN Superadmin Salah!');
+    try {
+        const res = await fetch(API_URL + '?action=login&email=superadmin&pin=' + pin);
+        const json = await res.json();
+        
+        if (json.status === 'ok' && json.role === 'SUPERADMIN') { 
+            localStorage.setItem('pow_super_token', json.token);
+            masukSistem();
+        } else {
+            showToast('PIN Salah atau Akses Ditolak!');
+            btn.disabled = false; btn.textContent = 'MASUK SISTEM';
+        }
+    } catch(err) {
+        showToast('Koneksi terputus!');
         btn.disabled = false; btn.textContent = 'MASUK SISTEM';
     }
 }
 
 function logout() {
-    localStorage.removeItem('is_superadmin');
+    localStorage.removeItem('pow_super_token');
     document.getElementById('superadmin-content').style.display = 'none';
     document.getElementById('login-wrap').classList.add('show');
+    document.getElementById('pin-superadmin').value = '';
 }
 
 function masukSistem() {
@@ -321,54 +332,43 @@ function masukSistem() {
 async function loadDashboardData() {
     try {
         document.getElementById('loading').style.display = 'block';
-        document.getElementById('loading').innerText = '⚡ Mengambil daftar masjid (Jalur Cepat)...';
+        document.getElementById('loading').innerText = '⚡ Memuat daftar masjid...';
         document.getElementById('list-masjid-container').innerHTML = '';
         
-        // FASE 1: TARIK NAMA MASJID & LINK DULU (KILAT)
-        try {
-            const resFast = await fetch(API_URL + '?action=getAllMasjid&_t=' + Date.now());
-            const jsonFast = await resFast.json();
-            if (jsonFast.status === 'ok') {
-                let htmlCepat = '';
-                jsonFast.data.forEach(m => {
-                    htmlCepat += `
-                        <div class="masjid-card" id="card-${m.id_masjid}">
-                            <h4>${m.nama}</h4>
-                            <p style="font-size:11px; opacity:0.7; color:#F59E0B; margin-bottom:8px;" id="status-${m.id_masjid}">⏳ Menganalisis status aktif...</p>
-                            <div style="display:flex; gap:6px; margin-bottom:10px;">
-                                <button class="btn-small dark" onclick="copyLink('masjid.html?masjid=${m.slug}')">🔗 Copy Link Web</button>
-                                <button class="btn-small dark" onclick="copyLink('tv.html?masjid=${m.slug}')">📺 Copy Link TV</button>
-                            </div>
-                            <div id="detail-${m.id_masjid}"></div>
+        const resFast = await fetch(API_URL + '?action=getAllMasjid&_t=' + Date.now());
+        const jsonFast = await resFast.json();
+        if (jsonFast.status === 'ok') {
+            let htmlCepat = '';
+            jsonFast.data.forEach(m => {
+                htmlCepat += `
+                    <div class="masjid-card" id="card-${m.id_masjid}">
+                        <h4>${m.nama}</h4>
+                        <p style="font-size:11px; opacity:0.7; color:#F59E0B; margin-bottom:8px;" id="status-${m.id_masjid}">⏳ Menganalisis status aktif...</p>
+                        <div style="display:flex; gap:6px; margin-bottom:10px;">
+                            <button class="btn-small dark" onclick="copyLink('masjid.html?masjid=${m.slug}')">🔗 Copy Link Web</button>
+                            <button class="btn-small dark" onclick="copyLink('tv.html?masjid=${m.slug}')">📺 Copy Link TV</button>
                         </div>
-                    `;
-                });
-                document.getElementById('list-masjid-container').innerHTML = htmlCepat;
-                document.getElementById('loading').innerText = '🔍 Menganalisis kelengkapan data di latar belakang...';
-            }
-        } catch(e) { console.log("Skip fast load"); }
+                        <div id="detail-${m.id_masjid}"></div>
+                    </div>
+                `;
+            });
+            document.getElementById('list-masjid-container').innerHTML = htmlCepat;
+            document.getElementById('loading').innerText = '🔍 Menganalisis kelengkapan data...';
+        }
 
-        // FASE 2: TARIK STATUS REKAP (BACKGROUND)
-        const res = await fetch(API_URL + '?action=getSuperadminData&_t=' + Date.now());
+        const res = await fetch(API_URL + '?action=getSuperadminData&token=' + getToken() + '&_t=' + Date.now());
         const json = await res.json();
         
         if (json.status === 'ok') {
-            const data = json.data;
-            const list = data.list_masjid;
-            let html = '';
-            let masjidAktifTotal = 0;
+            const data = json.data; const list = data.list_masjid;
+            let html = ''; let masjidAktifTotal = 0;
 
             for(let m of list) {
-                const isKas = m.kriteria.trx;
-                const isJdw = m.kriteria.jdw;
-                const isGal = m.kriteria.gal;
-
+                const isKas = m.kriteria.trx; const isJdw = m.kriteria.jdw; const isGal = m.kriteria.gal;
                 const criteriaCount = m.kriteriaCount;
                 if (criteriaCount === 3) masjidAktifTotal++;
 
-                const ageInDays = m.hariSejakDaftar || 0;
-                const daysSinceUpdate = m.hariSejakUpdate || 0;
-
+                const ageInDays = m.hariSejakDaftar || 0; const daysSinceUpdate = m.hariSejakUpdate || 0;
                 let cardClass = ''; let badge = ''; let showWarningBtn = false; let pesanWA = '';
 
                 if (criteriaCount < 3) {
@@ -418,36 +418,27 @@ async function loadDashboardData() {
             document.getElementById('ekspedisi-text').textContent = 'Tercapai: ' + masjidAktifTotal + ' Masjid Aktif';
             document.getElementById('ekspedisi-persen').textContent = Math.round(persen) + '%';
         }
-    } catch (error) {
-        document.getElementById('loading').innerText = 'Gagal memuat data. Periksa koneksi internet Anda.';
-    }
+    } catch (error) { document.getElementById('loading').innerText = 'Gagal memuat data. Periksa koneksi internet Anda.'; }
 }
 
 function copyWarning(encodedText) {
     const text = decodeURIComponent(encodedText);
-    navigator.clipboard.writeText(text).then(() => {
-        alert('Teks peringatan berhasil disalin! Silakan paste di chat WA Ustadz / Admin Masjid tersebut.');
-    }).catch(err => { alert('Gagal menyalin teks.'); });
+    navigator.clipboard.writeText(text).then(() => { alert('Teks peringatan disalin! Silakan paste di WA Ustadz.'); }).catch(err => { alert('Gagal menyalin.'); });
 }
 
 async function tambahMasjidBaru() {
-    const nama = document.getElementById('reg-nama').value.trim();
-    const slug = document.getElementById('reg-slug').value.trim();
-    const kelurahan = document.getElementById('reg-kelurahan').value.trim();
-    const kecamatan = document.getElementById('reg-kecamatan').value.trim();
-    const email = document.getElementById('reg-email').value.trim();
-    const pin = document.getElementById('reg-pin').value.trim();
+    const nama = document.getElementById('reg-nama').value.trim(); const slug = document.getElementById('reg-slug').value.trim();
+    const kelurahan = document.getElementById('reg-kelurahan').value.trim(); const kecamatan = document.getElementById('reg-kecamatan').value.trim();
+    const email = document.getElementById('reg-email').value.trim(); const pin = document.getElementById('reg-pin').value.trim();
     
-    if(!nama || !slug || !email || !pin) { showToast('Lengkapi semua data wajib!'); return; }
-    
-    const btn = document.getElementById('btn-tambah');
-    btn.disabled = true; btn.textContent = 'MENYIMPAN...';
+    if(!nama || !slug || !email || !pin) return showToast('Lengkapi semua data wajib!');
+    const btn = document.getElementById('btn-tambah'); btn.disabled = true; btn.textContent = 'MENYIMPAN...';
     
     try {
         const res = await fetch(API_URL, {
             method: 'POST',
             body: JSON.stringify({
-                api_key: KUNCI_RAHASIA, action: 'addMasjidBaru',
+                token: getToken(), action: 'addMasjidBaru',
                 nama: nama, slug: slug, kelurahan: kelurahan,
                 kecamatan: kecamatan, email: email, pin: pin
             })
@@ -455,12 +446,9 @@ async function tambahMasjidBaru() {
         const json = await res.json();
         if(json.status === 'ok') {
             showToast('Masjid berhasil ditambahkan!');
-            document.getElementById('reg-nama').value = '';
-            document.getElementById('reg-slug').value = '';
-            document.getElementById('reg-kelurahan').value = '';
-            document.getElementById('reg-kecamatan').value = '';
-            document.getElementById('reg-email').value = '';
-            document.getElementById('reg-pin').value = '';
+            document.getElementById('reg-nama').value = ''; document.getElementById('reg-slug').value = '';
+            document.getElementById('reg-kelurahan').value = ''; document.getElementById('reg-kecamatan').value = '';
+            document.getElementById('reg-email').value = ''; document.getElementById('reg-pin').value = '';
             loadDashboardData(); 
         } else { showToast('Gagal: ' + json.message); }
     } catch(e) { showToast('Koneksi terputus!'); }
@@ -469,7 +457,7 @@ async function tambahMasjidBaru() {
 
 async function loadIklanData() {
     try {
-        const res = await fetch(API_URL + '?action=getIklanSuperadmin&_t=' + Date.now());
+        const res = await fetch(API_URL + '?action=getIklanSuperadmin&token=' + getToken() + '&_t=' + Date.now());
         const json = await res.json();
         
         if (json.status === 'ok' && json.data && json.data.length > 0) {
@@ -487,79 +475,51 @@ async function loadIklanData() {
                     </div>
                 </div>
             `).join('');
-        } else {
-            document.getElementById('list-iklan-container').innerHTML = '<div style="text-align:center; font-size:12px; color:rgba(255,255,255,0.5);">Belum ada data iklan</div>';
-        }
-    } catch(e) {
-        document.getElementById('list-iklan-container').innerHTML = '<div style="text-align:center; font-size:12px; color:var(--danger);">Gagal memuat iklan</div>';
-    }
+        } else { document.getElementById('list-iklan-container').innerHTML = '<div style="text-align:center; font-size:12px; color:rgba(255,255,255,0.5);">Belum ada data iklan</div>'; }
+    } catch(e) { document.getElementById('list-iklan-container').innerHTML = '<div style="text-align:center; font-size:12px; color:var(--danger);">Gagal memuat iklan</div>'; }
 }
 
 function editIklan(idx) {
     let ik = LIST_IKLAN[idx];
-    document.getElementById('iklan-id').value = ik.id;
-    document.getElementById('iklan-judul').value = ik.judul;
-    document.getElementById('iklan-program').value = ik.program;
-    document.getElementById('iklan-desc').value = ik.deskripsi;
-    document.getElementById('iklan-wa').value = ik.link_wa || '';
-    document.getElementById('iklan-web').value = ik.link_web || '';
-    
+    document.getElementById('iklan-id').value = ik.id; document.getElementById('iklan-judul').value = ik.judul;
+    document.getElementById('iklan-program').value = ik.program; document.getElementById('iklan-desc').value = ik.deskripsi;
+    document.getElementById('iklan-wa').value = ik.link_wa || ''; document.getElementById('iklan-web').value = ik.link_web || '';
     if(ik.tgl_mulai) document.getElementById('iklan-mulai').value = new Date(ik.tgl_mulai).toISOString().split('T')[0];
     if(ik.tgl_selesai) document.getElementById('iklan-selesai').value = new Date(ik.tgl_selesai).toISOString().split('T')[0];
-    
-    document.getElementById('btn-simpan-iklan').textContent = 'UPDATE IKLAN';
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    document.getElementById('btn-simpan-iklan').textContent = 'UPDATE IKLAN'; window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 async function simpanIklan() {
     let id = document.getElementById('iklan-id').value;
     let d = { 
-        api_key: KUNCI_RAHASIA, 
-        action: id ? 'updateIklan' : 'addIklan', 
-        id: id, 
-        judul: document.getElementById('iklan-judul').value.trim(), 
-        program: document.getElementById('iklan-program').value.trim(), 
-        deskripsi: document.getElementById('iklan-desc').value.trim(), 
-        link_wa: document.getElementById('iklan-wa').value.trim(), 
-        link_web: document.getElementById('iklan-web').value.trim(), 
-        tgl_mulai: document.getElementById('iklan-mulai').value, 
-        tgl_selesai: document.getElementById('iklan-selesai').value 
+        token: getToken(), action: id ? 'updateIklan' : 'addIklan', id: id, 
+        judul: document.getElementById('iklan-judul').value.trim(), program: document.getElementById('iklan-program').value.trim(), 
+        deskripsi: document.getElementById('iklan-desc').value.trim(), link_wa: document.getElementById('iklan-wa').value.trim(), 
+        link_web: document.getElementById('iklan-web').value.trim(), tgl_mulai: document.getElementById('iklan-mulai').value, tgl_selesai: document.getElementById('iklan-selesai').value 
     };
-    
     if(!d.judul || !d.program || !d.tgl_mulai || !d.tgl_selesai) return showToast('Lengkapi Judul, Program, dan Tanggal!');
-    
-    const btn = document.getElementById('btn-simpan-iklan');
-    btn.disabled = true; btn.textContent = 'MENYIMPAN...';
-    
+    const btn = document.getElementById('btn-simpan-iklan'); btn.disabled = true; btn.textContent = 'MENYIMPAN...';
     try {
         const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify(d) });
         const j = await res.json();
         if(j.status === 'ok') { 
             showToast('Iklan Tersimpan!'); 
-            document.getElementById('iklan-id').value = ''; 
-            document.getElementById('iklan-judul').value = ''; 
-            document.getElementById('iklan-program').value = ''; 
-            document.getElementById('iklan-desc').value = ''; 
-            document.getElementById('iklan-wa').value = ''; 
-            document.getElementById('iklan-web').value = '';
-            document.getElementById('iklan-mulai').value = '';
-            document.getElementById('iklan-selesai').value = '';
-            btn.textContent = 'PUBLIKASIKAN IKLAN';
-            loadIklanData(); 
+            document.getElementById('iklan-id').value = ''; document.getElementById('iklan-judul').value = ''; 
+            document.getElementById('iklan-program').value = ''; document.getElementById('iklan-desc').value = ''; 
+            document.getElementById('iklan-wa').value = ''; document.getElementById('iklan-web').value = '';
+            document.getElementById('iklan-mulai').value = ''; document.getElementById('iklan-selesai').value = '';
+            btn.textContent = 'PUBLIKASIKAN IKLAN'; loadIklanData(); 
         } else { showToast('Gagal: ' + j.message); }
     } catch(e) { showToast('Koneksi terputus!'); }
-    
-    btn.disabled = false;
-    if(!id) btn.textContent = 'PUBLIKASIKAN IKLAN';
+    btn.disabled = false; if(!id) btn.textContent = 'PUBLIKASIKAN IKLAN';
 }
 
 async function hapusIklan(id) {
-    if(!confirm('Apakah Anda yakin ingin menghapus iklan ini?')) return;
+    if(!confirm('Yakin hapus iklan ini?')) return;
     try {
-        const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({api_key: KUNCI_RAHASIA, action: 'deleteIklan', id: id}) });
-        const j = await res.json();
-        if(j.status === 'ok') { showToast('Iklan Dihapus'); loadIklanData(); } else { showToast('Gagal menghapus'); }
-    } catch(e) { showToast('Koneksi terputus!'); }
+        const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({token: getToken(), action: 'deleteIklan', id: id}) });
+        if((await res.json()).status === 'ok') { showToast('Dihapus'); loadIklanData(); } else { showToast('Gagal'); }
+    } catch(e) {}
 }
 
 async function loadSponsorData() {
@@ -569,9 +529,9 @@ async function loadSponsorData() {
 
     try {
         let [resTv, resWeb, resVch] = await Promise.all([
-            fetch(API_URL + '?action=getSponsorTV&_t=' + Date.now()).then(r => r.json()),
-            fetch(API_URL + '?action=getSponsorWeb&_t=' + Date.now()).then(r => r.json()),
-            fetch(API_URL + '?action=getVoucherList&_t=' + Date.now()).then(r => r.json())
+            fetch(API_URL + '?action=getSponsorTV&token=' + getToken() + '&_t=' + Date.now()).then(r => r.json()),
+            fetch(API_URL + '?action=getSponsorWeb&token=' + getToken() + '&_t=' + Date.now()).then(r => r.json()),
+            fetch(API_URL + '?action=getVoucherList&token=' + getToken() + '&_t=' + Date.now()).then(r => r.json())
         ]);
 
         if(resTv.status === 'ok') {
@@ -610,44 +570,34 @@ async function loadSponsorData() {
 }
 
 async function tambahSponsorTV() {
-    let nama = document.getElementById('spo-tv-nama').value;
-    let mulai = document.getElementById('spo-tv-mulai').value;
-    let selesai = document.getElementById('spo-tv-selesai').value;
-    let fileInput = document.getElementById('spo-tv-file');
+    let nama = document.getElementById('spo-tv-nama').value; let mulai = document.getElementById('spo-tv-mulai').value;
+    let selesai = document.getElementById('spo-tv-selesai').value; let fileInput = document.getElementById('spo-tv-file');
 
     if(!nama || !mulai || !selesai || !fileInput.files[0]) return showToast('Lengkapi form & upload flyer!');
+    let btn = document.getElementById('btn-spo-tv'); btn.disabled = true; btn.textContent = 'MENGUPLOAD FLYER... (JANGAN TUTUP)';
 
-    let btn = document.getElementById('btn-spo-tv');
-    btn.disabled = true; btn.textContent = 'MENGUPLOAD FLYER... (JANGAN TUTUP)';
-
-    let file = fileInput.files[0];
-    let reader = new FileReader();
+    let file = fileInput.files[0]; let reader = new FileReader();
     reader.onload = async function(e) {
-        let base64str = e.target.result.split(',')[1];
-        let mimeType = file.type; let filename = file.name;
-
+        let base64str = e.target.result.split(',')[1]; let mimeType = file.type; let filename = file.name;
         try {
             let resUpload = await fetch(API_URL, {
                 method: 'POST',
-                body: JSON.stringify({ api_key: KUNCI_RAHASIA, action: 'uploadMedia', base64: base64str, mimeType: mimeType, filename: filename, kategori: "Sponsor_TV" })
+                body: JSON.stringify({ token: getToken(), action: 'uploadMedia', base64: base64str, mimeType: mimeType, filename: filename, kategori: "Sponsor_TV" })
             });
             let jUpload = await resUpload.json();
-
             if(jUpload.status !== 'ok') { showToast('Gagal upload flyer!'); btn.disabled = false; btn.textContent = 'UPLOAD & SIMPAN TV'; return; }
 
             btn.textContent = 'MENYIMPAN DATA...';
             let resData = await fetch(API_URL, {
                 method: 'POST',
-                body: JSON.stringify({ api_key: KUNCI_RAHASIA, action: 'addSponsorTV', nama: nama, url: jUpload.url, mulai: mulai, selesai: selesai })
+                body: JSON.stringify({ token: getToken(), action: 'addSponsorTV', nama: nama, url: jUpload.url, mulai: mulai, selesai: selesai })
             });
             let jData = await resData.json();
 
             if(jData.status === 'ok') {
                 showToast('Sponsor TV tersimpan!');
-                document.getElementById('spo-tv-nama').value = '';
-                document.getElementById('spo-tv-mulai').value = '';
-                document.getElementById('spo-tv-selesai').value = '';
-                document.getElementById('spo-tv-file').value = '';
+                document.getElementById('spo-tv-nama').value = ''; document.getElementById('spo-tv-mulai').value = '';
+                document.getElementById('spo-tv-selesai').value = ''; document.getElementById('spo-tv-file').value = '';
                 loadSponsorData();
             } else { showToast(jData.message); }
         } catch(err) { showToast('Koneksi terputus'); }
@@ -659,25 +609,19 @@ async function tambahSponsorTV() {
 async function hapusSponsorTV(id) {
     if(!confirm('Hapus flyer sponsor ini dari TV Masjid?')) return;
     try {
-        let r = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ api_key: KUNCI_RAHASIA, action: 'deleteSponsorTV', id: id }) });
+        let r = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ token: getToken(), action: 'deleteSponsorTV', id: id }) });
         if((await r.json()).status === 'ok') { showToast('Dihapus'); loadSponsorData(); }
     } catch(e) {}
 }
 
 async function tambahSponsorWeb() {
-    let nama = document.getElementById('spo-web-nama').value;
-    let teks = document.getElementById('spo-web-teks').value;
+    let nama = document.getElementById('spo-web-nama').value; let teks = document.getElementById('spo-web-teks').value;
     if(!nama || !teks) return showToast('Lengkapi nama dan teks!');
-    
-    let btn = document.getElementById('btn-spo-web');
-    btn.disabled = true; btn.textContent = 'MENYIMPAN...';
-    
+    let btn = document.getElementById('btn-spo-web'); btn.disabled = true; btn.textContent = 'MENYIMPAN...';
     try {
-        let r = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ api_key: KUNCI_RAHASIA, action: 'addSponsorWeb', nama: nama, teks: teks }) });
+        let r = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ token: getToken(), action: 'addSponsorWeb', nama: nama, teks: teks }) });
         if((await r.json()).status === 'ok') {
-            showToast('Teks tersimpan!');
-            document.getElementById('spo-web-nama').value = ''; document.getElementById('spo-web-teks').value = '';
-            loadSponsorData();
+            showToast('Teks tersimpan!'); document.getElementById('spo-web-nama').value = ''; document.getElementById('spo-web-teks').value = ''; loadSponsorData();
         }
     } catch(e) {}
     btn.disabled = false; btn.textContent = 'SIMPAN TEKS WEB';
@@ -686,7 +630,7 @@ async function tambahSponsorWeb() {
 async function hapusSponsorWeb(id) {
     if(!confirm('Hapus teks sponsor ini dari Website Masjid?')) return;
     try {
-        let r = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ api_key: KUNCI_RAHASIA, action: 'deleteSponsorWeb', id: id }) });
+        let r = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ token: getToken(), action: 'deleteSponsorWeb', id: id }) });
         if((await r.json()).status === 'ok') { showToast('Dihapus'); loadSponsorData(); }
     } catch(e) {}
 }
@@ -695,7 +639,7 @@ window.onload = function() {
     document.getElementById('splash').classList.add('hide');
     setTimeout(function(){ document.getElementById('splash').style.display = 'none'; }, 500);
     
-    if(localStorage.getItem('is_superadmin') === 'true') { masukSistem(); } 
+    if(getToken()) { masukSistem(); } 
     else { document.getElementById('login-wrap').classList.add('show'); }
 };
 </script>
