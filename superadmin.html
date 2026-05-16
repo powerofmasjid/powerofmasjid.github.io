@@ -55,7 +55,7 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg-dark);
 .scroll-list::-webkit-scrollbar { width: 4px; }
 .scroll-list::-webkit-scrollbar-thumb { background: rgba(201,168,76,0.3); border-radius: 4px; }
 
-.masjid-card { background: white; border-radius: 12px; padding: 15px; margin-bottom: 15px; color: #1F2937; position: relative; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+.masjid-card { background: white; border-radius: 12px; padding: 15px; margin-bottom: 15px; color: #1F2937; position: relative; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: all 0.3s ease;}
 .card-aktif { border-left: 6px solid #10B981; }
 .card-pasif { border-left: 6px solid #EF4444; }
 .card-belajar { border-left: 6px solid #F59E0B; }
@@ -151,7 +151,7 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg-dark);
       
       <div class="card">
         <div class="card-title">Daftar Status Masjid</div>
-        <div id="loading" style="text-align:center; font-size:12px; color:rgba(255,255,255,0.6);">⏳ Menganalisis aktivitas, mohon tunggu...</div>
+        <div id="loading" style="text-align:center; font-size:12px; color:rgba(255,255,255,0.6); padding: 10px; background: rgba(0,0,0,0.2); border-radius: 8px; margin-bottom: 10px;">⏳ Memuat daftar masjid...</div>
         <div id="list-masjid-container" class="scroll-list"></div>
       </div>
     </div>
@@ -244,7 +244,6 @@ function showToast(msg) {
     setTimeout(function(){ t.classList.remove('show'); }, 3000);
 }
 
-// PERBAIKAN: FUNGSI MEMATANGKAN LINK AGAR GAMBAR TIDAK PECAH DI SUPERADMIN
 function matenginLinkDrive(url) {
     if (!url) return ''; var fileId = '';
     if (url.includes('drive.google.com/file/d/')) { fileId = url.split('/d/')[1].split('/')[0]; } 
@@ -319,25 +318,38 @@ function masukSistem() {
     loadDashboardData();
 }
 
-function extractDateFromId(idMasjid) {
-    try {
-        let parts = idMasjid.split('-');
-        if(parts.length >= 2) {
-            let timestampHex = parts[1];
-            let timestamp = parseInt(timestampHex, 36);
-            if(!isNaN(timestamp) && timestamp > 1700000000000) return timestamp;
-        }
-    } catch(e) {}
-    return Date.now() - (15 * 24 * 60 * 60 * 1000); 
-}
-
 async function loadDashboardData() {
     try {
         document.getElementById('loading').style.display = 'block';
+        document.getElementById('loading').innerText = '⚡ Mengambil daftar masjid (Jalur Cepat)...';
         document.getElementById('list-masjid-container').innerHTML = '';
         
-        // FASE 2: MEMANGGIL DATA YANG SUDAH DIREKAP OLEH BACKEND (SUPER CEPAT)
-        const res = await fetch(API_URL + '?action=getSuperadminData');
+        // FASE 1: TARIK NAMA MASJID & LINK DULU (KILAT)
+        try {
+            const resFast = await fetch(API_URL + '?action=getAllMasjid&_t=' + Date.now());
+            const jsonFast = await resFast.json();
+            if (jsonFast.status === 'ok') {
+                let htmlCepat = '';
+                jsonFast.data.forEach(m => {
+                    htmlCepat += `
+                        <div class="masjid-card" id="card-${m.id_masjid}">
+                            <h4>${m.nama}</h4>
+                            <p style="font-size:11px; opacity:0.7; color:#F59E0B; margin-bottom:8px;" id="status-${m.id_masjid}">⏳ Menganalisis status aktif...</p>
+                            <div style="display:flex; gap:6px; margin-bottom:10px;">
+                                <button class="btn-small dark" onclick="copyLink('masjid.html?masjid=${m.slug}')">🔗 Copy Link Web</button>
+                                <button class="btn-small dark" onclick="copyLink('tv.html?masjid=${m.slug}')">📺 Copy Link TV</button>
+                            </div>
+                            <div id="detail-${m.id_masjid}"></div>
+                        </div>
+                    `;
+                });
+                document.getElementById('list-masjid-container').innerHTML = htmlCepat;
+                document.getElementById('loading').innerText = '🔍 Menganalisis kelengkapan data di latar belakang...';
+            }
+        } catch(e) { console.log("Skip fast load"); }
+
+        // FASE 2: TARIK STATUS REKAP (BACKGROUND)
+        const res = await fetch(API_URL + '?action=getSuperadminData&_t=' + Date.now());
         const json = await res.json();
         
         if (json.status === 'ok') {
@@ -387,8 +399,8 @@ async function loadDashboardData() {
                             <div>${isGal ? '✅' : '❌'} Upload Foto Galeri</div>
                         </div>
                         <div style="display:flex; gap:6px; margin-bottom:10px;">
-                            <button class="btn-small dark" onclick="copyLink('masjid.html?masjid=${m.slug}')">🔗 Link Web</button>
-                            <button class="btn-small dark" onclick="copyLink('tv.html?masjid=${m.slug}')">📺 Link TV</button>
+                            <button class="btn-small dark" onclick="copyLink('masjid.html?masjid=${m.slug}')">🔗 Copy Link Web</button>
+                            <button class="btn-small dark" onclick="copyLink('tv.html?masjid=${m.slug}')">📺 Copy Link TV</button>
                         </div>
                         ${showWarningBtn ? `<button class="btn-warning" onclick="copyWarning('${encodeURIComponent(pesanWA)}')">💬 Salin Pesan Teguran WA</button>` : ''}
                     </div>
@@ -550,9 +562,6 @@ async function hapusIklan(id) {
     } catch(e) { showToast('Koneksi terputus!'); }
 }
 
-// ----------------------------------------------------
-// FUNGSI SPONSOR DENGAN PENANGKAL CACHE
-// ----------------------------------------------------
 async function loadSponsorData() {
     document.getElementById('list-spo-tv').innerHTML = '<div style="text-align:center; font-size:12px;">Memuat...</div>';
     document.getElementById('list-spo-web').innerHTML = '<div style="text-align:center; font-size:12px;">Memuat...</div>';
