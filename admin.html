@@ -704,11 +704,12 @@
         if(t === 'profil') loadProfilAdmin();
     }
 
-    // PERBAIKAN: Fungsi prosesLogin sekarang menunjuk action=login dan email=g
     function prosesLogin() {
-        var g = document.getElementById('login-gmail').value;
-        var p = document.getElementById('login-pin').value;
+        var g = document.getElementById('login-gmail').value.trim();
+        var p = document.getElementById('login-pin').value.trim();
         var btn = document.getElementById('btn-login'); 
+        
+        if (!g || !p) { alert("Tolong isi Email dan PIN dulu!"); return; }
         
         setLoading(btn, true);
         
@@ -717,13 +718,22 @@
         .then(j => {
             setLoading(btn, false); 
             if (j.status === 'ok') { 
-                ADMIN_DATA = j.data; 
-                ID_MASJID = j.data.id_masjid; 
-                localStorage.setItem('pow_admin', JSON.stringify(j.data)); 
+                // PERBAIKAN FATAL: Membungkus data sesuai format asli API
+                ADMIN_DATA = { 
+                    id_masjid: j.id_masjid, 
+                    nama: j.nama, 
+                    slug: j.slug 
+                }; 
+                ID_MASJID = j.id_masjid; 
+                localStorage.setItem('pow_admin', JSON.stringify(ADMIN_DATA)); 
                 tampilAdmin(); 
             } else {
-                showToast(j.message);
+                alert("❌ LOGIN DITOLAK SERVER:\nAlasan: " + j.message);
             }
+        })
+        .catch(err => {
+            setLoading(btn, false);
+            alert("⚠️ GAGAL TERHUBUNG KE MESIN:\nDetail error: " + err);
         });
     }
 
