@@ -1,0 +1,204 @@
+﻿<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Voucher Jamaah — Power of Masjid</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root { --bg: #0A2F1C; --card: #113F27; --gold: #C9A84C; --text: #E8F5EE; --border: rgba(201, 168, 76, 0.2); --success: #10B981; --danger: #EF4444; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: var(--text); display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 15px; }
+
+.panel { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 30px 20px; width: 100%; max-width: 400px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+.logo { width: 70px; margin-bottom: 15px; }
+h2 { font-size: 22px; font-weight: 800; margin-bottom: 8px; color: white; }
+.subtitle { font-size: 13px; color: rgba(255,255,255,0.7); margin-bottom: 25px; line-height: 1.4; }
+
+/* FORM KLAIM */
+.form-group { margin-bottom: 15px; text-align: left; }
+label { display: block; font-size: 12px; font-weight: 600; margin-bottom: 6px; color: rgba(255,255,255,0.9); }
+.form-control { width: 100%; background: rgba(0,0,0,0.3); border: 1px solid var(--border); color: white; padding: 14px 15px; border-radius: 12px; font-family: inherit; font-size: 14px; outline: none; }
+.form-control:focus { border-color: var(--gold); }
+select.form-control { color: white; }
+select option { background: var(--card); color: white; }
+
+.btn-primary { width: 100%; background: var(--gold); color: var(--bg); border: none; padding: 15px; border-radius: 12px; font-weight: 800; font-size: 15px; cursor: pointer; transition: 0.2s; margin-top: 10px; }
+.btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
+
+/* LAYAR VOUCHER AKTIF */
+#voucher-area { display: none; }
+.voucher-box { background: rgba(0,0,0,0.4); border: 2px dashed var(--gold); padding: 25px 15px; border-radius: 16px; margin: 20px 0; }
+.kode-teks { font-size: 32px; font-weight: 800; color: var(--gold); letter-spacing: 2px; font-family: monospace; }
+.btn-redeem { width: 100%; background: var(--danger); color: white; border: none; padding: 16px; border-radius: 12px; font-weight: 800; font-size: 16px; cursor: pointer; animation: pulse 2s infinite; box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4); }
+@keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.02); } 100% { transform: scale(1); } }
+
+/* LAYAR SUDAH DITUKAR (HIJAU) */
+#used-area { display: none; padding: 20px 0; }
+.circle-check { width: 80px; height: 80px; background: var(--success); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 40px; margin: 0 auto 15px; color: white; box-shadow: 0 0 20px rgba(16, 185, 129, 0.5); }
+.time-live { font-family: monospace; font-size: 18px; color: var(--success); background: rgba(16, 185, 129, 0.1); padding: 10px; border-radius: 8px; margin-top: 15px; border: 1px solid rgba(16, 185, 129, 0.3); font-weight: bold;}
+
+.toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(100px); background: white; color: var(--bg); font-size: 13px; font-weight: 700; padding: 12px 24px; border-radius: 20px; transition: 0.3s; z-index: 9999; }
+.toast.show { transform: translateX(-50%) translateY(0); }
+</style>
+</head>
+<body>
+
+<div class="panel">
+  <img src="Logo%20Power%20of%20Masjid.png" class="logo" alt="Logo">
+  
+  <div id="form-area">
+    <h2>Voucher Sponsor</h2>
+    <p class="subtitle">Isi data Anda untuk mengambil voucher diskon/hadiah dari Sponsor.</p>
+    <div class="form-group">
+      <label>Nama Lengkap</label>
+      <input type="text" class="form-control" id="v-nama" placeholder="Contoh: Budi Santoso">
+    </div>
+    <div class="form-group">
+      <label>Nomor WA (Aktif)</label>
+      <input type="number" class="form-control" id="v-wa" placeholder="0812xxxxxx">
+    </div>
+    <div class="form-group">
+      <label>Lokasi Masjid (Tempat Botol Didapat)</label>
+      <select class="form-control" id="v-masjid"><option value="">-- Pilih Masjid --</option></select>
+    </div>
+    <button class="btn-primary" id="btn-klaim" onclick="klaimVoucher()">AMBIL VOUCHER SEKARANG</button>
+  </div>
+
+  <div id="voucher-area">
+    <h2>Voucher Tersedia!</h2>
+    <p class="subtitle">Bawa HP Anda dan tunjukkan halaman ini kepada kasir toko sponsor.</p>
+    <div class="voucher-box">
+      <div style="font-size:12px; color:rgba(255,255,255,0.6); margin-bottom:5px; text-transform:uppercase;">Kode Anda:</div>
+      <div class="kode-teks" id="v-kode">...</div>
+    </div>
+    <p style="font-size:12px; color:#FCA5A5; margin-bottom:15px; font-weight:600;">⚠️ PERINGATAN: Tombol merah di bawah ini HANYA BOLEH DITEKAN oleh Anda di depan Kasir!</p>
+    <button class="btn-redeem" id="btn-tukar" onclick="tukarDepanKasir()">SAYA DI DEPAN KASIR (TUKAR)</button>
+  </div>
+
+  <div id="used-area">
+    <div class="circle-check">✓</div>
+    <h2 style="color:var(--success);">VOUCHER SAH</h2>
+    <p class="subtitle" style="color:white; font-size:14px; font-weight:600; margin-bottom:5px;">Produk/Diskon dapat diberikan.</p>
+    <p style="font-size:12px; color:rgba(255,255,255,0.6);">Kode: <span id="v-kode-done" style="color:white; font-weight:bold;"></span></p>
+    
+    <div class="time-live" id="live-clock">00:00:00</div>
+    <p style="font-size:11px; margin-top:10px; color:rgba(255,255,255,0.5);">*Jam bergerak menandakan ini layar asli, bukan hasil screenshot.</p>
+  </div>
+
+</div>
+
+<div class="toast" id="toast">Notifikasi</div>
+
+<script>
+const API_URL = 'https://script.google.com/macros/s/AKfycbzmrlLwmTFnV_yJ31McDRHu0zfjNgw2ldJiGpXhICxuOeDQUDEEob5WSaA94jkxDSo2cQ/exec';
+const KUNCI_RAHASIA = 'POW_MASJID_SECURE_2026'; // Kunci untuk menembus backend
+const SPONSOR_NAME = "Madu Pak Haji"; // Default Sponsor
+let KODE_SEKARANG = "";
+
+function showToast(msg) {
+    var t = document.getElementById('toast');
+    t.textContent = msg; t.classList.add('show');
+    setTimeout(() => { t.classList.remove('show'); }, 3000);
+}
+
+// Jam Live untuk Bukti Layar Asli ke Kasir
+function startClock() {
+    setInterval(() => {
+        let now = new Date();
+        document.getElementById('live-clock').textContent = 
+            now.toLocaleDateString('id-ID') + " - " + 
+            now.toLocaleTimeString('id-ID');
+    }, 1000);
+}
+
+async function loadMasjidDropdown() {
+    try {
+        const res = await fetch(API_URL + '?action=getAllMasjid');
+        const json = await res.json();
+        if (json.status === 'ok') {
+            const sel = document.getElementById('v-masjid');
+            json.data.forEach(m => {
+                let opt = document.createElement('option');
+                opt.value = m.nama; opt.textContent = m.nama; sel.appendChild(opt);
+            });
+        }
+    } catch(e) {}
+}
+
+async function klaimVoucher() {
+    const nama = document.getElementById('v-nama').value.trim();
+    const wa = document.getElementById('v-wa').value.trim();
+    const masjid = document.getElementById('v-masjid').value;
+    
+    if(!nama || !wa || !masjid) return showToast('Harap lengkapi semua data!');
+    if(wa.length < 9) return showToast('Nomor WA tidak valid!');
+    
+    const btn = document.getElementById('btn-klaim');
+    btn.disabled = true; btn.textContent = 'MEMPROSES...';
+
+    try {
+        const res = await fetch(API_URL, {
+            method: 'POST',
+            body: JSON.stringify({ 
+                action: 'addVoucherScan', 
+                nama: nama, 
+                wa: wa, 
+                masjid: masjid, 
+                sponsor: SPONSOR_NAME 
+            })
+        });
+        const json = await res.json();
+        
+        if (json.status === 'ok') {
+            KODE_SEKARANG = json.kode;
+            document.getElementById('v-kode').textContent = KODE_SEKARANG;
+            document.getElementById('form-area').style.display = 'none';
+            document.getElementById('voucher-area').style.display = 'block';
+        } else { 
+            showToast(json.message); 
+            btn.disabled = false; btn.textContent = 'AMBIL VOUCHER SEKARANG'; 
+        }
+    } catch(e) { 
+        showToast('Koneksi terputus!'); 
+        btn.disabled = false; btn.textContent = 'AMBIL VOUCHER SEKARANG'; 
+    }
+}
+
+async function tukarDepanKasir() {
+    let konfirmasi = confirm("PERHATIAN!\n\nPastikan Anda SUDAH BERADA DI DEPAN KASIR sebelum menekan OK.\n\nJika ditekan sekarang dan Anda belum di kasir, voucher akan hangus.");
+    if(!konfirmasi) return;
+
+    const btn = document.getElementById('btn-tukar');
+    btn.disabled = true; btn.textContent = 'MENGHANGUSKAN VOUCHER...';
+
+    try {
+        const res = await fetch(API_URL, {
+            method: 'POST', 
+            body: JSON.stringify({ 
+                api_key: KUNCI_RAHASIA, // Kunci rahasia dikirim agar tidak diblokir backend
+                action: 'redeemVoucher', 
+                kode: KODE_SEKARANG 
+            })
+        });
+        const json = await res.json();
+        
+        if(json.status === 'ok') {
+            document.getElementById('voucher-area').style.display = 'none';
+            document.getElementById('used-area').style.display = 'block';
+            document.getElementById('v-kode-done').textContent = KODE_SEKARANG;
+            startClock(); // Jam Hijau Berdetak Mulai!
+        } else { 
+            showToast("Gagal: " + json.message); 
+            btn.disabled = false; btn.textContent = 'SAYA DI DEPAN KASIR (TUKAR)'; 
+        }
+    } catch(e) { 
+        showToast('Koneksi terputus!'); 
+        btn.disabled = false; btn.textContent = 'SAYA DI DEPAN KASIR (TUKAR)'; 
+    }
+}
+
+window.onload = function() { loadMasjidDropdown(); };
+</script>
+</body>
+</html>
