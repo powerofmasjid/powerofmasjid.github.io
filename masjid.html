@@ -397,8 +397,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 <div class="toast" id="toast">Nomor rekening disalin!</div>
 
 <script>
-// LINK API BARU BAPAK
-var API_URL = 'https://script.google.com/macros/s/AKfycbzmrlLwmTFnV_yJ31McDRHu0zfjNgw2ldJiGpXhICxuOeDQUDEEob5WSaA94jkxDSo2cQ/exec';
+var API_URL = 'https://script.google.com/macros/s/AKfycbxSYVpNu02Vu2J__09h_PGAWv_egVLICyS0S7Y3_pgnTE49E-o-UvlaXUNFTmeOGblrjw/exec';
 
 var ID_MASJID = '';
 var CACHE_DURATION = 60000; 
@@ -835,7 +834,6 @@ async function init() {
 
     await Promise.all([ loadSaldo(), loadTransaksi(), loadProgramAmal(), loadJadwal(), loadPengumuman(), loadGaleri() ]);
     
-    // PERBAIKAN: MEMANGGIL TEKS SPONSOR WEB DENGAN PENANGKAL CACHE
     var resSponsor = await apiFetch('getSponsorWeb', {_t: Date.now()}, null);
     if(resSponsor && resSponsor.status === 'ok' && resSponsor.data.length > 0) {
        var sponsorTeks = resSponsor.data.map(s => s.teks).join(' &nbsp;✦&nbsp; ');

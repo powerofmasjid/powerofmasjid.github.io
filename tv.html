@@ -269,7 +269,7 @@
   <div class="footer"><div class="footer-label">INFO</div><div style="flex:1; overflow:hidden;"><div class="marquee-text" id="tv-pengumuman"></div></div></div>
 
 <script>
-const API_URL = 'https://script.google.com/macros/s/AKfycbzmrlLwmTFnV_yJ31McDRHu0zfjNgw2ldJiGpXhICxuOeDQUDEEob5WSaA94jkxDSo2cQ/exec';
+const API_URL = 'https://script.google.com/macros/s/AKfycbxSYVpNu02Vu2J__09h_PGAWv_egVLICyS0S7Y3_pgnTE49E-o-UvlaXUNFTmeOGblrjw/exec';
 
 let ID_MASJID = ''; let globalSholatList = []; let LIST_JADWAL = [];
 let playlist = []; let playIndex = 0; let masterTimer;
@@ -576,7 +576,6 @@ async function loadData() {
       if(jM.data.latitude && jM.data.longitude) calcSholat(jM.data.latitude, jM.data.longitude);
     }
     
-    // PERBAIKAN: SEMUA FETCH WAJIB PAKAI PENANGKAL CACHE & MEMANGGIL resSpoTV
     const [resS, resP, resG, resA, resK, resSpoTV] = await Promise.all([
       fetch(API_URL + '?action=getSaldo&id_masjid=' + ID_MASJID + '&_t=' + Date.now()).then(r => r.json()),
       fetch(API_URL + '?action=getPengumuman&id_masjid=' + ID_MASJID + '&_t=' + Date.now()).then(r => r.json()),
@@ -615,7 +614,6 @@ async function loadData() {
         resG.data.forEach(g => rawPlaylist.push({ type: 'MEDIA', data: g }));
     }
 
-    // PERBAIKAN: MENYUNTIKKAN SPONSOR TV KE DALAM ANTRIAN SLIDE LAYAR TV
     if(resSpoTV && resSpoTV.status === 'ok' && resSpoTV.data.length > 0) {
         resSpoTV.data.forEach(spo => {
             rawPlaylist.push({ type: 'MEDIA', data: { url: spo.url, judul: spo.nama, tipe: 'FLYER' } });
