@@ -69,6 +69,16 @@ label { display: block; font-size: 12px; font-weight: 600; margin-bottom: 6px; c
 
 .toast { position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%) translateY(100px); background: white; color: var(--bg-dark); font-size: 13px; font-weight: 700; padding: 12px 25px; border-radius: 20px; transition: 0.3s; z-index: 10000; }
 .toast.show { transform: translateX(-50%) translateY(0); }
+
+@media (max-width: 768px) {
+    .main-layout { display: block; min-height: auto; }
+    .content-area { padding: 15px; width: 100%; overflow: visible; display: block; }
+    .sidebar { width: 100%; display: flex; overflow-x: auto; border-right: none; border-bottom: 1px solid var(--border); padding: 0; background: rgba(0,0,0,0.3); -webkit-overflow-scrolling: touch; }
+    .menu-item { flex-shrink: 0; padding: 15px 20px; border-left: none !important; border-bottom: 3px solid transparent; white-space: nowrap; font-size: 13px; }
+    .menu-item.active { border-bottom: 3px solid var(--gold); padding-left: 20px !important; background: transparent; }
+    .grid-summary { grid-template-columns: 1fr; }
+    .form-row { display: flex !important; flex-direction: column; gap: 15px; }
+}
 </style>
 </head>
 <body>
