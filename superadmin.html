@@ -80,6 +80,8 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg-dark);
 .btn-edit { background: rgba(201,168,76,0.1); color: var(--gold); border: 1px solid rgba(201,168,76,0.3); }
 .btn-del { background: rgba(220, 38, 38, 0.1); color: #FCA5A5; border: 1px solid #DC2626; }
 
+select.form-control option { background: var(--panel-bg); color: white; }
+
 .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(100px);background:white;color:var(--bg-dark);font-size:13px;font-weight:600;padding:12px 24px;border-radius:20px;transition:transform 0.3s;z-index:9999;}
 .toast.show{transform:translateX(-50%) translateY(0);}
 </style>
@@ -122,6 +124,7 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg-dark);
     <div class="nav-tab" onclick="bukaTab('masjid', this)">KELOLA MASJID</div>
     <div class="nav-tab" onclick="bukaTab('iklan', this)">IKLAN GLOBAL</div>
     <div class="nav-tab" onclick="bukaTab('sponsor', this)">KELOLA SPONSOR</div>
+    <div class="nav-tab" onclick="bukaTab('kampanye', this)">KAMPANYE & MERCHANT</div>
   </div>
 
   <div class="content">
@@ -220,10 +223,61 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg-dark);
         <div class="card-title">Daftar Tayang Website</div>
         <div id="list-spo-web" class="scroll-list"></div>
       </div>
+    </div>
+
+    <div id="kampanye" class="tab-content">
+      
+      <div class="card">
+        <div class="card-title">Validasi / Redeem Voucher Scan</div>
+        <div class="form-row">
+          <div class="form-group"><input type="text" class="form-control" id="redeem-kode" placeholder="Masukkan Kode (Contoh: YNJ-ABCD)"></div>
+          <button class="btn-primary" style="margin-top:0;" onclick="prosesRedeem()">REDEEM VOUCHER</button>
+        </div>
+      </div>
 
       <div class="card">
-        <div class="card-title">Live Tracking Scan Voucher Botol</div>
+        <div class="card-title">Data Jamaah (Tracking Voucher)</div>
         <div id="list-voucher" class="scroll-list"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Master Sponsor Baru</div>
+        <div class="form-row">
+          <div class="form-group"><label>Nama Perusahaan</label><input type="text" class="form-control" id="ms-nama" placeholder="Cth: PT Makmur Sejahtera"></div>
+          <div class="form-group"><label>Merk Produk</label><input type="text" class="form-control" id="ms-merk" placeholder="Cth: Air Minum Berkah"></div>
+        </div>
+        <button class="btn-primary" onclick="tambahMasterSponsor()">SIMPAN MASTER SPONSOR</button>
+        <div id="list-master-sponsor" class="scroll-list" style="margin-top:15px; border-top:1px dashed rgba(255,255,255,0.1); padding-top:15px;"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Master Merchant (Warung/Ekspedisi)</div>
+        <div class="form-row">
+          <div class="form-group"><label>Nama Warung</label><input type="text" class="form-control" id="mm-nama" placeholder="Cth: Warung Nasi Makmur"></div>
+          <div class="form-group"><label>Kode Merchant</label><input type="text" class="form-control" id="mm-kode" placeholder="Cth: MRC-001"></div>
+        </div>
+        <div class="form-group"><label>Alamat Cabang</label><input type="text" class="form-control" id="mm-alamat" placeholder="Detail Alamat"></div>
+        <button class="btn-primary" onclick="tambahMasterMerchant()">SIMPAN MASTER MERCHANT</button>
+        <div id="list-master-merchant" class="scroll-list" style="margin-top:15px; border-top:1px dashed rgba(255,255,255,0.1); padding-top:15px;"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Buat Program Kampanye Gabungan</div>
+        <div class="form-group">
+          <label>Pilih Sponsor Pendana</label>
+          <select class="form-control" id="cp-sponsor"><option value="">-- Memuat Sponsor --</option></select>
+        </div>
+        <div class="form-group">
+          <label>Pilih Merchant Pelaksana</label>
+          <select class="form-control" id="cp-merchant"><option value="">-- Memuat Merchant --</option></select>
+        </div>
+        <div class="form-group"><label>Nama Program</label><input type="text" class="form-control" id="cp-nama" placeholder="Cth: Jumat Berkah Bersama Air Berkah"></div>
+        <div class="form-row">
+          <div class="form-group"><label>Total Kuota Voucher</label><input type="number" class="form-control" id="cp-kuota" placeholder="Cth: 100"></div>
+          <div class="form-group"><label>Tanggal Kadaluarsa</label><input type="date" class="form-control" id="cp-expired"></div>
+        </div>
+        <button class="btn-primary" onclick="tambahCampaign()">AKTIFKAN PROGRAM KAMPANYE</button>
+        <div id="list-campaign" class="scroll-list" style="margin-top:15px; border-top:1px dashed rgba(255,255,255,0.1); padding-top:15px;"></div>
       </div>
     </div>
 
@@ -233,7 +287,7 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg-dark);
 <div class="toast" id="toast">Notifikasi</div>
 
 <script>
-// LINK API SUDAH SAYA PERBARUI DENGAN YANG BARU DARI BAPAK
+// LINK API BAPAK YANG BARU (SUDAH DIPERBARUI)
 const API_URL = 'https://script.google.com/macros/s/AKfycbx-OPYS9HjOv8lQzsiuAeDNjcWK_-ugDVTRcpE7kN7BWoKrEbreSvyUtgH5zFpB78cr9g/exec';
 let LIST_IKLAN = [];
 
@@ -267,6 +321,7 @@ function bukaTab(tabId, el) {
     
     if(tabId === 'iklan') loadIklanData();
     if(tabId === 'sponsor') loadSponsorData(); 
+    if(tabId === 'kampanye') loadKampanyeData(); // Panggil Data Kampanye & Merchant
 }
 
 function generateSlug() {
@@ -526,13 +581,11 @@ async function hapusIklan(id) {
 async function loadSponsorData() {
     document.getElementById('list-spo-tv').innerHTML = '<div style="text-align:center; font-size:12px;">Memuat...</div>';
     document.getElementById('list-spo-web').innerHTML = '<div style="text-align:center; font-size:12px;">Memuat...</div>';
-    document.getElementById('list-voucher').innerHTML = '<div style="text-align:center; font-size:12px;">Memuat...</div>';
 
     try {
-        let [resTv, resWeb, resVch] = await Promise.all([
+        let [resTv, resWeb] = await Promise.all([
             fetch(API_URL + '?action=getSponsorTV&token=' + getToken() + '&_t=' + Date.now()).then(r => r.json()),
-            fetch(API_URL + '?action=getSponsorWeb&token=' + getToken() + '&_t=' + Date.now()).then(r => r.json()),
-            fetch(API_URL + '?action=getVoucherList&token=' + getToken() + '&_t=' + Date.now()).then(r => r.json())
+            fetch(API_URL + '?action=getSponsorWeb&token=' + getToken() + '&_t=' + Date.now()).then(r => r.json())
         ]);
 
         if(resTv.status === 'ok') {
@@ -555,18 +608,6 @@ async function loadSponsorData() {
             `).join('') || '<div style="text-align:center;font-size:12px;color:rgba(255,255,255,0.5);">Belum ada teks sponsor Web</div>';
         }
 
-        if(resVch.status === 'ok') {
-            document.getElementById('list-voucher').innerHTML = resVch.data.map(v => `
-                <div style="background:rgba(0,0,0,0.3); padding:10px; border-radius:8px; margin-bottom:8px; border-left:4px solid ${v.status==='TERPAKAI'?'#10B981':'#F59E0B'}">
-                    <div style="font-size:12px; color:var(--gold); font-weight:bold; display:flex; justify-content:space-between;">
-                        <span>KODE: ${v.kode}</span>
-                        <span style="color:${v.status==='TERPAKAI'?'#10B981':'#F59E0B'}">${v.status}</span>
-                    </div>
-                    <div style="font-size:13px; color:white; margin:4px 0;">👤 ${v.nama} - 📱 ${v.wa}</div>
-                    <div style="font-size:10px; color:rgba(255,255,255,0.6);">📍 Lokasi: ${v.masjid} <br> 🤝 Sponsor: ${v.sponsor}</div>
-                </div>
-            `).join('') || '<div style="text-align:center;font-size:12px;color:rgba(255,255,255,0.5);">Belum ada jamaah yang scan botol</div>';
-        }
     } catch(e) { showToast('Gagal memuat data sponsor'); }
 }
 
@@ -633,6 +674,97 @@ async function hapusSponsorWeb(id) {
     try {
         let r = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ token: getToken(), action: 'deleteSponsorWeb', id: id }) });
         if((await r.json()).status === 'ok') { showToast('Dihapus'); loadSponsorData(); }
+    } catch(e) {}
+}
+
+// FUNGSI BARU UNTUK KAMPANYE, MERCHANT, SPONSOR & VOUCHER
+async function loadKampanyeData() {
+    document.getElementById('list-voucher').innerHTML = '<div style="text-align:center; font-size:12px;">Memuat data...</div>';
+    document.getElementById('list-master-sponsor').innerHTML = '<div style="text-align:center; font-size:12px;">Memuat data...</div>';
+    document.getElementById('list-master-merchant').innerHTML = '<div style="text-align:center; font-size:12px;">Memuat data...</div>';
+    document.getElementById('list-campaign').innerHTML = '<div style="text-align:center; font-size:12px;">Memuat data...</div>';
+
+    try {
+        let [resSpo, resMer, resCam, resVch] = await Promise.all([
+            fetch(API_URL + '?action=getMasterSponsor&token=' + getToken() + '&_t=' + Date.now()).then(r => r.json()),
+            fetch(API_URL + '?action=getMasterMerchant&token=' + getToken() + '&_t=' + Date.now()).then(r => r.json()),
+            fetch(API_URL + '?action=getCampaignProgram&token=' + getToken() + '&_t=' + Date.now()).then(r => r.json()),
+            fetch(API_URL + '?action=getVoucherList&token=' + getToken() + '&_t=' + Date.now()).then(r => r.json())
+        ]);
+
+        if(resSpo.status === 'ok') {
+            document.getElementById('list-master-sponsor').innerHTML = resSpo.data.map(s => `<div class="item-card"><b style="color:var(--gold);">${s.nama_perusahaan}</b><br><span style="font-size:12px;">Produk: ${s.merk_produk}</span></div>`).join('') || '<div style="text-align:center; font-size:12px;">Kosong</div>';
+            document.getElementById('cp-sponsor').innerHTML = '<option value="">-- Pilih Sponsor --</option>' + resSpo.data.map(s => `<option value="${s.id_sponsor}">${s.nama_perusahaan}</option>`).join('');
+        }
+        
+        if(resMer.status === 'ok') {
+            document.getElementById('list-master-merchant').innerHTML = resMer.data.map(m => `<div class="item-card"><b style="color:var(--gold);">${m.nama_warung}</b> [${m.kode_merchant}]<br><small style="color:rgba(255,255,255,0.7);">${m.alamat}</small></div>`).join('') || '<div style="text-align:center; font-size:12px;">Kosong</div>';
+            document.getElementById('cp-merchant').innerHTML = '<option value="">-- Pilih Merchant --</option>' + resMer.data.map(m => `<option value="${m.id_merchant}">${m.nama_warung} [${m.kode_merchant}]</option>`).join('');
+        }
+
+        if(resCam.status === 'ok') {
+            document.getElementById('list-campaign').innerHTML = resCam.data.map(c => `
+                <div class="item-card" style="border-left: 4px solid ${c.status==='AKTIF'?'#10B981':'#EF4444'}">
+                    <h4 style="color:var(--gold); font-size:14px; margin-bottom:4px;">${c.nama_program}</h4>
+                    <div style="font-size:12px; color:rgba(255,255,255,0.8);">Kuota Voucher: ${c.total_kuota} | Status: <span style="color:${c.status==='AKTIF'?'#10B981':'#EF4444'}; font-weight:bold;">${c.status}</span></div>
+                    <div style="font-size:10px; margin-top:4px;">Expired: ${new Date(c.tanggal_kadaluarsa).toLocaleDateString('id-ID')}</div>
+                </div>
+            `).join('') || '<div style="text-align:center; font-size:12px;">Belum ada program kampanye.</div>';
+        }
+
+        if(resVch.status === 'ok') {
+            document.getElementById('list-voucher').innerHTML = resVch.data.map(v => `
+                <div style="background:rgba(0,0,0,0.3); padding:10px; border-radius:8px; margin-bottom:8px; border-left:4px solid ${v.status==='TERPAKAI'?'#10B981':'#F59E0B'}">
+                    <div style="font-size:12px; color:var(--gold); font-weight:bold; display:flex; justify-content:space-between;">
+                        <span>KODE: ${v.kode}</span>
+                        <span style="color:${v.status==='TERPAKAI'?'#10B981':'#F59E0B'}">${v.status}</span>
+                    </div>
+                    <div style="font-size:13px; color:white; margin:4px 0;">👤 ${v.nama} - 📱 ${v.wa}</div>
+                    <div style="font-size:10px; color:rgba(255,255,255,0.6);">📍 Lokasi: ${v.masjid} <br> 🤝 Sponsor: ${v.sponsor}</div>
+                </div>
+            `).join('') || '<div style="text-align:center;font-size:12px;color:rgba(255,255,255,0.5);">Belum ada jamaah yang scan botol</div>';
+        }
+    } catch(e) { showToast('Gagal memuat data kampanye'); }
+}
+
+async function tambahMasterSponsor() {
+    let n = document.getElementById('ms-nama').value; let m = document.getElementById('ms-merk').value;
+    if(!n || !m) return showToast('Lengkapi nama dan merk!');
+    try {
+        let r = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ token: getToken(), action: 'addMasterSponsor', nama_perusahaan: n, merk_produk: m }) });
+        if((await r.json()).status === 'ok') { showToast('Sponsor disimpan!'); document.getElementById('ms-nama').value=''; document.getElementById('ms-merk').value=''; loadKampanyeData(); }
+    } catch(e) {}
+}
+
+async function tambahMasterMerchant() {
+    let n = document.getElementById('mm-nama').value; let k = document.getElementById('mm-kode').value; let a = document.getElementById('mm-alamat').value;
+    if(!n || !k) return showToast('Lengkapi data merchant!');
+    try {
+        let r = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ token: getToken(), action: 'addMasterMerchant', nama_warung: n, kode_merchant: k, alamat_cabang: a }) });
+        let j = await r.json();
+        if(j.status === 'ok') { showToast('Merchant disimpan!'); document.getElementById('mm-nama').value=''; document.getElementById('mm-kode').value=''; document.getElementById('mm-alamat').value=''; loadKampanyeData(); }
+        else { showToast('Gagal: ' + j.message); }
+    } catch(e) {}
+}
+
+async function tambahCampaign() {
+    let s = document.getElementById('cp-sponsor').value; let m = document.getElementById('cp-merchant').value;
+    let n = document.getElementById('cp-nama').value; let k = document.getElementById('cp-kuota').value; let e = document.getElementById('cp-expired').value;
+    if(!s || !m || !n || !k || !e) return showToast('Lengkapi form kampanye!');
+    try {
+        let r = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ token: getToken(), action: 'addCampaignProgram', id_sponsor: s, id_merchant: m, nama_program: n, total_kuota: k, tanggal_kadaluarsa: e }) });
+        if((await r.json()).status === 'ok') { showToast('Kampanye aktif!'); document.getElementById('cp-nama').value=''; document.getElementById('cp-kuota').value=''; loadKampanyeData(); }
+    } catch(err) {}
+}
+
+async function prosesRedeem() {
+    let kode = document.getElementById('redeem-kode').value.trim();
+    if(!kode) return showToast('Masukkan kode voucher!');
+    try {
+        let r = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ token: getToken(), action: 'redeemVoucher', kode: kode }) });
+        let j = await r.json();
+        if(j.status === 'ok') { showToast('Voucher Berhasil Di-Redeem!'); document.getElementById('redeem-kode').value=''; loadKampanyeData(); }
+        else { showToast(j.message); }
     } catch(e) {}
 }
 
