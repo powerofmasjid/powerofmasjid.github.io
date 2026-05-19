@@ -32,7 +32,7 @@ label { display: block; font-size: 12px; font-weight: 600; margin-bottom: 6px; c
 .menu-item:hover, .menu-item.active { color: white; background: rgba(255,255,255,0.05); }
 .menu-item.active { border-left: 4px solid var(--gold); color: var(--gold); padding-left: 21px; }
 
-.content-area { flex: 1; padding: 30px; overflow-y: auto; max-width: 1000px; }
+.content-area { flex: 1; padding: 30px; overflow-y: auto; max-width: 900px; }
 .tab-content { display: none; }
 .tab-content.active { display: block; }
 
@@ -45,7 +45,7 @@ label { display: block; font-size: 12px; font-weight: 600; margin-bottom: 6px; c
 .section-title { font-size: 15px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: white; margin-bottom: 20px; border-bottom: 1px dashed var(--border); padding-bottom: 10px; }
 
 .list-wrapper { display: flex; flex-direction: column; gap: 10px; }
-.card-masjid, .card-sponsor { background: rgba(0,0,0,0.15); border: 1px solid var(--border); border-radius: 12px; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+.card-masjid { background: rgba(0,0,0,0.15); border: 1px solid var(--border); border-radius: 12px; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; }
 .msj-info { display: flex; flex-direction: column; gap: 4px; }
 .msj-name { font-size: 15px; font-weight: 600; color: white; }
 .msj-meta { font-size: 11px; color: rgba(255,255,255,0.4); }
@@ -53,8 +53,13 @@ label { display: block; font-size: 12px; font-weight: 600; margin-bottom: 6px; c
 .badge-status { font-size: 9px; font-weight: 700; padding: 2px 6px; border-radius: 4px; background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.6); }
 .badge-status.ada { background: rgba(16,185,129,0.15); color: #6EE7B7; border: 1px solid rgba(16,185,129,0.3); }
 
+.card-sponsor { background: rgba(0,0,0,0.15); border: 1px solid var(--border); border-radius: 12px; padding: 15px 20px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
 .spo-btn-del { background: rgba(220,38,38,0.15); color: #FCA5A5; border: 1px solid rgba(220,38,38,0.3); font-size: 11px; padding: 5px 12px; border-radius: 6px; cursor: pointer; }
 
+.toast { position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%) translateY(100px); background: white; color: var(--bg-dark); font-size: 13px; font-weight: 700; padding: 12px 25px; border-radius: 20px; transition: 0.3s; z-index: 10000; }
+.toast.show { transform: translateX(-50%) translateY(0); }
+
+/* --- CSS TAMBAHAN KHUSUS MODUL VOUCHER DAN RESPONSIVE HP --- */
 .table-responsive { overflow-x: auto; margin-top: 15px; }
 .table { width: 100%; border-collapse: collapse; font-size: 12px; color: white; }
 .table th, .table td { padding: 10px; border-bottom: 1px solid var(--border); text-align: left; }
@@ -67,12 +72,9 @@ label { display: block; font-size: 12px; font-weight: 600; margin-bottom: 6px; c
 .search-box { width: 100%; padding: 12px 15px; border-radius: 8px; border: 1px solid var(--border); background: rgba(0,0,0,0.2); color: white; margin-bottom: 15px; font-family: inherit; font-size: 13px;}
 .search-box:focus { border-color: var(--gold); outline: none; }
 
-.toast { position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%) translateY(100px); background: white; color: var(--bg-dark); font-size: 13px; font-weight: 700; padding: 12px 25px; border-radius: 20px; transition: 0.3s; z-index: 10000; }
-.toast.show { transform: translateX(-50%) translateY(0); }
-
 @media (max-width: 768px) {
     .main-layout { display: block; min-height: auto; }
-    .content-area { padding: 15px; width: 100%; overflow: visible; display: block; }
+    .content-area { padding: 15px; width: 100%; display: block; overflow: visible; }
     .sidebar { width: 100%; display: flex; overflow-x: auto; border-right: none; border-bottom: 1px solid var(--border); padding: 0; background: rgba(0,0,0,0.3); -webkit-overflow-scrolling: touch; }
     .menu-item { flex-shrink: 0; padding: 15px 20px; border-left: none !important; border-bottom: 3px solid transparent; white-space: nowrap; font-size: 13px; }
     .menu-item.active { border-bottom: 3px solid var(--gold); padding-left: 20px !important; background: transparent; }
@@ -90,7 +92,7 @@ label { display: block; font-size: 12px; font-weight: 600; margin-bottom: 6px; c
 
 <div class="login-wrap" id="login-area" style="display:none;">
     <div class="login-card">
-        <img src="Logo%20Power%20of%20Masjid.png" class="logo-pusat" onerror="this.src='https://via.placeholder.com/100?text=LOGO'" style="width:100px; height:100px; margin-bottom:15px;">
+        <img src="Logo%20Power%20of%20Masjid.png" class="logo-pusat" style="width:100px; height:100px; margin-bottom:15px;" onerror="this.src='https://via.placeholder.com/100?text=LOGO'">
         <h2 style="font-size:18px; margin-bottom:4px; color:white;">Superadmin PUSAT</h2>
         <p style="font-size:12px; color:rgba(255,255,255,0.5); margin-bottom:20px;">Otoritas kendali ekosistem digital masjid.</p>
         <div class="form-group">
@@ -118,6 +120,7 @@ label { display: block; font-size: 12px; font-weight: 600; margin-bottom: 6px; c
             <div class="menu-item" id="m-spo" onclick="geserTab('spo')">📢 Manajemen Iklan</div>
             <div class="menu-item" id="m-tv" onclick="geserTab('tv')">📺 Sponsor TV Display</div>
             <div class="menu-item" id="m-web" onclick="geserTab('web')">🖼️ Sponsor Teks Web</div>
+            
             <div class="menu-item" id="m-mspon" onclick="geserTab('mspon')">🏢 Master Sponsor</div>
             <div class="menu-item" id="m-mmerch" onclick="geserTab('mmerch')">🏪 Master Merchant</div>
             <div class="menu-item" id="m-camp" onclick="geserTab('camp')">🤝 Campaign Program</div>
@@ -137,6 +140,7 @@ label { display: block; font-size: 12px; font-weight: 600; margin-bottom: 6px; c
                         <div class="sm-value" id="sum-jaringan">0 Jaringan</div>
                     </div>
                 </div>
+                
                 <div class="section-box">
                     <div class="section-title">Daftar Ekosistem Jaringan Masjid</div>
                     <div class="list-wrapper" id="master-list-masjid"></div>
@@ -146,13 +150,34 @@ label { display: block; font-size: 12px; font-weight: 600; margin-bottom: 6px; c
             <div class="tab-content" id="tab-add">
                 <div class="section-box">
                     <div class="section-title">Registrasi Jaringan Masjid Baru</div>
-                    <div class="form-group"><label>Nama Masjid</label><input type="text" class="form-control" id="new-nama" placeholder="Contoh: Masjid Jami Al-Ikhlas"></div>
-                    <div class="form-group"><label>Wilayah Kelurahan</label><input type="text" class="form-control" id="new-kel"></div>
-                    <div class="form-group"><label>Wilayah Kecamatan</label><input type="text" class="form-control" id="new-kec"></div>
-                    <div class="form-group"><label>Kota / Kabupaten</label><input type="text" class="form-control" id="new-kota"></div>
-                    <div class="form-group"><label>URL Kustom Pendek (Slug)</label><input type="text" class="form-control" id="new-slug" placeholder="Contoh: alikhlas-ragunan"></div>
-                    <div class="form-group"><label>Email Utama Pengurus (Untuk Login Admin)</label><input type="email" class="form-control" id="new-email"></div>
-                    <div class="form-group"><label>Buat PIN Keamanan Admin (6 Angka)</label><input type="password" class="form-control" id="new-pin" maxlength="6"></div>
+                    <div class="form-group">
+                        <label>Nama Masjid</label>
+                        <input type="text" class="form-control" id="new-nama" placeholder="Contoh: Masjid Jami Al-Ikhlas">
+                    </div>
+                    <div class="form-group">
+                        <label>Wilayah Kelurahan</label>
+                        <input type="text" class="form-control" id="new-kel">
+                    </div>
+                    <div class="form-group">
+                        <label>Wilayah Kecamatan</label>
+                        <input type="text" class="form-control" id="new-kec">
+                    </div>
+                    <div class="form-group">
+                        <label>Kota / Kabupaten</label>
+                        <input type="text" class="form-control" id="new-kota">
+                    </div>
+                    <div class="form-group">
+                        <label>URL Kustom Pendek (Slug)</label>
+                        <input type="text" class="form-control" id="new-slug" placeholder="Contoh: alikhlas-ragunan">
+                    </div>
+                    <div class="form-group">
+                        <label>Email Utama Pengurus (Untuk Login Admin)</label>
+                        <input type="email" class="form-control" id="new-email">
+                    </div>
+                    <div class="form-group">
+                        <label>Buat PIN Keamanan Admin (6 Angka)</label>
+                        <input type="password" class="form-control" id="new-pin" maxlength="6">
+                    </div>
                     <button class="btn" id="btn-buat-masjid" onclick="simpanMasjidBaru()">PROSES REGISTRASI SEKARANG</button>
                 </div>
             </div>
@@ -295,6 +320,7 @@ label { display: block; font-size: 12px; font-weight: 600; margin-bottom: 6px; c
 <div class="toast" id="toast">Sukses</div>
 
 <script>
+// LINK API_URL TERBARU
 const API_URL = 'https://script.google.com/macros/s/AKfycbzJTEZI5we7s_ShQzZtKb9SeTfqeCRE6rjSmRM-YAurBVDBxL8Vv4K7qqg_tUJHxZoLJw/exec';
 
 let globalVoucherData = [];
@@ -306,9 +332,17 @@ function getToken() { return localStorage.getItem('pow_super_session'); }
 function eksekusiLogin() {
     let u = document.getElementById('adm-user').value.trim(); let p = document.getElementById('adm-pass').value.trim();
     let btn = document.getElementById('btn-login'); btn.disabled = true; btn.textContent = 'VALIDASI OTORITAS...';
-    fetch(API_URL + '?action=login&email=' + encodeURIComponent(u) + '&pin=' + p).then(r => r.json()).then(j => {
-        if(j.status === 'ok' && j.role === 'SUPERADMIN') { localStorage.setItem('pow_super_session', j.token); bukaDashboardPusat(); } 
-        else { alert('Akses ditolak.'); btn.disabled = false; btn.textContent = 'MASUK OTORITAS'; }
+    
+    fetch(API_URL + '?action=login&email=' + encodeURIComponent(u) + '&pin=' + p)
+    .then(r => r.json())
+    .then(j => {
+        if(j.status === 'ok' && j.role === 'SUPERADMIN') {
+            localStorage.setItem('pow_super_session', j.token);
+            bukaDashboardPusat();
+        } else {
+            alert('Akses ditolak. ID Otoritas atau Sandi Pusat keliru.');
+            btn.disabled = false; btn.textContent = 'MASUK OTORITAS';
+        }
     }).catch(() => { btn.disabled = false; btn.textContent = 'MASUK OTORITAS'; });
 }
 
@@ -317,6 +351,7 @@ function bukaDashboardPusat() {
     document.getElementById('panel-pusat').style.display = 'block';
     loadMainDashboardData();
 }
+
 function keluarSistem() { localStorage.removeItem('pow_super_session'); location.reload(); }
 
 function geserTab(t) {
@@ -324,9 +359,12 @@ function geserTab(t) {
     document.querySelectorAll('.menu-item').forEach(el => el.classList.remove('active'));
     document.getElementById('tab-' + t).classList.add('active');
     document.getElementById('m-' + t).classList.add('active');
+    
     if(t === 'dash') loadMainDashboardData();
     if(t === 'spo') loadIklanGlobalData();
     if(t === 'tv' || t === 'web') loadSponsorData();
+    
+    // PEMANGGILAN DATA UNTUK TAB BARU
     if(t === 'mspon') loadMasterSponsor();
     if(t === 'mmerch') loadMasterMerchant();
     if(t === 'camp') loadCampaignProgram();
@@ -334,26 +372,58 @@ function geserTab(t) {
 }
 
 function loadMainDashboardData() {
-    fetch(API_URL + '?action=getSuperadminData&token=' + getToken()).then(r => r.json()).then(j => {
+    fetch(API_URL + '?action=getSuperadminData&token=' + getToken())
+    .then(r => r.json())
+    .then(j => {
         if(j.status === 'ok') {
             document.getElementById('sum-kas').textContent = 'Rp ' + Number(j.data.total_kas).toLocaleString('id-ID');
             document.getElementById('sum-jaringan').textContent = j.data.list_masjid.length + ' Jaringan';
+            
             document.getElementById('master-list-masjid').innerHTML = j.data.list_masjid.map(m => `
-                <div class="card-masjid"><div class="msj-info"><div class="msj-name">¼ Masjid ${m.nama}</div><div class="msj-meta">ID: ${m.id} &nbsp;•&nbsp; Email: ${m.email}</div><div class="msj-status"><div class="badge-status ${m.kriteria.trx ? 'ada' : ''}">KAS ${m.kriteria.trx ? '✓':'KOSONG'}</div><div class="badge-status ${m.kriteria.jdw ? 'ada' : ''}">JADWAL ${m.kriteria.jdw ? '✓':'KOSONG'}</div><div class="badge-status ${m.kriteria.gal ? 'ada' : ''}">GALERI ${m.kriteria.gal ? '✓':'KOSONG'}</div></div></div></div>
+                <div class="card-masjid">
+                    <div class="msj-info">
+                        <div class="msj-name">🕌 ${m.nama}</div>
+                        <div class="msj-meta">ID: ${m.id} &nbsp;•&nbsp; Email: ${m.email}</div>
+                        <div class="msj-status">
+                            <div class="badge-status ${m.kriteria.trx ? 'ada' : ''}">KAS ${m.kriteria.trx ? '✓':'KOSONG'}</div>
+                            <div class="badge-status ${m.kriteria.jdw ? 'ada' : ''}">JADWAL ${m.kriteria.jdw ? '✓':'KOSONG'}</div>
+                            <div class="badge-status ${m.kriteria.gal ? 'ada' : ''}">GALERI ${m.kriteria.gal ? '✓':'KOSONG'}</div>
+                        </div>
+                    </div>
+                </div>
             `).join('');
         } else { keluarSistem(); }
     });
 }
 
 function simpanMasjidBaru() {
-    let payload = { token: getToken(), action: 'addMasjidBaru', nama: document.getElementById('new-nama').value, kelurahan: document.getElementById('new-kel').value, kecamatan: document.getElementById('new-kec').value, kota: document.getElementById('new-kota').value, slug: document.getElementById('new-slug').value, email: document.getElementById('new-email').value, pin: document.getElementById('new-pin').value };
-    if(!payload.nama || !payload.slug || !payload.email || !payload.pin) return alert('Data krusial wajib dilengkapi!');
-    let btn = document.getElementById('btn-buat-masjid'); btn.disabled = true; btn.textContent = 'MEREGISTRASI...';
-    fetch(API_URL, { method: 'POST', body: JSON.stringify(payload) }).then(r => r.json()).then(j => {
+    let nama = document.getElementById('new-nama').value.trim();
+    let kel = document.getElementById('new-kel').value.trim();
+    let kec = document.getElementById('new-kec').value.trim();
+    let kota = document.getElementById('new-kota').value.trim();
+    let slug = document.getElementById('new-slug').value.trim();
+    let email = document.getElementById('new-email').value.trim();
+    let pin = document.getElementById('new-pin').value.trim();
+    let btn = document.getElementById('btn-buat-masjid');
+    
+    if(!nama || !slug || !email || !pin) return alert('Data krusial wajib dilengkapi!');
+    btn.disabled = true; btn.textContent = 'MEREGISTRASI MASJID...';
+    
+    let payload = { token: getToken(), action: 'addMasjidBaru', nama: nama, kelurahan: kel, kecamatan: kec, kota: kota, slug: slug, email: email, pin: pin };
+    
+    fetch(API_URL, { method: 'POST', body: JSON.stringify(payload) })
+    .then(r => r.json())
+    .then(j => {
         btn.disabled = false; btn.textContent = 'PROSES REGISTRASI SEKARANG';
-        if(j.status === 'ok') { showToast('Jaringan aktif!'); ['nama','slug','email','pin'].forEach(i=>document.getElementById('new-'+i).value=''); geserTab('dash'); } else { alert(j.message); }
+        if(j.status === 'ok') {
+            showToast('Jaringan masjid baru sukses aktif!');
+            document.getElementById('new-nama').value = ''; document.getElementById('new-slug').value = '';
+            document.getElementById('new-email').value = ''; document.getElementById('new-pin').value = '';
+            geserTab('dash');
+        } else { alert(j.message); }
     });
 }
+
 function uploadPusat(input, targetId, statusId) {
     if (!input.files || input.files.length === 0) return;
     let file = input.files[0]; document.getElementById(statusId).style.display = 'block';
@@ -364,30 +434,126 @@ function uploadPusat(input, targetId, statusId) {
             let canvas = document.createElement('canvas'); let max = 1200; let w = img.width, h = img.height;
             if (w > h) { if (w > max) { h *= max / w; w = max; } } else { if (h > max) { w *= max / h; h = max; } }
             canvas.width = w; canvas.height = h; canvas.getContext('2d').drawImage(img, 0, 0, w, h);
-            fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'uploadMedia', token: getToken(), filename: file.name, base64: canvas.toDataURL('image/jpeg', 0.8).split(',')[1] }) }).then(r => r.json()).then(res => { document.getElementById(statusId).style.display = 'none'; if(res.status === 'ok') { document.getElementById(targetId).value = res.url; showToast('Tersimpan di Cloud!'); } });
-        }; img.src = e.target.result;
-    }; reader.readAsDataURL(file);
+            let base64 = canvas.toDataURL('image/jpeg', 0.8).split(',')[1];
+            
+            fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'uploadMedia', token: getToken(), filename: file.name, base64: base64 }) })
+            .then(r => r.json())
+            .then(res => {
+                document.getElementById(statusId).style.display = 'none';
+                if(res.status === 'ok') { document.getElementById(targetId).value = res.url; showToast('Gambar tersimpan di Cloud!'); }
+            });
+        };
+        img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
 }
 
 function loadIklanGlobalData() {
-    fetch(API_URL + '?action=getIklanSuperadmin&token=' + getToken()).then(r => r.json()).then(j => {
-        if(j.status === 'ok') document.getElementById('master-list-iklan').innerHTML = j.data.map(i => `<div class="card-sponsor"><div><strong style="color:white; font-size:14px;">${i.judul} (${i.program})</strong><div style="font-size:11px; opacity:0.6; margin-top:2px;">${i.deskripsi}</div></div><button class="spo-btn-del" onclick="hapusIklanGlobal('${i.id}')">Hapus</button></div>`).join('');
+    fetch(API_URL + '?action=getIklanSuperadmin&token=' + getToken())
+    .then(r => r.json())
+    .then(j => {
+        if(j.status === 'ok') {
+            document.getElementById('master-list-iklan').innerHTML = j.data.map(i => `
+                <div class="card-sponsor">
+                    <div>
+                        <strong style="color:white; font-size:14px;">${i.judul} (${i.program})</strong>
+                        <div style="font-size:11px; opacity:0.6; margin-top:2px;">${i.deskripsi}</div>
+                    </div>
+                    <button class="spo-btn-del" onclick="hapusIklanGlobal('${i.id}')">Hapus</button>
+                </div>
+            `).join('');
+        }
     });
 }
+
 function simpanIklanGlobal() {
-    let d = { token: getToken(), action: 'addIklan', judul: document.getElementById('skl-judul').value, program: document.getElementById('skl-program').value, deskripsi: document.getElementById('skl-desc').value, link_wa: document.getElementById('skl-wa').value, link_web: document.getElementById('skl-web').value, tgl_mulai: document.getElementById('skl-mulai').value, tgl_selesai: document.getElementById('skl-selesai').value };
-    let btn = document.getElementById('btn-ikl-global'); btn.disabled = true; fetch(API_URL, { method: 'POST', body: JSON.stringify(d) }).then(() => { btn.disabled = false; showToast('Mengudara!'); loadIklanGlobalData(); });
+    let d = {
+        token: getToken(), action: 'addIklan',
+        judul: document.getElementById('skl-judul').value, program: document.getElementById('skl-program').value,
+        deskripsi: document.getElementById('skl-desc').value, link_wa: document.getElementById('skl-wa').value,
+        link_web: document.getElementById('skl-web').value, tgl_mulai: document.getElementById('skl-mulai').value,
+        tgl_selesai: document.getElementById('skl-selesai').value
+    };
+    let btn = document.getElementById('btn-ikl-global'); btn.disabled = true; btn.textContent = 'MENYUNTIKKAN DATA...';
+    fetch(API_URL, { method: 'POST', body: JSON.stringify(d) }).then(() => {
+        btn.disabled = false; btn.textContent = 'PUBLIKASIKAN KAMPANYE GLOBAL';
+        showToast('Kampanye Global Mengudara!'); loadIklanGlobalData();
+    });
 }
-function hapusIklanGlobal(id) { if(confirm('Hapus?')) fetch(API_URL, { method: 'POST', body: JSON.stringify({ token: getToken(), action: 'deleteIklan', id: id }) }).then(() => { showToast('Dihapus'); loadIklanGlobalData(); }); }
+
+function hapusIklanGlobal(id) {
+    if(!confirm('Hapus kampanye global pusat ini?')) return;
+    fetch(API_URL, { method: 'POST', body: JSON.stringify({ token: getToken(), action: 'deleteIklan', id: id }) })
+    .then(() => { showToast('Dihapus'); loadIklanGlobalData(); });
+}
 
 function loadSponsorData() {
-    fetch(API_URL + '?action=getSponsorTV').then(r => r.json()).then(j => { document.getElementById('master-list-spo-tv').innerHTML = j.data.map(i => `<div class="card-sponsor"><div><strong style="color:white; font-size:14px;">${i.nama}</strong><br><a href="${i.url}" target="_blank" style="color:var(--gold); font-size:11px;">Lihat Gambar</a></div><button class="spo-btn-del" onclick="hapusSponsorTV('${i.id}')">Hapus</button></div>`).join(''); });
-    fetch(API_URL + '?action=getSponsorWeb').then(r => r.json()).then(j => { document.getElementById('master-list-spo-web').innerHTML = j.data.map(i => `<div class="card-sponsor"><div style="max-width:80%;"><strong style="color:white; font-size:14px;">${i.nama}</strong><div style="font-size:11px; opacity:0.6; margin-top:2px;">${i.teks}</div></div><button class="spo-btn-del" onclick="hapusSponsorWeb('${i.id}')">Hapus</button></div>`).join(''); });
+    fetch(API_URL + '?action=getSponsorTV').then(r => r.json()).then(j => {
+        document.getElementById('master-list-spo-tv').innerHTML = j.data.map(i => `
+            <div class="card-sponsor">
+                <div><strong style="color:white; font-size:14px;">${i.nama}</strong><br><a href="${i.url}" target="_blank" style="color:var(--gold); font-size:11px;">Lihat Gambar</a></div>
+                <button class="spo-btn-del" onclick="hapusSponsorTV('${i.id}')">Hapus</button>
+            </div>
+        `).join('');
+    });
+    
+    fetch(API_URL + '?action=getSponsorWeb').then(r => r.json()).then(j => {
+        document.getElementById('master-list-spo-web').innerHTML = j.data.map(i => `
+            <div class="card-sponsor">
+                <div style="max-width:80%;"><strong style="color:white; font-size:14px;">${i.nama}</strong><div style="font-size:11px; opacity:0.6; margin-top:2px;">${i.teks}</div></div>
+                <button class="spo-btn-del" onclick="hapusSponsorWeb('${i.id}')">Hapus</button>
+            </div>
+        `).join('');
+    });
 }
-async function simpanSponsorTV() { let n = document.getElementById('spo-tv-nama').value, u = document.getElementById('spo-tv-url').value, m = document.getElementById('spo-tv-mulai').value, s = document.getElementById('spo-tv-selesai').value; if(!n||!u) return; let b = document.getElementById('btn-spo-tv'); b.disabled=true; try{ await fetch(API_URL, {method:'POST',body:JSON.stringify({token:getToken(),action:'addSponsorTV',nama:n,url:u,mulai:m,selesai:s})}); showToast('Masuk!'); document.getElementById('spo-tv-nama').value=''; document.getElementById('spo-tv-url').value=''; loadSponsorData(); }catch(e){} b.disabled=false; }
-async function hapusSponsorTV(id) { if(confirm('Hapus?')) { await fetch(API_URL, {method:'POST',body:JSON.stringify({token:getToken(),action:'deleteSponsorTV',id:id})}); showToast('Dihapus'); loadSponsorData(); } }
-async function simpanSponsorWeb() { let n = document.getElementById('spo-web-nama').value, t = document.getElementById('spo-web-teks').value; if(!n||!t) return; let b = document.getElementById('btn-spo-web'); b.disabled=true; try{ await fetch(API_URL, {method:'POST',body:JSON.stringify({token:getToken(),action:'addSponsorWeb',nama:n,teks:t})}); showToast('Tersimpan!'); document.getElementById('spo-web-nama').value=''; document.getElementById('spo-web-teks').value=''; loadSponsorData(); }catch(e){} b.disabled=false; }
-async function hapusSponsorWeb(id) { if(confirm('Hapus?')) { await fetch(API_URL, {method:'POST',body:JSON.stringify({token:getToken(),action:'deleteSponsorWeb',id:id})}); showToast('Dihapus'); loadSponsorData(); } }
+
+async function simpanSponsorTV() {
+    let nama = document.getElementById('spo-tv-nama').value; let url = document.getElementById('spo-tv-url').value;
+    let mulai = document.getElementById('spo-tv-mulai').value; let selesai = document.getElementById('spo-tv-selesai').value;
+    if(!nama || !url) return showToast('Lengkapi nama dan asset gambar!');
+    let btn = document.getElementById('btn-spo-tv'); btn.disabled = true; btn.textContent = 'MENYUNTIKKAN DATA...';
+    try {
+        let r = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ token: getToken(), action: 'addSponsorTV', nama: nama, url: url, mulai: mulai, selesai: selesai }) });
+        if((await r.json()).status === 'ok') {
+            showToast('Sponsor TV Masuk!'); document.getElementById('spo-tv-nama').value = ''; document.getElementById('spo-tv-url').value = ''; loadSponsorData();
+        }
+    } catch(e) {}
+    btn.disabled = false; btn.textContent = 'INJEKSI SPONSOR TV DISPLAY';
+}
+
+async function hapusSponsorTV(id) {
+    if(!confirm('Hapus spanduk sponsor digital ini dari TV?')) return;
+    try {
+        let r = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ token: getToken(), action: 'deleteSponsorTV', id: id }) });
+        if((await r.json()).status === 'ok') { showToast('Dihapus'); loadSponsorData(); }
+    } catch(e) {}
+}
+
+async function simpanSponsorWeb() {
+    let nama = document.getElementById('spo-web-nama').value; let teks = document.getElementById('spo-web-teks').value;
+    if(!nama || !teks) return showToast('Lengkapi nama dan teks!');
+    let btn = document.getElementById('btn-spo-web'); btn.disabled = true; btn.textContent = 'MENYIMPAN...';
+    try {
+        let r = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ token: getToken(), action: 'addSponsorWeb', nama: nama, teks: teks }) });
+        if((await r.json()).status === 'ok') {
+            showToast('Teks tersimpan!'); document.getElementById('spo-web-nama').value = ''; document.getElementById('spo-web-teks').value = ''; loadSponsorData();
+        }
+    } catch(e) {}
+    btn.disabled = false; btn.textContent = 'SIMPAN TEKS WEB';
+}
+
+async function hapusSponsorWeb(id) {
+    if(!confirm('Hapus teks sponsor ini dari Website Masjid?')) return;
+    try {
+        let r = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ token: getToken(), action: 'deleteSponsorWeb', id: id }) });
+        if((await r.json()).status === 'ok') { showToast('Dihapus'); loadSponsorData(); }
+    } catch(e) {}
+}
+
+
+// ==========================================
+// FUNGSI JAVASCRIPT UNTUK MODUL VOUCHER BARU
+// ==========================================
 
 function loadMasterSponsor() {
     fetch(API_URL + '?action=getMasterSponsor&token=' + getToken()).then(r => r.json()).then(j => {
@@ -398,6 +564,7 @@ function loadMasterSponsor() {
         }
     });
 }
+
 function simpanMasterSponsor() {
     let btn = document.getElementById('btn-mspon'); btn.disabled = true;
     fetch(API_URL, { method: 'POST', body: JSON.stringify({ token: getToken(), action: 'addMasterSponsor', nama_perusahaan: document.getElementById('mspon-perusahaan').value, merk_produk: document.getElementById('mspon-merk').value }) }).then(r=>r.json()).then(j=>{
@@ -415,6 +582,7 @@ function loadMasterMerchant() {
         }
     });
 }
+
 function filterMerchant() {
     let input = document.getElementById('search-merchant').value.toUpperCase();
     let table = document.getElementById('tbl-mmerch');
@@ -424,6 +592,7 @@ function filterMerchant() {
         if (textValue.toUpperCase().indexOf(input) > -1) tr[i].style.display = ""; else tr[i].style.display = "none";
     }
 }
+
 function simpanMasterMerchant() {
     let btn = document.getElementById('btn-mmerch'); btn.disabled = true;
     fetch(API_URL, { method: 'POST', body: JSON.stringify({ token: getToken(), action: 'addMasterMerchant', nama_warung: document.getElementById('mmerch-nama').value, alamat_cabang: document.getElementById('mmerch-alamat').value, kode_merchant: document.getElementById('mmerch-kode').value }) }).then(r=>r.json()).then(j=>{
@@ -443,6 +612,7 @@ function loadCampaignProgram() {
         }
     });
 }
+
 function simpanCampaignProgram() {
     let btn = document.getElementById('btn-camp'); btn.disabled = true;
     fetch(API_URL, { method: 'POST', body: JSON.stringify({ token: getToken(), action: 'addCampaignProgram', id_sponsor: document.getElementById('camp-sponsor').value, id_merchant: document.getElementById('camp-merchant').value, nama_program: document.getElementById('camp-nama').value, total_kuota: document.getElementById('camp-kuota').value, tanggal_kadaluarsa: document.getElementById('camp-kadaluarsa').value }) }).then(r=>r.json()).then(j=>{
@@ -476,6 +646,7 @@ function downloadExcelVoucher() {
     a.download = 'Laporan_Voucher_Jamaah.csv';
     a.click();
 }
+
 function printLaporanVoucher() {
     let prt = window.open('', '', 'height=600,width=800');
     prt.document.write('<html><head><title>Laporan Voucher</title><style>table{width:100%;border-collapse:collapse;font-family:sans-serif;font-size:12px;}th,td{border:1px solid #ddd;padding:8px;text-align:left;}th{background:#f4f4f4;}</style></head><body>');
@@ -487,29 +658,33 @@ function printLaporanVoucher() {
     prt.document.write('</tbody></table></body></html>');
     prt.document.close(); prt.focus(); setTimeout(()=>prt.print(), 500);
 }
+
 function shareWAVoucher() {
     let tot = globalVoucherData.length;
     let rdm = globalVoucherData.filter(x => x.status === 'TERPAKAI').length;
     let t = `*LAPORAN SISTEM VOUCHER MASJID*%0A%0ATotal Klaim: ${tot} Jamaah%0ASukses Redeem: ${rdm} Voucher%0ABelum Tukar: ${tot - rdm} Voucher%0A%0ATerima kasih atas partisipasi program ini.`;
     window.open('https://wa.me/?text=' + t, '_blank');
 }
+
 function printKodeMerchant() {
     let prt = window.open('', '', 'height=600,width=800');
     prt.document.write('<html><head><title>Kode Merchant Kasir</title><style>body{font-family:sans-serif;text-align:center;}.card{border:2px dashed #000;padding:20px;margin:20px;display:inline-block;width:300px;}</style></head><body><h2>Stiker Kode Meja Kasir (Merchant)</h2>');
     globalMerchantData.forEach(m => {
-        prt.document.write(`<div class="card"><h3>${m.nama_warung}</h3><p>${m.alamat}</p><h1 style="font-size:40px;margin:10px 0;">${m.kode_merchant}</h1><p>Gunakan kode di atas untuk memvalidasi voucher jamaah.</p></div>`);
+        prt.document.write(`<div class="card"><h3>${m.nama_warung}</h3><p>${m.alamat}</p><h1 style="font-size:40px;margin:10px 0;">${m.kode_merchant}</h1><p>Gunakan kode di atas untuk memvalidasi penukaran.</p></div>`);
     });
     prt.document.write('</body></html>');
     prt.document.close(); prt.focus(); setTimeout(()=>prt.print(), 500);
 }
+
 function shareWAMerchant() {
     if(globalMerchantData.length === 0) return alert('Data kosong');
     let t = `*DAFTAR KODE KASIR MERCHANT*%0A%0A`;
     globalMerchantData.forEach((m, i) => { t += `${i+1}. ${m.nama_warung} (${m.alamat}) = *${m.kode_merchant}*%0A`; });
-    t += `%0AMohon infokan kode tersebut ke masing-masing cabang untuk validasi voucher jamaah.`;
+    t += `%0AMohon infokan kode tersebut ke masing-masing cabang.`;
     window.open('https://wa.me/?text=' + t, '_blank');
 }
 
+// PERBAIKAN LOADING AGAR TIDAK NYANGKUT SEPERTI PERMINTAAN BAPAK
 document.addEventListener("DOMContentLoaded", function() {
     setTimeout(() => {
         document.getElementById('splash').classList.add('hide');
