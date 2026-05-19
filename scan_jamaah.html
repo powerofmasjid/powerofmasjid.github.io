@@ -1,0 +1,174 @@
+﻿<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Klaim Hadiah - Power of Masjid</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+    :root { --bg: #0A2F1C; --card: #113F27; --gold: #C9A84C; --text: #E8F5EE; --success: #10B981; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+    body { background: var(--bg); color: var(--text); display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+    .card { background: var(--card); width: 100%; max-width: 400px; padding: 30px; border-radius: 20px; border: 1px solid rgba(201,168,76,0.2); box-shadow: 0 10px 30px rgba(0,0,0,0.5); text-align: center; }
+    h2 { color: var(--gold); margin-bottom: 5px; font-size: 22px; font-weight: 800; }
+    p.subtitle { font-size: 12px; opacity: 0.7; margin-bottom: 25px; }
+    
+    .form-group { margin-bottom: 15px; text-align: left; }
+    label { display: block; font-size: 12px; margin-bottom: 6px; font-weight: 600; opacity: 0.9; }
+    input[type="text"], input[type="number"] { width: 100%; padding: 14px; border-radius: 10px; border: 1px solid rgba(201,168,76,0.3); background: rgba(0,0,0,0.2); color: white; outline: none; font-size: 14px; text-transform: uppercase; }
+    input:focus { border-color: var(--gold); }
+    
+    .btn { width: 100%; padding: 15px; background: var(--gold); color: #000; border: none; border-radius: 10px; font-weight: 800; font-size: 14px; cursor: pointer; transition: 0.3s; margin-top: 10px; }
+    .btn:disabled { opacity: 0.4; cursor: not-allowed; background: #555; color: #999; }
+    .btn-redeem { background: var(--success); color: white; }
+    
+    .kode-voucher { font-size: 32px; font-weight: 800; color: var(--gold); letter-spacing: 2px; margin: 15px 0; background: rgba(0,0,0,0.3); padding: 15px; border-radius: 12px; border: 2px dashed var(--gold); }
+    
+    .checkbox-area { display: flex; align-items: flex-start; gap: 10px; margin: 15px 0; text-align: left; background: rgba(0,0,0,0.2); padding: 12px; border-radius: 8px; border: 1px solid #555; }
+    .checkbox-area input[type="checkbox"] { width: 20px; height: 20px; margin-top: 2px; accent-color: var(--gold); cursor: pointer; }
+    .checkbox-area label { font-size: 12px; margin: 0; cursor: pointer; line-height: 1.4; color: #E8F5EE; opacity: 0.9; }
+
+    /* Area Kontrol Layar */
+    #area-klaim { display: block; }
+    #area-redeem { display: none; }
+    #area-sukses { display: none; }
+    
+    .anim-sukses { font-size: 60px; margin-bottom: 10px; }
+    .live-time { font-family: monospace; font-size: 18px; font-weight: bold; background: rgba(255,255,255,0.1); padding: 10px; border-radius: 8px; margin-top: 15px; color: var(--gold); }
+</style>
+</head>
+<body>
+
+<div class="card">
+    
+    <div id="area-klaim">
+        <h2>🎁 Klaim Hadiah Sponsor</h2>
+        <p class="subtitle">Isi data diri Anda untuk mendapatkan hak penukaran hadiah.</p>
+        
+        <input type="hidden" id="id_campaign" value="CPN-CONTOH"> 
+        
+        <div class="form-group">
+            <label>Lokasi Scan (Asal Masjid)</label>
+            <input type="text" id="lokasi_scan" placeholder="Misal: Masjid Al-Ikhlas" style="text-transform: none;">
+        </div>
+        <div class="form-group">
+            <label>Nama Lengkap</label>
+            <input type="text" id="nama_jamaah" placeholder="Nama Anda" style="text-transform: none;">
+        </div>
+        <div class="form-group">
+            <label>Nomor WhatsApp</label>
+            <input type="number" id="wa_jamaah" placeholder="0812xxxxxx" style="text-transform: none;">
+        </div>
+        <button class="btn" id="btn-klaim" onclick="klaimVoucher()">DAPATKAN HAK PENUKARAN</button>
+    </div>
+
+    <div id="area-redeem">
+        <h2>🎟️ HAK PENUKARAN AKTIF!</h2>
+        <p class="subtitle">Bawa layar HP ini ke kasir/merchant terdekat.</p>
+        
+        <div class="kode-voucher" id="tampil-kode">VCH-XXXX</div>
+        
+        <div style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 12px; margin-top: 20px;">
+            <label style="color: #6EE7B7; font-size: 13px; text-align: center; margin-bottom: 10px;">🏪 AREA PENUKARAN KASIR</label>
+            <p style="font-size: 11px; opacity: 0.7; margin-bottom: 15px;">Tanyakan Kode Kasir kepada penjaga toko, lalu ketik di bawah ini.</p>
+            
+            <input type="text" id="input-kode-meja" placeholder="KODE KASIR (Misal: MPH-01)" style="text-align: center; font-weight: bold; font-size: 16px;">
+            
+            <div class="checkbox-area">
+                <input type="checkbox" id="cek-lokasi" onchange="cekValidasiTukar()">
+                <label for="cek-lokasi">Saya sudah mengetik Kode Kasir yang benar dan saat ini sedang berada di depan kasir.</label>
+            </div>
+
+            <button class="btn btn-redeem" id="btn-hangus" onclick="prosesTukar()" disabled>TUKARKAN</button>
+        </div>
+    </div>
+
+    <div id="area-sukses">
+        <div class="anim-sukses">✅</div>
+        <h2 style="color: var(--success);">PENUKARAN BERHASIL!</h2>
+        <p class="subtitle" style="margin-top: 10px; font-size: 14px;">Validasi sah. Tunjukkan layar ini ke Kasir.</p>
+        
+        <div class="live-time" id="live-time">Memuat waktu...</div>
+
+        <p style="font-size: 12px; opacity: 0.8; margin-top: 20px;">Silakan ambil hadiah Anda. Layar ini adalah bukti penukaran resmi sistem.</p>
+    </div>
+
+</div>
+
+<script>
+const API_URL = 'https://script.google.com/macros/s/AKfycbzJTEZI5we7s_ShQzZtKb9SeTfqeCRE6rjSmRM-YAurBVDBxL8Vv4K7qqg_tUJHxZoLJw/exec';
+let simpanKodeVoucher = '';
+
+const urlParams = new URLSearchParams(window.location.search);
+if(urlParams.has('camp')) document.getElementById('id_campaign').value = urlParams.get('camp');
+
+function klaimVoucher() {
+    let camp = document.getElementById('id_campaign').value;
+    let lokasi = document.getElementById('lokasi_scan').value;
+    let nama = document.getElementById('nama_jamaah').value;
+    let wa = document.getElementById('wa_jamaah').value;
+
+    if(!lokasi || !nama || !wa) return alert('Mohon lengkapi semua data diri Anda.');
+
+    let btn = document.getElementById('btn-klaim');
+    btn.disabled = true; btn.textContent = 'MEMPROSES...';
+
+    fetch(API_URL, {
+        method: 'POST',
+        body: JSON.stringify({ action: 'addVoucherScan', id_campaign: camp, lokasi_scan: lokasi, nama: nama, wa: wa })
+    }).then(res => res.json()).then(data => {
+        if(data.status === 'ok') {
+            simpanKodeVoucher = data.kode;
+            document.getElementById('tampil-kode').textContent = data.kode;
+            document.getElementById('area-klaim').style.display = 'none';
+            document.getElementById('area-redeem').style.display = 'block';
+        } else {
+            alert('GAGAL: ' + data.message);
+            btn.disabled = false; btn.textContent = 'DAPATKAN HAK PENUKARAN';
+        }
+    }).catch(err => {
+        alert('Gangguan sinyal. Silakan coba lagi.');
+        btn.disabled = false; btn.textContent = 'DAPATKAN HAK PENUKARAN';
+    });
+}
+
+function cekValidasiTukar() {
+    let btn = document.getElementById('btn-hangus');
+    let cek = document.getElementById('cek-lokasi').checked;
+    btn.disabled = !cek;
+}
+
+function startLiveTime() {
+    setInterval(() => {
+        let now = new Date();
+        document.getElementById('live-time').textContent = now.toLocaleDateString('id-ID') + ' ' + now.toLocaleTimeString('id-ID');
+    }, 1000);
+}
+
+function prosesTukar() {
+    let kodeMeja = document.getElementById('input-kode-meja').value.trim();
+    if(!kodeMeja) return alert('Silakan ketik Kode Kasir terlebih dahulu.');
+
+    let btn = document.getElementById('btn-hangus');
+    btn.disabled = true; btn.textContent = 'MEMVALIDASI...';
+
+    fetch(API_URL, {
+        method: 'POST',
+        body: JSON.stringify({ action: 'redeemVoucher', kode_merchant: kodeMeja, kode_voucher: simpanKodeVoucher })
+    }).then(res => res.json()).then(data => {
+        if(data.status === 'ok') {
+            document.getElementById('area-redeem').style.display = 'none';
+            document.getElementById('area-sukses').style.display = 'block';
+            startLiveTime(); 
+        } else {
+            alert('PENUKARAN DITOLAK: ' + data.message);
+            btn.disabled = false; btn.textContent = 'TUKARKAN';
+        }
+    }).catch(err => {
+        alert('Gangguan sinyal. Silakan coba lagi.');
+        btn.disabled = false; btn.textContent = 'TUKARKAN';
+    });
+}
+</script>
+</body>
+</html>
