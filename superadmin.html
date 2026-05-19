@@ -122,7 +122,6 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg-dark);
     <div class="nav-tab" onclick="bukaTab('masjid', this)">KELOLA MASJID</div>
     <div class="nav-tab" onclick="bukaTab('iklan', this)">IKLAN GLOBAL</div>
     <div class="nav-tab" onclick="bukaTab('sponsor', this)">KELOLA SPONSOR</div>
-    <div class="nav-tab" onclick="bukaTab('voucher', this)">DATA VOUCHER</div>
   </div>
 
   <div class="content">
@@ -221,14 +220,10 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg-dark);
         <div class="card-title">Daftar Tayang Website</div>
         <div id="list-spo-web" class="scroll-list"></div>
       </div>
-    </div>
 
-    <div id="voucher" class="tab-content">
       <div class="card">
-        <div class="card-title">Live Tracking Scan Voucher Botol Jamaah</div>
-        <div id="list-voucher-super" class="scroll-list">
-          <div style="text-align:center; font-size:12px; color:rgba(255,255,255,0.5);">Memuat data scanner voucher...</div>
-        </div>
+        <div class="card-title">Live Tracking Scan Voucher Botol</div>
+        <div id="list-voucher" class="scroll-list"></div>
       </div>
     </div>
 
@@ -238,9 +233,11 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg-dark);
 <div class="toast" id="toast">Notifikasi</div>
 
 <script>
+// LINK API SUDAH SAYA PERBARUI DENGAN YANG BARU DARI BAPAK
 const API_URL = 'https://script.google.com/macros/s/AKfycbx-OPYS9HjOv8lQzsiuAeDNjcWK_-ugDVTRcpE7kN7BWoKrEbreSvyUtgH5zFpB78cr9g/exec';
 let LIST_IKLAN = [];
 
+// Helper Ambil Token
 function getToken() { return localStorage.getItem('pow_super_token'); }
 
 function showToast(msg) {
@@ -253,8 +250,8 @@ function showToast(msg) {
 function matenginLinkDrive(url) {
     if (!url) return ''; var fileId = '';
     if (url.includes('drive.google.com/file/d/')) { fileId = url.split('/d/')[1].split('/')[0]; } 
-    if (url.includes('drive.google.com/open?id=')) { fileId = url.split('id=')[1].split('&')[0]; } 
-    if (url.includes('drive.google.com/uc')) { if (url.includes('id=')) fileId = url.split('id=')[1].split('&')[0]; }
+    else if (url.includes('drive.google.com/open?id=')) { fileId = url.split('id=')[1].split('&')[0]; } 
+    else if (url.includes('drive.google.com/uc')) { if (url.includes('id=')) fileId = url.split('id=')[1].split('&')[0]; }
     if (fileId) { return 'https://drive.google.com/thumbnail?id=' + fileId + '&sz=w1000'; }
     return url; 
 }
@@ -268,10 +265,8 @@ function bukaTab(tabId, el) {
     document.getElementById(tabId).classList.add('active');
     el.classList.add('active');
     
-    if(tabId === 'dashboard') loadDashboardData();
     if(tabId === 'iklan') loadIklanData();
     if(tabId === 'sponsor') loadSponsorData(); 
-    if(tabId === 'voucher') loadVoucherDataSuper(); // Trigger loader data voucher baru
 }
 
 function generateSlug() {
@@ -531,11 +526,13 @@ async function hapusIklan(id) {
 async function loadSponsorData() {
     document.getElementById('list-spo-tv').innerHTML = '<div style="text-align:center; font-size:12px;">Memuat...</div>';
     document.getElementById('list-spo-web').innerHTML = '<div style="text-align:center; font-size:12px;">Memuat...</div>';
+    document.getElementById('list-voucher').innerHTML = '<div style="text-align:center; font-size:12px;">Memuat...</div>';
 
     try {
-        let [resTv, resWeb] = await Promise.all([
+        let [resTv, resWeb, resVch] = await Promise.all([
             fetch(API_URL + '?action=getSponsorTV&token=' + getToken() + '&_t=' + Date.now()).then(r => r.json()),
-            fetch(API_URL + '?action=getSponsorWeb&token=' + getToken() + '&_t=' + Date.now()).then(r => r.json())
+            fetch(API_URL + '?action=getSponsorWeb&token=' + getToken() + '&_t=' + Date.now()).then(r => r.json()),
+            fetch(API_URL + '?action=getVoucherList&token=' + getToken() + '&_t=' + Date.now()).then(r => r.json())
         ]);
 
         if(resTv.status === 'ok') {
@@ -556,6 +553,19 @@ async function loadSponsorData() {
                     <button class="btn-action btn-del" style="width:100%; margin-top:8px; display:block;" onclick="hapusSponsorWeb('${ik.id}')">🗑️ Hapus</button>
                 </div>
             `).join('') || '<div style="text-align:center;font-size:12px;color:rgba(255,255,255,0.5);">Belum ada teks sponsor Web</div>';
+        }
+
+        if(resVch.status === 'ok') {
+            document.getElementById('list-voucher').innerHTML = resVch.data.map(v => `
+                <div style="background:rgba(0,0,0,0.3); padding:10px; border-radius:8px; margin-bottom:8px; border-left:4px solid ${v.status==='TERPAKAI'?'#10B981':'#F59E0B'}">
+                    <div style="font-size:12px; color:var(--gold); font-weight:bold; display:flex; justify-content:space-between;">
+                        <span>KODE: ${v.kode}</span>
+                        <span style="color:${v.status==='TERPAKAI'?'#10B981':'#F59E0B'}">${v.status}</span>
+                    </div>
+                    <div style="font-size:13px; color:white; margin:4px 0;">👤 ${v.nama} - 📱 ${v.wa}</div>
+                    <div style="font-size:10px; color:rgba(255,255,255,0.6);">📍 Lokasi: ${v.masjid} <br> 🤝 Sponsor: ${v.sponsor}</div>
+                </div>
+            `).join('') || '<div style="text-align:center;font-size:12px;color:rgba(255,255,255,0.5);">Belum ada jamaah yang scan botol</div>';
         }
     } catch(e) { showToast('Gagal memuat data sponsor'); }
 }
@@ -624,30 +634,6 @@ async function hapusSponsorWeb(id) {
         let r = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ token: getToken(), action: 'deleteSponsorWeb', id: id }) });
         if((await r.json()).status === 'ok') { showToast('Dihapus'); loadSponsorData(); }
     } catch(e) {}
-}
-
-// FUNGSI BARU UNTUK MEMUAT LOG VOUCHER DENGAN STYLE ASLI BAPAK
-async function loadVoucherDataSuper() {
-    document.getElementById('list-voucher-super').innerHTML = '<div style="text-align:center; font-size:12px; color:rgba(255,255,255,0.6);">⚡ Memuat real-time log voucher...</div>';
-    try {
-        const res = await fetch(API_URL + '?action=getVoucherList&token=' + getToken() + '&_t=' + Date.now());
-        const j = await res.json();
-        if(j.status === 'ok') {
-            document.getElementById('list-voucher-super').innerHTML = j.data.map(v => {
-                let badgeClass = v.status === 'TERPAKAI' ? 'badge-aktif' : 'badge-belajar';
-                return `
-                    <div class="masjid-card" style="color: #1F2937; border-left: 6px solid ${v.status === 'TERPAKAI' ? '#10B981' : '#F59E0B'}">
-                        <div style="font-weight:700; font-size:14px; color: #111827; font-family: monospace; letter-spacing: 1px;">KODE: ${v.kode}</div>
-                        <div style="font-size:13px; margin: 5px 0;">👤 Jamaah: <b>${v.nama}</b> (${v.wa})</div>
-                        <div style="font-size:11px; color:#4B5563; margin-bottom: 8px;">📍 Masjid: ${v.masjid} <br> 🤝 Sponsor: ${v.sponsor}</div>
-                        <span class="status-badge ${badgeClass}">${v.status}</span>
-                    </div>
-                `;
-            }).join('') || '<div style="text-align:center; font-size:12px; color:rgba(255,255,255,0.5);">Belum ada data klaim voucher dari jamaah.</div>';
-        }
-    } catch(e) {
-        document.getElementById('list-voucher-super').innerHTML = '<div style="text-align:center; font-size:12px; color:var(--danger);">Gagal memuat log voucher.</div>';
-    }
 }
 
 window.onload = function() {
