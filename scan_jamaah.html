@@ -3,172 +3,806 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Rezeki Berkah - Power of Masjid</title>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<title>Rezeki Berkah — Power of Masjid</title>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-    :root { --bg: #0A2F1C; --card: #113F27; --gold: #C9A84C; --text: #E8F5EE; --success: #10B981; }
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
-    body { background: var(--bg); color: var(--text); display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
-    .card { background: var(--card); width: 100%; max-width: 400px; padding: 30px; border-radius: 20px; border: 1px solid rgba(201,168,76,0.2); box-shadow: 0 10px 30px rgba(0,0,0,0.5); text-align: center; }
-    h2 { color: var(--gold); margin-bottom: 5px; font-size: 22px; font-weight: 800; }
-    p.subtitle { font-size: 12px; opacity: 0.7; margin-bottom: 25px; }
-    
-    .form-group { margin-bottom: 15px; text-align: left; }
-    label { display: block; font-size: 12px; margin-bottom: 6px; font-weight: 600; opacity: 0.9; }
-    input[type="text"], input[type="number"] { width: 100%; padding: 14px; border-radius: 10px; border: 1px solid rgba(201,168,76,0.3); background: rgba(0,0,0,0.2); color: white; outline: none; font-size: 14px; text-transform: uppercase; }
-    input:focus { border-color: var(--gold); }
-    
-    .btn { width: 100%; padding: 15px; background: var(--gold); color: #000; border: none; border-radius: 10px; font-weight: 800; font-size: 14px; cursor: pointer; transition: 0.3s; margin-top: 10px; }
-    .btn:disabled { opacity: 0.4; cursor: not-allowed; background: #555; color: #999; }
-    .btn-redeem { background: var(--success); color: white; }
-    
-    .kode-voucher { font-size: 32px; font-weight: 800; color: var(--gold); letter-spacing: 2px; margin: 15px 0; background: rgba(0,0,0,0.3); padding: 15px; border-radius: 12px; border: 2px dashed var(--gold); }
-    
-    .checkbox-area { display: flex; align-items: flex-start; gap: 10px; margin: 15px 0; text-align: left; background: rgba(0,0,0,0.2); padding: 12px; border-radius: 8px; border: 1px solid #555; }
-    .checkbox-area input[type="checkbox"] { width: 20px; height: 20px; margin-top: 2px; accent-color: var(--gold); cursor: pointer; }
-    .checkbox-area label { font-size: 12px; margin: 0; cursor: pointer; line-height: 1.4; color: #E8F5EE; opacity: 0.9; }
+:root {
+    --bg-dark: #071B10;
+    --panel: #0E2F1D;
+    --panel-soft: #143F28;
+    --gold: #C9A84C;
+    --gold-light: #FDE68A;
+    --text: #E8F5EE;
+    --muted: rgba(232,245,238,0.72);
+    --border: rgba(201,168,76,0.28);
+    --success: #10B981;
+    --danger: #EF4444;
+    --warning: #F59E0B;
+}
 
-    /* Area Kontrol Layar */
-    #area-klaim { display: block; }
-    #area-redeem { display: none; }
-    #area-sukses { display: none; }
-    
-    .anim-sukses { font-size: 60px; margin-bottom: 10px; }
-    .live-time { font-family: monospace; font-size: 18px; font-weight: bold; background: rgba(255,255,255,0.1); padding: 10px; border-radius: 8px; margin-top: 15px; color: var(--gold); }
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    min-height: 100vh;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background:
+        radial-gradient(circle at top, rgba(201,168,76,0.20), transparent 34%),
+        linear-gradient(180deg, #071B10 0%, #0A2F1C 100%);
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 18px;
+}
+
+.card {
+    width: 100%;
+    max-width: 430px;
+    background: rgba(14,47,29,0.96);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    padding: 24px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.45);
+    overflow: hidden;
+    position: relative;
+}
+
+.card:before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(201,168,76,0.10), transparent 42%);
+    pointer-events: none;
+}
+
+.content {
+    position: relative;
+    z-index: 2;
+}
+
+.logo-wrap {
+    text-align: center;
+    margin-bottom: 14px;
+}
+
+.logo-wrap img {
+    width: 72px;
+    height: 72px;
+    object-fit: contain;
+}
+
+.badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(201,168,76,0.13);
+    border: 1px solid rgba(201,168,76,0.4);
+    color: var(--gold-light);
+    border-radius: 999px;
+    padding: 6px 12px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.4px;
+    margin-bottom: 12px;
+}
+
+h1, h2 {
+    font-family: 'Amiri', serif;
+    color: white;
+    text-align: center;
+    line-height: 1.18;
+}
+
+h1 {
+    font-size: 34px;
+    margin-bottom: 8px;
+}
+
+h2 {
+    font-size: 28px;
+    margin-bottom: 8px;
+}
+
+.subtitle {
+    text-align: center;
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.6;
+    margin-bottom: 18px;
+}
+
+.info-program {
+    background: rgba(0,0,0,0.22);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 16px;
+    padding: 14px;
+    margin-bottom: 18px;
+}
+
+.info-row {
+    margin-bottom: 10px;
+}
+
+.info-row:last-child {
+    margin-bottom: 0;
+}
+
+.info-label {
+    font-size: 10px;
+    color: rgba(255,255,255,0.52);
+    text-transform: uppercase;
+    letter-spacing: 0.9px;
+    margin-bottom: 3px;
+}
+
+.info-value {
+    font-size: 13px;
+    color: white;
+    font-weight: 700;
+    line-height: 1.45;
+}
+
+.info-desc {
+    font-size: 12px;
+    color: rgba(255,255,255,0.72);
+    line-height: 1.55;
+}
+
+.form-group {
+    margin-bottom: 14px;
+}
+
+label {
+    display: block;
+    font-size: 12px;
+    font-weight: 700;
+    color: rgba(255,255,255,0.82);
+    margin-bottom: 7px;
+}
+
+input {
+    width: 100%;
+    padding: 14px 15px;
+    border-radius: 12px;
+    border: 1px solid rgba(201,168,76,0.32);
+    background: rgba(0,0,0,0.25);
+    color: white;
+    font-family: inherit;
+    font-size: 14px;
+    outline: none;
+}
+
+input:focus {
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(201,168,76,0.10);
+}
+
+input::placeholder {
+    color: rgba(255,255,255,0.35);
+}
+
+.btn {
+    width: 100%;
+    padding: 15px;
+    background: var(--gold);
+    color: #071B10;
+    border: none;
+    border-radius: 12px;
+    font-weight: 800;
+    font-size: 14px;
+    cursor: pointer;
+    transition: 0.25s;
+    font-family: inherit;
+    margin-top: 8px;
+}
+
+.btn:hover {
+    transform: translateY(-1px);
+    background: var(--gold-light);
+}
+
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.btn-success {
+    background: var(--success);
+    color: white;
+}
+
+.btn-outline {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(201,168,76,0.4);
+    color: var(--gold-light);
+}
+
+.hidden {
+    display: none !important;
+}
+
+.kode-box {
+    text-align: center;
+    background: rgba(0,0,0,0.30);
+    border: 2px dashed var(--gold);
+    border-radius: 18px;
+    padding: 18px 12px;
+    margin: 18px 0;
+}
+
+.kode-label {
+    font-size: 11px;
+    color: rgba(255,255,255,0.62);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+}
+
+.kode-berkah {
+    font-size: 34px;
+    color: var(--gold-light);
+    font-weight: 800;
+    letter-spacing: 2px;
+    word-break: break-word;
+}
+
+.note {
+    background: rgba(201,168,76,0.10);
+    border: 1px solid rgba(201,168,76,0.28);
+    border-radius: 14px;
+    padding: 12px;
+    color: rgba(255,255,255,0.82);
+    font-size: 12px;
+    line-height: 1.55;
+    margin: 12px 0;
+}
+
+.success-icon {
+    text-align: center;
+    font-size: 58px;
+    margin: 8px 0 4px;
+}
+
+.status-pill {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 800;
+    margin-top: 8px;
+}
+
+.status-ready {
+    background: rgba(245,158,11,0.13);
+    color: #FCD34D;
+    border: 1px solid rgba(245,158,11,0.45);
+}
+
+.status-done {
+    background: rgba(16,185,129,0.13);
+    color: #A7F3D0;
+    border: 1px solid rgba(16,185,129,0.45);
+}
+
+.loading {
+    text-align: center;
+    padding: 25px 0;
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.error-box {
+    text-align: center;
+    background: rgba(239,68,68,0.13);
+    border: 1px solid rgba(239,68,68,0.45);
+    color: #FCA5A5;
+    border-radius: 16px;
+    padding: 16px;
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+.footer {
+    text-align: center;
+    color: rgba(255,255,255,0.45);
+    font-size: 11px;
+    margin-top: 18px;
+    line-height: 1.5;
+}
+
+.live-time {
+    text-align: center;
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.09);
+    border-radius: 12px;
+    padding: 10px;
+    color: var(--gold-light);
+    font-weight: 800;
+    font-family: monospace;
+    margin-top: 14px;
+}
+
+.small-link {
+    text-align: center;
+    margin-top: 12px;
+    color: rgba(255,255,255,0.55);
+    font-size: 11px;
+}
+
+@media (max-width: 430px) {
+    body {
+        padding: 12px;
+        align-items: flex-start;
+    }
+
+    .card {
+        padding: 20px;
+        border-radius: 20px;
+    }
+
+    h1 {
+        font-size: 30px;
+    }
+
+    .kode-berkah {
+        font-size: 28px;
+    }
+}
 </style>
 </head>
 <body>
 
 <div class="card">
-    
-    <div id="area-klaim">
-        <h2>🎁 Buka Rezeki Anda</h2>
-        <p class="subtitle">Isi data singkat di bawah ini untuk menjemput rezeki berkah dari donatur.</p>
-        
-        <input type="hidden" id="id_campaign" value="CPN-CONTOH"> 
-        
-        <div class="form-group">
-            <label>Lokasi Scan (Asal Masjid)</label>
-            <input type="text" id="lokasi_scan" placeholder="Misal: Masjid Al-Ikhlas" style="text-transform: none;">
-        </div>
-        <div class="form-group">
-            <label>Nama Lengkap</label>
-            <input type="text" id="nama_jamaah" placeholder="Nama Anda" style="text-transform: none;">
-        </div>
-        <div class="form-group">
-            <label>Nomor WhatsApp</label>
-            <input type="number" id="wa_jamaah" placeholder="0812xxxxxx" style="text-transform: none;">
-        </div>
-        <button class="btn" id="btn-klaim" onclick="klaimVoucher()">CEK REZEKI SAYA</button>
-    </div>
+    <div class="content">
 
-    <div id="area-redeem">
-        <h2>🎟️ REZEKI TERSEDIA!</h2>
-        <p class="subtitle">Bawa layar HP ini ke kasir/merchant terdekat.</p>
-        
-        <div class="kode-voucher" id="tampil-kode">RZK-XXXX</div>
-        
-        <div style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 12px; margin-top: 20px;">
-            <label style="color: #6EE7B7; font-size: 13px; text-align: center; margin-bottom: 10px;">🏪 AREA PENUKARAN KASIR</label>
-            <p style="font-size: 11px; opacity: 0.7; margin-bottom: 15px;">Tanyakan Kode Kasir kepada penjaga toko, lalu ketik di bawah ini.</p>
-            
-            <input type="text" id="input-kode-meja" placeholder="KODE KASIR (Misal: MPH-01)" style="text-align: center; font-weight: bold; font-size: 16px;">
-            
-            <div class="checkbox-area">
-                <input type="checkbox" id="cek-lokasi" onchange="cekValidasiTukar()">
-                <label for="cek-lokasi">Saya sudah mengetik Kode Kasir yang benar dan saat ini sedang berada di depan kasir.</label>
+        <div class="logo-wrap">
+            <img src="Logo%20Power%20of%20Masjid.png" alt="Power of Masjid">
+        </div>
+
+        <div id="area-loading" class="loading">
+            ⏳ Memuat Program Rezeki Berkah...
+        </div>
+
+        <div id="area-error" class="hidden">
+            <div class="error-box" id="error-text">
+                Program tidak ditemukan.
+            </div>
+            <div class="footer">
+                Power of Masjid<br>
+                Memakmurkan Masjid, Menguatkan Umat.
+            </div>
+        </div>
+
+        <div id="area-klaim" class="hidden">
+            <div style="text-align:center;">
+                <div class="badge">REZEKI BERKAH</div>
             </div>
 
-            <button class="btn btn-redeem" id="btn-hangus" onclick="prosesTukar()" disabled>TERIMA REZEKI</button>
+            <h1>Ambil Rezeki Berkah</h1>
+            <p class="subtitle">
+                Silakan isi nama dan nomor WhatsApp untuk mendapatkan Kode Berkah.
+            </p>
+
+            <div class="info-program">
+                <div class="info-row">
+                    <div class="info-label">Program</div>
+                    <div class="info-value" id="info-program">-</div>
+                </div>
+                <div class="info-row">
+                    <div class="info-label">Sahabat Berkah</div>
+                    <div class="info-value" id="info-sponsor">-</div>
+                </div>
+                <div class="info-row">
+                    <div class="info-label">Manfaat</div>
+                    <div class="info-desc" id="info-manfaat">-</div>
+                </div>
+                <div class="info-row">
+                    <div class="info-label">Masjid Lokasi Distribusi</div>
+                    <div class="info-value" id="info-masjid">-</div>
+                </div>
+                <div class="info-row">
+                    <div class="info-label">Titik Ambil Berkah</div>
+                    <div class="info-value" id="info-merchant">-</div>
+                    <div class="info-desc" id="info-alamat-merchant"></div>
+                </div>
+            </div>
+
+            <input type="hidden" id="id_campaign">
+            <input type="hidden" id="id_masjid">
+
+            <div class="form-group">
+                <label>Nama Lengkap</label>
+                <input type="text" id="nama_jamaah" placeholder="Tulis nama Anda">
+            </div>
+
+            <div class="form-group">
+                <label>Nomor WhatsApp</label>
+                <input type="tel" id="wa_jamaah" placeholder="0812xxxxxx">
+            </div>
+
+            <button class="btn" id="btn-klaim" onclick="ambilKodeBerkah()">
+                AMBIL KODE BERKAH
+            </button>
+
+            <div class="note">
+                Kode Berkah hanya berlaku untuk program ini dan mengikuti kuota yang tersedia. Gunakan dengan amanah.
+            </div>
         </div>
+
+        <div id="area-kode" class="hidden">
+            <div class="success-icon">🌿</div>
+            <h2>Alhamdulillah</h2>
+            <p class="subtitle">
+                Kode Berkah Anda berhasil dibuat.
+            </p>
+
+            <div class="kode-box">
+                <div class="kode-label">Kode Berkah</div>
+                <div class="kode-berkah" id="tampil-kode">-</div>
+                <div class="status-pill status-ready">Kode Dibuat</div>
+            </div>
+
+            <div class="info-program">
+                <div class="info-row">
+                    <div class="info-label">Program</div>
+                    <div class="info-value" id="hasil-program">-</div>
+                </div>
+                <div class="info-row">
+                    <div class="info-label">Titik Ambil Berkah</div>
+                    <div class="info-value" id="hasil-merchant">-</div>
+                    <div class="info-desc" id="hasil-alamat-merchant"></div>
+                </div>
+            </div>
+
+            <div class="note">
+                Tunjukkan kode ini kepada petugas di Titik Ambil Berkah. Jangan berikan kode kepada orang lain.
+            </div>
+
+            <button class="btn btn-outline" onclick="salinKodeBerkah()">SALIN KODE BERKAH</button>
+            <button class="btn btn-success" onclick="tampilkanAreaAmbil()">SAYA SUDAH DI TITIK AMBIL</button>
+        </div>
+
+        <div id="area-ambil" class="hidden">
+            <h2>Ambil Berkah</h2>
+            <p class="subtitle">
+                Bagian ini digunakan saat Anda sudah berada di Titik Ambil Berkah.
+            </p>
+
+            <div class="kode-box">
+                <div class="kode-label">Kode Berkah</div>
+                <div class="kode-berkah" id="tampil-kode-ambil">-</div>
+            </div>
+
+            <div class="form-group">
+                <label>Kode Titik Ambil Berkah</label>
+                <input type="text" id="kode_merchant" placeholder="Minta kode kepada petugas" style="text-align:center; font-weight:800; letter-spacing:1px;">
+            </div>
+
+            <button class="btn btn-success" id="btn-ambil" onclick="konfirmasiAmbilBerkah()">
+                KONFIRMASI AMBIL BERKAH
+            </button>
+
+            <button class="btn btn-outline" onclick="kembaliKeKode()">KEMBALI KE KODE</button>
+
+            <div class="note">
+                Kode Titik Ambil hanya diketahui petugas/merchant. Ini untuk memastikan Rezeki Berkah tidak salah digunakan.
+            </div>
+        </div>
+
+        <div id="area-sukses" class="hidden">
+            <div class="success-icon">✅</div>
+            <h2>Berhasil Diambil</h2>
+            <p class="subtitle">
+                Semoga menjadi rezeki yang bermanfaat dan penuh berkah.
+            </p>
+
+            <div class="kode-box">
+                <div class="kode-label">Kode Berkah</div>
+                <div class="kode-berkah" id="tampil-kode-sukses">-</div>
+                <div class="status-pill status-done">Sudah Diambil</div>
+            </div>
+
+            <div class="live-time" id="live-time">Memuat waktu...</div>
+
+            <div class="note">
+                Terima kasih sudah menggunakan Rezeki Berkah melalui Power of Masjid.
+            </div>
+        </div>
+
+        <div class="footer">
+            Power of Masjid<br>
+            Memakmurkan Masjid, Menguatkan Umat.
+        </div>
+
     </div>
-
-    <div id="area-sukses">
-        <div class="anim-sukses">✅</div>
-        <h2 style="color: var(--success);">ALHAMDULILLAH!</h2>
-        <p class="subtitle" style="margin-top: 10px; font-size: 14px;">Validasi sah. Tunjukkan layar ini ke Kasir.</p>
-        
-        <div class="live-time" id="live-time">Memuat waktu...</div>
-
-        <p style="font-size: 12px; opacity: 0.8; margin-top: 20px;">Silakan nikmati jamuan rezeki Anda. Layar ini adalah bukti resmi sistem.</p>
-    </div>
-
 </div>
 
 <script>
-const API_URL = 'https://script.google.com/macros/s/AKfycbwX220QtX433eT9NhRH2TTc3S_J56kX0B4Kq9Cv_3tnySuE3osUMKc-mESjNUiFb4jvSA/exec';
-let simpanKodeVoucher = '';
+const API_URL = 'https://script.google.com/macros/s/AKfycbyS_CfKq7wFsoG_AAWpMehVQOaexYLUFxOqESponCdXxWNJUQQ0L-krYumzVMnNBwXhIQ/exec';
 
-const urlParams = new URLSearchParams(window.location.search);
-if(urlParams.has('camp')) document.getElementById('id_campaign').value = urlParams.get('camp');
+let DATA_PROGRAM = null;
+let KODE_BERKAH = '';
+let ID_CAMPAIGN = '';
+let ID_MASJID = '';
 
-function klaimVoucher() {
-    let camp = document.getElementById('id_campaign').value;
-    let lokasi = document.getElementById('lokasi_scan').value;
-    let nama = document.getElementById('nama_jamaah').value;
-    let wa = document.getElementById('wa_jamaah').value;
+window.addEventListener('load', function() {
+    ID_CAMPAIGN = getParam('camp') || getParam('campaign') || '';
+    ID_MASJID = getParam('masjid') || getParam('m') || '';
 
-    if(!lokasi || !nama || !wa) return alert('Mohon lengkapi semua data diri Anda.');
+    document.getElementById('id_campaign').value = ID_CAMPAIGN;
+    document.getElementById('id_masjid').value = ID_MASJID;
 
-    let btn = document.getElementById('btn-klaim');
-    btn.disabled = true; btn.textContent = 'MENCARI REZEKI...';
+    loadProgramPublic();
+    setInterval(updateLiveTime, 1000);
+});
 
-    fetch(API_URL, {
-        method: 'POST',
-        body: JSON.stringify({ action: 'addVoucherScan', id_campaign: camp, masjid: lokasi, nama: nama, wa: wa })
-    }).then(res => res.json()).then(data => {
-        if(data.status === 'ok') {
-            simpanKodeVoucher = data.kode;
-            document.getElementById('tampil-kode').textContent = data.kode;
-            document.getElementById('area-klaim').style.display = 'none';
-            document.getElementById('area-redeem').style.display = 'block';
-        } else {
-            alert('GAGAL: ' + data.message);
-            btn.disabled = false; btn.textContent = 'CEK REZEKI SAYA';
-        }
-    }).catch(err => {
-        alert('Gangguan sinyal. Silakan coba lagi.');
-        btn.disabled = false; btn.textContent = 'CEK REZEKI SAYA';
+function getParam(name) {
+    return new URLSearchParams(window.location.search).get(name);
+}
+
+function showArea(id) {
+    ['area-loading', 'area-error', 'area-klaim', 'area-kode', 'area-ambil', 'area-sukses'].forEach(function(areaId) {
+        document.getElementById(areaId).classList.add('hidden');
+    });
+
+    document.getElementById(id).classList.remove('hidden');
+}
+
+function setError(msg) {
+    document.getElementById('error-text').textContent = msg;
+    showArea('area-error');
+}
+
+function escapeHtml(text) {
+    return String(text || '').replace(/[&<>"']/g, function(match) {
+        return {
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#039;'
+        }[match];
     });
 }
 
-function cekValidasiTukar() {
-    let btn = document.getElementById('btn-hangus');
-    let cek = document.getElementById('cek-lokasi').checked;
-    btn.disabled = !cek;
+function normalizeWa(wa) {
+    let clean = String(wa || '').replace(/\D/g, '');
+
+    if (clean.startsWith('0')) {
+        clean = '62' + clean.slice(1);
+    }
+
+    if (clean.startsWith('8')) {
+        clean = '62' + clean;
+    }
+
+    return clean;
 }
 
-function startLiveTime() {
-    setInterval(() => {
-        let now = new Date();
-        document.getElementById('live-time').textContent = now.toLocaleDateString('id-ID') + ' ' + now.toLocaleTimeString('id-ID');
-    }, 1000);
+function formatWaForDisplay(wa) {
+    const clean = normalizeWa(wa);
+    if (!clean) return '';
+    return '+' + clean;
 }
 
-function prosesTukar() {
-    let kodeMeja = document.getElementById('input-kode-meja').value.trim();
-    if(!kodeMeja) return alert('Silakan ketik Kode Kasir terlebih dahulu.');
-
-    let btn = document.getElementById('btn-hangus');
-    btn.disabled = true; btn.textContent = 'MEMVALIDASI...';
-
-    fetch(API_URL, {
+function postData(payload) {
+    return fetch(API_URL, {
         method: 'POST',
-        body: JSON.stringify({ action: 'redeemVoucher', kode_merchant: kodeMeja, kode: simpanKodeVoucher })
-    }).then(res => res.json()).then(data => {
-        if(data.status === 'ok') {
-            document.getElementById('area-redeem').style.display = 'none';
-            document.getElementById('area-sukses').style.display = 'block';
-            startLiveTime(); 
-        } else {
-            alert('PENUKARAN DITOLAK: ' + data.message);
-            btn.disabled = false; btn.textContent = 'TERIMA REZEKI';
+        body: JSON.stringify(payload)
+    }).then(function(res) {
+        return res.json();
+    });
+}
+
+async function loadProgramPublic() {
+    showArea('area-loading');
+
+    if (!ID_CAMPAIGN) {
+        setError('Link Rezeki Berkah tidak lengkap. ID program tidak ditemukan.');
+        return;
+    }
+
+    try {
+        const url = API_URL
+            + '?action=getCampaignPublic'
+            + '&camp=' + encodeURIComponent(ID_CAMPAIGN)
+            + (ID_MASJID ? '&masjid=' + encodeURIComponent(ID_MASJID) : '')
+            + '&_t=' + Date.now();
+
+        const res = await fetch(url);
+        const json = await res.json();
+
+        if (json.status !== 'ok') {
+            setError(json.message || 'Program Rezeki Berkah tidak ditemukan atau belum aktif.');
+            return;
         }
-    }).catch(err => {
-        alert('Gangguan sinyal. Silakan coba lagi.');
-        btn.disabled = false; btn.textContent = 'TERIMA REZEKI';
+
+        DATA_PROGRAM = json.data || {};
+
+        const idMasjidFromData = DATA_PROGRAM.id_masjid || DATA_PROGRAM.ID_MASJID || '';
+        if (!ID_MASJID && idMasjidFromData) {
+            ID_MASJID = idMasjidFromData;
+            document.getElementById('id_masjid').value = ID_MASJID;
+        }
+
+        renderProgramInfo();
+        showArea('area-klaim');
+    } catch (e) {
+        setError('Gagal memuat Program Rezeki Berkah. Periksa koneksi internet lalu coba lagi.');
+    }
+}
+
+function renderProgramInfo() {
+    const namaProgram = DATA_PROGRAM.nama_program || DATA_PROGRAM.NAMA_PROGRAM || 'Program Rezeki Berkah';
+    const sponsor = DATA_PROGRAM.nama_sponsor || DATA_PROGRAM.NAMA_SPONSOR || DATA_PROGRAM.nama_perusahaan || DATA_PROGRAM.NAMA_PERUSAHAAN || 'Sahabat Berkah';
+    const merk = DATA_PROGRAM.merk_produk || DATA_PROGRAM.MERK_PRODUK || '';
+    const jenis = DATA_PROGRAM.jenis_rezeki || DATA_PROGRAM.JENIS_REZEKI || '';
+    const deskripsi = DATA_PROGRAM.deskripsi_rezeki || DATA_PROGRAM.DESKRIPSI_REZEKI || 'Manfaat Rezeki Berkah tersedia untuk jamaah.';
+    const masjid = DATA_PROGRAM.nama_masjid || DATA_PROGRAM.NAMA_MASJID || DATA_PROGRAM.lokasi_scan || DATA_PROGRAM.LOKASI_SCAN || 'Masjid lokasi distribusi';
+    const merchant = DATA_PROGRAM.nama_merchant || DATA_PROGRAM.NAMA_MERCHANT || DATA_PROGRAM.nama_warung_toko || DATA_PROGRAM.NAMA_WARUNG_TOKO || 'Titik Ambil Berkah';
+    const alamatMerchant = DATA_PROGRAM.alamat_merchant || DATA_PROGRAM.ALAMAT_MERCHANT || DATA_PROGRAM.alamat_cabang || DATA_PROGRAM.ALAMAT_CABANG || '';
+
+    document.getElementById('info-program').textContent = namaProgram;
+    document.getElementById('info-sponsor').textContent = merk ? sponsor + ' — ' + merk : sponsor;
+    document.getElementById('info-manfaat').textContent = jenis ? jenis + ': ' + deskripsi : deskripsi;
+    document.getElementById('info-masjid').textContent = masjid;
+    document.getElementById('info-merchant').textContent = merchant;
+    document.getElementById('info-alamat-merchant').textContent = alamatMerchant;
+
+    document.getElementById('hasil-program').textContent = namaProgram;
+    document.getElementById('hasil-merchant').textContent = merchant;
+    document.getElementById('hasil-alamat-merchant').textContent = alamatMerchant;
+}
+
+async function ambilKodeBerkah() {
+    const nama = document.getElementById('nama_jamaah').value.trim();
+    const waInput = document.getElementById('wa_jamaah').value.trim();
+    const wa = normalizeWa(waInput);
+
+    if (!nama) {
+        alert('Nama wajib diisi.');
+        return;
+    }
+
+    if (!wa || wa.length < 10) {
+        alert('Nomor WhatsApp belum benar.');
+        return;
+    }
+
+    const btn = document.getElementById('btn-klaim');
+    btn.disabled = true;
+    btn.textContent = 'MEMBUAT KODE BERKAH...';
+
+    try {
+        const masjidName = DATA_PROGRAM.nama_masjid || DATA_PROGRAM.NAMA_MASJID || '';
+
+        const json = await postData({
+            action: 'addVoucherScan',
+            id_campaign: ID_CAMPAIGN,
+            id_masjid: ID_MASJID,
+            nama_jamaah: nama,
+            no_wa: wa,
+            wa_jamaah: wa,
+            lokasi_scan: masjidName
+        });
+
+        if (json.status === 'ok') {
+            KODE_BERKAH = json.kode || json.kode_voucher || json.kode_berkah || '';
+
+            if (!KODE_BERKAH) {
+                setError('Kode Berkah berhasil dibuat, tetapi kode tidak diterima dari server.');
+                return;
+            }
+
+            simpanKodeLokal(KODE_BERKAH);
+
+            document.getElementById('tampil-kode').textContent = KODE_BERKAH;
+            document.getElementById('tampil-kode-ambil').textContent = KODE_BERKAH;
+            document.getElementById('tampil-kode-sukses').textContent = KODE_BERKAH;
+
+            showArea('area-kode');
+        } else {
+            alert(json.message || 'Kode Berkah belum bisa dibuat.');
+        }
+    } catch (e) {
+        alert('Gagal membuat Kode Berkah. Periksa koneksi internet.');
+    }
+
+    btn.disabled = false;
+    btn.textContent = 'AMBIL KODE BERKAH';
+}
+
+function simpanKodeLokal(kode) {
+    try {
+        localStorage.setItem('rezeki_berkah_' + ID_CAMPAIGN, JSON.stringify({
+            kode: kode,
+            waktu: new Date().toISOString()
+        }));
+    } catch(e) {}
+}
+
+function salinKodeBerkah() {
+    if (!KODE_BERKAH) return;
+
+    navigator.clipboard.writeText(KODE_BERKAH).then(function() {
+        alert('Kode Berkah berhasil disalin.');
+    }).catch(function() {
+        alert('Gagal menyalin Kode Berkah.');
+    });
+}
+
+function tampilkanAreaAmbil() {
+    if (!KODE_BERKAH) {
+        alert('Kode Berkah belum tersedia.');
+        return;
+    }
+
+    showArea('area-ambil');
+}
+
+function kembaliKeKode() {
+    showArea('area-kode');
+}
+
+async function konfirmasiAmbilBerkah() {
+    const kodeMerchant = document.getElementById('kode_merchant').value.trim().toUpperCase();
+
+    if (!KODE_BERKAH) {
+        alert('Kode Berkah belum tersedia.');
+        return;
+    }
+
+    if (!kodeMerchant) {
+        alert('Masukkan Kode Titik Ambil Berkah dari petugas.');
+        return;
+    }
+
+    const btn = document.getElementById('btn-ambil');
+    btn.disabled = true;
+    btn.textContent = 'MEMERIKSA KODE...';
+
+    try {
+        const json = await postData({
+            action: 'redeemVoucher',
+            kode_voucher: KODE_BERKAH,
+            kode_berkah: KODE_BERKAH,
+            kode_merchant: kodeMerchant
+        });
+
+        if (json.status === 'ok') {
+            showArea('area-sukses');
+        } else {
+            alert(json.message || 'Kode Titik Ambil tidak sesuai atau Kode Berkah sudah digunakan.');
+        }
+    } catch (e) {
+        alert('Gagal konfirmasi. Periksa koneksi internet.');
+    }
+
+    btn.disabled = false;
+    btn.textContent = 'KONFIRMASI AMBIL BERKAH';
+}
+
+function updateLiveTime() {
+    const el = document.getElementById('live-time');
+    if (!el) return;
+
+    const now = new Date();
+    el.textContent = now.toLocaleString('id-ID', {
+        weekday: 'long',
+        day: '2-digit',
+        month: 'long',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
     });
 }
 </script>
+
 </body>
 </html>
