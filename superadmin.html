@@ -6,86 +6,543 @@
 <title>Superadmin — Power of Masjid</title>
 <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
-:root { --bg-dark: #0A2F1C; --panel-bg: #113F27; --gold: #C9A84C; --text-light: #E8F5EE; --border: rgba(201, 168, 76, 0.2); --danger: #DC2626; --success: #10B981; }
+:root {
+  --bg-dark: #0A2F1C;
+  --panel-bg: #113F27;
+  --panel-soft: #154D31;
+  --gold: #C9A84C;
+  --text-light: #E8F5EE;
+  --border: rgba(201, 168, 76, 0.22);
+  --danger: #DC2626;
+  --success: #10B981;
+  --warning: #F59E0B;
+}
+
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg-dark); color: var(--text-light); }
 
-.splash, .login-wrap { position: fixed; inset: 0; background: var(--bg-dark); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; }
+body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background: var(--bg-dark);
+  color: var(--text-light);
+}
+
+.splash,
+.login-wrap {
+  position: fixed;
+  inset: 0;
+  background: var(--bg-dark);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.splash { z-index: 9999; }
 .splash.hide { opacity: 0; pointer-events: none; transition: 0.5s; }
-.login-wrap { z-index: 9998; display: none; padding: 20px; }
+
+.login-wrap {
+  z-index: 9998;
+  display: none;
+  padding: 20px;
+}
+
 .login-wrap.show { display: flex; }
-.login-card { background: var(--panel-bg); border: 1px solid var(--border); border-radius: 16px; padding: 30px 20px; text-align: center; width: 100%; max-width: 360px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
 
-.header { background: linear-gradient(180deg, #051A0F, var(--bg-dark)); padding: 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; }
-.logo-area { display: flex; align-items: center; gap: 10px; }
-.brand-name { font-weight: 700; font-size: 16px; letter-spacing: 1px; color: white; }
-.brand-sub { font-size: 11px; color: var(--gold); text-transform: uppercase; letter-spacing: 2px; }
-.btn-logout { background: rgba(201,168,76,0.1); border: 1px solid var(--gold); color: var(--gold); padding: 6px 12px; border-radius: 6px; font-size: 12px; cursor: pointer; font-family: inherit; }
+.login-card {
+  background: var(--panel-bg);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 30px 20px;
+  text-align: center;
+  width: 100%;
+  max-width: 360px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
 
-.nav-scroll { background: var(--panel-bg); display: flex; overflow-x: auto; border-bottom: 1px solid var(--border); }
-.nav-tab { padding: 15px 20px; font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.6); white-space: nowrap; cursor: pointer; border-bottom: 3px solid transparent; transition: 0.3s; }
-.nav-tab.active { color: var(--gold); border-bottom-color: var(--gold); }
+.header {
+  background: linear-gradient(180deg, #051A0F, var(--bg-dark));
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
 
-.content { padding: 20px; max-width: 800px; margin: 0 auto; padding-bottom: 80px; }
-.tab-content { display: none; animation: fadeIn 0.3s ease; }
+.logo-area {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.brand-name {
+  font-weight: 700;
+  font-size: 16px;
+  letter-spacing: 1px;
+  color: white;
+}
+
+.brand-sub {
+  font-size: 11px;
+  color: var(--gold);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.btn-logout {
+  background: rgba(201,168,76,0.1);
+  border: 1px solid var(--gold);
+  color: var(--gold);
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.nav-scroll {
+  background: var(--panel-bg);
+  display: flex;
+  overflow-x: auto;
+  border-bottom: 1px solid var(--border);
+}
+
+.nav-tab {
+  padding: 15px 20px;
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.6);
+  white-space: nowrap;
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  transition: 0.3s;
+}
+
+.nav-tab.active {
+  color: var(--gold);
+  border-bottom-color: var(--gold);
+}
+
+.content {
+  padding: 20px;
+  max-width: 900px;
+  margin: 0 auto;
+  padding-bottom: 80px;
+}
+
+.tab-content {
+  display: none;
+  animation: fadeIn 0.3s ease;
+}
+
 .tab-content.active { display: block; }
-@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-.card { background: var(--panel-bg); border: 1px solid var(--border); border-radius: 16px; padding: 20px; margin-bottom: 20px; }
-.card-title { font-size: 16px; font-weight: 700; color: var(--gold); margin-bottom: 15px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 10px; }
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
 
-.stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-.stat-box { background: rgba(0,0,0,0.2); border: 1px solid var(--border); border-radius: 12px; padding: 15px; text-align: center; }
-.stat-val { font-family: 'Amiri', serif; font-size: 28px; color: var(--gold); font-weight: 700; }
-.stat-lbl { font-size: 11px; color: rgba(255,255,255,0.7); margin-top: 5px; text-transform: uppercase; letter-spacing: 1px; }
+.card {
+  background: var(--panel-bg);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
 
-.progress-bg { background: rgba(255,255,255,0.1); height: 12px; border-radius: 20px; overflow: hidden; margin: 15px 0 8px; }
-.progress-fill { background: linear-gradient(90deg, #C9A84C, #FDE68A); height: 100%; border-radius: 20px; width: 0%; transition: width 1s ease; }
-.progress-info { display: flex; justify-content: space-between; font-size: 12px; color: rgba(255,255,255,0.8); }
+.card-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--gold);
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  padding-bottom: 10px;
+}
 
-.form-group { margin-bottom: 15px; text-align: left; }
-.form-group label { display: block; font-size: 12px; font-weight: 500; color: rgba(255,255,255,0.8); margin-bottom: 6px; }
-.form-control { width: 100%; background: rgba(0,0,0,0.3); border: 1px solid var(--border); color: white; padding: 12px 15px; border-radius: 10px; font-family: inherit; font-size: 14px; outline: none; }
+.stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
+.stat-box {
+  background: rgba(0,0,0,0.2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 15px;
+  text-align: center;
+}
+
+.stat-val {
+  font-family: 'Amiri', serif;
+  font-size: 28px;
+  color: var(--gold);
+  font-weight: 700;
+}
+
+.stat-lbl {
+  font-size: 11px;
+  color: rgba(255,255,255,0.7);
+  margin-top: 5px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.progress-bg {
+  background: rgba(255,255,255,0.1);
+  height: 12px;
+  border-radius: 20px;
+  overflow: hidden;
+  margin: 15px 0 8px;
+}
+
+.progress-fill {
+  background: linear-gradient(90deg, #C9A84C, #FDE68A);
+  height: 100%;
+  border-radius: 20px;
+  width: 0%;
+  transition: width 1s ease;
+}
+
+.progress-info {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: rgba(255,255,255,0.8);
+}
+
+.form-group {
+  margin-bottom: 15px;
+  text-align: left;
+}
+
+.form-group label {
+  display: block;
+  font-size: 12px;
+  font-weight: 500;
+  color: rgba(255,255,255,0.8);
+  margin-bottom: 6px;
+}
+
+.form-control {
+  width: 100%;
+  background: rgba(0,0,0,0.3);
+  border: 1px solid var(--border);
+  color: white;
+  padding: 12px 15px;
+  border-radius: 10px;
+  font-family: inherit;
+  font-size: 14px;
+  outline: none;
+}
+
 .form-control:focus { border-color: var(--gold); }
-.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-.btn-primary { width: 100%; background: var(--gold); color: var(--bg-dark); border: none; padding: 14px; border-radius: 10px; font-weight: 700; font-size: 14px; cursor: pointer; font-family: inherit; margin-top: 10px; }
-.btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
 
-.scroll-list { max-height: 450px; overflow-y: auto; padding-right: 5px; }
+textarea.form-control {
+  min-height: 75px;
+  resize: vertical;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+@media (max-width: 640px) {
+  .form-row { grid-template-columns: 1fr; }
+  .stats-grid { grid-template-columns: 1fr 1fr; }
+}
+
+.btn-primary,
+.btn-secondary,
+.btn-danger,
+.btn-copy {
+  width: 100%;
+  border: none;
+  padding: 14px;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  font-family: inherit;
+  margin-top: 10px;
+}
+
+.btn-primary {
+  background: var(--gold);
+  color: var(--bg-dark);
+}
+
+.btn-secondary {
+  background: rgba(255,255,255,0.08);
+  color: white;
+  border: 1px solid var(--border);
+}
+
+.btn-danger {
+  background: rgba(220,38,38,0.14);
+  color: #FCA5A5;
+  border: 1px solid rgba(220,38,38,0.7);
+}
+
+.btn-copy {
+  background: rgba(16,185,129,0.15);
+  color: #A7F3D0;
+  border: 1px solid rgba(16,185,129,0.55);
+}
+
+button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.scroll-list {
+  max-height: 460px;
+  overflow-y: auto;
+  padding-right: 5px;
+}
+
 .scroll-list::-webkit-scrollbar { width: 4px; }
 .scroll-list::-webkit-scrollbar-thumb { background: rgba(201,168,76,0.3); border-radius: 4px; }
 
-.masjid-card { background: white; border-radius: 12px; padding: 15px; margin-bottom: 15px; color: #1F2937; position: relative; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: all 0.3s ease;}
+.masjid-card {
+  background: white;
+  border-radius: 12px;
+  padding: 15px;
+  margin-bottom: 15px;
+  color: #1F2937;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
 .card-aktif { border-left: 6px solid #10B981; }
 .card-pasif { border-left: 6px solid #EF4444; }
 .card-belajar { border-left: 6px solid #F59E0B; }
-.masjid-card h4 { font-size: 16px; margin-bottom: 4px; color: #111827; }
-.masjid-card p { font-size: 12px; color: #4B5563; margin-bottom: 10px; }
-.status-badge { display: inline-block; padding: 4px 10px; border-radius: 20px; font-size: 10px; font-weight: 700; text-transform: uppercase; margin-bottom: 10px; }
+
+.masjid-card h4 {
+  font-size: 16px;
+  margin-bottom: 4px;
+  color: #111827;
+}
+
+.masjid-card p {
+  font-size: 12px;
+  color: #4B5563;
+  margin-bottom: 10px;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
 .badge-aktif { background: #ECFDF5; color: #10B981; border: 1px solid #10B981; }
 .badge-pasif { background: #FEF2F2; color: #EF4444; border: 1px solid #EF4444; }
 .badge-belajar { background: #FFFBEB; color: #D97706; border: 1px solid #F59E0B; }
-.check-list { background: #F3F4F6; padding: 10px; border-radius: 8px; font-size: 12px; margin-bottom: 12px; }
+
+.check-list {
+  background: #F3F4F6;
+  padding: 10px;
+  border-radius: 8px;
+  font-size: 12px;
+  margin-bottom: 12px;
+}
+
 .check-list div { margin-bottom: 4px; }
-.btn-warning { width: 100%; background: #EF4444; color: white; border: none; padding: 10px; border-radius: 8px; font-weight: 600; font-size: 12px; cursor: pointer; transition: 0.2s; }
-.btn-warning:hover { background: #DC2626; }
-.btn-small { background: rgba(255,255,255,0.1); border: 1px solid var(--border); color: white; padding: 6px 12px; border-radius: 6px; font-size: 11px; cursor: pointer; }
-.btn-small.dark { background: white; color: #1F2937; border: 1px solid #D1D5DB; }
 
-.item-card { background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 15px; margin-bottom: 10px; cursor: pointer; transition: background 0.2s; }
-.item-card:hover { background: rgba(0,0,0,0.3); border-color: var(--gold); }
-.action-buttons { display: none; margin-top: 10px; gap: 8px; padding-top: 10px; border-top: 1px dashed rgba(255,255,255,0.1); }
-.item-card.expanded .action-buttons { display: flex; }
-.btn-action { flex: 1; padding: 8px; border-radius: 6px; font-size: 11px; font-weight: 600; cursor: pointer; border: none; text-align: center; }
-.btn-edit { background: rgba(201,168,76,0.1); color: var(--gold); border: 1px solid rgba(201,168,76,0.3); }
-.btn-del { background: rgba(220, 38, 38, 0.1); color: #FCA5A5; border: 1px solid #DC2626; }
+.btn-warning {
+  width: 100%;
+  background: #EF4444;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 12px;
+  cursor: pointer;
+}
 
-select.form-control option { background: var(--panel-bg); color: white; }
+.btn-small {
+  background: white;
+  color: #1F2937;
+  border: 1px solid #D1D5DB;
+  padding: 8px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  display: block;
+}
 
-.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(100px);background:white;color:var(--bg-dark);font-size:13px;font-weight:600;padding:12px 24px;border-radius:20px;transition:transform 0.3s;z-index:9999;}
-.toast.show{transform:translateX(-50%) translateY(0);}
+.item-card {
+  background: rgba(0,0,0,0.2);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 12px;
+  padding: 15px;
+  margin-bottom: 10px;
+  transition: background 0.2s;
+}
+
+.item-card:hover {
+  background: rgba(0,0,0,0.3);
+  border-color: var(--gold);
+}
+
+.item-title {
+  font-weight: 700;
+  color: white;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.item-sub {
+  font-size: 12px;
+  color: rgba(255,255,255,0.65);
+  margin-top: 4px;
+  line-height: 1.5;
+}
+
+.item-gold {
+  font-size: 12px;
+  color: var(--gold);
+  margin-top: 6px;
+  line-height: 1.5;
+}
+
+.item-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px dashed rgba(255,255,255,0.1);
+}
+
+.btn-action {
+  flex: 1;
+  padding: 8px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  border: none;
+  text-align: center;
+}
+
+.btn-edit {
+  background: rgba(201,168,76,0.15);
+  color: var(--gold);
+  border: 1px solid rgba(201,168,76,0.45);
+}
+
+.btn-del {
+  background: rgba(220,38,38,0.16);
+  color: #FCA5A5;
+  border: 1px solid #DC2626;
+}
+
+select.form-control option {
+  background: var(--panel-bg);
+  color: white;
+}
+
+.info-box {
+  background: rgba(201,168,76,0.08);
+  border: 1px dashed rgba(201,168,76,0.5);
+  color: rgba(255,255,255,0.82);
+  border-radius: 12px;
+  padding: 12px;
+  font-size: 12px;
+  line-height: 1.6;
+  margin-bottom: 15px;
+}
+
+.table-wrap {
+  overflow-x: auto;
+}
+
+.table-report {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 900px;
+  font-size: 12px;
+}
+
+.table-report th,
+.table-report td {
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  padding: 10px;
+  text-align: left;
+  vertical-align: top;
+}
+
+.table-report th {
+  color: var(--gold);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  background: rgba(0,0,0,0.18);
+}
+
+.table-report td {
+  color: rgba(255,255,255,0.82);
+}
+
+.status-pill {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 20px;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.status-new {
+  background: rgba(245,158,11,0.14);
+  color: #FCD34D;
+  border: 1px solid rgba(245,158,11,0.5);
+}
+
+.status-used {
+  background: rgba(16,185,129,0.14);
+  color: #A7F3D0;
+  border: 1px solid rgba(16,185,129,0.5);
+}
+
+.toast {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  background: white;
+  color: var(--bg-dark);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 12px 24px;
+  border-radius: 20px;
+  transition: transform 0.3s;
+  z-index: 9999;
+  max-width: 90%;
+  text-align: center;
+}
+
+.toast.show {
+  transform: translateX(-50%) translateY(0);
+}
 </style>
 </head>
+
 <body>
 
 <div class="splash" id="splash">
@@ -98,7 +555,6 @@ select.form-control option { background: var(--panel-bg); color: white; }
     <img src="Logo%20Power%20of%20Masjid.png" style="width:80px; margin-bottom:15px;" alt="Logo">
     <h2 style="font-size:18px; margin-bottom:5px;">Otoritas Pusat</h2>
     <p style="font-size:12px; color:rgba(255,255,255,0.6); margin-bottom:20px;">Masukkan PIN Superadmin</p>
-    
     <div class="form-group">
       <input type="password" class="form-control" id="pin-superadmin" placeholder="••••••" maxlength="6" style="text-align:center; letter-spacing:8px; font-size:18px;">
     </div>
@@ -123,8 +579,8 @@ select.form-control option { background: var(--panel-bg); color: white; }
     <div class="nav-tab active" onclick="bukaTab('dashboard', this)">DASHBOARD</div>
     <div class="nav-tab" onclick="bukaTab('masjid', this)">KELOLA MASJID</div>
     <div class="nav-tab" onclick="bukaTab('iklan', this)">IKLAN GLOBAL</div>
-    <div class="nav-tab" onclick="bukaTab('sponsor', this)">KELOLA SPONSOR</div>
-    <div class="nav-tab" onclick="bukaTab('kampanye', this)">KAMPANYE & MERCHANT</div>
+    <div class="nav-tab" onclick="bukaTab('sponsor', this)">SPONSOR TV/WEB</div>
+    <div class="nav-tab" onclick="bukaTab('berkah', this)">REZEKI BERKAH</div>
   </div>
 
   <div class="content">
@@ -143,18 +599,19 @@ select.form-control option { background: var(--panel-bg); color: white; }
           </div>
         </div>
       </div>
+
       <div class="card">
         <div class="card-title">Ekspedisi Tracker</div>
         <div class="progress-bg"><div class="progress-fill" id="ekspedisi-bar"></div></div>
         <div class="progress-info">
-          <span id="ekspedisi-text">Tercapai: 0 Masjid</span>
+          <span id="ekspedisi-text">Terdaftar: 0 Masjid</span>
           <span style="color:var(--gold); font-weight:bold;" id="ekspedisi-persen">0%</span>
         </div>
       </div>
-      
+
       <div class="card">
         <div class="card-title">Daftar Status Masjid</div>
-        <div id="loading" style="text-align:center; font-size:12px; color:rgba(255,255,255,0.6); padding: 10px; background: rgba(0,0,0,0.2); border-radius: 8px; margin-bottom: 10px;">⏳ Memuat daftar masjid...</div>
+        <div id="loading" style="text-align:center; font-size:12px; color:rgba(255,255,255,0.6); padding:10px; background:rgba(0,0,0,0.2); border-radius:8px; margin-bottom:10px;">⏳ Memuat daftar masjid...</div>
         <div id="list-masjid-container" class="scroll-list"></div>
       </div>
     </div>
@@ -162,13 +619,31 @@ select.form-control option { background: var(--panel-bg); color: white; }
     <div id="masjid" class="tab-content">
       <div class="card">
         <div class="card-title">Registrasi Masjid Baru</div>
-        <div class="form-group"><label>Nama Masjid</label><input type="text" class="form-control" id="reg-nama" placeholder="Contoh: Masjid Jami' An-Nuriyah" oninput="generateSlug()"></div>
-        <div class="form-group"><label>Kelurahan</label><input type="text" class="form-control" id="reg-kelurahan" placeholder="Contoh: Tanjung Barat" oninput="generateSlug()"></div>
-        <div class="form-group"><label>Kecamatan</label><input type="text" class="form-control" id="reg-kecamatan" placeholder="Contoh: Jagakarsa"></div>
-        <div class="form-group"><label>Slug URL</label><input type="text" class="form-control" id="reg-slug" placeholder="Otomatis terisi..." style="color:var(--gold); font-weight:bold;" readonly></div>
-        <div style="border-top: 1px dashed rgba(255,255,255,0.1); margin:15px 0;"></div>
-        <div class="form-group"><label>Email Pengurus</label><input type="email" class="form-control" id="reg-email" placeholder="dkm@gmail.com"></div>
-        <div class="form-group"><label>PIN DKM</label><input type="number" class="form-control" id="reg-pin" placeholder="123456"></div>
+        <div class="form-group">
+          <label>Nama Masjid</label>
+          <input type="text" class="form-control" id="reg-nama" placeholder="Contoh: Masjid Jami' An-Nuriyah" oninput="generateSlug()">
+        </div>
+        <div class="form-group">
+          <label>Kelurahan</label>
+          <input type="text" class="form-control" id="reg-kelurahan" placeholder="Contoh: Tanjung Barat" oninput="generateSlug()">
+        </div>
+        <div class="form-group">
+          <label>Kecamatan</label>
+          <input type="text" class="form-control" id="reg-kecamatan" placeholder="Contoh: Jagakarsa">
+        </div>
+        <div class="form-group">
+          <label>Slug URL</label>
+          <input type="text" class="form-control" id="reg-slug" placeholder="Otomatis terisi..." style="color:var(--gold); font-weight:bold;" readonly>
+        </div>
+        <div style="border-top:1px dashed rgba(255,255,255,0.1); margin:15px 0;"></div>
+        <div class="form-group">
+          <label>Email Pengurus</label>
+          <input type="email" class="form-control" id="reg-email" placeholder="dkm@gmail.com">
+        </div>
+        <div class="form-group">
+          <label>PIN DKM</label>
+          <input type="number" class="form-control" id="reg-pin" placeholder="123456">
+        </div>
         <button class="btn-primary" id="btn-tambah" onclick="tambahMasjidBaru()">SIMPAN MASJID BARU</button>
       </div>
     </div>
@@ -177,32 +652,67 @@ select.form-control option { background: var(--panel-bg); color: white; }
       <div class="card">
         <div class="card-title">Buat Iklan / Pengumuman Global</div>
         <input type="hidden" id="iklan-id">
-        <div class="form-group"><label>Judul Iklan (Muncul di atas)</label><input type="text" class="form-control" id="iklan-judul" placeholder="Contoh: Air Jamaah Pekan Ini"></div>
-        <div class="form-group"><label>Nama Tampilan Utama</label><input type="text" class="form-control" id="iklan-program" placeholder="Contoh: Air Jamaah Didukung Partner Kebaikan"></div>
-        <div class="form-group"><label>Deskripsi Singkat</label><textarea class="form-control" id="iklan-desc" style="height:60px"></textarea></div>
-        <div class="form-row">
-          <div class="form-group"><label>Mulai Tayang</label><input type="date" class="form-control" id="iklan-mulai"></div>
-          <div class="form-group"><label>Selesai Tayang</label><input type="date" class="form-control" id="iklan-selesai"></div>
+        <div class="form-group">
+          <label>Judul Iklan</label>
+          <input type="text" class="form-control" id="iklan-judul" placeholder="Contoh: Air Jamaah Pekan Ini">
         </div>
-        <div class="form-group"><label>Link WhatsApp (Opsional)</label><input type="text" class="form-control" id="iklan-wa" placeholder="08123456789"></div>
-        <div class="form-group"><label>Link Website (Opsional)</label><input type="text" class="form-control" id="iklan-web" placeholder="https://pejuangkebaikan.site/produk"></div>
+        <div class="form-group">
+          <label>Nama Tampilan Utama</label>
+          <input type="text" class="form-control" id="iklan-program" placeholder="Contoh: Air Jamaah Didukung Partner Kebaikan">
+        </div>
+        <div class="form-group">
+          <label>Deskripsi Singkat</label>
+          <textarea class="form-control" id="iklan-desc"></textarea>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Mulai Tayang</label>
+            <input type="date" class="form-control" id="iklan-mulai">
+          </div>
+          <div class="form-group">
+            <label>Selesai Tayang</label>
+            <input type="date" class="form-control" id="iklan-selesai">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Link WhatsApp</label>
+          <input type="text" class="form-control" id="iklan-wa" placeholder="08123456789">
+        </div>
+        <div class="form-group">
+          <label>Link Website</label>
+          <input type="text" class="form-control" id="iklan-web" placeholder="https://pejuangkebaikan.site/produk">
+        </div>
         <button class="btn-primary" id="btn-simpan-iklan" onclick="simpanIklan()">PUBLIKASIKAN IKLAN</button>
       </div>
-      
+
       <div class="card">
         <div class="card-title">Daftar Iklan Tayang</div>
-        <div id="list-iklan-container" class="scroll-list"><div style="text-align:center; font-size:12px;">Memuat...</div></div>
+        <div id="list-iklan-container" class="scroll-list">
+          <div style="text-align:center; font-size:12px;">Memuat...</div>
+        </div>
       </div>
     </div>
 
     <div id="sponsor" class="tab-content">
       <div class="card">
         <div class="card-title">Tambah Flyer Sponsor TV Masjid</div>
-        <div class="form-group"><label>Nama Sponsor</label><input type="text" class="form-control" id="spo-tv-nama" placeholder="Contoh: Madu Pak Haji"></div>
-        <div class="form-group"><label>Upload Flyer (Bebas Ukuran)</label><input type="file" class="form-control" id="spo-tv-file" accept="image/*"></div>
+        <div class="form-group">
+          <label>Nama Sponsor</label>
+          <input type="text" class="form-control" id="spo-tv-nama" placeholder="Contoh: Madu Pak Haji">
+        </div>
+        <div class="form-group">
+          <label>Upload Flyer</label>
+          <input type="file" class="form-control" id="spo-tv-file" accept="image/*">
+        </div>
         <div class="form-row">
-          <div class="form-group"><label>Mulai Tayang</label><input type="date" class="form-control" id="spo-tv-mulai"></div>
-          <div class="form-group"><label>Selesai Tayang</label><input type="date" class="form-control" id="spo-tv-selesai"></div>
+          <div class="form-group">
+            <label>Mulai Tayang</label>
+            <input type="date" class="form-control" id="spo-tv-mulai">
+          </div>
+          <div class="form-group">
+            <label>Selesai Tayang</label>
+            <input type="date" class="form-control" id="spo-tv-selesai">
+          </div>
         </div>
         <button class="btn-primary" id="btn-spo-tv" onclick="tambahSponsorTV()">UPLOAD & SIMPAN TV</button>
       </div>
@@ -214,8 +724,14 @@ select.form-control option { background: var(--panel-bg); color: white; }
 
       <div class="card">
         <div class="card-title">Tambah Teks Sponsor Website</div>
-        <div class="form-group"><label>Nama Sponsor</label><input type="text" class="form-control" id="spo-web-nama" placeholder="Contoh: BJ Grup"></div>
-        <div class="form-group"><label>Teks Tampilan di Web</label><input type="text" class="form-control" id="spo-web-teks" placeholder="Contoh: Ekosistem ini didukung oleh BJ Grup"></div>
+        <div class="form-group">
+          <label>Nama Sponsor</label>
+          <input type="text" class="form-control" id="spo-web-nama" placeholder="Contoh: BJ Grup">
+        </div>
+        <div class="form-group">
+          <label>Teks Tampilan di Web</label>
+          <input type="text" class="form-control" id="spo-web-teks" placeholder="Contoh: Ekosistem ini didukung oleh BJ Grup">
+        </div>
         <button class="btn-primary" id="btn-spo-web" onclick="tambahSponsorWeb()">SIMPAN TEKS WEB</button>
       </div>
 
@@ -225,52 +741,146 @@ select.form-control option { background: var(--panel-bg); color: white; }
       </div>
     </div>
 
-    <div id="kampanye" class="tab-content">
-      
+    <div id="berkah" class="tab-content">
+
       <div class="card">
-        <div class="card-title">Live Tracking Scan Voucher Botol (CCTV Pusat)</div>
-        <div id="list-voucher" class="scroll-list"></div>
+        <div class="card-title">Laporan Rezeki Berkah</div>
+        <div class="info-box">
+          Data ini bisa dipakai untuk laporan ke sponsor: siapa penerima Kode Berkah, dari masjid mana, program apa, dan di Titik Ambil Berkah mana.
+        </div>
+        <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:12px;">
+          <button class="btn-secondary" style="margin-top:0; flex:1;" onclick="loadLaporanRezekiBerkah()">Muat Ulang Laporan</button>
+          <button class="btn-copy" style="margin-top:0; flex:1;" onclick="copyLaporanRezekiBerkah()">Salin Laporan untuk Sponsor</button>
+        </div>
+        <div class="table-wrap">
+          <table class="table-report">
+            <thead>
+              <tr>
+                <th>Nama Jamaah</th>
+                <th>WA</th>
+                <th>Masjid</th>
+                <th>Program</th>
+                <th>Sahabat Berkah</th>
+                <th>Titik Ambil Berkah</th>
+                <th>Status</th>
+                <th>Waktu Kode</th>
+                <th>Waktu Diambil</th>
+              </tr>
+            </thead>
+            <tbody id="tabel-laporan-berkah">
+              <tr><td colspan="9" style="text-align:center;">Belum ada data.</td></tr>
+            </tbody>
+          </table>
+        </div>
       </div>
 
       <div class="card">
-        <div class="card-title">Master Sponsor Baru</div>
+        <div class="card-title">Master Sahabat Berkah</div>
         <div class="form-row">
-          <div class="form-group"><label>Nama Perusahaan</label><input type="text" class="form-control" id="ms-nama" placeholder="Cth: PT Makmur Sejahtera"></div>
-          <div class="form-group"><label>Merk Produk</label><input type="text" class="form-control" id="ms-merk" placeholder="Cth: Air Minum Berkah"></div>
+          <div class="form-group">
+            <label>Nama Perusahaan</label>
+            <input type="text" class="form-control" id="ms-nama" placeholder="Contoh: PT Makmur Sejahtera">
+          </div>
+          <div class="form-group">
+            <label>Merk / Produk</label>
+            <input type="text" class="form-control" id="ms-merk" placeholder="Contoh: Air Minum Berkah">
+          </div>
         </div>
-        <button class="btn-primary" onclick="tambahMasterSponsor()">SIMPAN MASTER SPONSOR</button>
+        <div class="form-group">
+          <label>Jenis Rezeki</label>
+          <select class="form-control" id="ms-jenis">
+            <option value="">-- Pilih Jenis Rezeki --</option>
+            <option value="Produk Gratis">Produk Gratis</option>
+            <option value="Sample Produk">Sample Produk</option>
+            <option value="Diskon">Diskon</option>
+            <option value="Makanan">Makanan</option>
+            <option value="Minuman">Minuman</option>
+            <option value="Jasa">Jasa</option>
+            <option value="Lainnya">Lainnya</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Deskripsi Rezeki</label>
+          <textarea class="form-control" id="ms-deskripsi" placeholder="Contoh: 1 botol air minum gratis untuk jamaah yang memiliki Kode Berkah."></textarea>
+        </div>
+        <div class="form-group">
+          <label>Kontak Sponsor</label>
+          <input type="text" class="form-control" id="ms-kontak" placeholder="Nama PIC / WA / email sponsor">
+        </div>
+        <button class="btn-primary" id="btn-ms" onclick="tambahMasterSponsor()">SIMPAN SAHABAT BERKAH</button>
         <div id="list-master-sponsor" class="scroll-list" style="margin-top:15px; border-top:1px dashed rgba(255,255,255,0.1); padding-top:15px;"></div>
       </div>
 
       <div class="card">
-        <div class="card-title">Master Merchant (Warung/Ekspedisi)</div>
-        <div class="form-row">
-          <div class="form-group"><label>Nama Warung / Cabang</label><input type="text" class="form-control" id="mm-nama" placeholder="Cth: Warung Nasi Makmur"></div>
-          <div class="form-group"><label>Kode Kustom Merchant</label><input type="text" class="form-control" id="mm-kode" placeholder="Cth: W-TB01"></div>
+        <div class="card-title">Master Titik Ambil Berkah</div>
+        <div class="form-group">
+          <label>Sahabat Berkah / Sponsor Pemilik Titik</label>
+          <select class="form-control" id="mm-sponsor">
+            <option value="">-- Pilih Sahabat Berkah --</option>
+          </select>
         </div>
-        <div class="form-group"><label>Alamat Lengkap Tempat Penukaran</label><input type="text" class="form-control" id="mm-alamat" placeholder="Jl. Tanjung Barat Raya No. 10 (Ditampilkan saat jamaah bertanya)"></div>
-        <button class="btn-primary" onclick="tambahMasterMerchant()">SIMPAN MASTER MERCHANT</button>
+        <div class="form-group">
+          <label>Nama Warung / Toko / Outlet</label>
+          <input type="text" class="form-control" id="mm-nama" placeholder="Contoh: Warung Nasi Makmur">
+        </div>
+        <div class="form-group">
+          <label>Alamat Cabang / Titik Ambil</label>
+          <input type="text" class="form-control" id="mm-alamat" placeholder="Contoh: Jl. Tanjung Barat Raya No. 10">
+        </div>
+        <div class="form-group">
+          <label>WA PIC Titik Ambil</label>
+          <input type="text" class="form-control" id="mm-wa" placeholder="Contoh: 08123456789">
+        </div>
+        <div class="info-box">
+          Kode merchant tidak diketik manual. Sistem akan membuat kode otomatis agar tidak salah input.
+        </div>
+        <button class="btn-primary" id="btn-mm" onclick="tambahMasterMerchant()">SIMPAN TITIK AMBIL BERKAH</button>
         <div id="list-master-merchant" class="scroll-list" style="margin-top:15px; border-top:1px dashed rgba(255,255,255,0.1); padding-top:15px;"></div>
       </div>
 
       <div class="card">
-        <div class="card-title">Buat Program Kampanye Gabungan</div>
+        <div class="card-title">Buat Program Rezeki Berkah</div>
         <div class="form-group">
-          <label>Pilih Sponsor Pendana</label>
-          <select class="form-control" id="cp-sponsor"><option value="">-- Memuat Sponsor --</option></select>
+          <label>Pilih Sahabat Berkah</label>
+          <select class="form-control" id="cp-sponsor" onchange="filterMerchantBySponsor()">
+            <option value="">-- Pilih Sahabat Berkah --</option>
+          </select>
         </div>
         <div class="form-group">
-          <label>Pilih Merchant Penukaran</label>
-          <select class="form-control" id="cp-merchant"><option value="">-- Memuat Merchant --</option></select>
+          <label>Pilih Titik Ambil Berkah</label>
+          <select class="form-control" id="cp-merchant">
+            <option value="">-- Pilih Titik Ambil --</option>
+          </select>
         </div>
-        <div class="form-group"><label>Nama Program Publik</label><input type="text" class="form-control" id="cp-nama" placeholder="Cth: Berkah Nasi Jumat Gratis"></div>
+        <div class="form-group">
+          <label>Pilih Masjid Lokasi Distribusi QR</label>
+          <select class="form-control" id="cp-masjid">
+            <option value="">-- Pilih Masjid --</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Nama Program Publik</label>
+          <input type="text" class="form-control" id="cp-nama" placeholder="Contoh: Rezeki Berkah Air Jamaah Jumat">
+        </div>
         <div class="form-row">
-          <div class="form-group"><label>Total Kuota Voucher</label><input type="number" class="form-control" id="cp-kuota" placeholder="100"></div>
-          <div class="form-group"><label>Batas Akhir Program</label><input type="date" class="form-control" id="cp-expired"></div>
+          <div class="form-group">
+            <label>Total Kuota Berkah</label>
+            <input type="number" class="form-control" id="cp-kuota" placeholder="100">
+          </div>
+          <div class="form-group">
+            <label>Tanggal Mulai</label>
+            <input type="date" class="form-control" id="cp-mulai">
+          </div>
         </div>
-        <button class="btn-primary" onclick="tambahCampaignProgram()">BUAT KAMPANYE AKTIF</button>
+        <div class="form-group">
+          <label>Batas Akhir Program</label>
+          <input type="date" class="form-control" id="cp-expired">
+        </div>
+        <button class="btn-primary" id="btn-cp" onclick="tambahCampaignProgram()">BUAT PROGRAM REZEKI BERKAH</button>
+        <div id="campaign-result" style="display:none; margin-top:15px;" class="info-box"></div>
         <div id="list-campaign" class="scroll-list" style="margin-top:15px; border-top:1px dashed rgba(255,255,255,0.1); padding-top:15px;"></div>
       </div>
+
     </div>
 
   </div>
@@ -279,105 +889,123 @@ select.form-control option { background: var(--panel-bg); color: white; }
 <div class="toast" id="toast">Notifikasi</div>
 
 <script>
-const API_URL = 'https://script.google.com/macros/s/AKfycbzLYFKH9iRSAiulDf1hRsRMY_nw4L8Vhi8LCNmaIiFS7WlQzHDkukyEt_SOk1mEM5hvBg/exec';
+const API_URL = 'https://script.google.com/macros/s/AKfycbyS_CfKq7wFsoG_AAWpMehVQOaexYLUFxOqESponCdXxWNJUQQ0L-krYumzVMnNBwXhIQ/exec';
 const TARGET_EKSPEDISI = 100;
 
 let allMasjidData = [];
+let masterSponsorData = [];
+let masterMerchantData = [];
+let campaignData = [];
+let laporanBerkahData = [];
 let isLoadingDashboard = false;
 
 window.addEventListener('load', () => {
-    setTimeout(() => {
-        document.getElementById('splash').classList.add('hide');
-        cekLogin();
-    }, 800);
+  setTimeout(() => {
+    document.getElementById('splash').classList.add('hide');
+    cekLogin();
+  }, 800);
 });
 
 function getToken() {
-    return localStorage.getItem('superadmin_token');
+  return localStorage.getItem('superadmin_token');
 }
 
 function setToken(token) {
-    localStorage.setItem('superadmin_token', token);
+  localStorage.setItem('superadmin_token', token);
 }
 
 function cekLogin() {
-    const token = getToken();
-    if (token) {
-        document.getElementById('superadmin-content').style.display = 'block';
-        document.getElementById('login-wrap').classList.remove('show');
-        loadDashboardData();
-        loadIklan();
-        loadSponsor();
-        loadKampanyeData();
-    } else {
-        document.getElementById('login-wrap').classList.add('show');
-    }
+  const token = getToken();
+  if (token) {
+    document.getElementById('superadmin-content').style.display = 'block';
+    document.getElementById('login-wrap').classList.remove('show');
+    loadDashboardData();
+    loadIklan();
+    loadSponsor();
+    loadRezekiBerkah();
+  } else {
+    document.getElementById('login-wrap').classList.add('show');
+  }
 }
 
 function logout() {
-    localStorage.removeItem('superadmin_token');
-    location.reload();
+  localStorage.removeItem('superadmin_token');
+  location.reload();
 }
 
 function showToast(msg) {
-    const toast = document.getElementById('toast');
-    toast.textContent = msg;
-    toast.classList.add('show');
-    setTimeout(() => toast.classList.remove('show'), 3000);
+  const toast = document.getElementById('toast');
+  toast.textContent = msg;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 3000);
 }
 
 function bukaTab(id, el) {
-    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
-    document.getElementById(id).classList.add('active');
-    el.classList.add('active');
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  el.classList.add('active');
 
-    if (id === 'dashboard') loadDashboardData();
-    if (id === 'iklan') loadIklan();
-    if (id === 'sponsor') loadSponsor();
-    if (id === 'kampanye') loadKampanyeData();
+  if (id === 'dashboard') loadDashboardData();
+  if (id === 'iklan') loadIklan();
+  if (id === 'sponsor') loadSponsor();
+  if (id === 'berkah') loadRezekiBerkah();
 }
 
 function formatRp(num) {
-    return 'Rp ' + (Number(num) || 0).toLocaleString('id-ID');
+  return 'Rp ' + (Number(num) || 0).toLocaleString('id-ID');
 }
 
 function escapeHtml(text) {
-    return String(text || '').replace(/[&<>"']/g, function(match) {
-        return {
-            '&': '&amp;',
-            '<': '&lt;',
-            '>': '&gt;',
-            '"': '&quot;',
-            "'": '&#039;'
-        }[match];
-    });
+  return String(text || '').replace(/[&<>"']/g, function(match) {
+    return {
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#039;'
+    }[match];
+  });
+}
+
+function normalizeDate(dateValue) {
+  if (!dateValue) return '';
+  const d = new Date(dateValue);
+  if (isNaN(d.getTime())) return String(dateValue);
+  return d.toLocaleString('id-ID', {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+  });
+}
+
+function postData(payload) {
+  return fetch(API_URL, {
+    method: 'POST',
+    body: JSON.stringify(payload)
+  }).then(res => res.json());
 }
 
 function extractDateFromId(idMasjid) {
-    try {
-        const parts = String(idMasjid || '').split('-');
-        if (parts.length < 2) return Date.now();
-
-        const timestamp = parseInt(parts[1], 36);
-
-        if (!isNaN(timestamp) && timestamp > 1700000000000) {
-            return timestamp;
-        }
-    } catch(e) {}
-
-    return Date.now();
+  try {
+    const parts = String(idMasjid || '').split('-');
+    if (parts.length < 2) return Date.now();
+    const timestamp = parseInt(parts[1], 36);
+    if (!isNaN(timestamp) && timestamp > 1700000000000) return timestamp;
+  } catch(e) {}
+  return Date.now();
 }
 
 function hitungHariSejakDaftar(idMasjid) {
-    const createdAtMs = extractDateFromId(idMasjid);
-    return Math.floor((Date.now() - createdAtMs) / (1000 * 60 * 60 * 24));
+  const createdAtMs = extractDateFromId(idMasjid);
+  return Math.floor((Date.now() - createdAtMs) / (1000 * 60 * 60 * 24));
 }
 
 function buatPesanFollowUp(namaMasjid, itemKurang) {
-    const daftarKurang = itemKurang.length ? itemKurang.join(', ') : 'beberapa data awal';
-
-    return `Assalamu'alaikum Ustadz/Pak/Bu Pengurus ${namaMasjid}.
+  const daftarKurang = itemKurang.length ? itemKurang.join(', ') : 'beberapa data awal';
+  return `Assalamu'alaikum Ustadz/Pak/Bu Pengurus ${namaMasjid}.
 
 Semoga sehat selalu.
 
@@ -392,823 +1020,1007 @@ Kalau berkenan, saya siap bantu dampingi lagi sampai website masjidnya hidup dan
 Terima kasih banyak 🙏`;
 }
 
+function copyText(text) {
+  navigator.clipboard.writeText(text).then(() => {
+    showToast('Berhasil disalin');
+  }).catch(() => {
+    showToast('Gagal menyalin');
+  });
+}
+
 function copyWarning(text) {
-    const pesan = decodeURIComponent(text);
-    navigator.clipboard.writeText(pesan).then(() => {
-        showToast('Pesan follow up berhasil disalin');
-    }).catch(() => {
-        showToast('Gagal menyalin pesan');
-    });
+  copyText(decodeURIComponent(text));
 }
 
 async function prosesLogin() {
-    const pin = document.getElementById('pin-superadmin').value.trim();
-    if (!pin) return showToast('Masukkan PIN');
+  const pin = document.getElementById('pin-superadmin').value.trim();
+  if (!pin) return showToast('Masukkan PIN');
 
-    const btn = document.getElementById('btn-login');
-    btn.disabled = true;
-    btn.textContent = 'MEMERIKSA...';
+  const btn = document.getElementById('btn-login');
+  btn.disabled = true;
+  btn.textContent = 'MEMERIKSA...';
 
-    try {
-        const res = await fetch(API_URL + '?action=login&email=superadmin&pin=' + encodeURIComponent(pin));
-        const json = await res.json();
+  try {
+    const res = await fetch(API_URL + '?action=login&email=superadmin&pin=' + encodeURIComponent(pin));
+    const json = await res.json();
 
-        if (json.status === 'ok') {
-            setToken(json.token);
-            showToast('Login berhasil');
-            cekLogin();
-        } else {
-            showToast(json.message || 'PIN salah');
-        }
-    } catch (e) {
-        showToast('Gagal login');
+    if (json.status === 'ok') {
+      setToken(json.token);
+      showToast('Login berhasil');
+      cekLogin();
+    } else {
+      showToast(json.message || 'PIN salah');
     }
+  } catch (e) {
+    showToast('Gagal login');
+  }
 
-    btn.disabled = false;
-    btn.textContent = 'MASUK SISTEM';
+  btn.disabled = false;
+  btn.textContent = 'MASUK SISTEM';
 }
 
 async function loadDashboardData() {
-    if (isLoadingDashboard) return;
-    isLoadingDashboard = true;
+  if (isLoadingDashboard) return;
+  isLoadingDashboard = true;
 
-    const loading = document.getElementById('loading');
-    const container = document.getElementById('list-masjid-container');
-    loading.style.display = 'block';
-    container.innerHTML = '';
+  const loading = document.getElementById('loading');
+  const container = document.getElementById('list-masjid-container');
+  loading.style.display = 'block';
+  container.innerHTML = '';
 
-    try {
-        const res = await fetch(API_URL + '?action=getSuperadminData&token=' + encodeURIComponent(getToken()) + '&_t=' + Date.now());
-        const json = await res.json();
+  try {
+    const res = await fetch(API_URL + '?action=getSuperadminData&token=' + encodeURIComponent(getToken()) + '&_t=' + Date.now());
+    const json = await res.json();
 
-        if (json.status !== 'ok') {
-            showToast(json.message || 'Gagal memuat dashboard');
-            isLoadingDashboard = false;
-            return;
-        }
-
-        const data = json.data || {};
-        const list = data.list_masjid || [];
-        allMasjidData = list;
-
-        const totalMasjidAktif = list.filter(m => Number(m.kriteriaCount || 0) >= 3).length;
-
-        document.getElementById('stat-masjid').textContent = totalMasjidAktif;
-        document.getElementById('stat-kas').textContent = formatRp(data.total_kas || 0);
-
-        const persen = Math.min(100, Math.round((list.length / TARGET_EKSPEDISI) * 100));
-        document.getElementById('ekspedisi-bar').style.width = persen + '%';
-        document.getElementById('ekspedisi-text').textContent = `Terdaftar: ${list.length} Masjid`;
-        document.getElementById('ekspedisi-persen').textContent = persen + '%';
-
-        if (list.length === 0) {
-            container.innerHTML = '<div style="text-align:center; font-size:12px; color:rgba(255,255,255,0.6);">Belum ada masjid aktif.</div>';
-        } else {
-            container.innerHTML = list.map(m => {
-                const kriteria = m.kriteria || {};
-                const criteriaCount = Number(m.kriteriaCount || 0);
-
-                const itemKurang = [];
-                if (!kriteria.trx) itemKurang.push('kas/transaksi');
-                if (!kriteria.jdw) itemKurang.push('jadwal kegiatan');
-                if (!kriteria.gal) itemKurang.push('galeri/foto kegiatan');
-
-                const ageInDays = hitungHariSejakDaftar(m.id);
-                const masaBelajar = 14;
-                const sisaHari = Math.max(0, masaBelajar - ageInDays);
-
-                let cardClass = '';
-                let badge = '';
-                let showFollowUp = false;
-                let pesanWA = '';
-
-                if (criteriaCount >= 3) {
-                    cardClass = 'card-aktif';
-                    badge = '<span class="status-badge badge-aktif">Masjid Aktif</span>';
-                } else if (sisaHari > 0) {
-                    cardClass = 'card-belajar';
-                    badge = `<span class="status-badge badge-belajar">Masa Belajar (${sisaHari} Hari Lagi)</span>`;
-                } else {
-                    cardClass = 'card-pasif';
-                    badge = '<span class="status-badge badge-pasif">Perlu Disapa</span>';
-                    showFollowUp = true;
-                    pesanWA = buatPesanFollowUp(m.nama, itemKurang);
-                }
-
-                const webUrl = m.slug ? `masjid.html?masjid=${encodeURIComponent(m.slug)}` : '#';
-                const tvUrl = m.slug ? `tv.html?masjid=${encodeURIComponent(m.slug)}` : '#';
-
-                return `
-                    <div class="masjid-card ${cardClass}">
-                        ${badge}
-                        <h4>${escapeHtml(m.nama)}</h4>
-                        <p>${escapeHtml(m.email || 'Email admin belum tersedia')}</p>
-
-                        <div class="check-list">
-                            <div>${kriteria.trx ? '✅' : '⬜'} Kas / transaksi</div>
-                            <div>${kriteria.jdw ? '✅' : '⬜'} Jadwal kegiatan</div>
-                            <div>${kriteria.gal ? '✅' : '⬜'} Galeri kegiatan</div>
-                            <div>📅 Usia sistem: ${ageInDays} hari</div>
-                            ${m.last_login ? `<div>👤 Login terakhir: ${escapeHtml(m.last_login)}</div>` : ''}
-                            ${m.skor_aktif !== undefined && m.skor_aktif !== '' ? `<div>📊 Skor aktif: ${escapeHtml(m.skor_aktif)}</div>` : ''}
-                        </div>
-
-                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:10px;">
-                            <a href="${webUrl}" target="_blank" class="btn-small dark" style="text-align:center; text-decoration:none;">Buka Web</a>
-                            <a href="${tvUrl}" target="_blank" class="btn-small dark" style="text-align:center; text-decoration:none;">Buka TV</a>
-                        </div>
-
-                        ${showFollowUp ? `<button class="btn-warning" onclick="copyWarning('${encodeURIComponent(pesanWA)}')">💬 Salin Pesan Follow Up WA</button>` : ''}
-                    </div>
-                `;
-            }).join('');
-        }
-
-        loading.style.display = 'none';
-    } catch (e) {
-        console.error(e);
-        showToast('Gagal memuat dashboard');
+    if (json.status !== 'ok') {
+      showToast(json.message || 'Gagal memuat dashboard');
+      isLoadingDashboard = false;
+      return;
     }
 
-    isLoadingDashboard = false;
+    const data = json.data || {};
+    const list = data.list_masjid || [];
+    allMasjidData = list;
+
+    const totalMasjidAktif = list.filter(m => Number(m.kriteriaCount || 0) >= 3).length;
+
+    document.getElementById('stat-masjid').textContent = totalMasjidAktif;
+    document.getElementById('stat-kas').textContent = formatRp(data.total_kas || 0);
+
+    const persen = Math.min(100, Math.round((list.length / TARGET_EKSPEDISI) * 100));
+    document.getElementById('ekspedisi-bar').style.width = persen + '%';
+    document.getElementById('ekspedisi-text').textContent = `Terdaftar: ${list.length} Masjid`;
+    document.getElementById('ekspedisi-persen').textContent = persen + '%';
+
+    renderMasjidDashboard(list);
+    loading.style.display = 'none';
+    isiPilihanMasjid();
+  } catch (e) {
+    showToast('Gagal memuat dashboard');
+  }
+
+  isLoadingDashboard = false;
+}
+
+function renderMasjidDashboard(list) {
+  const container = document.getElementById('list-masjid-container');
+
+  if (!list.length) {
+    container.innerHTML = '<div style="text-align:center; font-size:12px; color:rgba(255,255,255,0.6);">Belum ada masjid aktif.</div>';
+    return;
+  }
+
+  container.innerHTML = list.map(m => {
+    const kriteria = m.kriteria || {};
+    const criteriaCount = Number(m.kriteriaCount || 0);
+
+    const itemKurang = [];
+    if (!kriteria.trx) itemKurang.push('kas/transaksi');
+    if (!kriteria.jdw) itemKurang.push('jadwal kegiatan');
+    if (!kriteria.gal) itemKurang.push('galeri/foto kegiatan');
+
+    const ageInDays = hitungHariSejakDaftar(m.id);
+    const masaBelajar = 14;
+    const sisaHari = Math.max(0, masaBelajar - ageInDays);
+
+    let cardClass = '';
+    let badge = '';
+    let showFollowUp = false;
+    let pesanWA = '';
+
+    if (criteriaCount >= 3) {
+      cardClass = 'card-aktif';
+      badge = '<span class="status-badge badge-aktif">Masjid Aktif</span>';
+    } else if (sisaHari > 0) {
+      cardClass = 'card-belajar';
+      badge = `<span class="status-badge badge-belajar">Masa Belajar (${sisaHari} Hari Lagi)</span>`;
+    } else {
+      cardClass = 'card-pasif';
+      badge = '<span class="status-badge badge-pasif">Perlu Disapa</span>';
+      showFollowUp = true;
+      pesanWA = buatPesanFollowUp(m.nama, itemKurang);
+    }
+
+    const webUrl = m.slug ? `masjid.html?masjid=${encodeURIComponent(m.slug)}` : '#';
+    const tvUrl = m.slug ? `tv.html?masjid=${encodeURIComponent(m.slug)}` : '#';
+
+    return `
+      <div class="masjid-card ${cardClass}">
+        ${badge}
+        <h4>${escapeHtml(m.nama)}</h4>
+        <p>${escapeHtml(m.email || 'Email admin belum tersedia')}</p>
+
+        <div class="check-list">
+          <div>${kriteria.trx ? '✅' : '⬜'} Kas / transaksi</div>
+          <div>${kriteria.jdw ? '✅' : '⬜'} Jadwal kegiatan</div>
+          <div>${kriteria.gal ? '✅' : '⬜'} Galeri kegiatan</div>
+          <div>📅 Usia sistem: ${ageInDays} hari</div>
+          ${m.last_login ? `<div>👤 Login terakhir: ${escapeHtml(m.last_login)}</div>` : ''}
+          ${m.skor_aktif !== undefined && m.skor_aktif !== '' ? `<div>📊 Skor aktif: ${escapeHtml(m.skor_aktif)}</div>` : ''}
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:10px;">
+          <a href="${webUrl}" target="_blank" class="btn-small">Buka Web</a>
+          <a href="${tvUrl}" target="_blank" class="btn-small">Buka TV</a>
+        </div>
+
+        ${showFollowUp ? `<button class="btn-warning" onclick="copyWarning('${encodeURIComponent(pesanWA)}')">💬 Salin Pesan Follow Up WA</button>` : ''}
+      </div>
+    `;
+  }).join('');
 }
 
 function generateSlug() {
-    const nama = document.getElementById('reg-nama').value.trim();
-    const kel = document.getElementById('reg-kelurahan').value.trim();
+  const nama = document.getElementById('reg-nama').value.trim();
+  const kel = document.getElementById('reg-kelurahan').value.trim();
 
-    let slug = (nama + ' ' + kel)
-        .toLowerCase()
-        .replace(/masjid|musholla|musala|jami|jami'|al/g, '')
-        .replace(/[^a-z0-9]+/g, '-')
-        .replace(/^-+|-+$/g, '');
+  let slug = (nama + ' ' + kel)
+    .toLowerCase()
+    .replace(/masjid|musholla|musala|jami|jami'|al/g, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
 
-    if (!slug) slug = 'masjid-baru';
-    document.getElementById('reg-slug').value = slug;
+  if (!slug) slug = 'masjid-baru';
+  document.getElementById('reg-slug').value = slug;
 }
 
 async function tambahMasjidBaru() {
-    const nama = document.getElementById('reg-nama').value.trim();
-    const kelurahan = document.getElementById('reg-kelurahan').value.trim();
-    const kecamatan = document.getElementById('reg-kecamatan').value.trim();
-    const slug = document.getElementById('reg-slug').value.trim();
-    const email = document.getElementById('reg-email').value.trim();
-    const pin = document.getElementById('reg-pin').value.trim();
+  const nama = document.getElementById('reg-nama').value.trim();
+  const kelurahan = document.getElementById('reg-kelurahan').value.trim();
+  const kecamatan = document.getElementById('reg-kecamatan').value.trim();
+  const slug = document.getElementById('reg-slug').value.trim();
+  const email = document.getElementById('reg-email').value.trim();
+  const pin = document.getElementById('reg-pin').value.trim();
 
-    if (!nama || !kelurahan || !kecamatan || !slug || !email || !pin) {
-        return showToast('Lengkapi semua data masjid');
+  if (!nama || !kelurahan || !kecamatan || !slug || !email || !pin) {
+    return showToast('Lengkapi semua data masjid');
+  }
+
+  const btn = document.getElementById('btn-tambah');
+  btn.disabled = true;
+  btn.textContent = 'MENYIMPAN...';
+
+  try {
+    const payload = {
+      token: getToken(),
+      action: 'addMasjidBaru',
+      nama,
+      kelurahan,
+      kecamatan,
+      kota: '',
+      slug,
+      email,
+      pin
+    };
+
+    const json = await postData(payload);
+
+    if (json.status === 'ok') {
+      showToast('Masjid baru berhasil disimpan');
+      document.getElementById('reg-nama').value = '';
+      document.getElementById('reg-kelurahan').value = '';
+      document.getElementById('reg-kecamatan').value = '';
+      document.getElementById('reg-slug').value = '';
+      document.getElementById('reg-email').value = '';
+      document.getElementById('reg-pin').value = '';
+      loadDashboardData();
+    } else {
+      showToast(json.message || 'Gagal menyimpan masjid');
     }
+  } catch (e) {
+    showToast('Gagal menyimpan masjid');
+  }
 
-    const btn = document.getElementById('btn-tambah');
-    btn.disabled = true;
-    btn.textContent = 'MENYIMPAN...';
-
-    try {
-        const payload = {
-            token: getToken(),
-            action: 'addMasjidBaru',
-            nama: nama,
-            kelurahan: kelurahan,
-            kecamatan: kecamatan,
-            kota: '',
-            slug: slug,
-            email: email,
-            pin: pin
-        };
-
-        const res = await fetch(API_URL, {
-            method: 'POST',
-            body: JSON.stringify(payload)
-        });
-        const json = await res.json();
-
-        if (json.status === 'ok') {
-            showToast('Masjid baru berhasil disimpan');
-            document.getElementById('reg-nama').value = '';
-            document.getElementById('reg-kelurahan').value = '';
-            document.getElementById('reg-kecamatan').value = '';
-            document.getElementById('reg-slug').value = '';
-            document.getElementById('reg-email').value = '';
-            document.getElementById('reg-pin').value = '';
-            loadDashboardData();
-        } else {
-            showToast(json.message || 'Gagal menyimpan masjid');
-        }
-    } catch (e) {
-        console.error(e);
-        showToast('Gagal menyimpan masjid');
-    }
-
-    btn.disabled = false;
-    btn.textContent = 'SIMPAN MASJID BARU';
+  btn.disabled = false;
+  btn.textContent = 'SIMPAN MASJID BARU';
 }
 
 async function loadIklan() {
-    const box = document.getElementById('list-iklan-container');
-    if (!box) return;
+  const box = document.getElementById('list-iklan-container');
+  if (!box) return;
 
-    box.innerHTML = '<div style="text-align:center; font-size:12px;">Memuat...</div>';
+  box.innerHTML = '<div style="text-align:center; font-size:12px;">Memuat...</div>';
 
-    try {
-        const res = await fetch(API_URL + '?action=getIklanSuperadmin&token=' + encodeURIComponent(getToken()) + '&_t=' + Date.now());
-        const json = await res.json();
+  try {
+    const res = await fetch(API_URL + '?action=getIklanSuperadmin&token=' + encodeURIComponent(getToken()) + '&_t=' + Date.now());
+    const json = await res.json();
 
-        if (json.status !== 'ok') {
-            box.innerHTML = '<div style="text-align:center; font-size:12px;">Gagal memuat iklan.</div>';
-            return;
-        }
-
-        const list = json.data || [];
-        if (!list.length) {
-            box.innerHTML = '<div style="text-align:center; font-size:12px;">Belum ada iklan.</div>';
-            return;
-        }
-
-        box.innerHTML = list.map(item => `
-            <div class="item-card" onclick="this.classList.toggle('expanded')">
-                <div style="font-weight:700; color:white;">${escapeHtml(item.judul || item.nama || '-')}</div>
-                <div style="font-size:12px; color:rgba(255,255,255,0.6); margin-top:4px;">${escapeHtml(item.program || item.deskripsi || '')}</div>
-                <div style="font-size:11px; color:var(--gold); margin-top:6px;">${escapeHtml(item.mulai || '')} - ${escapeHtml(item.selesai || '')}</div>
-                <div class="action-buttons">
-                    <button class="btn-action btn-del" onclick="event.stopPropagation(); hapusIklan('${escapeHtml(item.id || item.id_iklan || '')}')">Hapus</button>
-                </div>
-            </div>
-        `).join('');
-    } catch (e) {
-        console.error(e);
-        box.innerHTML = '<div style="text-align:center; font-size:12px;">Gagal memuat iklan.</div>';
+    if (json.status !== 'ok') {
+      box.innerHTML = '<div style="text-align:center; font-size:12px;">Gagal memuat iklan.</div>';
+      return;
     }
+
+    const list = json.data || [];
+    if (!list.length) {
+      box.innerHTML = '<div style="text-align:center; font-size:12px;">Belum ada iklan.</div>';
+      return;
+    }
+
+    box.innerHTML = list.map(item => `
+      <div class="item-card">
+        <div class="item-title">${escapeHtml(item.judul || item.nama || '-')}</div>
+        <div class="item-sub">${escapeHtml(item.program || item.deskripsi || '')}</div>
+        <div class="item-gold">${escapeHtml(item.mulai || '')} - ${escapeHtml(item.selesai || '')}</div>
+        <div class="item-actions">
+          <button class="btn-action btn-del" onclick="hapusIklan('${escapeHtml(item.id || item.id_iklan || '')}')">Hapus</button>
+        </div>
+      </div>
+    `).join('');
+  } catch (e) {
+    box.innerHTML = '<div style="text-align:center; font-size:12px;">Gagal memuat iklan.</div>';
+  }
 }
 
 async function simpanIklan() {
-    const judul = document.getElementById('iklan-judul').value.trim();
-    const program = document.getElementById('iklan-program').value.trim();
-    const desc = document.getElementById('iklan-desc').value.trim();
-    const mulai = document.getElementById('iklan-mulai').value;
-    const selesai = document.getElementById('iklan-selesai').value;
-    const wa = document.getElementById('iklan-wa').value.trim();
-    const web = document.getElementById('iklan-web').value.trim();
+  const judul = document.getElementById('iklan-judul').value.trim();
+  const program = document.getElementById('iklan-program').value.trim();
+  const desc = document.getElementById('iklan-desc').value.trim();
+  const mulai = document.getElementById('iklan-mulai').value;
+  const selesai = document.getElementById('iklan-selesai').value;
+  const wa = document.getElementById('iklan-wa').value.trim();
+  const web = document.getElementById('iklan-web').value.trim();
 
-    if (!judul || !program || !desc || !mulai || !selesai) {
-        return showToast('Lengkapi data iklan');
+  if (!judul || !program || !desc || !mulai || !selesai) {
+    return showToast('Lengkapi data iklan');
+  }
+
+  const btn = document.getElementById('btn-simpan-iklan');
+  btn.disabled = true;
+  btn.textContent = 'MENYIMPAN...';
+
+  try {
+    const json = await postData({
+      token: getToken(),
+      action: 'addIklan',
+      judul,
+      program,
+      deskripsi: desc,
+      mulai,
+      selesai,
+      wa,
+      web
+    });
+
+    if (json.status === 'ok') {
+      showToast('Iklan berhasil dipublikasikan');
+      document.getElementById('iklan-judul').value = '';
+      document.getElementById('iklan-program').value = '';
+      document.getElementById('iklan-desc').value = '';
+      document.getElementById('iklan-mulai').value = '';
+      document.getElementById('iklan-selesai').value = '';
+      document.getElementById('iklan-wa').value = '';
+      document.getElementById('iklan-web').value = '';
+      loadIklan();
+    } else {
+      showToast(json.message || 'Gagal menyimpan iklan');
     }
+  } catch (e) {
+    showToast('Gagal menyimpan iklan');
+  }
 
-    const btn = document.getElementById('btn-simpan-iklan');
-    btn.disabled = true;
-    btn.textContent = 'MENYIMPAN...';
-
-    try {
-        const payload = {
-            token: getToken(),
-            action: 'addIklan',
-            judul: judul,
-            program: program,
-            deskripsi: desc,
-            mulai: mulai,
-            selesai: selesai,
-            wa: wa,
-            web: web
-        };
-
-        const res = await fetch(API_URL, {
-            method: 'POST',
-            body: JSON.stringify(payload)
-        });
-        const json = await res.json();
-
-        if (json.status === 'ok') {
-            showToast('Iklan berhasil dipublikasikan');
-            document.getElementById('iklan-judul').value = '';
-            document.getElementById('iklan-program').value = '';
-            document.getElementById('iklan-desc').value = '';
-            document.getElementById('iklan-mulai').value = '';
-            document.getElementById('iklan-selesai').value = '';
-            document.getElementById('iklan-wa').value = '';
-            document.getElementById('iklan-web').value = '';
-            loadIklan();
-        } else {
-            showToast(json.message || 'Gagal menyimpan iklan');
-        }
-    } catch (e) {
-        console.error(e);
-        showToast('Gagal menyimpan iklan');
-    }
-
-    btn.disabled = false;
-    btn.textContent = 'PUBLIKASIKAN IKLAN';
+  btn.disabled = false;
+  btn.textContent = 'PUBLIKASIKAN IKLAN';
 }
 
 async function hapusIklan(id) {
-    if (!id) return showToast('ID iklan tidak ditemukan');
-    if (!confirm('Hapus iklan ini?')) return;
+  if (!id) return showToast('ID iklan tidak ditemukan');
+  if (!confirm('Hapus iklan ini?')) return;
 
-    try {
-        const res = await fetch(API_URL, {
-            method: 'POST',
-            body: JSON.stringify({
-                token: getToken(),
-                action: 'deleteIklan',
-                id: id
-            })
-        });
-        const json = await res.json();
+  try {
+    const json = await postData({
+      token: getToken(),
+      action: 'deleteIklan',
+      id
+    });
 
-        if (json.status === 'ok') {
-            showToast('Iklan dihapus');
-            loadIklan();
-        } else {
-            showToast(json.message || 'Gagal menghapus iklan');
-        }
-    } catch (e) {
-        console.error(e);
-        showToast('Gagal menghapus iklan');
+    if (json.status === 'ok') {
+      showToast('Iklan dihapus');
+      loadIklan();
+    } else {
+      showToast(json.message || 'Gagal menghapus iklan');
     }
+  } catch (e) {
+    showToast('Gagal menghapus iklan');
+  }
 }
 
 async function fileToBase64(file) {
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => {
-            const base64 = String(reader.result).split(',')[1];
-            resolve(base64);
-        };
-        reader.onerror = reject;
-        reader.readAsDataURL(file);
-    });
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(String(reader.result).split(',')[1]);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
 }
 
 async function loadSponsor() {
-    await Promise.all([loadSponsorTV(), loadSponsorWeb()]);
+  await Promise.all([loadSponsorTV(), loadSponsorWeb()]);
 }
 
 async function loadSponsorTV() {
-    const box = document.getElementById('list-spo-tv');
-    if (!box) return;
+  const box = document.getElementById('list-spo-tv');
+  if (!box) return;
 
-    box.innerHTML = '<div style="text-align:center; font-size:12px;">Memuat...</div>';
+  box.innerHTML = '<div style="text-align:center; font-size:12px;">Memuat...</div>';
 
-    try {
-        const res = await fetch(API_URL + '?action=getSponsorTV&token=' + encodeURIComponent(getToken()) + '&_t=' + Date.now());
-        const json = await res.json();
-        const list = json.data || [];
+  try {
+    const res = await fetch(API_URL + '?action=getSponsorTV&token=' + encodeURIComponent(getToken()) + '&_t=' + Date.now());
+    const json = await res.json();
+    const list = json.data || [];
 
-        if (!list.length) {
-            box.innerHTML = '<div style="text-align:center; font-size:12px;">Belum ada sponsor TV.</div>';
-            return;
-        }
-
-        box.innerHTML = list.map(item => `
-            <div class="item-card" onclick="this.classList.toggle('expanded')">
-                <div style="font-weight:700; color:white;">${escapeHtml(item.nama || item.nama_sponsor || '-')}</div>
-                <div style="font-size:11px; color:var(--gold); margin-top:6px;">${escapeHtml(item.mulai || '')} - ${escapeHtml(item.selesai || '')}</div>
-                <div class="action-buttons">
-                    <button class="btn-action btn-del" onclick="event.stopPropagation(); hapusSponsorTV('${escapeHtml(item.id || item.id_sponsor || '')}')">Hapus</button>
-                </div>
-            </div>
-        `).join('');
-    } catch (e) {
-        console.error(e);
-        box.innerHTML = '<div style="text-align:center; font-size:12px;">Gagal memuat sponsor TV.</div>';
+    if (!list.length) {
+      box.innerHTML = '<div style="text-align:center; font-size:12px;">Belum ada sponsor TV.</div>';
+      return;
     }
+
+    box.innerHTML = list.map(item => `
+      <div class="item-card">
+        <div class="item-title">${escapeHtml(item.nama || item.nama_sponsor || '-')}</div>
+        <div class="item-gold">${escapeHtml(item.mulai || '')} - ${escapeHtml(item.selesai || '')}</div>
+        <div class="item-actions">
+          <button class="btn-action btn-del" onclick="hapusSponsorTV('${escapeHtml(item.id || item.id_sponsor || '')}')">Hapus</button>
+        </div>
+      </div>
+    `).join('');
+  } catch (e) {
+    box.innerHTML = '<div style="text-align:center; font-size:12px;">Gagal memuat sponsor TV.</div>';
+  }
 }
 
 async function tambahSponsorTV() {
-    const nama = document.getElementById('spo-tv-nama').value.trim();
-    const file = document.getElementById('spo-tv-file').files[0];
-    const mulai = document.getElementById('spo-tv-mulai').value;
-    const selesai = document.getElementById('spo-tv-selesai').value;
+  const nama = document.getElementById('spo-tv-nama').value.trim();
+  const file = document.getElementById('spo-tv-file').files[0];
+  const mulai = document.getElementById('spo-tv-mulai').value;
+  const selesai = document.getElementById('spo-tv-selesai').value;
 
-    if (!nama || !file || !mulai || !selesai) {
-        return showToast('Lengkapi data sponsor TV');
+  if (!nama || !file || !mulai || !selesai) {
+    return showToast('Lengkapi data sponsor TV');
+  }
+
+  const btn = document.getElementById('btn-spo-tv');
+  btn.disabled = true;
+  btn.textContent = 'MENGUNGGAH...';
+
+  try {
+    const base64 = await fileToBase64(file);
+
+    const uploadJson = await postData({
+      token: getToken(),
+      action: 'uploadMedia',
+      base64,
+      filename: file.name,
+      mimeType: file.type,
+      kategori: 'Sponsor_TV',
+      nama_masjid: 'Pusat_Superadmin'
+    });
+
+    if (uploadJson.status !== 'ok') {
+      showToast(uploadJson.message || 'Gagal upload gambar');
+      btn.disabled = false;
+      btn.textContent = 'UPLOAD & SIMPAN TV';
+      return;
     }
 
-    const btn = document.getElementById('btn-spo-tv');
-    btn.disabled = true;
-    btn.textContent = 'MENGUNGGAH...';
+    const saveJson = await postData({
+      token: getToken(),
+      action: 'addSponsorTV',
+      nama,
+      url: uploadJson.url,
+      mulai,
+      selesai
+    });
 
-    try {
-        const base64 = await fileToBase64(file);
-
-        const uploadRes = await fetch(API_URL, {
-            method: 'POST',
-            body: JSON.stringify({
-                token: getToken(),
-                action: 'uploadMedia',
-                base64: base64,
-                filename: file.name,
-                mimeType: file.type,
-                kategori: 'Sponsor_TV',
-                nama_masjid: 'Pusat_Superadmin'
-            })
-        });
-
-        const uploadJson = await uploadRes.json();
-        if (uploadJson.status !== 'ok') {
-            showToast(uploadJson.message || 'Gagal upload gambar');
-            btn.disabled = false;
-            btn.textContent = 'UPLOAD & SIMPAN TV';
-            return;
-        }
-
-        const saveRes = await fetch(API_URL, {
-            method: 'POST',
-            body: JSON.stringify({
-                token: getToken(),
-                action: 'addSponsorTV',
-                nama: nama,
-                url: uploadJson.url,
-                mulai: mulai,
-                selesai: selesai
-            })
-        });
-
-        const saveJson = await saveRes.json();
-
-        if (saveJson.status === 'ok') {
-            showToast('Sponsor TV berhasil disimpan');
-            document.getElementById('spo-tv-nama').value = '';
-            document.getElementById('spo-tv-file').value = '';
-            document.getElementById('spo-tv-mulai').value = '';
-            document.getElementById('spo-tv-selesai').value = '';
-            loadSponsorTV();
-        } else {
-            showToast(saveJson.message || 'Gagal menyimpan sponsor TV');
-        }
-    } catch (e) {
-        console.error(e);
-        showToast('Gagal menyimpan sponsor TV');
+    if (saveJson.status === 'ok') {
+      showToast('Sponsor TV berhasil disimpan');
+      document.getElementById('spo-tv-nama').value = '';
+      document.getElementById('spo-tv-file').value = '';
+      document.getElementById('spo-tv-mulai').value = '';
+      document.getElementById('spo-tv-selesai').value = '';
+      loadSponsorTV();
+    } else {
+      showToast(saveJson.message || 'Gagal menyimpan sponsor TV');
     }
+  } catch (e) {
+    showToast('Gagal menyimpan sponsor TV');
+  }
 
-    btn.disabled = false;
-    btn.textContent = 'UPLOAD & SIMPAN TV';
+  btn.disabled = false;
+  btn.textContent = 'UPLOAD & SIMPAN TV';
 }
 
 async function hapusSponsorTV(id) {
-    if (!id) return showToast('ID sponsor tidak ditemukan');
-    if (!confirm('Hapus sponsor TV ini?')) return;
+  if (!id) return showToast('ID sponsor tidak ditemukan');
+  if (!confirm('Hapus sponsor TV ini?')) return;
 
-    try {
-        const res = await fetch(API_URL, {
-            method: 'POST',
-            body: JSON.stringify({
-                token: getToken(),
-                action: 'deleteSponsorTV',
-                id: id
-            })
-        });
-        const json = await res.json();
+  try {
+    const json = await postData({
+      token: getToken(),
+      action: 'deleteSponsorTV',
+      id
+    });
 
-        if (json.status === 'ok') {
-            showToast('Sponsor TV dihapus');
-            loadSponsorTV();
-        } else {
-            showToast(json.message || 'Gagal menghapus sponsor TV');
-        }
-    } catch (e) {
-        console.error(e);
-        showToast('Gagal menghapus sponsor TV');
+    if (json.status === 'ok') {
+      showToast('Sponsor TV dihapus');
+      loadSponsorTV();
+    } else {
+      showToast(json.message || 'Gagal menghapus sponsor TV');
     }
+  } catch (e) {
+    showToast('Gagal menghapus sponsor TV');
+  }
 }
 
 async function loadSponsorWeb() {
-    const box = document.getElementById('list-spo-web');
-    if (!box) return;
+  const box = document.getElementById('list-spo-web');
+  if (!box) return;
 
-    box.innerHTML = '<div style="text-align:center; font-size:12px;">Memuat...</div>';
+  box.innerHTML = '<div style="text-align:center; font-size:12px;">Memuat...</div>';
 
-    try {
-        const res = await fetch(API_URL + '?action=getSponsorWeb&token=' + encodeURIComponent(getToken()) + '&_t=' + Date.now());
-        const json = await res.json();
-        const list = json.data || [];
+  try {
+    const res = await fetch(API_URL + '?action=getSponsorWeb&token=' + encodeURIComponent(getToken()) + '&_t=' + Date.now());
+    const json = await res.json();
+    const list = json.data || [];
 
-        if (!list.length) {
-            box.innerHTML = '<div style="text-align:center; font-size:12px;">Belum ada sponsor website.</div>';
-            return;
-        }
-
-        box.innerHTML = list.map(item => `
-            <div class="item-card" onclick="this.classList.toggle('expanded')">
-                <div style="font-weight:700; color:white;">${escapeHtml(item.nama || item.nama_sponsor || '-')}</div>
-                <div style="font-size:12px; color:rgba(255,255,255,0.6); margin-top:4px;">${escapeHtml(item.teks || '')}</div>
-                <div class="action-buttons">
-                    <button class="btn-action btn-del" onclick="event.stopPropagation(); hapusSponsorWeb('${escapeHtml(item.id || item.id_sponsor || '')}')">Hapus</button>
-                </div>
-            </div>
-        `).join('');
-    } catch (e) {
-        console.error(e);
-        box.innerHTML = '<div style="text-align:center; font-size:12px;">Gagal memuat sponsor website.</div>';
+    if (!list.length) {
+      box.innerHTML = '<div style="text-align:center; font-size:12px;">Belum ada sponsor website.</div>';
+      return;
     }
+
+    box.innerHTML = list.map(item => `
+      <div class="item-card">
+        <div class="item-title">${escapeHtml(item.nama || item.nama_sponsor || '-')}</div>
+        <div class="item-sub">${escapeHtml(item.teks || '')}</div>
+        <div class="item-actions">
+          <button class="btn-action btn-del" onclick="hapusSponsorWeb('${escapeHtml(item.id || item.id_sponsor || '')}')">Hapus</button>
+        </div>
+      </div>
+    `).join('');
+  } catch (e) {
+    box.innerHTML = '<div style="text-align:center; font-size:12px;">Gagal memuat sponsor website.</div>';
+  }
 }
 
 async function tambahSponsorWeb() {
-    const nama = document.getElementById('spo-web-nama').value.trim();
-    const teks = document.getElementById('spo-web-teks').value.trim();
+  const nama = document.getElementById('spo-web-nama').value.trim();
+  const teks = document.getElementById('spo-web-teks').value.trim();
 
-    if (!nama || !teks) {
-        return showToast('Lengkapi teks sponsor website');
+  if (!nama || !teks) return showToast('Lengkapi teks sponsor website');
+
+  const btn = document.getElementById('btn-spo-web');
+  btn.disabled = true;
+  btn.textContent = 'MENYIMPAN...';
+
+  try {
+    const json = await postData({
+      token: getToken(),
+      action: 'addSponsorWeb',
+      nama,
+      teks
+    });
+
+    if (json.status === 'ok') {
+      showToast('Sponsor website berhasil disimpan');
+      document.getElementById('spo-web-nama').value = '';
+      document.getElementById('spo-web-teks').value = '';
+      loadSponsorWeb();
+    } else {
+      showToast(json.message || 'Gagal menyimpan sponsor website');
     }
+  } catch (e) {
+    showToast('Gagal menyimpan sponsor website');
+  }
 
-    const btn = document.getElementById('btn-spo-web');
-    btn.disabled = true;
-    btn.textContent = 'MENYIMPAN...';
-
-    try {
-        const res = await fetch(API_URL, {
-            method: 'POST',
-            body: JSON.stringify({
-                token: getToken(),
-                action: 'addSponsorWeb',
-                nama: nama,
-                teks: teks
-            })
-        });
-
-        const json = await res.json();
-
-        if (json.status === 'ok') {
-            showToast('Sponsor website berhasil disimpan');
-            document.getElementById('spo-web-nama').value = '';
-            document.getElementById('spo-web-teks').value = '';
-            loadSponsorWeb();
-        } else {
-            showToast(json.message || 'Gagal menyimpan sponsor website');
-        }
-    } catch (e) {
-        console.error(e);
-        showToast('Gagal menyimpan sponsor website');
-    }
-
-    btn.disabled = false;
-    btn.textContent = 'SIMPAN TEKS WEB';
+  btn.disabled = false;
+  btn.textContent = 'SIMPAN TEKS WEB';
 }
 
 async function hapusSponsorWeb(id) {
-    if (!id) return showToast('ID sponsor tidak ditemukan');
-    if (!confirm('Hapus sponsor website ini?')) return;
+  if (!id) return showToast('ID sponsor tidak ditemukan');
+  if (!confirm('Hapus sponsor website ini?')) return;
 
-    try {
-        const res = await fetch(API_URL, {
-            method: 'POST',
-            body: JSON.stringify({
-                token: getToken(),
-                action: 'deleteSponsorWeb',
-                id: id
-            })
-        });
-        const json = await res.json();
+  try {
+    const json = await postData({
+      token: getToken(),
+      action: 'deleteSponsorWeb',
+      id
+    });
 
-        if (json.status === 'ok') {
-            showToast('Sponsor website dihapus');
-            loadSponsorWeb();
-        } else {
-            showToast(json.message || 'Gagal menghapus sponsor website');
-        }
-    } catch (e) {
-        console.error(e);
-        showToast('Gagal menghapus sponsor website');
+    if (json.status === 'ok') {
+      showToast('Sponsor website dihapus');
+      loadSponsorWeb();
+    } else {
+      showToast(json.message || 'Gagal menghapus sponsor website');
     }
+  } catch (e) {
+    showToast('Gagal menghapus sponsor website');
+  }
 }
 
-async function loadKampanyeData() {
-    await Promise.all([
-        loadMasterSponsor(),
-        loadMasterMerchant(),
-        loadCampaignProgram(),
-        loadVoucherList()
-    ]);
+async function loadRezekiBerkah() {
+  await Promise.all([
+    loadMasterSponsor(),
+    loadMasterMerchant(),
+    loadCampaignProgram(),
+    loadLaporanRezekiBerkah()
+  ]);
+  isiPilihanMasjid();
 }
 
 async function loadMasterSponsor() {
-    const box = document.getElementById('list-master-sponsor');
-    const select = document.getElementById('cp-sponsor');
-    if (!box || !select) return;
+  const box = document.getElementById('list-master-sponsor');
 
-    try {
-        const res = await fetch(API_URL + '?action=getMasterSponsor&token=' + encodeURIComponent(getToken()) + '&_t=' + Date.now());
-        const json = await res.json();
-        const list = json.data || [];
+  try {
+    const res = await fetch(API_URL + '?action=getMasterSponsor&token=' + encodeURIComponent(getToken()) + '&_t=' + Date.now());
+    const json = await res.json();
+    masterSponsorData = json.data || [];
 
-        select.innerHTML = '<option value="">-- Pilih Sponsor --</option>' + list.map(s => `
-            <option value="${escapeHtml(s.id || s.id_sponsor || '')}">${escapeHtml(s.nama_perusahaan || s.nama || '')} - ${escapeHtml(s.merk_produk || s.merk || '')}</option>
-        `).join('');
+    isiPilihanSponsor();
 
-        if (!list.length) {
-            box.innerHTML = '<div style="font-size:12px; text-align:center;">Belum ada master sponsor.</div>';
-            return;
-        }
-
-        box.innerHTML = list.map(s => `
-            <div class="item-card">
-                <div style="font-weight:700; color:white;">${escapeHtml(s.nama_perusahaan || s.nama || '-')}</div>
-                <div style="font-size:12px; color:rgba(255,255,255,0.6);">${escapeHtml(s.merk_produk || s.merk || '')}</div>
-            </div>
-        `).join('');
-    } catch (e) {
-        console.error(e);
-        box.innerHTML = '<div style="font-size:12px; text-align:center;">Gagal memuat sponsor.</div>';
+    if (!masterSponsorData.length) {
+      box.innerHTML = '<div style="font-size:12px; text-align:center;">Belum ada Sahabat Berkah.</div>';
+      return;
     }
+
+    box.innerHTML = masterSponsorData.map(s => {
+      const id = s.id || s.id_sponsor || s.ID_SPONSOR || '';
+      const nama = s.nama_perusahaan || s.nama || s.NAMA_PERUSAHAAN || '';
+      const merk = s.merk_produk || s.merk || s.MERK_PRODUK || '';
+      const jenis = s.jenis_rezeki || s.JENIS_REZEKI || '';
+      const deskripsi = s.deskripsi_rezeki || s.DESKRIPSI_REZEKI || '';
+      const kontak = s.kontak_sponsor || s.KONTAK_SPONSOR || '';
+
+      return `
+        <div class="item-card">
+          <div class="item-title">${escapeHtml(nama)}</div>
+          <div class="item-gold">${escapeHtml(merk)} ${jenis ? '• ' + escapeHtml(jenis) : ''}</div>
+          <div class="item-sub">${escapeHtml(deskripsi)}</div>
+          ${kontak ? `<div class="item-sub">Kontak: ${escapeHtml(kontak)}</div>` : ''}
+        </div>
+      `;
+    }).join('');
+  } catch (e) {
+    box.innerHTML = '<div style="font-size:12px; text-align:center;">Gagal memuat Sahabat Berkah.</div>';
+  }
+}
+
+function isiPilihanSponsor() {
+  const selects = [document.getElementById('cp-sponsor'), document.getElementById('mm-sponsor')];
+
+  selects.forEach(select => {
+    if (!select) return;
+
+    const current = select.value;
+    select.innerHTML = '<option value="">-- Pilih Sahabat Berkah --</option>' + masterSponsorData.map(s => {
+      const id = s.id || s.id_sponsor || s.ID_SPONSOR || '';
+      const nama = s.nama_perusahaan || s.nama || s.NAMA_PERUSAHAAN || '';
+      const merk = s.merk_produk || s.merk || s.MERK_PRODUK || '';
+      return `<option value="${escapeHtml(id)}">${escapeHtml(nama)} - ${escapeHtml(merk)}</option>`;
+    }).join('');
+
+    select.value = current;
+  });
 }
 
 async function tambahMasterSponsor() {
-    const nama = document.getElementById('ms-nama').value.trim();
-    const merk = document.getElementById('ms-merk').value.trim();
+  const nama = document.getElementById('ms-nama').value.trim();
+  const merk = document.getElementById('ms-merk').value.trim();
+  const jenis = document.getElementById('ms-jenis').value.trim();
+  const deskripsi = document.getElementById('ms-deskripsi').value.trim();
+  const kontak = document.getElementById('ms-kontak').value.trim();
 
-    if (!nama || !merk) return showToast('Lengkapi master sponsor');
+  if (!nama || !merk || !jenis || !deskripsi) {
+    return showToast('Lengkapi data Sahabat Berkah');
+  }
 
-    try {
-        const res = await fetch(API_URL, {
-            method: 'POST',
-            body: JSON.stringify({
-                token: getToken(),
-                action: 'addMasterSponsor',
-                nama_perusahaan: nama,
-                merk_produk: merk
-            })
-        });
+  const btn = document.getElementById('btn-ms');
+  btn.disabled = true;
+  btn.textContent = 'MENYIMPAN...';
 
-        const json = await res.json();
+  try {
+    const json = await postData({
+      token: getToken(),
+      action: 'addMasterSponsor',
+      nama_perusahaan: nama,
+      merk_produk: merk,
+      jenis_rezeki: jenis,
+      deskripsi_rezeki: deskripsi,
+      kontak_sponsor: kontak
+    });
 
-        if (json.status === 'ok') {
-            showToast('Master sponsor disimpan');
-            document.getElementById('ms-nama').value = '';
-            document.getElementById('ms-merk').value = '';
-            loadMasterSponsor();
-        } else {
-            showToast(json.message || 'Gagal menyimpan master sponsor');
-        }
-    } catch (e) {
-        console.error(e);
-        showToast('Gagal menyimpan master sponsor');
+    if (json.status === 'ok') {
+      showToast('Sahabat Berkah disimpan');
+      document.getElementById('ms-nama').value = '';
+      document.getElementById('ms-merk').value = '';
+      document.getElementById('ms-jenis').value = '';
+      document.getElementById('ms-deskripsi').value = '';
+      document.getElementById('ms-kontak').value = '';
+      loadMasterSponsor();
+    } else {
+      showToast(json.message || 'Gagal menyimpan Sahabat Berkah');
     }
+  } catch (e) {
+    showToast('Gagal menyimpan Sahabat Berkah');
+  }
+
+  btn.disabled = false;
+  btn.textContent = 'SIMPAN SAHABAT BERKAH';
 }
 
 async function loadMasterMerchant() {
-    const box = document.getElementById('list-master-merchant');
-    const select = document.getElementById('cp-merchant');
-    if (!box || !select) return;
+  const box = document.getElementById('list-master-merchant');
 
-    try {
-        const res = await fetch(API_URL + '?action=getMasterMerchant&token=' + encodeURIComponent(getToken()) + '&_t=' + Date.now());
-        const json = await res.json();
-        const list = json.data || [];
+  try {
+    const res = await fetch(API_URL + '?action=getMasterMerchant&token=' + encodeURIComponent(getToken()) + '&_t=' + Date.now());
+    const json = await res.json();
+    masterMerchantData = json.data || [];
 
-        select.innerHTML = '<option value="">-- Pilih Merchant --</option>' + list.map(m => `
-            <option value="${escapeHtml(m.id || m.id_merchant || '')}">${escapeHtml(m.nama_warung || m.nama || '')} (${escapeHtml(m.kode_merchant || m.kode || '')})</option>
-        `).join('');
+    filterMerchantBySponsor();
 
-        if (!list.length) {
-            box.innerHTML = '<div style="font-size:12px; text-align:center;">Belum ada master merchant.</div>';
-            return;
-        }
-
-        box.innerHTML = list.map(m => `
-            <div class="item-card">
-                <div style="font-weight:700; color:white;">${escapeHtml(m.nama_warung || m.nama || '-')}</div>
-                <div style="font-size:12px; color:var(--gold);">${escapeHtml(m.kode_merchant || m.kode || '')}</div>
-                <div style="font-size:12px; color:rgba(255,255,255,0.6);">${escapeHtml(m.alamat_cabang || m.alamat || '')}</div>
-            </div>
-        `).join('');
-    } catch (e) {
-        console.error(e);
-        box.innerHTML = '<div style="font-size:12px; text-align:center;">Gagal memuat merchant.</div>';
+    if (!masterMerchantData.length) {
+      box.innerHTML = '<div style="font-size:12px; text-align:center;">Belum ada Titik Ambil Berkah.</div>';
+      return;
     }
+
+    box.innerHTML = masterMerchantData.map(m => {
+      const id = m.id || m.id_merchant || m.ID_MERCHANT || '';
+      const nama = m.nama_warung || m.nama_warung_toko || m.nama || m.NAMA_WARUNG_TOKO || '';
+      const alamat = m.alamat_cabang || m.alamat || m.ALAMAT_CABANG || '';
+      const kode = m.kode_merchant || m.kode || m.KODE_MERCHANT || '';
+      const sponsor = cariNamaSponsor(m.id_sponsor || m.ID_SPONSOR || '');
+      const wa = m.no_wa_pic || m.NO_WA_PIC || '';
+
+      return `
+        <div class="item-card">
+          <div class="item-title">${escapeHtml(nama)}</div>
+          <div class="item-gold">${escapeHtml(kode)} ${sponsor ? '• ' + escapeHtml(sponsor) : ''}</div>
+          <div class="item-sub">${escapeHtml(alamat)}</div>
+          ${wa ? `<div class="item-sub">WA PIC: ${escapeHtml(wa)}</div>` : ''}
+        </div>
+      `;
+    }).join('');
+  } catch (e) {
+    box.innerHTML = '<div style="font-size:12px; text-align:center;">Gagal memuat Titik Ambil Berkah.</div>';
+  }
+}
+
+function cariNamaSponsor(idSponsor) {
+  const found = masterSponsorData.find(s => {
+    const id = s.id || s.id_sponsor || s.ID_SPONSOR || '';
+    return String(id) === String(idSponsor);
+  });
+  if (!found) return '';
+  const nama = found.nama_perusahaan || found.nama || found.NAMA_PERUSAHAAN || '';
+  const merk = found.merk_produk || found.merk || found.MERK_PRODUK || '';
+  return `${nama} - ${merk}`;
+}
+
+function filterMerchantBySponsor() {
+  const select = document.getElementById('cp-merchant');
+  if (!select) return;
+
+  const sponsorDipilih = document.getElementById('cp-sponsor') ? document.getElementById('cp-sponsor').value : '';
+  const current = select.value;
+
+  const filtered = sponsorDipilih
+    ? masterMerchantData.filter(m => String(m.id_sponsor || m.ID_SPONSOR || '') === String(sponsorDipilih))
+    : masterMerchantData;
+
+  select.innerHTML = '<option value="">-- Pilih Titik Ambil --</option>' + filtered.map(m => {
+    const id = m.id || m.id_merchant || m.ID_MERCHANT || '';
+    const nama = m.nama_warung || m.nama_warung_toko || m.nama || m.NAMA_WARUNG_TOKO || '';
+    const kode = m.kode_merchant || m.kode || m.KODE_MERCHANT || '';
+    return `<option value="${escapeHtml(id)}">${escapeHtml(nama)} ${kode ? '(' + escapeHtml(kode) + ')' : ''}</option>`;
+  }).join('');
+
+  select.value = current;
 }
 
 async function tambahMasterMerchant() {
-    const nama = document.getElementById('mm-nama').value.trim();
-    const kode = document.getElementById('mm-kode').value.trim();
-    const alamat = document.getElementById('mm-alamat').value.trim();
+  const idSponsor = document.getElementById('mm-sponsor').value.trim();
+  const nama = document.getElementById('mm-nama').value.trim();
+  const alamat = document.getElementById('mm-alamat').value.trim();
+  const wa = document.getElementById('mm-wa').value.trim();
 
-    if (!nama || !kode || !alamat) return showToast('Lengkapi master merchant');
+  if (!idSponsor || !nama || !alamat) {
+    return showToast('Lengkapi Titik Ambil Berkah');
+  }
 
-    try {
-        const res = await fetch(API_URL, {
-            method: 'POST',
-            body: JSON.stringify({
-                token: getToken(),
-                action: 'addMasterMerchant',
-                nama_warung: nama,
-                kode_merchant: kode,
-                alamat_cabang: alamat
-            })
-        });
+  const btn = document.getElementById('btn-mm');
+  btn.disabled = true;
+  btn.textContent = 'MENYIMPAN...';
 
-        const json = await res.json();
+  try {
+    const json = await postData({
+      token: getToken(),
+      action: 'addMasterMerchant',
+      id_sponsor: idSponsor,
+      nama_warung_toko: nama,
+      alamat_cabang: alamat,
+      no_wa_pic: wa
+    });
 
-        if (json.status === 'ok') {
-            showToast('Master merchant disimpan');
-            document.getElementById('mm-nama').value = '';
-            document.getElementById('mm-kode').value = '';
-            document.getElementById('mm-alamat').value = '';
-            loadMasterMerchant();
-        } else {
-            showToast(json.message || 'Gagal menyimpan master merchant');
-        }
-    } catch (e) {
-        console.error(e);
-        showToast('Gagal menyimpan master merchant');
+    if (json.status === 'ok') {
+      showToast('Titik Ambil Berkah disimpan');
+      document.getElementById('mm-sponsor').value = '';
+      document.getElementById('mm-nama').value = '';
+      document.getElementById('mm-alamat').value = '';
+      document.getElementById('mm-wa').value = '';
+      loadMasterMerchant();
+    } else {
+      showToast(json.message || 'Gagal menyimpan Titik Ambil');
     }
+  } catch (e) {
+    showToast('Gagal menyimpan Titik Ambil');
+  }
+
+  btn.disabled = false;
+  btn.textContent = 'SIMPAN TITIK AMBIL BERKAH';
+}
+
+function isiPilihanMasjid() {
+  const select = document.getElementById('cp-masjid');
+  if (!select) return;
+
+  const current = select.value;
+  const list = allMasjidData || [];
+
+  select.innerHTML = '<option value="">-- Pilih Masjid --</option>' + list.map(m => {
+    const id = m.id || m.id_masjid || m.ID_MASJID || '';
+    const nama = m.nama || m.NAMA || '';
+    const kel = m.kelurahan || m.KELURAHAN || '';
+    return `<option value="${escapeHtml(id)}">${escapeHtml(nama)}${kel ? ' - ' + escapeHtml(kel) : ''}</option>`;
+  }).join('');
+
+  select.value = current;
 }
 
 async function loadCampaignProgram() {
-    const box = document.getElementById('list-campaign');
-    if (!box) return;
+  const box = document.getElementById('list-campaign');
 
-    try {
-        const res = await fetch(API_URL + '?action=getCampaignProgram&token=' + encodeURIComponent(getToken()) + '&_t=' + Date.now());
-        const json = await res.json();
-        const list = json.data || [];
+  try {
+    const res = await fetch(API_URL + '?action=getCampaignProgram&token=' + encodeURIComponent(getToken()) + '&_t=' + Date.now());
+    const json = await res.json();
+    campaignData = json.data || [];
 
-        if (!list.length) {
-            box.innerHTML = '<div style="font-size:12px; text-align:center;">Belum ada kampanye.</div>';
-            return;
-        }
-
-        box.innerHTML = list.map(c => `
-            <div class="item-card">
-                <div style="font-weight:700; color:white;">${escapeHtml(c.nama_program || c.nama || '-')}</div>
-                <div style="font-size:12px; color:rgba(255,255,255,0.6);">Kuota: ${escapeHtml(c.total_kuota || c.kuota || '0')}</div>
-                <div style="font-size:12px; color:var(--gold);">Batas: ${escapeHtml(c.tanggal_kadaluarsa || c.expired || '')}</div>
-            </div>
-        `).join('');
-    } catch (e) {
-        console.error(e);
-        box.innerHTML = '<div style="font-size:12px; text-align:center;">Gagal memuat kampanye.</div>';
+    if (!campaignData.length) {
+      box.innerHTML = '<div style="font-size:12px; text-align:center;">Belum ada Program Rezeki Berkah.</div>';
+      return;
     }
+
+    box.innerHTML = campaignData.map(c => {
+      const id = c.id || c.id_campaign || c.ID_CAMPAIGN || '';
+      const nama = c.nama_program || c.nama || c.NAMA_PROGRAM || '-';
+      const kuota = c.total_kuota || c.TOTAL_KUOTA || '0';
+      const redeem = c.sudah_redeem || c.SUDAH_REDEEM || '0';
+      const expired = c.tanggal_kadaluarsa || c.expired || c.TANGGAL_KADALUARSA || '';
+      const mulai = c.tanggal_mulai || c.TANGGAL_MULAI || '';
+      const link = c.link_qr || c.LINK_QR || '';
+      const sponsor = cariNamaSponsor(c.id_sponsor || c.ID_SPONSOR || '');
+      const merchant = cariNamaMerchant(c.id_merchant || c.ID_MERCHANT || '');
+      const masjid = cariNamaMasjid(c.id_masjid || c.ID_MASJID || '');
+
+      return `
+        <div class="item-card">
+          <div class="item-title">${escapeHtml(nama)}</div>
+          <div class="item-gold">${escapeHtml(sponsor)} ${merchant ? '• ' + escapeHtml(merchant) : ''}</div>
+          <div class="item-sub">Masjid: ${escapeHtml(masjid || '-')}</div>
+          <div class="item-sub">Kuota Berkah: ${escapeHtml(redeem)} / ${escapeHtml(kuota)}</div>
+          <div class="item-sub">Masa Program: ${escapeHtml(mulai)} sampai ${escapeHtml(expired)}</div>
+          ${link ? `<div class="item-sub" style="word-break:break-all;">QR Link: ${escapeHtml(link)}</div>` : ''}
+          <div class="item-actions">
+            ${link ? `<button class="btn-action btn-edit" onclick="copyText('${escapeJs(link)}')">Salin Link QR</button>` : ''}
+            ${link ? `<a class="btn-action btn-edit" style="text-decoration:none;" target="_blank" href="${escapeHtml(link)}">Buka QR</a>` : ''}
+          </div>
+        </div>
+      `;
+    }).join('');
+  } catch (e) {
+    box.innerHTML = '<div style="font-size:12px; text-align:center;">Gagal memuat Program Rezeki Berkah.</div>';
+  }
+}
+
+function cariNamaMerchant(idMerchant) {
+  const found = masterMerchantData.find(m => {
+    const id = m.id || m.id_merchant || m.ID_MERCHANT || '';
+    return String(id) === String(idMerchant);
+  });
+  if (!found) return '';
+  return found.nama_warung || found.nama_warung_toko || found.nama || found.NAMA_WARUNG_TOKO || '';
+}
+
+function cariNamaMasjid(idMasjid) {
+  const found = allMasjidData.find(m => {
+    const id = m.id || m.id_masjid || m.ID_MASJID || '';
+    return String(id) === String(idMasjid);
+  });
+  if (!found) return '';
+  return found.nama || found.NAMA || '';
+}
+
+function escapeJs(text) {
+  return String(text || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/\n/g, '\\n');
 }
 
 async function tambahCampaignProgram() {
-    const sponsor = document.getElementById('cp-sponsor').value;
-    const merchant = document.getElementById('cp-merchant').value;
-    const nama = document.getElementById('cp-nama').value.trim();
-    const kuota = document.getElementById('cp-kuota').value.trim();
-    const expired = document.getElementById('cp-expired').value;
+  const idSponsor = document.getElementById('cp-sponsor').value.trim();
+  const idMerchant = document.getElementById('cp-merchant').value.trim();
+  const idMasjid = document.getElementById('cp-masjid').value.trim();
+  const nama = document.getElementById('cp-nama').value.trim();
+  const kuota = document.getElementById('cp-kuota').value.trim();
+  const mulai = document.getElementById('cp-mulai').value;
+  const expired = document.getElementById('cp-expired').value;
 
-    if (!sponsor || !merchant || !nama || !kuota || !expired) {
-        return showToast('Lengkapi data kampanye');
+  if (!idSponsor || !idMerchant || !idMasjid || !nama || !kuota || !mulai || !expired) {
+    return showToast('Lengkapi Program Rezeki Berkah');
+  }
+
+  const btn = document.getElementById('btn-cp');
+  btn.disabled = true;
+  btn.textContent = 'MEMBUAT PROGRAM...';
+
+  try {
+    const json = await postData({
+      token: getToken(),
+      action: 'addCampaignProgram',
+      id_sponsor: idSponsor,
+      id_merchant: idMerchant,
+      id_masjid: idMasjid,
+      nama_program: nama,
+      total_kuota: kuota,
+      tanggal_mulai: mulai,
+      tanggal_kadaluarsa: expired
+    });
+
+    if (json.status === 'ok') {
+      showToast('Program Rezeki Berkah dibuat');
+
+      const linkQr = json.link_qr || json.link || json.qr_link || '';
+      const resultBox = document.getElementById('campaign-result');
+
+      if (linkQr) {
+        resultBox.style.display = 'block';
+        resultBox.innerHTML = `
+          <b>Link QR Program Rezeki Berkah:</b><br>
+          <div style="word-break:break-all; margin-top:6px;">${escapeHtml(linkQr)}</div>
+          <button class="btn-copy" onclick="copyText('${escapeJs(linkQr)}')">Salin Link QR</button>
+        `;
+      } else {
+        resultBox.style.display = 'none';
+        resultBox.innerHTML = '';
+      }
+
+      document.getElementById('cp-sponsor').value = '';
+      document.getElementById('cp-merchant').value = '';
+      document.getElementById('cp-masjid').value = '';
+      document.getElementById('cp-nama').value = '';
+      document.getElementById('cp-kuota').value = '';
+      document.getElementById('cp-mulai').value = '';
+      document.getElementById('cp-expired').value = '';
+
+      loadCampaignProgram();
+    } else {
+      showToast(json.message || 'Gagal membuat Program Rezeki Berkah');
     }
+  } catch (e) {
+    showToast('Gagal membuat Program Rezeki Berkah');
+  }
 
-    try {
-        const res = await fetch(API_URL, {
-            method: 'POST',
-            body: JSON.stringify({
-                token: getToken(),
-                action: 'addCampaignProgram',
-                id_sponsor: sponsor,
-                id_merchant: merchant,
-                nama_program: nama,
-                total_kuota: kuota,
-                tanggal_kadaluarsa: expired
-            })
-        });
-
-        const json = await res.json();
-
-        if (json.status === 'ok') {
-            showToast('Kampanye berhasil dibuat');
-            document.getElementById('cp-sponsor').value = '';
-            document.getElementById('cp-merchant').value = '';
-            document.getElementById('cp-nama').value = '';
-            document.getElementById('cp-kuota').value = '';
-            document.getElementById('cp-expired').value = '';
-            loadCampaignProgram();
-        } else {
-            showToast(json.message || 'Gagal membuat kampanye');
-        }
-    } catch (e) {
-        console.error(e);
-        showToast('Gagal membuat kampanye');
-    }
+  btn.disabled = false;
+  btn.textContent = 'BUAT PROGRAM REZEKI BERKAH';
 }
 
-async function loadVoucherList() {
-    const box = document.getElementById('list-voucher');
-    if (!box) return;
+async function loadLaporanRezekiBerkah() {
+  const tbody = document.getElementById('tabel-laporan-berkah');
+  if (!tbody) return;
 
-    box.innerHTML = '<div style="font-size:12px; text-align:center;">Memuat...</div>';
+  tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;">Memuat laporan...</td></tr>';
 
-    try {
-        const res = await fetch(API_URL + '?action=getVoucherList&token=' + encodeURIComponent(getToken()) + '&_t=' + Date.now());
-        const json = await res.json();
-        const list = json.data || [];
+  try {
+    const res = await fetch(API_URL + '?action=getLaporanRezekiBerkah&token=' + encodeURIComponent(getToken()) + '&_t=' + Date.now());
+    const json = await res.json();
+    laporanBerkahData = json.data || [];
 
-        if (!list.length) {
-            box.innerHTML = '<div style="font-size:12px; text-align:center;">Belum ada scan.</div>';
-            return;
-        }
-
-        box.innerHTML = list.slice(0, 50).map(v => `
-            <div class="item-card">
-                <div style="font-weight:700; color:white;">${escapeHtml(v.kode_unik || v.kode || '-')}</div>
-                <div style="font-size:12px; color:rgba(255,255,255,0.6);">${escapeHtml(v.nama_jamaah || v.nama || '')} — ${escapeHtml(v.wa_jamaah || v.wa || '')}</div>
-                <div style="font-size:12px; color:var(--gold);">${escapeHtml(v.status || '')} ${v.lokasi_scan ? '• ' + escapeHtml(v.lokasi_scan) : ''}</div>
-            </div>
-        `).join('');
-    } catch (e) {
-        console.error(e);
-        box.innerHTML = '<div style="font-size:12px; text-align:center;">Gagal memuat scan.</div>';
+    if (!laporanBerkahData.length) {
+      tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;">Belum ada data Rezeki Berkah.</td></tr>';
+      return;
     }
+
+    tbody.innerHTML = laporanBerkahData.map(row => {
+      const nama = row.nama_jamaah || row.NAMA_JAMAAH || '';
+      const wa = row.no_wa || row.NO_WA || row.wa || '';
+      const masjid = row.nama_masjid || row.NAMA_MASJID || row.lokasi_scan || row.LOKASI_SCAN || '';
+      const program = row.nama_program || row.NAMA_PROGRAM || '';
+      const sponsor = row.nama_sponsor || row.NAMA_SPONSOR || row.nama_perusahaan || row.NAMA_PERUSAHAAN || '';
+      const merchant = row.nama_merchant || row.NAMA_MERCHANT || row.nama_warung_toko || row.NAMA_WARUNG_TOKO || '';
+      const status = row.status || row.STATUS || '';
+      const waktuBuat = row.waktu_dibuat || row.WAKTU_DIBUAT || '';
+      const waktuRedeem = row.waktu_redeem || row.WAKTU_REDEEM || '';
+
+      const statusClass = String(status).toUpperCase().includes('TERPAKAI') || String(status).toUpperCase().includes('DIAMBIL') ? 'status-used' : 'status-new';
+      const statusLabel = ubahStatusBerkah(status);
+
+      return `
+        <tr>
+          <td>${escapeHtml(nama)}</td>
+          <td>${escapeHtml(wa)}</td>
+          <td>${escapeHtml(masjid)}</td>
+          <td>${escapeHtml(program)}</td>
+          <td>${escapeHtml(sponsor)}</td>
+          <td>${escapeHtml(merchant)}</td>
+          <td><span class="status-pill ${statusClass}">${escapeHtml(statusLabel)}</span></td>
+          <td>${escapeHtml(normalizeDate(waktuBuat))}</td>
+          <td>${escapeHtml(normalizeDate(waktuRedeem))}</td>
+        </tr>
+      `;
+    }).join('');
+  } catch (e) {
+    tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;">Gagal memuat laporan.</td></tr>';
+  }
+}
+
+function ubahStatusBerkah(status) {
+  const s = String(status || '').toUpperCase();
+  if (s === 'TERPAKAI' || s === 'SUDAH_DITUKAR' || s === 'SUDAH_DIAMBIL') return 'Sudah Diambil';
+  if (s === 'BARU' || s === 'AKTIF' || s === 'BELUM_DITUKAR') return 'Kode Dibuat';
+  if (s === 'HANGUS') return 'Masa Berkah Berakhir';
+  return status || 'Kode Dibuat';
+}
+
+function copyLaporanRezekiBerkah() {
+  if (!laporanBerkahData.length) {
+    showToast('Belum ada laporan untuk disalin');
+    return;
+  }
+
+  const lines = [];
+  lines.push('LAPORAN REZEKI BERKAH');
+  lines.push('Power of Masjid');
+  lines.push('');
+
+  laporanBerkahData.forEach((row, i) => {
+    const nama = row.nama_jamaah || row.NAMA_JAMAAH || '';
+    const wa = row.no_wa || row.NO_WA || row.wa || '';
+    const masjid = row.nama_masjid || row.NAMA_MASJID || row.lokasi_scan || row.LOKASI_SCAN || '';
+    const program = row.nama_program || row.NAMA_PROGRAM || '';
+    const sponsor = row.nama_sponsor || row.NAMA_SPONSOR || row.nama_perusahaan || row.NAMA_PERUSAHAAN || '';
+    const merchant = row.nama_merchant || row.NAMA_MERCHANT || row.nama_warung_toko || row.NAMA_WARUNG_TOKO || '';
+    const status = ubahStatusBerkah(row.status || row.STATUS || '');
+    const waktuBuat = normalizeDate(row.waktu_dibuat || row.WAKTU_DIBUAT || '');
+    const waktuRedeem = normalizeDate(row.waktu_redeem || row.WAKTU_REDEEM || '');
+
+    lines.push(`${i + 1}. ${nama}`);
+    lines.push(`WA: ${wa}`);
+    lines.push(`Masjid: ${masjid}`);
+    lines.push(`Program: ${program}`);
+    lines.push(`Sahabat Berkah: ${sponsor}`);
+    lines.push(`Titik Ambil Berkah: ${merchant}`);
+    lines.push(`Status: ${status}`);
+    lines.push(`Waktu Kode: ${waktuBuat}`);
+    if (waktuRedeem) lines.push(`Waktu Diambil: ${waktuRedeem}`);
+    lines.push('');
+  });
+
+  copyText(lines.join('\n'));
 }
 </script>
 
