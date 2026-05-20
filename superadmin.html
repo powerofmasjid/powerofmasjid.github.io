@@ -12,344 +12,717 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg-dark);
 
 .splash, .login-wrap { position: fixed; inset: 0; background: var(--bg-dark); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; }
 .splash.hide { opacity: 0; pointer-events: none; transition: 0.5s; }
-.login-box { background: var(--panel-bg); padding: 40px; border-radius: 20px; border: 1px solid var(--border); width: 100%; max-width: 400px; text-align: center; }
-.login-box h2 { color: var(--gold); margin-bottom: 20px; }
-.form-control { width: 100%; padding: 12px 15px; margin-bottom: 15px; border-radius: 10px; border: 1px solid var(--border); background: rgba(0,0,0,0.2); color: white; outline: none; }
-.form-control:focus { border-color: var(--gold); }
-.btn { background: var(--gold); color: #000; border: none; padding: 12px 20px; border-radius: 10px; font-weight: bold; cursor: pointer; width: 100%; transition: 0.3s; }
-.btn:hover { opacity: 0.9; }
+.login-wrap { z-index: 9998; display: none; padding: 20px; }
+.login-wrap.show { display: flex; }
+.login-card { background: var(--panel-bg); border: 1px solid var(--border); border-radius: 16px; padding: 30px 20px; text-align: center; width: 100%; max-width: 360px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
 
-.app-container { display: flex; min-height: 100vh; }
-.sidebar { width: 250px; background: var(--panel-bg); border-right: 1px solid var(--border); padding: 20px 0; display: flex; flex-direction: column; }
-.brand { font-size: 20px; font-weight: 800; color: var(--gold); text-align: center; margin-bottom: 30px; padding: 0 20px; }
-.nav-btn { background: transparent; color: var(--text-light); border: none; padding: 15px 20px; text-align: left; font-size: 15px; cursor: pointer; border-left: 4px solid transparent; transition: 0.2s; }
-.nav-btn:hover, .nav-btn.active { background: rgba(201,168,76,0.1); border-left-color: var(--gold); color: var(--gold); font-weight: bold; }
-.logout-btn { margin-top: auto; color: var(--danger); text-align: center; padding: 15px; cursor: pointer; font-weight: bold; }
+.header { background: linear-gradient(180deg, #051A0F, var(--bg-dark)); padding: 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; }
+.logo-area { display: flex; align-items: center; gap: 10px; }
+.brand-name { font-weight: 700; font-size: 16px; letter-spacing: 1px; color: white; }
+.brand-sub { font-size: 11px; color: var(--gold); text-transform: uppercase; letter-spacing: 2px; }
+.btn-logout { background: rgba(201,168,76,0.1); border: 1px solid var(--gold); color: var(--gold); padding: 6px 12px; border-radius: 6px; font-size: 12px; cursor: pointer; font-family: inherit; }
 
-.main-content { flex: 1; padding: 30px; overflow-y: auto; height: 100vh; }
-.header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; padding-bottom: 15px; border-bottom: 1px solid var(--border); }
-.header h1 { font-size: 24px; }
+.nav-scroll { background: var(--panel-bg); display: flex; overflow-x: auto; border-bottom: 1px solid var(--border); }
+.nav-tab { padding: 15px 20px; font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.6); white-space: nowrap; cursor: pointer; border-bottom: 3px solid transparent; transition: 0.3s; }
+.nav-tab.active { color: var(--gold); border-bottom-color: var(--gold); }
 
-.tab-content { display: none; animation: fadeIn 0.3s; }
+.content { padding: 20px; max-width: 800px; margin: 0 auto; padding-bottom: 80px; }
+.tab-content { display: none; animation: fadeIn 0.3s ease; }
 .tab-content.active { display: block; }
 @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-.card { background: var(--panel-bg); border: 1px solid var(--border); border-radius: 15px; padding: 25px; margin-bottom: 25px; }
-.card-title { font-size: 18px; color: var(--gold); margin-bottom: 20px; font-weight: bold; border-bottom: 1px dashed var(--border); padding-bottom: 10px; }
+.card { background: var(--panel-bg); border: 1px solid var(--border); border-radius: 16px; padding: 20px; margin-bottom: 20px; }
+.card-title { font-size: 16px; font-weight: 700; color: var(--gold); margin-bottom: 15px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 10px; }
 
-.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-.stat-box { background: rgba(0,0,0,0.2); padding: 20px; border-radius: 12px; border: 1px solid var(--border); text-align: center; }
-.stat-box h3 { font-size: 14px; opacity: 0.8; margin-bottom: 10px; }
-.stat-box .num { font-size: 32px; font-weight: 800; color: var(--gold); }
+.stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+.stat-box { background: rgba(0,0,0,0.2); border: 1px solid var(--border); border-radius: 12px; padding: 15px; text-align: center; }
+.stat-val { font-family: 'Amiri', serif; font-size: 28px; color: var(--gold); font-weight: 700; }
+.stat-lbl { font-size: 11px; color: rgba(255,255,255,0.7); margin-top: 5px; text-transform: uppercase; letter-spacing: 1px; }
 
-table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid var(--border); font-size: 14px; }
-th { color: var(--gold); font-weight: 600; background: rgba(0,0,0,0.2); }
-tbody tr:hover { background: rgba(255,255,255,0.02); }
+.progress-bg { background: rgba(255,255,255,0.1); height: 12px; border-radius: 20px; overflow: hidden; margin: 15px 0 8px; }
+.progress-fill { background: linear-gradient(90deg, #C9A84C, #FDE68A); height: 100%; border-radius: 20px; width: 0%; transition: width 1s ease; }
+.progress-info { display: flex; justify-content: space-between; font-size: 12px; color: rgba(255,255,255,0.8); }
 
-.badge { padding: 5px 10px; border-radius: 6px; font-size: 12px; font-weight: bold; }
-.badge.aktif { background: rgba(16,185,129,0.2); color: var(--success); }
-.badge.expired { background: rgba(220,38,38,0.2); color: var(--danger); }
+.form-group { margin-bottom: 15px; text-align: left; }
+.form-group label { display: block; font-size: 12px; font-weight: 500; color: rgba(255,255,255,0.8); margin-bottom: 6px; }
+.form-control { width: 100%; background: rgba(0,0,0,0.3); border: 1px solid var(--border); color: white; padding: 12px 15px; border-radius: 10px; font-family: inherit; font-size: 14px; outline: none; }
+.form-control:focus { border-color: var(--gold); }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.btn-primary { width: 100%; background: var(--gold); color: var(--bg-dark); border: none; padding: 14px; border-radius: 10px; font-weight: 700; font-size: 14px; cursor: pointer; font-family: inherit; margin-top: 10px; }
+.btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
 
-.toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(100px); background: white; color: var(--bg-dark); font-size: 14px; font-weight: bold; padding: 15px 25px; border-radius: 30px; transition: 0.3s; z-index: 10000; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
-.toast.show { transform: translateX(-50%) translateY(0); }
+.scroll-list { max-height: 450px; overflow-y: auto; padding-right: 5px; }
+.scroll-list::-webkit-scrollbar { width: 4px; }
+.scroll-list::-webkit-scrollbar-thumb { background: rgba(201,168,76,0.3); border-radius: 4px; }
+
+.masjid-card { background: white; border-radius: 12px; padding: 15px; margin-bottom: 15px; color: #1F2937; position: relative; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: all 0.3s ease;}
+.card-aktif { border-left: 6px solid #10B981; }
+.card-pasif { border-left: 6px solid #EF4444; }
+.card-belajar { border-left: 6px solid #F59E0B; }
+.masjid-card h4 { font-size: 16px; margin-bottom: 4px; color: #111827; }
+.masjid-card p { font-size: 12px; color: #4B5563; margin-bottom: 10px; }
+.status-badge { display: inline-block; padding: 4px 10px; border-radius: 20px; font-size: 10px; font-weight: 700; text-transform: uppercase; margin-bottom: 10px; }
+.badge-aktif { background: #ECFDF5; color: #10B981; border: 1px solid #10B981; }
+.badge-pasif { background: #FEF2F2; color: #EF4444; border: 1px solid #EF4444; }
+.badge-belajar { background: #FFFBEB; color: #D97706; border: 1px solid #F59E0B; }
+.check-list { background: #F3F4F6; padding: 10px; border-radius: 8px; font-size: 12px; margin-bottom: 12px; }
+.check-list div { margin-bottom: 4px; }
+.btn-warning { width: 100%; background: #EF4444; color: white; border: none; padding: 10px; border-radius: 8px; font-weight: 600; font-size: 12px; cursor: pointer; transition: 0.2s; }
+.btn-warning:hover { background: #DC2626; }
+.btn-small { background: rgba(255,255,255,0.1); border: 1px solid var(--border); color: white; padding: 6px 12px; border-radius: 6px; font-size: 11px; cursor: pointer; }
+.btn-small.dark { background: white; color: #1F2937; border: 1px solid #D1D5DB; }
+
+.item-card { background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 15px; margin-bottom: 10px; cursor: pointer; transition: background 0.2s; }
+.item-card:hover { background: rgba(0,0,0,0.3); border-color: var(--gold); }
+.action-buttons { display: none; margin-top: 10px; gap: 8px; padding-top: 10px; border-top: 1px dashed rgba(255,255,255,0.1); }
+.item-card.expanded .action-buttons { display: flex; }
+.btn-action { flex: 1; padding: 8px; border-radius: 6px; font-size: 11px; font-weight: 600; cursor: pointer; border: none; text-align: center; }
+.btn-edit { background: rgba(201,168,76,0.1); color: var(--gold); border: 1px solid rgba(201,168,76,0.3); }
+.btn-del { background: rgba(220, 38, 38, 0.1); color: #FCA5A5; border: 1px solid #DC2626; }
+
+select.form-control option { background: var(--panel-bg); color: white; }
+
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(100px);background:white;color:var(--bg-dark);font-size:13px;font-weight:600;padding:12px 24px;border-radius:20px;transition:transform 0.3s;z-index:9999;}
+.toast.show{transform:translateX(-50%) translateY(0);}
 </style>
 </head>
 <body>
 
 <div class="splash" id="splash">
-    <h1 style="color:var(--gold); font-size:30px; font-weight:800; margin-bottom:10px;">POWER OF MASJID</h1>
-    <p>Memuat Sistem Superadmin...</p>
+  <img src="Logo%20Power%20of%20Masjid.png" style="width:70px; margin-bottom:15px;" alt="Logo">
+  <div style="font-size:12px; letter-spacing:2px; color:var(--gold);">MEMUAT SISTEM PUSAT...</div>
 </div>
 
-<div class="login-wrap" id="login-wrap" style="display:none;">
-    <div class="login-box">
-        <h2>Login Superadmin</h2>
-        <input type="text" id="log-email" class="form-control" placeholder="ID Superadmin (superadmin)">
-        <input type="password" id="log-pin" class="form-control" placeholder="PIN Rahasia (999999)">
-        <button class="btn" onclick="prosesLogin()">MASUK SISTEM</button>
+<div class="login-wrap" id="login-wrap">
+  <div class="login-card">
+    <img src="Logo%20Power%20of%20Masjid.png" style="width:80px; margin-bottom:15px;" alt="Logo">
+    <h2 style="font-size:18px; margin-bottom:5px;">Otoritas Pusat</h2>
+    <p style="font-size:12px; color:rgba(255,255,255,0.6); margin-bottom:20px;">Masukkan PIN Superadmin</p>
+    
+    <div class="form-group">
+      <input type="password" class="form-control" id="pin-superadmin" placeholder="••••••" maxlength="6" style="text-align:center; letter-spacing:8px; font-size:18px;">
     </div>
+    <button class="btn-primary" id="btn-login" onclick="prosesLogin()">MASUK SISTEM</button>
+  </div>
 </div>
 
-<div class="app-container" id="app-container" style="display:none;">
-    <div class="sidebar">
-        <div class="brand">PUSAT KOMANDO</div>
-        <button class="nav-btn active" onclick="bukaTab('dashboard')">📊 Dashboard Utama</button>
-        <button class="nav-btn" onclick="bukaTab('sponsor')">🏢 Master Sponsor</button>
-        <button class="nav-btn" onclick="bukaTab('merchant')">🏪 Master Merchant</button>
-        <button class="nav-btn" onclick="bukaTab('kampanye')">🎯 Program Kampanye</button>
-        <div class="logout-btn" onclick="logout()">KELUAR ➔</div>
+<div id="superadmin-content" style="display:none;">
+
+  <div class="header">
+    <div class="logo-area">
+      <img src="Logo%20Power%20of%20Masjid.png" style="height:40px;" alt="Logo">
+      <div>
+        <div class="brand-name">SUPERADMIN</div>
+        <div class="brand-sub">Power of Masjid</div>
+      </div>
+    </div>
+    <button class="btn-logout" onclick="logout()">LOGOUT</button>
+  </div>
+
+  <div class="nav-scroll">
+    <div class="nav-tab active" onclick="bukaTab('dashboard', this)">DASHBOARD</div>
+    <div class="nav-tab" onclick="bukaTab('masjid', this)">KELOLA MASJID</div>
+    <div class="nav-tab" onclick="bukaTab('iklan', this)">IKLAN GLOBAL</div>
+    <div class="nav-tab" onclick="bukaTab('sponsor', this)">KELOLA SPONSOR</div>
+    <div class="nav-tab" onclick="bukaTab('kampanye', this)">KAMPANYE & MERCHANT</div>
+  </div>
+
+  <div class="content">
+
+    <div id="dashboard" class="tab-content active">
+      <div class="card">
+        <div class="card-title">Statistik Platform</div>
+        <div class="stats-grid">
+          <div class="stat-box">
+            <div class="stat-val" id="stat-masjid">...</div>
+            <div class="stat-lbl">Masjid Aktif</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-val" id="stat-kas">...</div>
+            <div class="stat-lbl">Total Kas Umat</div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Ekspedisi Tracker</div>
+        <div class="progress-bg"><div class="progress-fill" id="ekspedisi-bar"></div></div>
+        <div class="progress-info">
+          <span id="ekspedisi-text">Tercapai: 0 Masjid</span>
+          <span style="color:var(--gold); font-weight:bold;" id="ekspedisi-persen">0%</span>
+        </div>
+      </div>
+      
+      <div class="card">
+        <div class="card-title">Daftar Status Masjid</div>
+        <div id="loading" style="text-align:center; font-size:12px; color:rgba(255,255,255,0.6); padding: 10px; background: rgba(0,0,0,0.2); border-radius: 8px; margin-bottom: 10px;">⏳ Memuat daftar masjid...</div>
+        <div id="list-masjid-container" class="scroll-list"></div>
+      </div>
     </div>
 
-    <div class="main-content">
-        <div class="header">
-            <h1 id="page-title">Dashboard Utama</h1>
-            <div style="font-size:14px; opacity:0.8;">Role: <strong style="color:var(--gold);">SUPERADMIN</strong></div>
-        </div>
-
-        <div id="tab-dashboard" class="tab-content active">
-            <div class="grid-2">
-                <div class="stat-box">
-                    <h3>Total Masjid Aktif</h3>
-                    <div class="num" id="stat-masjid">0</div>
-                </div>
-                <div class="stat-box">
-                    <h3>Total Transaksi Kas Umat</h3>
-                    <div class="num" id="stat-kas">Rp 0</div>
-                </div>
-            </div>
-
-            <div class="card" style="margin-top:25px;">
-                <div class="card-title">Daftar Masjid Terdaftar</div>
-                <div style="overflow-x:auto;">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>ID MASJID</th>
-                                <th>NAMA MASJID</th>
-                                <th>SLUG URL</th>
-                                <th>KELENGKAPAN DATA</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tbl-masjid">
-                            <tr><td colspan="4" style="text-align:center;">Memuat data...</td></tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            
-            <div class="card">
-                <div class="card-title">Log Penukaran Voucher Global</div>
-                <div style="overflow-x:auto;">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>TANGGAL</th>
-                                <th>KODE VOUCHER</th>
-                                <th>ID CAMPAIGN</th>
-                                <th>NAMA JAMAAH</th>
-                                <th>LOKASI SCAN</th>
-                                <th>STATUS</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tbl-log-voucher">
-                            <tr><td colspan="6" style="text-align:center;">Memuat data...</td></tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-        <div id="tab-sponsor" class="tab-content">
-            <div class="card">
-                <div class="card-title">Tambah Sponsor Baru</div>
-                <div class="grid-2">
-                    <input type="text" id="sp-nama" class="form-control" placeholder="Nama Perusahaan (Misal: PT. Berkah)">
-                    <input type="text" id="sp-merk" class="form-control" placeholder="Merk Produk (Misal: Kecap Bango)">
-                </div>
-                <button class="btn" onclick="tambahSponsor()">SIMPAN SPONSOR</button>
-            </div>
-            <div class="card">
-                <div class="card-title">Database Sponsor</div>
-                <div style="overflow-x:auto;">
-                    <table>
-                        <thead><tr><th>ID SPONSOR</th><th>NAMA PERUSAHAAN</th><th>MERK PRODUK</th></tr></thead>
-                        <tbody id="tbl-sponsor"></tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-        <div id="tab-merchant" class="tab-content">
-            <div class="card">
-                <div class="card-title">Daftarkan Warung / Kasir Baru</div>
-                <input type="text" id="mm-nama" class="form-control" placeholder="Nama Warung (Misal: Warteg Bahari)">
-                <input type="text" id="mm-alamat" class="form-control" placeholder="Alamat Singkat">
-                <input type="text" id="mm-kode" class="form-control" placeholder="Buat Kode Kasir Unik (Misal: WHB-01)" style="text-transform:uppercase;">
-                <button class="btn" onclick="tambahMerchant()">SIMPAN MERCHANT</button>
-            </div>
-            <div class="card">
-                <div class="card-title">Database Merchant</div>
-                <div style="overflow-x:auto;">
-                    <table>
-                        <thead><tr><th>ID MERCHANT</th><th>NAMA WARUNG</th><th>KODE KASIR</th></tr></thead>
-                        <tbody id="tbl-merchant"></tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-        <div id="tab-kampanye" class="tab-content">
-            <div class="card">
-                <div class="card-title">Buat Program Rezeki Baru</div>
-                <div class="grid-2">
-                    <select id="cp-sponsor" class="form-control"><option value="">-- Pilih Sponsor --</option></select>
-                    <select id="cp-merchant" class="form-control"><option value="">-- Pilih Warung Pencairan --</option></select>
-                </div>
-                <input type="text" id="cp-nama" class="form-control" placeholder="Nama Program (Misal: Jumat Berkah Makan Gratis)">
-                <div class="grid-2">
-                    <input type="number" id="cp-kuota" class="form-control" placeholder="Total Kuota (Misal: 100)">
-                    <input type="date" id="cp-expired" class="form-control">
-                </div>
-                <button class="btn" onclick="tambahCampaign()">AKTIFKAN PROGRAM</button>
-            </div>
-            <div class="card">
-                <div class="card-title">Daftar Program Berjalan</div>
-                <div style="overflow-x:auto;">
-                    <table>
-                        <thead><tr><th>ID PROGRAM</th><th>NAMA PROGRAM</th><th>KUOTA TERPAKAI</th><th>STATUS</th></tr></thead>
-                        <tbody id="tbl-kampanye"></tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
+    <div id="masjid" class="tab-content">
+      <div class="card">
+        <div class="card-title">Registrasi Masjid Baru</div>
+        <div class="form-group"><label>Nama Masjid</label><input type="text" class="form-control" id="reg-nama" placeholder="Contoh: Masjid Jami' An-Nuriyah" oninput="generateSlug()"></div>
+        <div class="form-group"><label>Kelurahan</label><input type="text" class="form-control" id="reg-kelurahan" placeholder="Contoh: Tanjung Barat" oninput="generateSlug()"></div>
+        <div class="form-group"><label>Kecamatan</label><input type="text" class="form-control" id="reg-kecamatan" placeholder="Contoh: Jagakarsa"></div>
+        <div class="form-group"><label>Slug URL</label><input type="text" class="form-control" id="reg-slug" placeholder="Otomatis terisi..." style="color:var(--gold); font-weight:bold;" readonly></div>
+        <div style="border-top: 1px dashed rgba(255,255,255,0.1); margin:15px 0;"></div>
+        <div class="form-group"><label>Email Pengurus</label><input type="email" class="form-control" id="reg-email" placeholder="dkm@gmail.com"></div>
+        <div class="form-group"><label>PIN DKM</label><input type="number" class="form-control" id="reg-pin" placeholder="123456"></div>
+        <button class="btn-primary" id="btn-tambah" onclick="tambahMasjidBaru()">SIMPAN MASJID BARU</button>
+      </div>
     </div>
+
+    <div id="iklan" class="tab-content">
+      <div class="card">
+        <div class="card-title">Buat Iklan / Pengumuman Global</div>
+        <input type="hidden" id="iklan-id">
+        <div class="form-group"><label>Judul Iklan (Muncul di atas)</label><input type="text" class="form-control" id="iklan-judul" placeholder="Contoh: Info Kurban 1446H"></div>
+        <div class="form-group"><label>Nama Program (Teks Besar)</label><input type="text" class="form-control" id="iklan-program" placeholder="Contoh: Sapi Kolektif BJFarm"></div>
+        <div class="form-group"><label>Deskripsi Singkat</label><textarea class="form-control" id="iklan-desc" style="height:60px"></textarea></div>
+        <div class="form-row">
+          <div class="form-group"><label>Mulai Tayang</label><input type="date" class="form-control" id="iklan-mulai"></div>
+          <div class="form-group"><label>Selesai Tayang</label><input type="date" class="form-control" id="iklan-selesai"></div>
+        </div>
+        <div class="form-group"><label>Link WhatsApp (Opsional)</label><input type="text" class="form-control" id="iklan-wa" placeholder="08123456789"></div>
+        <div class="form-group"><label>Link Website (Opsional)</label><input type="text" class="form-control" id="iklan-web" placeholder="https://pejuangkebaikan.site/produk"></div>
+        <button class="btn-primary" id="btn-simpan-iklan" onclick="simpanIklan()">PUBLIKASIKAN IKLAN</button>
+      </div>
+      
+      <div class="card">
+        <div class="card-title">Daftar Iklan Tayang</div>
+        <div id="list-iklan-container" class="scroll-list"><div style="text-align:center; font-size:12px;">Memuat...</div></div>
+      </div>
+    </div>
+
+    <div id="sponsor" class="tab-content">
+      <div class="card">
+        <div class="card-title">Tambah Flyer Sponsor TV Masjid</div>
+        <div class="form-group"><label>Nama Sponsor</label><input type="text" class="form-control" id="spo-tv-nama" placeholder="Contoh: Madu Pak Haji"></div>
+        <div class="form-group"><label>Upload Flyer (Bebas Ukuran)</label><input type="file" class="form-control" id="spo-tv-file" accept="image/*"></div>
+        <div class="form-row">
+          <div class="form-group"><label>Mulai Tayang</label><input type="date" class="form-control" id="spo-tv-mulai"></div>
+          <div class="form-group"><label>Selesai Tayang</label><input type="date" class="form-control" id="spo-tv-selesai"></div>
+        </div>
+        <button class="btn-primary" id="btn-spo-tv" onclick="tambahSponsorTV()">UPLOAD & SIMPAN TV</button>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Daftar Tayang TV</div>
+        <div id="list-spo-tv" class="scroll-list"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Tambah Teks Sponsor Website</div>
+        <div class="form-group"><label>Nama Sponsor</label><input type="text" class="form-control" id="spo-web-nama" placeholder="Contoh: BJ Grup"></div>
+        <div class="form-group"><label>Teks Tampilan di Web</label><input type="text" class="form-control" id="spo-web-teks" placeholder="Contoh: Ekosistem ini didukung oleh BJ Grup"></div>
+        <button class="btn-primary" id="btn-spo-web" onclick="tambahSponsorWeb()">SIMPAN TEKS WEB</button>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Daftar Tayang Website</div>
+        <div id="list-spo-web" class="scroll-list"></div>
+      </div>
+    </div>
+
+    <div id="kampanye" class="tab-content">
+      
+      <div class="card">
+        <div class="card-title">Live Tracking Scan Voucher Botol (CCTV Pusat)</div>
+        <div id="list-voucher" class="scroll-list"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Master Sponsor Baru</div>
+        <div class="form-row">
+          <div class="form-group"><label>Nama Perusahaan</label><input type="text" class="form-control" id="ms-nama" placeholder="Cth: PT Makmur Sejahtera"></div>
+          <div class="form-group"><label>Merk Produk</label><input type="text" class="form-control" id="ms-merk" placeholder="Cth: Air Minum Berkah"></div>
+        </div>
+        <button class="btn-primary" onclick="tambahMasterSponsor()">SIMPAN MASTER SPONSOR</button>
+        <div id="list-master-sponsor" class="scroll-list" style="margin-top:15px; border-top:1px dashed rgba(255,255,255,0.1); padding-top:15px;"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Master Merchant (Warung/Ekspedisi)</div>
+        <div class="form-row">
+          <div class="form-group"><label>Nama Warung / Cabang</label><input type="text" class="form-control" id="mm-nama" placeholder="Cth: Warung Nasi Makmur"></div>
+          <div class="form-group"><label>Kode Kustom Merchant</label><input type="text" class="form-control" id="mm-kode" placeholder="Cth: W-TB01"></div>
+        </div>
+        <div class="form-group"><label>Alamat Lengkap Tempat Penukaran</label><input type="text" class="form-control" id="mm-alamat" placeholder="Jl. Tanjung Barat Raya No. 10 (Ditampilkan saat jamaah bertanya)"></div>
+        <button class="btn-primary" onclick="tambahMasterMerchant()">SIMPAN MASTER MERCHANT</button>
+        <div id="list-master-merchant" class="scroll-list" style="margin-top:15px; border-top:1px dashed rgba(255,255,255,0.1); padding-top:15px;"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Buat Program Kampanye Gabungan</div>
+        <div class="form-group">
+          <label>Pilih Sponsor Pendana</label>
+          <select class="form-control" id="cp-sponsor"><option value="">-- Memuat Sponsor --</option></select>
+        </div>
+        <div class="form-group">
+          <label>Pilih Merchant Pelaksana</label>
+          <select class="form-control" id="cp-merchant"><option value="">-- Memuat Merchant --</option></select>
+        </div>
+        <div class="form-group"><label>Nama Program Kampanye</label><input type="text" class="form-control" id="cp-nama" placeholder="Cth: Jumat Berkah Bersama Air Berkah"></div>
+        <div class="form-row">
+          <div class="form-group"><label>Total Kuota Voucher</label><input type="number" class="form-control" id="cp-kuota" placeholder="Cth: 100"></div>
+          <div class="form-group"><label>Tanggal Kadaluarsa</label><input type="date" class="form-control" id="cp-expired"></div>
+        </div>
+        <button class="btn-primary" onclick="tambahCampaign()">AKTIFKAN PROGRAM KAMPANYE</button>
+        <div id="list-campaign" class="scroll-list" style="margin-top:15px; border-top:1px dashed rgba(255,255,255,0.1); padding-top:15px;"></div>
+      </div>
+    </div>
+
+  </div>
 </div>
 
 <div class="toast" id="toast">Notifikasi</div>
 
 <script>
+// LINK DEPLOY BACKEND AKTIF BAPAK (SUDAH DIPERBARUI)
 const API_URL = 'https://script.google.com/macros/s/AKfycbwX220QtX433eT9NhRH2TTc3S_J56kX0B4Kq9Cv_3tnySuE3osUMKc-mESjNUiFb4jvSA/exec';
+let LIST_IKLAN = [];
+
+function getToken() { return localStorage.getItem('pow_super_token'); }
 
 function showToast(msg) {
-    let t = document.getElementById('toast');
-    t.textContent = msg; t.classList.add('show');
-    setTimeout(() => t.classList.remove('show'), 3000);
+    var t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(function(){ t.classList.remove('show'); }, 3000);
 }
 
-function getToken() { return localStorage.getItem('sup_token'); }
-
-window.onload = function() {
-    document.getElementById('splash').classList.add('hide');
-    setTimeout(() => {
-        document.getElementById('splash').style.display = 'none';
-        if(getToken()) { document.getElementById('app-container').style.display = 'flex'; loadAllData(); }
-        else { document.getElementById('login-wrap').style.display = 'flex'; }
-    }, 500);
+function matenginLinkDrive(url) {
+    if (!url) return ''; var fileId = '';
+    if (url.includes('drive.google.com/file/d/')) { fileId = url.split('/d/')[1].split('/')[0]; } 
+    else if (url.includes('drive.google.com/open?id=')) { fileId = url.split('id=')[1].split('&')[0]; } 
+    else if (url.includes('drive.google.com/uc')) { if (url.includes('id=')) fileId = url.split('id=')[1].split('&')[0]; }
+    if (fileId) { return 'https://drive.google.com/thumbnail?id=' + fileId + '&sz=w1000'; }
+    return url; 
 }
 
-function logout() { localStorage.removeItem('sup_token'); location.reload(); }
+function bukaTab(tabId, el) {
+    var contents = document.getElementsByClassName('tab-content');
+    for (var i = 0; i < contents.length; i++) contents[i].classList.remove('active');
+    var tabs = document.getElementsByClassName('nav-tab');
+    for (var i = 0; i < tabs.length; i++) tabs[i].classList.remove('active');
+    
+    document.getElementById(tabId).classList.add('active');
+    el.classList.add('active');
+    
+    if(tabId === 'iklan') loadIklanData();
+    if(tabId === 'sponsor') loadSponsorData(); 
+    if(tabId === 'kampanye') loadKampanyeData(); 
+}
 
-function formatRupiah(angka) {
-    return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(angka);
+function generateSlug() {
+    let nama = document.getElementById('reg-nama').value.toLowerCase();
+    let kel = document.getElementById('reg-kelurahan').value.toLowerCase();
+    nama = nama.replace(/masjid/g, '').replace(/jami'/g, '').replace(/jami/g, '').replace(/jamik/g, '');
+    nama = nama.replace(/[^a-z0-9\s-]/g, '').trim();
+    kel = kel.replace(/[^a-z0-9\s-]/g, '').trim();
+    let slugArr = [];
+    if(nama) slugArr.push(nama.replace(/\s+/g, '-'));
+    if(kel) slugArr.push(kel.replace(/\s+/g, '-'));
+    document.getElementById('reg-slug').value = slugArr.join('-');
+}
+
+function copyLink(p) {
+    let b = window.location.href.split('?')[0];
+    b = b.substring(0, b.lastIndexOf("/"));
+    navigator.clipboard.writeText(b + "/" + p).then(() => showToast('Link berhasil disalin!'));
+}
+
+function toggleAction(element) {
+    var cards = document.querySelectorAll('.item-card');
+    cards.forEach(c => { if(c !== element) c.classList.remove('expanded'); });
+    element.classList.toggle('expanded');
 }
 
 async function prosesLogin() {
-    let u = document.getElementById('log-email').value.trim();
-    let p = document.getElementById('log-pin').value.trim();
-    if(!u || !p) return showToast('Isi data login!');
-    
+    var pin = document.getElementById('pin-superadmin').value.trim();
+    if (!pin) { showToast('Masukkan PIN!'); return; }
+    var btn = document.getElementById('btn-login');
+    btn.disabled = true; btn.textContent = 'MEMVERIFIKASI...';
     try {
-        let res = await fetch(API_URL + '?action=login&email=' + u + '&pin=' + p);
-        let j = await res.json();
-        if(j.status === 'ok' && j.role === 'SUPERADMIN') {
-            localStorage.setItem('sup_token', j.token);
-            location.reload();
-        } else { showToast('Login Gagal!'); }
-    } catch(e) { showToast('Koneksi Error!'); }
+        const res = await fetch(API_URL + '?action=login&email=superadmin&pin=' + pin);
+        const json = await res.json();
+        if (json.status === 'ok' && json.role === 'SUPERADMIN') { 
+            localStorage.setItem('pow_super_token', json.token);
+            masukSistem();
+        } else {
+            showToast('PIN Salah atau Akses Ditolak!');
+            btn.disabled = false; btn.textContent = 'MASUK SISTEM';
+        }
+    } catch(err) {
+        showToast('Koneksi terputus!');
+        btn.disabled = false; btn.textContent = 'MASUK SISTEM';
+    }
 }
 
-function bukaTab(tabId) {
-    document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-    document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
-    document.getElementById('tab-' + tabId).classList.add('active');
-    event.currentTarget.classList.add('active');
-    
-    let titles = { 'dashboard':'Dashboard Utama', 'sponsor':'Master Sponsor', 'merchant':'Master Merchant', 'kampanye':'Program Kampanye' };
-    document.getElementById('page-title').textContent = titles[tabId];
+function logout() {
+    localStorage.removeItem('pow_super_token');
+    document.getElementById('superadmin-content').style.display = 'none';
+    document.getElementById('login-wrap').classList.add('show');
+    document.getElementById('pin-superadmin').value = '';
 }
 
-async function loadAllData() {
-    loadDashboard();
-    loadKampanyeData();
+function masukSistem() {
+    document.getElementById('login-wrap').classList.remove('show');
+    document.getElementById('superadmin-content').style.display = 'block';
+    loadDashboardData();
 }
 
-async function loadDashboard() {
+async function loadDashboardData() {
     try {
-        let res1 = await fetch(API_URL + '?action=getSuperadminData&token=' + getToken());
-        let j1 = await res1.json();
-        if(j1.status === 'ok') {
-            document.getElementById('stat-masjid').textContent = j1.data.list_masjid.length;
-            document.getElementById('stat-kas').textContent = formatRupiah(j1.data.total_kas);
+        document.getElementById('loading').style.display = 'block';
+        document.getElementById('loading').innerText = '⚡ Memuat daftar masjid...';
+        document.getElementById('list-masjid-container').innerHTML = '';
+        
+        const resFast = await fetch(API_URL + '?action=getAllMasjid&_t=' + Date.now());
+        const jsonFast = await resFast.json();
+        if (jsonFast.status === 'ok') {
+            let htmlCepat = '';
+            jsonFast.data.forEach(m => {
+                htmlCepat += `
+                    <div class="masjid-card" id="card-${m.id_masjid}">
+                        <h4>${m.nama}</h4>
+                        <p style="font-size:11px; opacity:0.7; color:#F59E0B; margin-bottom:8px;" id="status-${m.id_masjid}">⏳ Menganalisis status aktif...</p>
+                        <div style="display:flex; gap:6px; margin-bottom:10px;">
+                            <button class="btn-small dark" onclick="copyLink('masjid.html?masjid=${m.slug}')">🔗 Copy Link Web</button>
+                            <button class="btn-small dark" onclick="copyLink('tv.html?masjid=${m.slug}')">📺 Copy Link TV</button>
+                        </div>
+                        <div id="detail-${m.id_masjid}"></div>
+                    </div>
+                `;
+            });
+            document.getElementById('list-masjid-container').innerHTML = htmlCepat;
+            document.getElementById('loading').innerText = '🔍 Menganalisis kelengkapan data...';
+        }
+
+        const res = await fetch(API_URL + '?action=getSuperadminData&token=' + getToken() + '&_t=' + Date.now());
+        const json = await res.json();
+        
+        if (json.status === 'ok') {
+            const data = json.data; const list = data.list_masjid;
+            let html = ''; let masjidAktifTotal = 0;
+
+            for(let m of list) {
+                const isKas = m.kriteria.trx; const isJdw = m.kriteria.jdw; const isGal = m.kriteria.gal;
+                const criteriaCount = m.kriteriaCount;
+                if (criteriaCount === 3) masjidAktifTotal++;
+
+                const ageInDays = m.hariSejakDaftar || 0; const daysSinceUpdate = m.hariSejakUpdate || 0;
+                let cardClass = ''; let badge = ''; let showWarningBtn = false; let pesanWA = '';
+
+                if (criteriaCount < 3) {
+                    if (ageInDays > 14) {
+                        cardClass = 'card-pasif'; badge = '<span class="status-badge badge-pasif">MACET (> 14 HARI)</span>'; showWarningBtn = true;
+                        pesanWA = `Assalamu'alaikum Ustadz. Semoga selalu dalam lindungan Allah.\n\nKami dari tim pusat *Power of Masjid* memperhatikan bahwa sistem Layar TV dan Website untuk masjid Anda sudah didaftarkan lebih dari 14 hari, namun terpantau belum ada pergerakan kelengkapan data dasar (Kas/Jadwal/Galeri).\n\nMengingat kapasitas server kami saat ini dibatasi sangat eksklusif *hanya untuk 10 Masjid*, kami mohon konfirmasinya. Apabila sistem ini belum akan dimaksimalkan penggunaannya dalam waktu dekat, mohon izin akun Anda akan kami cabut/bekukan sementara waktu. Slot servernya akan kami berikan kepada masjid lain yang kebetulan sedang mengantre.\n\nKami tunggu pergerakan datanya atau konfirmasinya dalam 2x24 jam ya, Ustadz. Jika ada kendala teknis dalam pengisian, silakan sampaikan ke kami. Terima kasih atas pengertiannya. 🙏`;
+                    } else {
+                        cardClass = 'card-belajar'; let sisaHari = Math.max(1, Math.ceil(14 - ageInDays));
+                        badge = `<span class="status-badge badge-belajar">Masa Belajar (${sisaHari} Hari Lagi)</span>`;
+                    }
+                } else {
+                    if (daysSinceUpdate > 7) {
+                        cardClass = 'card-pasif'; badge = '<span class="status-badge badge-pasif">Perlu Diingatkan (> 7 Hari)</span>'; showWarningBtn = true;
+                        pesanWA = `Assalamu'alaikum Ustadz. Semoga selalu dalam lindungan Allah.\n\nSekadar mengingatkan, sistem mendeteksi sudah lebih dari sepekan data transparansi masjid belum diperbarui. Mari rutin melakukan update minimal sepekan sekali demi menjaga kepercayaan jamaah. Terima kasih. 🙏`;
+                    } else {
+                        cardClass = 'card-aktif'; badge = '<span class="status-badge badge-aktif">Telah Aktif</span>';
+                    }
+                }
+
+                html += `
+                    <div class="masjid-card ${cardClass}">
+                        <h4>${m.nama}</h4>
+                        <p>Email: ${m.email}</p>
+                        ${badge}
+                        <div class="check-list">
+                            <div>${isKas ? '✅' : '❌'} Catat Transaksi Kas</div>
+                            <div>${isJdw ? '✅' : '❌'} Buat Jadwal Kegiatan</div>
+                            <div>${isGal ? '✅' : '❌'} Upload Foto Galeri</div>
+                        </div>
+                        <div style="display:flex; gap:6px; margin-bottom:10px;">
+                            <button class="btn-small dark" onclick="copyLink('masjid.html?masjid=${m.slug}')">🔗 Copy Link Web</button>
+                            <button class="btn-small dark" onclick="copyLink('tv.html?masjid=${m.slug}')">📺 Copy Link TV</button>
+                        </div>
+                        ${showWarningBtn ? `<button class="btn-warning" onclick="copyWarning('${encodeURIComponent(pesanWA)}')">💬 Salin Pesan Teguran WA</button>` : ''}
+                    </div>
+                `;
+            }
+
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('list-masjid-container').innerHTML = html;
+            document.getElementById('stat-masjid').textContent = masjidAktifTotal;
+            document.getElementById('stat-kas').textContent = 'Rp ' + Number(data.total_kas).toLocaleString('id-ID');
             
-            let htmlMsj = '';
-            j1.data.list_masjid.forEach(m => {
-                htmlMsj += `<tr><td>${m.id}</td><td>${m.nama}</td><td>${m.slug}</td><td>${m.kriteriaCount}/3 Modul</td></tr>`;
-            });
-            document.getElementById('tbl-masjid').innerHTML = htmlMsj || '<tr><td colspan="4">Kosong</td></tr>';
+            let persen = (masjidAktifTotal / 10) * 100;
+            if(persen > 100) persen = 100;
+            document.getElementById('ekspedisi-bar').style.width = persen + '%';
+            document.getElementById('ekspedisi-text').textContent = 'Tercapai: ' + masjidAktifTotal + ' Masjid Aktif';
+            document.getElementById('ekspedisi-persen').textContent = Math.round(persen) + '%';
         }
-
-        let res2 = await fetch(API_URL + '?action=getVoucherList&token=' + getToken());
-        let j2 = await res2.json();
-        if(j2.status === 'ok') {
-            let htmlV = '';
-            j2.data.forEach(v => {
-                let badge = v.status === 'TERPAKAI' ? '<span class="badge expired">TERPAKAI</span>' : '<span class="badge aktif">BARU</span>';
-                htmlV += `<tr><td>${new Date().toLocaleDateString('id-ID')}</td><td>${v.kode}</td><td>${v.id_campaign || '-'}</td><td>${v.nama}</td><td>${v.masjid}</td><td>${badge}</td></tr>`;
-            });
-            document.getElementById('tbl-log-voucher').innerHTML = htmlV || '<tr><td colspan="6">Belum ada penukaran</td></tr>';
-        }
-    } catch(e) { console.log(e); }
+    } catch (error) { document.getElementById('loading').innerText = 'Gagal memuat data. Periksa koneksi internet Anda.'; }
 }
 
-async function loadKampanyeData() {
-    try {
-        let r1 = await fetch(API_URL + '?action=getMasterSponsor&token=' + getToken());
-        let j1 = await r1.json();
-        if(j1.status === 'ok') {
-            let opt = '<option value="">-- Pilih Sponsor --</option>', tbl = '';
-            j1.data.forEach(s => {
-                opt += `<option value="${s.id_sponsor}">${s.nama_perusahaan} (${s.merk_produk})</option>`;
-                tbl += `<tr><td>${s.id_sponsor}</td><td>${s.nama_perusahaan}</td><td>${s.merk_produk}</td></tr>`;
-            });
-            document.getElementById('cp-sponsor').innerHTML = opt;
-            document.getElementById('tbl-sponsor').innerHTML = tbl || '<tr><td colspan="3">Kosong</td></tr>';
-        }
-
-        let r2 = await fetch(API_URL + '?action=getMasterMerchant&token=' + getToken());
-        let j2 = await r2.json();
-        if(j2.status === 'ok') {
-            let opt = '<option value="">-- Pilih Warung --</option>', tbl = '';
-            j2.data.forEach(m => {
-                opt += `<option value="${m.id_merchant}">${m.nama_warung} [${m.kode_merchant}]</option>`;
-                tbl += `<tr><td>${m.id_merchant}</td><td>${m.nama_warung}</td><td><strong style="color:var(--gold);">${m.kode_merchant}</strong></td></tr>`;
-            });
-            document.getElementById('cp-merchant').innerHTML = opt;
-            document.getElementById('tbl-merchant').innerHTML = tbl || '<tr><td colspan="3">Kosong</td></tr>';
-        }
-
-        let r3 = await fetch(API_URL + '?action=getCampaignProgram&token=' + getToken());
-        let j3 = await r3.json();
-        if(j3.status === 'ok') {
-            let tbl = '';
-            j3.data.forEach(c => {
-                let badge = c.status === 'AKTIF' ? '<span class="badge aktif">AKTIF</span>' : '<span class="badge expired">EXPIRED</span>';
-                tbl += `<tr><td>${c.id_campaign}</td><td>${c.nama_program}</td><td>${c.sudah_redeem} / ${c.total_kuota}</td><td>${badge}</td></tr>`;
-            });
-            document.getElementById('tbl-kampanye').innerHTML = tbl || '<tr><td colspan="4">Kosong</td></tr>';
-        }
-    } catch(e) { console.log(e); }
+function copyWarning(encodedText) {
+    const text = decodeURIComponent(encodedText);
+    navigator.clipboard.writeText(text).then(() => { alert('Teks peringatan disalin! Silakan paste di WA Ustadz.'); }).catch(err => { alert('Gagal menyalin.'); });
 }
 
-async function tambahSponsor() {
-    let n = document.getElementById('sp-nama').value.trim();
-    let m = document.getElementById('sp-merk').value.trim();
-    if(!n || !m) return showToast('Lengkapi form!');
+async function tambahMasjidBaru() {
+    const nama = document.getElementById('reg-nama').value.trim(); const slug = document.getElementById('reg-slug').value.trim();
+    const kelurahan = document.getElementById('reg-kelurahan').value.trim(); const kecamatan = document.getElementById('reg-kecamatan').value.trim();
+    const email = document.getElementById('reg-email').value.trim(); const pin = document.getElementById('reg-pin').value.trim();
+    
+    if(!nama || !slug || !email || !pin) return showToast('Lengkapi semua data wajib!');
+    const btn = document.getElementById('btn-tambah'); btn.disabled = true; btn.textContent = 'MENYIMPAN...';
+    
     try {
-        let r = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ token: getToken(), action: 'addMasterSponsor', nama_perusahaan: n, merk_produk: m }) });
-        let j = await r.json();
-        if(j.status === 'ok') { showToast('Sponsor disimpan!'); document.getElementById('sp-nama').value=''; document.getElementById('sp-merk').value=''; loadKampanyeData(); }
+        const res = await fetch(API_URL, {
+            method: 'POST',
+            body: JSON.stringify({
+                token: getToken(), action: 'addMasjidBaru',
+                nama: nama, slug: slug, kelurahan: kelurahan,
+                kecamatan: kecamatan, email: email, pin: pin
+            })
+        });
+        const json = await res.json();
+        if(json.status === 'ok') {
+            showToast('Masjid berhasil ditambahkan!');
+            document.getElementById('reg-nama').value = ''; document.getElementById('reg-slug').value = '';
+            document.getElementById('reg-kelurahan').value = ''; document.getElementById('reg-kecamatan').value = '';
+            document.getElementById('reg-email').value = ''; document.getElementById('reg-pin').value = '';
+            loadDashboardData(); 
+        } else { showToast('Gagal: ' + json.message); }
+    } catch(e) { showToast('Koneksi terputus!'); }
+    btn.disabled = false; btn.textContent = 'SIMPAN MASJID BARU';
+}
+
+async function loadIklanData() {
+    try {
+        const res = await fetch(API_URL + '?action=getIklanSuperadmin&token=' + getToken() + '&_t=' + Date.now());
+        const json = await res.json();
+        
+        if (json.status === 'ok' && json.data && json.data.length > 0) {
+            LIST_IKLAN = json.data.reverse();
+            document.getElementById('list-iklan-container').innerHTML = LIST_IKLAN.map((ik, idx) => `
+                <div class="item-card" onclick="toggleAction(this)">
+                    <div style="flex:1;">
+                        <h4 style="color:var(--gold); font-size:14px; margin-bottom:4px;">${ik.judul}</h4>
+                        <p style="font-size:12px; color:white;">${ik.program}</p>
+                        <p style="font-size:10px; margin-top:4px;"><span style="color:#10B981;">Tampil: ${new Date(ik.tgl_mulai).toLocaleDateString('id-ID')} s/d ${new Date(ik.tgl_selesai).toLocaleDateString('id-ID')}</span></p>
+                    </div>
+                    <div class="action-buttons">
+                        <button class="btn-action btn-edit" onclick="event.stopPropagation(); editIklan(${idx})">✏️ Edit</button>
+                        <button class="btn-action btn-del" onclick="event.stopPropagation(); hapusIklan('${ik.id}')">🗑️ Hapus</button>
+                    </div>
+                </div>
+            `).join('');
+        } else { document.getElementById('list-iklan-container').innerHTML = '<div style="text-align:center; font-size:12px; color:rgba(255,255,255,0.5);">Belum ada data iklan</div>'; }
+    } catch(e) { document.getElementById('list-iklan-container').innerHTML = '<div style="text-align:center; font-size:12px; color:var(--danger);">Gagal memuat iklan</div>'; }
+}
+
+function editIklan(idx) {
+    let ik = LIST_IKLAN[idx];
+    document.getElementById('iklan-id').value = ik.id; document.getElementById('iklan-judul').value = ik.judul;
+    document.getElementById('iklan-program').value = ik.program; document.getElementById('iklan-desc').value = ik.deskripsi;
+    document.getElementById('iklan-wa').value = ik.link_wa || ''; document.getElementById('iklan-web').value = ik.link_web || '';
+    if(ik.tgl_mulai) document.getElementById('iklan-mulai').value = new Date(ik.tgl_mulai).toISOString().split('T')[0];
+    if(ik.tgl_selesai) document.getElementById('iklan-selesai').value = new Date(ik.tgl_selesai).toISOString().split('T')[0];
+    document.getElementById('btn-simpan-iklan').textContent = 'UPDATE IKLAN'; window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+async function simpanIklan() {
+    let id = document.getElementById('iklan-id').value;
+    let d = { 
+        token: getToken(), action: id ? 'updateIklan' : 'addIklan', id: id, 
+        judul: document.getElementById('iklan-judul').value.trim(), program: document.getElementById('iklan-program').value.trim(), 
+        deskripsi: document.getElementById('iklan-desc').value.trim(), link_wa: document.getElementById('iklan-wa').value.trim(), 
+        link_web: document.getElementById('iklan-web').value.trim(), tgl_mulai: document.getElementById('iklan-mulai').value, tgl_selesai: document.getElementById('iklan-selesai').value 
+    };
+    if(!d.judul || !d.program || !d.tgl_mulai || !d.tgl_selesai) return showToast('Lengkapi Judul, Program, dan Tanggal!');
+    const btn = document.getElementById('btn-simpan-iklan'); btn.disabled = true; btn.textContent = 'MENYIMPAN...';
+    try {
+        const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify(d) });
+        const j = await res.json();
+        if(j.status === 'ok') { 
+            showToast('Iklan Tersimpan!'); 
+            document.getElementById('iklan-id').value = ''; document.getElementById('iklan-judul').value = ''; 
+            document.getElementById('iklan-program').value = ''; document.getElementById('iklan-desc').value = ''; 
+            document.getElementById('iklan-wa').value = ''; document.getElementById('iklan-web').value = '';
+            document.getElementById('iklan-mulai').value = ''; document.getElementById('iklan-selesai').value = '';
+            btn.textContent = 'PUBLIKASIKAN IKLAN'; loadIklanData(); 
+        } else { showToast('Gagal: ' + j.message); }
+    } catch(e) { showToast('Koneksi terputus!'); }
+    btn.disabled = false; if(!id) btn.textContent = 'PUBLIKASIKAN IKLAN';
+}
+
+async function hapusIklan(id) {
+    if(!confirm('Yakin hapus iklan ini?')) return;
+    try {
+        const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({token: getToken(), action: 'deleteIklan', id: id}) });
+        if((await res.json()).status === 'ok') { showToast('Dihapus'); loadIklanData(); } else { showToast('Gagal'); }
     } catch(e) {}
 }
 
-async function tambahMerchant() {
-    let n = document.getElementById('mm-nama').value.trim();
-    let a = document.getElementById('mm-alamat').value.trim();
-    let k = document.getElementById('mm-kode').value.trim().toUpperCase();
-    if(!n || !k) return showToast('Lengkapi nama dan kode!');
+async function loadSponsorData() {
+    document.getElementById('list-spo-tv').innerHTML = '<div style="text-align:center; font-size:12px;">Memuat...</div>';
+    document.getElementById('list-spo-web').innerHTML = '<div style="text-align:center; font-size:12px;">Memuat...</div>';
     try {
-        let r = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ token: getToken(), action: 'addMasterMerchant', nama_warung: n, alamat_cabang: a, kode_merchant: k }) });
+        let [resTv, resWeb] = await Promise.all([
+            fetch(API_URL + '?action=getSponsorTV&token=' + getToken() + '&_t=' + Date.now()).then(r => r.json()),
+            fetch(API_URL + '?action=getSponsorWeb&token=' + getToken() + '&_t=' + Date.now()).then(r => r.json())
+        ]);
+        if(resTv.status === 'ok') {
+            document.getElementById('list-spo-tv').innerHTML = resTv.data.map(ik => `
+                <div class="item-card">
+                    <img src="${matenginLinkDrive(ik.url)}" style="width:100%; height:120px; object-fit:cover; border-radius:8px; margin-bottom:8px; border:1px solid rgba(255,255,255,0.1);">
+                    <h4 style="color:var(--gold); font-size:14px;">${ik.nama}</h4>
+                    <button class="btn-action btn-del" style="width:100%; margin-top:8px; display:block;" onclick="hapusSponsorTV('${ik.id}')">🗑️ Hapus</button>
+                </div>
+            `).join('') || '<div style="text-align:center;font-size:12px;color:rgba(255,255,255,0.5);">Belum ada flyer sponsor TV</div>';
+        }
+        if(resWeb.status === 'ok') {
+            document.getElementById('list-spo-web').innerHTML = resWeb.data.map(ik => `
+                <div class="item-card">
+                    <h4 style="color:var(--gold); font-size:14px; margin-bottom:4px;">${ik.nama}</h4>
+                    <p style="font-size:12px; color:rgba(255,255,255,0.8);">${ik.teks}</p>
+                    <button class="btn-action btn-del" style="width:100%; margin-top:8px; display:block;" onclick="hapusSponsorWeb('${ik.id}')">🗑️ Hapus</button>
+                </div>
+            `).join('') || '<div style="text-align:center;font-size:12px;color:rgba(255,255,255,0.5);">Belum ada teks sponsor Web</div>';
+        }
+    } catch(e) { showToast('Gagal memuat data sponsor'); }
+}
+
+async function tambahSponsorTV() {
+    let nama = document.getElementById('spo-tv-nama').value; let mulai = document.getElementById('spo-tv-mulai').value;
+    let selesai = document.getElementById('spo-tv-selesai').value; let fileInput = document.getElementById('spo-tv-file');
+    if(!nama || !mulai || !selesai|| !fileInput.files[0]) return showToast('Lengkapi form & upload flyer!');
+    let btn = document.getElementById('btn-spo-tv'); btn.disabled = true; btn.textContent = 'MENGUPLOAD FLYER... (JANGAN TUTUP)';
+    let file = fileInput.files[0]; let reader = new FileReader();
+    reader.onload = async function(e) {
+        let base64str = e.target.result.split(',')[1]; let mimeType = file.type; let filename = file.name;
+        try {
+            let resUpload = await fetch(API_URL, {
+                method: 'POST',
+                body: JSON.stringify({ token: getToken(), action: 'uploadMedia', base64: base64str, mimeType: mimeType, filename: filename, kategori: "Sponsor_TV" })
+            });
+            let jUpload = await resUpload.json();
+            if(jUpload.status !== 'ok') { showToast('Gagal upload flyer!'); btn.disabled = false; btn.textContent = 'UPLOAD & SIMPAN TV'; return; }
+            btn.textContent = 'MENYIMPAN DATA...';
+            let resData = await fetch(API_URL, {
+                method: 'POST',
+                body: JSON.stringify({ token: getToken(), action: 'addSponsorTV', nama: nama, url: jUpload.url, mulai: mulai, selesai: selesai })
+            });
+            let jData = await resData.json();
+            if(jData.status === 'ok') {
+                showToast('Sponsor TV tersimpan!');
+                document.getElementById('spo-tv-nama').value = ''; document.getElementById('spo-tv-mulai').value = '';
+                document.getElementById('spo-tv-selesai').value = ''; document.getElementById('spo-tv-file').value = '';
+                loadSponsorData();
+            } else { showToast(jData.message); }
+        } catch(err) { showToast('Koneksi terputus'); }
+        btn.disabled = false; btn.textContent = 'UPLOAD & SIMPAN TV';
+    };
+    reader.readAsDataURL(file);
+}
+
+async function hapusSponsorTV(id) {
+    if(!confirm('Hapus flyer sponsor ini dari TV Masjid?')) return;
+    try {
+        let r = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ token: getToken(), action: 'deleteSponsorTV', id: id }) });
+        if((await r.json()).status === 'ok') { showToast('Dihapus'); loadSponsorData(); }
+    } catch(e) {}
+}
+
+async function tambahSponsorWeb() {
+    let nama = document.getElementById('spo-web-nama').value; let teks = document.getElementById('spo-web-teks').value;
+    if(!nama || !teks) return showToast('Lengkapi nama dan teks!');
+    let btn = document.getElementById('btn-spo-web'); btn.disabled = true; btn.textContent = 'MENYIMPAN...';
+    try {
+        let r = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ token: getToken(), action: 'addSponsorWeb', nama: nama, teks: teks }) });
+        if((await r.json()).status === 'ok') {
+            showToast('Teks tersimpan!'); document.getElementById('spo-web-nama').value = ''; document.getElementById('spo-web-teks').value = ''; loadSponsorData();
+        }
+    } catch(e) {}
+    btn.disabled = false; btn.textContent = 'SIMPAN TEKS WEB';
+}
+
+async function hapusSponsorWeb(id) {
+    if(!confirm('Hapus teks sponsor ini dari Website Masjid?')) return;
+    try {
+        let r = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ token: getToken(), action: 'deleteSponsorWeb', id: id }) });
+        if((await r.json()).status === 'ok') { showToast('Dihapus'); loadSponsorData(); }
+    } catch(e) {}
+}
+
+// LOGIKA SINKRONISASI PEMANTAUAN (CCTV VOUCHER, SPONSOR, & MERCHANT ALAMAT)
+async function loadKampanyeData() {
+    document.getElementById('list-voucher').innerHTML = '<div style="text-align:center; font-size:12px;">Memuat data...</div>';
+    document.getElementById('list-master-sponsor').innerHTML = '<div style="text-align:center; font-size:12px;">Memuat data...</div>';
+    document.getElementById('list-master-merchant').innerHTML = '<div style="text-align:center; font-size:12px;">Memuat data...</div>';
+    document.getElementById('list-campaign').innerHTML = '<div style="text-align:center; font-size:12px;">Memuat data...</div>';
+
+    try {
+        let [resSpo, resMer, resCam, resVch] = await Promise.all([
+            fetch(API_URL + '?action=getMasterSponsor&token=' + getToken() + '&_t=' + Date.now()).then(r => r.json()),
+            fetch(API_URL + '?action=getMasterMerchant&token=' + getToken() + '&_t=' + Date.now()).then(r => r.json()),
+            fetch(API_URL + '?action=getCampaignProgram&token=' + getToken() + '&_t=' + Date.now()).then(r => r.json()),
+            fetch(API_URL + '?action=getVoucherList&token=' + getToken() + '&_t=' + Date.now()).then(r => r.json())
+        ]);
+
+        if(resSpo.status === 'ok') {
+            document.getElementById('list-master-sponsor').innerHTML = resSpo.data.map(s => `<div class="item-card"><b style="color:var(--gold);">${s.nama_perusahaan}</b><br><span style="font-size:12px;">Produk: ${s.merk_produk}</span></div>`).join('') || '<div style="text-align:center; font-size:12px;">Kosong</div>';
+            document.getElementById('cp-sponsor').innerHTML = '<option value="">-- Pilih Sponsor --</option>' + resSpo.data.map(s => `<option value="${s.id_sponsor}">${s.nama_perusahaan}</option>`).join('');
+        }
+        
+        if(resMer.status === 'ok') {
+            document.getElementById('list-master-merchant').innerHTML = resMer.data.map(m => `<div class="item-card"><b style="color:var(--gold);">${m.nama_warung}</b> [<span style="color:#10B981; font-weight:bold;">${m.kode_merchant}</span>]<br><small style="color:rgba(255,255,255,0.7); font-style:italic;">📍 ${m.alamat}</small></div>`).join('') || '<div style="text-align:center; font-size:12px;">Kosong</div>';
+            document.getElementById('cp-merchant').innerHTML = '<option value="">-- Pilih Merchant --</option>' + resMer.data.map(m => `<option value="${m.id_merchant}">${m.nama_warung} [${m.kode_merchant}]</option>`).join('');
+        }
+
+        if(resCam.status === 'ok') {
+            document.getElementById('list-campaign').innerHTML = resCam.data.map(c => `
+                <div class="item-card" style="border-left: 4px solid ${c.status==='AKTIF'?'#10B981':'#EF4444'}">
+                    <h4 style="color:var(--gold); font-size:14px; margin-bottom:4px;">${c.nama_program}</h4>
+                    <div style="font-size:12px; color:rgba(255,255,255,0.8);">Kuota Voucher: ${c.total_kuota} | Status: <span style="color:${c.status==='AKTIF'?'#10B981':'#EF4444'}; font-weight:bold;">${c.status}</span></div>
+                    <div style="font-size:10px; margin-top:4px; opacity:0.6;">Expired: ${new Date(c.tanggal_kadaluarsa).toLocaleDateString('id-ID')}</div>
+                    <button class="btn-small dark" style="margin-top:8px;" onclick="copyLink('scan_jamaah.html?camp=${c.id_campaign}')">🔗 Salin Link QR Scan</button>
+                </div>
+            `).join('') || '<div style="text-align:center; font-size:12px;">Belum ada program kampanye.</div>';
+        }
+
+        // OUTPUT LOG MONITORING VOUCHER (MURNI SEBAGAI CCTV PUSAT)
+        if(resVch.status === 'ok') {
+            document.getElementById('list-voucher').innerHTML = resVch.data.map(v => `
+                <div style="background:rgba(0,0,0,0.3); padding:12px; border-radius:10px; margin-bottom:8px; border-left:4px solid ${v.status==='TERPAKAI'?'#10B981':'#F59E0B'}">
+                    <div style="font-size:12px; color:var(--gold); font-weight:bold; display:flex; justify-content:space-between;">
+                        <span>KODE: ${v.kode}</span>
+                        <span style="color:${v.status==='TERPAKAI'?'#10B981':'#F59E0B'}; font-weight:800; letter-spacing:1px;">${v.status}</span>
+                    </div>
+                    <div style="font-size:13px; color:white; margin:5px 0;">👤 Nama Jamaah: ${v.nama} (${v.wa})</div>
+                    <div style="font-size:11px; color:rgba(255,255,255,0.6); line-height:1.4;">📍 Lokasi Scan: ${v.masjid} <br> 🤝 Pendana: ${v.sponsor} ${v.merchant_kode ? `<br> 🏪 Ditukarkan di Merchant: <span style="color:white; font-weight:bold;">${v.merchant_kode}</span>` : ''}</div>
+                </div>
+            `).join('') || '<div style="text-align:center;font-size:12px;color:rgba(255,255,255,0.5);">Belum ada jamaah yang melakukan pemindaian botol</div>';
+        }
+    } catch(e) { showToast('Gagal memuat data kampanye'); }
+}
+
+async function tambahMasterSponsor() {
+    let n = document.getElementById('ms-nama').value.trim(); let m = document.getElementById('ms-merk').value.trim();
+    if(!n || !m) return showToast('Lengkapi nama dan merk!');
+    try {
+        let r = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ token: getToken(), action: 'addMasterSponsor', nama_perusahaan: n, merk_produk: m }) });
+        if((await r.json()).status === 'ok') { showToast('Sponsor disimpan!'); document.getElementById('ms-nama').value=''; document.getElementById('ms-merk').value=''; loadKampanyeData(); }
+    } catch(e) {}
+}
+
+async function tambahMasterMerchant() {
+    let n = document.getElementById('mm-nama').value.trim(); let k = document.getElementById('mm-kode').value.trim(); let a = document.getElementById('mm-alamat').value.trim();
+    if(!n || !k || !a) return showToast('Lengkapi seluruh data merchant dan alamat cabang!');
+    try {
+        let r = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ token: getToken(), action: 'addMasterMerchant', nama_warung: n, kode_merchant: k, alamat_cabang: a }) });
         let j = await r.json();
         if(j.status === 'ok') { showToast('Merchant disimpan!'); document.getElementById('mm-nama').value=''; document.getElementById('mm-kode').value=''; document.getElementById('mm-alamat').value=''; loadKampanyeData(); }
         else { showToast('Gagal: ' + j.message); }
@@ -362,10 +735,17 @@ async function tambahCampaign() {
     if(!s || !m || !n || !k || !e) return showToast('Lengkapi form kampanye!');
     try {
         let r = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ token: getToken(), action: 'addCampaignProgram', id_sponsor: s, id_merchant: m, nama_program: n, total_kuota: k, tanggal_kadaluarsa: e }) });
-        let j = await r.json();
-        if(j.status === 'ok') { showToast('Kampanye aktif!'); document.getElementById('cp-nama').value=''; document.getElementById('cp-kuota').value=''; loadKampanyeData(); }
+        if((await r.json()).status === 'ok') { showToast('Kampanye aktif!'); document.getElementById('cp-nama').value=''; document.getElementById('cp-kuota').value=''; loadKampanyeData(); }
     } catch(err) {}
 }
+
+window.onload = function() {
+    document.getElementById('splash').classList.add('hide');
+    setTimeout(function(){ document.getElementById('splash').style.display = 'none'; }, 500);
+    if(getToken()) { masukSistem(); } 
+    else { document.getElementById('login-wrap').classList.add('show'); }
+};
 </script>
+
 </body>
 </html>
