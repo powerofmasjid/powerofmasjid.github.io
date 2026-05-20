@@ -451,12 +451,14 @@ async function loadDashboardData() {
         const list = data.list_masjid || [];
         allMasjidData = list;
 
-        document.getElementById('stat-masjid').textContent = list.length;
+        const totalMasjidAktif = list.filter(m => Number(m.kriteriaCount || 0) >= 3).length;
+
+        document.getElementById('stat-masjid').textContent = totalMasjidAktif;
         document.getElementById('stat-kas').textContent = formatRp(data.total_kas || 0);
 
         const persen = Math.min(100, Math.round((list.length / TARGET_EKSPEDISI) * 100));
         document.getElementById('ekspedisi-bar').style.width = persen + '%';
-        document.getElementById('ekspedisi-text').textContent = `Tercapai: ${list.length} Masjid`;
+        document.getElementById('ekspedisi-text').textContent = `Terdaftar: ${list.length} Masjid`;
         document.getElementById('ekspedisi-persen').textContent = persen + '%';
 
         if (list.length === 0) {
@@ -508,7 +510,7 @@ async function loadDashboardData() {
                             <div>${kriteria.gal ? '✅' : '⬜'} Galeri kegiatan</div>
                             <div>📅 Usia sistem: ${ageInDays} hari</div>
                             ${m.last_login ? `<div>👤 Login terakhir: ${escapeHtml(m.last_login)}</div>` : ''}
-                            ${m.skor_aktif !== undefined ? `<div>📊 Skor aktif: ${escapeHtml(m.skor_aktif)}</div>` : ''}
+                            ${m.skor_aktif !== undefined && m.skor_aktif !== '' ? `<div>📊 Skor aktif: ${escapeHtml(m.skor_aktif)}</div>` : ''}
                         </div>
 
                         <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:10px;">
