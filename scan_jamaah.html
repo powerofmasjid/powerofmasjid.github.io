@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Klaim Hadiah - Power of Masjid</title>
+<title>Rezeki Berkah - Power of Masjid</title>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
     :root { --bg: #0A2F1C; --card: #113F27; --gold: #C9A84C; --text: #E8F5EE; --success: #10B981; }
@@ -42,8 +42,8 @@
 <div class="card">
     
     <div id="area-klaim">
-        <h2>🎁 Klaim Hadiah Sponsor</h2>
-        <p class="subtitle">Isi data diri Anda untuk mendapatkan hak penukaran hadiah.</p>
+        <h2>🎁 Buka Rezeki Anda</h2>
+        <p class="subtitle">Isi data singkat di bawah ini untuk menjemput rezeki berkah dari donatur.</p>
         
         <input type="hidden" id="id_campaign" value="CPN-CONTOH"> 
         
@@ -59,14 +59,14 @@
             <label>Nomor WhatsApp</label>
             <input type="number" id="wa_jamaah" placeholder="0812xxxxxx" style="text-transform: none;">
         </div>
-        <button class="btn" id="btn-klaim" onclick="klaimVoucher()">DAPATKAN HAK PENUKARAN</button>
+        <button class="btn" id="btn-klaim" onclick="klaimVoucher()">CEK REZEKI SAYA</button>
     </div>
 
     <div id="area-redeem">
-        <h2>🎟️ HAK PENUKARAN AKTIF!</h2>
+        <h2>🎟️ REZEKI TERSEDIA!</h2>
         <p class="subtitle">Bawa layar HP ini ke kasir/merchant terdekat.</p>
         
-        <div class="kode-voucher" id="tampil-kode">VCH-XXXX</div>
+        <div class="kode-voucher" id="tampil-kode">RZK-XXXX</div>
         
         <div style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 12px; margin-top: 20px;">
             <label style="color: #6EE7B7; font-size: 13px; text-align: center; margin-bottom: 10px;">🏪 AREA PENUKARAN KASIR</label>
@@ -79,24 +79,24 @@
                 <label for="cek-lokasi">Saya sudah mengetik Kode Kasir yang benar dan saat ini sedang berada di depan kasir.</label>
             </div>
 
-            <button class="btn btn-redeem" id="btn-hangus" onclick="prosesTukar()" disabled>TUKARKAN</button>
+            <button class="btn btn-redeem" id="btn-hangus" onclick="prosesTukar()" disabled>TERIMA REZEKI</button>
         </div>
     </div>
 
     <div id="area-sukses">
         <div class="anim-sukses">✅</div>
-        <h2 style="color: var(--success);">PENUKARAN BERHASIL!</h2>
+        <h2 style="color: var(--success);">ALHAMDULILLAH!</h2>
         <p class="subtitle" style="margin-top: 10px; font-size: 14px;">Validasi sah. Tunjukkan layar ini ke Kasir.</p>
         
         <div class="live-time" id="live-time">Memuat waktu...</div>
 
-        <p style="font-size: 12px; opacity: 0.8; margin-top: 20px;">Silakan ambil hadiah Anda. Layar ini adalah bukti penukaran resmi sistem.</p>
+        <p style="font-size: 12px; opacity: 0.8; margin-top: 20px;">Silakan nikmati jamuan rezeki Anda. Layar ini adalah bukti resmi sistem.</p>
     </div>
 
 </div>
 
 <script>
-const API_URL = 'https://script.google.com/macros/s/AKfycbx-OPYS9HjOv8lQzsiuAeDNjcWK_-ugDVTRcpE7kN7BWoKrEbreSvyUtgH5zFpB78cr9g/exec';
+const API_URL = 'https://script.google.com/macros/s/AKfycbwX220QtX433eT9NhRH2TTc3S_J56kX0B4Kq9Cv_3tnySuE3osUMKc-mESjNUiFb4jvSA/exec';
 let simpanKodeVoucher = '';
 
 const urlParams = new URLSearchParams(window.location.search);
@@ -111,11 +111,11 @@ function klaimVoucher() {
     if(!lokasi || !nama || !wa) return alert('Mohon lengkapi semua data diri Anda.');
 
     let btn = document.getElementById('btn-klaim');
-    btn.disabled = true; btn.textContent = 'MEMPROSES...';
+    btn.disabled = true; btn.textContent = 'MENCARI REZEKI...';
 
     fetch(API_URL, {
         method: 'POST',
-        body: JSON.stringify({ action: 'addVoucherScan', id_campaign: camp, lokasi_scan: lokasi, nama: nama, wa: wa })
+        body: JSON.stringify({ action: 'addVoucherScan', id_campaign: camp, masjid: lokasi, nama: nama, wa: wa })
     }).then(res => res.json()).then(data => {
         if(data.status === 'ok') {
             simpanKodeVoucher = data.kode;
@@ -124,11 +124,11 @@ function klaimVoucher() {
             document.getElementById('area-redeem').style.display = 'block';
         } else {
             alert('GAGAL: ' + data.message);
-            btn.disabled = false; btn.textContent = 'DAPATKAN HAK PENUKARAN';
+            btn.disabled = false; btn.textContent = 'CEK REZEKI SAYA';
         }
     }).catch(err => {
         alert('Gangguan sinyal. Silakan coba lagi.');
-        btn.disabled = false; btn.textContent = 'DAPATKAN HAK PENUKARAN';
+        btn.disabled = false; btn.textContent = 'CEK REZEKI SAYA';
     });
 }
 
@@ -154,7 +154,7 @@ function prosesTukar() {
 
     fetch(API_URL, {
         method: 'POST',
-        body: JSON.stringify({ action: 'redeemVoucher', kode_merchant: kodeMeja, kode_voucher: simpanKodeVoucher })
+        body: JSON.stringify({ action: 'redeemVoucher', kode_merchant: kodeMeja, kode: simpanKodeVoucher })
     }).then(res => res.json()).then(data => {
         if(data.status === 'ok') {
             document.getElementById('area-redeem').style.display = 'none';
@@ -162,11 +162,11 @@ function prosesTukar() {
             startLiveTime(); 
         } else {
             alert('PENUKARAN DITOLAK: ' + data.message);
-            btn.disabled = false; btn.textContent = 'TUKARKAN';
+            btn.disabled = false; btn.textContent = 'TERIMA REZEKI';
         }
     }).catch(err => {
         alert('Gangguan sinyal. Silakan coba lagi.');
-        btn.disabled = false; btn.textContent = 'TUKARKAN';
+        btn.disabled = false; btn.textContent = 'TERIMA REZEKI';
     });
 }
 </script>
