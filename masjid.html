@@ -397,7 +397,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 <div class="toast" id="toast">Nomor rekening disalin!</div>
 
 <script>
-var API_URL = 'https://script.google.com/macros/s/AKfycbyS_CfKq7wFsoG_AAWpMehVQOaexYLUFxOqESponCdXxWNJUQQ0L-krYumzVMnNBwXhIQ/exec';
+var API_URL = 'https://script.google.com/macros/s/AKfycbxv6n8kruFEXFzlPE6Np7X_Ac4zcnyGwvqP2ckGOgljuDLSXwQgLnkn6_Zmpx3oBENAKg/exec';
 
 var ID_MASJID = '';
 var CACHE_DURATION = 60000; 
@@ -781,67 +781,61 @@ async function loadJadwalSholat(lat, lon) {
     return;
   }
 
-  var today = new Date();
-  var tanggal = today.getDate() + '-' + (today.getMonth() + 1) + '-' + today.getFullYear();
-  var url = 'https://api.aladhan.com/v1/timings/' + tanggal + '?latitude=' + encodeURIComponent(lat) + '&longitude=' + encodeURIComponent(lon) + '&method=3';
+  function bersihkanWaktu(timeStr) {
+    return String(timeStr || '').split(' ')[0].trim();
+  }
 
-  try {
-    var res = await fetch(url);
-    var j = await res.json();
+  function sesuaikanWaktu(timeStr, tambahLagi) {
+    tambahLagi = tambahLagi || 0;
+    timeStr = bersihkanWaktu(timeStr);
+    var parts = timeStr.split(':');
+    var h = Number(parts[0]);
+    var m = Number(parts[1]);
 
-    if (!j || j.code !== 200 || !j.data || !j.data.timings) {
-      throw new Error('Data jadwal sholat tidak valid');
-    }
+    if (isNaN(h) || isNaN(m)) return '--:--';
 
-    var t = j.data.timings;
     var KOREKSI_MENIT = 0;
+    m += (KOREKSI_MENIT + tambahLagi);
+    h += Math.floor(m / 60);
+    m = ((m % 60) + 60) % 60;
+    h = ((h % 24) + 24) % 24;
 
-    function bersihkanWaktu(timeStr) {
-      return String(timeStr || '').split(' ')[0].trim();
-    }
+    return String(h).padStart(2, '0') + ':' + String(m).padStart(2, '0');
+  }
 
-    function sesuaikanWaktu(timeStr, tambahLagi = 0) {
-      timeStr = bersihkanWaktu(timeStr);
+  function toMenit(str) {
+    if (!str || str === '--:--') return 0;
+    var p = str.split(':');
+    return parseInt(p[0], 10) * 60 + parseInt(p[1], 10);
+  }
 
-      if (!timeStr || timeStr.indexOf(':') === -1) return '--:--';
+  function renderJadwal(timings) {
+    var today = new Date();
 
-      var parts = timeStr.split(':');
-      var h = Number(parts[0]);
-      var m = Number(parts[1]);
-
-      if (isNaN(h) || isNaN(m)) return '--:--';
-
-      m += (KOREKSI_MENIT + tambahLagi);
-      h += Math.floor(m / 60);
-      m = ((m % 60) + 60) % 60;
-      h = ((h % 24) + 24) % 24;
-
-      return String(h).padStart(2, '0') + ':' + String(m).padStart(2, '0');
-    }
+    var imsak = timings.Imsak || timings.imsak || '';
+    var subuh = timings.Fajr || timings.subuh || '';
+    var terbit = timings.Sunrise || timings.terbit || '';
+    var dzuhur = timings.Dhuhr || timings.dzuhur || '';
+    var ashar = timings.Asr || timings.ashar || '';
+    var maghrib = timings.Maghrib || timings.maghrib || '';
+    var isya = timings.Isha || timings.isya || '';
 
     var sholat = [
-      {name:'Imsak', time: sesuaikanWaktu(t.Imsak)},
-      {name:'Subuh', time: sesuaikanWaktu(t.Fajr)},
-      {name:'Terbit', time: sesuaikanWaktu(t.Sunrise)},
-      {name:'Dhuha', time: sesuaikanWaktu(t.Sunrise, 20)},
-      {name:'Dzuhur', time: sesuaikanWaktu(t.Dhuhr)},
-      {name:'Ashar', time: sesuaikanWaktu(t.Asr)},
-      {name:'Maghrib', time: sesuaikanWaktu(t.Maghrib)},
-      {name:'Isya', time: sesuaikanWaktu(t.Isha)}
+      {name:'Imsak', time: sesuaikanWaktu(imsak)},
+      {name:'Subuh', time: sesuaikanWaktu(subuh)},
+      {name:'Terbit', time: sesuaikanWaktu(terbit)},
+      {name:'Dhuha', time: terbit ? sesuaikanWaktu(terbit, 20) : '--:--'},
+      {name:'Dzuhur', time: sesuaikanWaktu(dzuhur)},
+      {name:'Ashar', time: sesuaikanWaktu(ashar)},
+      {name:'Maghrib', time: sesuaikanWaktu(maghrib)},
+      {name:'Isya', time: sesuaikanWaktu(isya)}
     ];
-
-    function toMenit(str) {
-      if (!str || str === '--:--' || str.indexOf(':') === -1) return 0;
-      var p = str.split(':');
-      return (parseInt(p[0], 10) * 60) + parseInt(p[1], 10);
-    }
 
     var now = today.getHours() * 60 + today.getMinutes();
     var aktifIdx = 0;
 
     for (var i = 0; i < sholat.length; i++) {
-      var menitSholat = toMenit(sholat[i].time);
-      if (menitSholat > 0 && now >= menitSholat) aktifIdx = i;
+      if (sholat[i].time !== '--:--' && now >= toMenit(sholat[i].time)) aktifIdx = i;
     }
 
     card.style.display = 'block';
@@ -859,8 +853,15 @@ async function loadJadwalSholat(lat, lon) {
       var isAktif = idx === aktifIdx;
       var extraHtml = '';
 
-      if (isAktif) {
+      if (isAktif && s.time !== '--:--') {
         var nextIdx = (idx + 1) % sholat.length;
+        var loopGuard = 0;
+
+        while (sholat[nextIdx].time === '--:--' && loopGuard < sholat.length) {
+          nextIdx = (nextIdx + 1) % sholat.length;
+          loopGuard++;
+        }
+
         var waktuBerikutnya = toMenit(sholat[nextIdx].time);
         var sisaMenit = waktuBerikutnya - now;
 
@@ -881,14 +882,58 @@ async function loadJadwalSholat(lat, lon) {
     });
 
     grid.innerHTML = htmlJadwal;
+  }
 
-  } catch(e) {
-    card.style.display = 'block';
-    title.textContent = 'Jadwal Waktu Sholat';
-    grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;color:white;font-size:12px;padding:10px;line-height:1.5;">Jadwal sholat belum bisa dimuat. Periksa koneksi internet atau koordinat masjid.</div>';
-    console.error('Gagal memuat jadwal sholat:', e);
+  async function ambilDariAladhanLangsung() {
+    var today = new Date();
+    var tanggal = today.getDate() + '-' + (today.getMonth() + 1) + '-' + today.getFullYear();
+    var url = 'https://api.aladhan.com/v1/timings/' + tanggal +
+      '?latitude=' + encodeURIComponent(lat) +
+      '&longitude=' + encodeURIComponent(lon) +
+      '&method=3';
+
+    var res = await fetch(url);
+    var j = await res.json();
+
+    if (!j || Number(j.code) !== 200 || !j.data || !j.data.timings) {
+      throw new Error('Data Aladhan langsung tidak valid');
+    }
+
+    return j.data.timings;
+  }
+
+  async function ambilDariKodeGs() {
+    if (!ID_MASJID) throw new Error('ID masjid belum tersedia');
+
+    var url = API_URL + '?action=getJadwalSholat&id_masjid=' + encodeURIComponent(ID_MASJID) + '&_t=' + Date.now();
+    var res = await fetch(url);
+    var j = await res.json();
+
+    if (!j || j.status !== 'ok' || !j.data) {
+      throw new Error((j && j.message) ? j.message : 'Fallback kode.gs gagal');
+    }
+
+    return j.data;
+  }
+
+  try {
+    var timings = await ambilDariAladhanLangsung();
+    renderJadwal(timings);
+  } catch(e1) {
+    console.warn('Aladhan langsung gagal, mencoba fallback kode.gs:', e1);
+
+    try {
+      var fallbackTimings = await ambilDariKodeGs();
+      renderJadwal(fallbackTimings);
+    } catch(e2) {
+      console.error('Jadwal sholat gagal total:', e2);
+      card.style.display = 'block';
+      title.textContent = 'Jadwal Waktu Sholat';
+      grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;color:white;font-size:12px;padding:10px;line-height:1.5;">Jadwal sholat belum bisa dimuat. Periksa koneksi atau koordinat masjid.</div>';
+    }
   }
 }
+
 async function tampilOverlay() {
   try {
     var json = await apiFetch('getIklanGlobal', null, 'iklan_global');
