@@ -819,7 +819,7 @@ async function loadJadwalSholat(lat, lon) {
     sholat.forEach(function(s, idx) {
       var isAktif = idx === aktifIdx;
       var isNext = idx === nextIdxAktif;
-      var extraHtml = isNext ? '<div class="countdown-badge">⏳ menuju ' + s.name + '<br>' + teksSisa + '</div>' : '';
+      var extraHtml = isNext ? '<div class="countdown-badge">⏳ ' + teksSisa + '</div>' : '';
       htmlJadwal += '<div class="sholat-item' + (isAktif ? ' aktif' : '') + '"><div class="sholat-name">' + s.name + '</div><div class="sholat-time">' + s.time + '</div>' + extraHtml + '</div>';
     });
     grid.innerHTML = htmlJadwal;
