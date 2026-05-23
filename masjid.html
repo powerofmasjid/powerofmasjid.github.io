@@ -46,7 +46,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 .logo-wrap img{width:100%;height:100%;object-fit:cover;display:block;}
 .logo-placeholder{font-family:'Amiri',serif;font-size:32px;color:var(--accent);}
 .header h1{font-family:'Amiri',serif;font-size:22px;color:white;font-weight:700;line-height:1.3;position:relative;z-index:1;}
-.header .alamat{font-size:12px;color:rgba(255,255,255,0.7);margin-top:6px;position:relative;z-index:1;line-height:1.6;white-space:pre-line;}
+.header .alamat{font-size:12px;color:rgba(255,255,255,0.7);margin-top:6px;position:relative;z-index:1;line-height:1.6;}
 .header .deskripsi{font-size:12px;color:rgba(255,255,255,0.6);margin-top:6px;line-height:1.5;position:relative;z-index:1;}
 .badge-pow{display:inline-flex;align-items:center;gap:6px;background:rgba(201,168,76,0.15);border:1px solid rgba(201,168,76,0.4);color:var(--accent);font-size:11px;padding:5px 14px;border-radius:20px;margin-top:10px;font-weight:600;position:relative;z-index:1;text-decoration:none;transition:all 0.3s ease;}
 .badge-pow:hover{background:var(--accent);color:var(--primary-dark);transform:translateY(-2px);box-shadow:0 4px 12px rgba(201,168,76,0.3);}
@@ -397,7 +397,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 <div class="toast" id="toast">Nomor rekening disalin!</div>
 
 <script>
-var API_URL = 'https://script.google.com/macros/s/AKfycbzwak_qeVoxi_AGW6yu71Az77_nNzC0g8HpXC37d_oc0Hzb4c8bnSalL_bkq1X6pY_02w/exec';
+var API_URL = 'https://script.google.com/macros/s/AKfycbxv6n8kruFEXFzlPE6Np7X_Ac4zcnyGwvqP2ckGOgljuDLSXwQgLnkn6_Zmpx3oBENAKg/exec';
 
 var ID_MASJID = '';
 var CACHE_DURATION = 60000; 
@@ -490,18 +490,14 @@ async function loadMasjid(slug) {
   var d = json.data; ID_MASJID = d.id_masjid; window.WA_MASJID = d.telepon_wa || '';
 
   document.getElementById('nama-masjid').textContent = d.nama; 
-
   var barisAlamat = [];
   if (d.alamat) barisAlamat.push(d.alamat);
-
-  var barisWilayah = [];
-  if (d.kelurahan) barisWilayah.push('Kel. ' + d.kelurahan);
-  if (d.kecamatan) barisWilayah.push('Kec. ' + d.kecamatan);
-  if (barisWilayah.length > 0) barisAlamat.push(barisWilayah.join(', '));
-
+  var wilayah = [];
+  if (d.kelurahan) wilayah.push('Kel. ' + d.kelurahan);
+  if (d.kecamatan) wilayah.push('Kec. ' + d.kecamatan);
+  if (wilayah.length) barisAlamat.push(wilayah.join(', '));
   if (d.kota) barisAlamat.push(d.kota);
-
-  document.getElementById('alamat-masjid').textContent = barisAlamat.join('\n');
+  document.getElementById('alamat-masjid').innerHTML = barisAlamat.join('<br>');
   document.title = d.nama + ' — Power of Masjid';
 
   if (d.deskripsi) { document.getElementById('deskripsi-masjid').textContent = d.deskripsi; document.getElementById('deskripsi-masjid').style.display = 'block'; }
@@ -769,118 +765,205 @@ async function loadJadwalSholat(lat, lon) {
   var grid = document.getElementById('sholat-grid');
   var title = document.getElementById('sholat-date');
 
-  if (!card || !grid || !title) return;
-
-  lat = String(lat || '').replace(',', '.').trim();
-  lon = String(lon || '').replace(',', '.').trim();
-
-  var latNum = Number(lat);
-  var lonNum = Number(lon);
-
-  if (!lat || !lon || isNaN(latNum) || isNaN(lonNum)) {
+  function showMessage(msg) {
+    if (!card || !grid || !title) return;
     card.style.display = 'block';
     title.textContent = 'Jadwal Waktu Sholat';
-    grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;color:white;font-size:12px;padding:10px;line-height:1.5;">Koordinat masjid belum valid. Isi latitude dan longitude di profil masjid.</div>';
-    return;
+    grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;color:white;font-size:12px;padding:10px;line-height:1.6;">' + msg + '</div>';
   }
 
-  function bersihkanWaktu(timeStr) {
-    return String(timeStr || '').split(' ')[0].trim();
+  function cleanCoord(v) {
+    return String(v || '').replace(',', '.').replace(/[^0-9.\-]/g, '').trim();
   }
 
-  function sesuaikanWaktu(timeStr, tambahLagi) {
-    tambahLagi = tambahLagi || 0;
-    timeStr = bersihkanWaktu(timeStr);
+  function cleanTime(v) {
+    return String(v || '').split(' ')[0].trim();
+  }
+
+  function adjustTime(timeStr, addMinutes) {
+    timeStr = cleanTime(timeStr);
     var parts = timeStr.split(':');
     var h = Number(parts[0]);
     var m = Number(parts[1]);
-
     if (isNaN(h) || isNaN(m)) return '--:--';
-
-    var KOREKSI_MENIT = 0;
-    m += (KOREKSI_MENIT + tambahLagi);
+    m += Number(addMinutes || 0);
     h += Math.floor(m / 60);
     m = ((m % 60) + 60) % 60;
     h = ((h % 24) + 24) % 24;
-
     return String(h).padStart(2, '0') + ':' + String(m).padStart(2, '0');
   }
 
   function toMenit(str) {
     if (!str || str === '--:--') return 0;
     var p = str.split(':');
-    return parseInt(p[0], 10) * 60 + parseInt(p[1], 10);
+    return (parseInt(p[0], 10) * 60) + parseInt(p[1], 10);
   }
 
-  function renderJadwal(timings, sumber) {
+  function renderJadwal(sholat, labelSumber) {
+    if (!card || !grid || !title || !sholat || !sholat.length) return;
     var today = new Date();
-
-    var imsak = timings.Imsak || timings.imsak || '';
-    var subuh = timings.Fajr || timings.subuh || '';
-    var terbit = timings.Sunrise || timings.terbit || '';
-    var dzuhur = timings.Dhuhr || timings.dzuhur || '';
-    var ashar = timings.Asr || timings.ashar || '';
-    var maghrib = timings.Maghrib || timings.maghrib || '';
-    var isya = timings.Isha || timings.isya || '';
-
-    var sholat = [
-      {name:'Imsak', time: sesuaikanWaktu(imsak)},
-      {name:'Subuh', time: sesuaikanWaktu(subuh)},
-      {name:'Terbit', time: sesuaikanWaktu(terbit)},
-      {name:'Dhuha', time: terbit ? sesuaikanWaktu(terbit, 20) : '--:--'},
-      {name:'Dzuhur', time: sesuaikanWaktu(dzuhur)},
-      {name:'Ashar', time: sesuaikanWaktu(ashar)},
-      {name:'Maghrib', time: sesuaikanWaktu(maghrib)},
-      {name:'Isya', time: sesuaikanWaktu(isya)}
-    ];
-
-    var adaWaktuValid = sholat.some(function(s) { return s.time !== '--:--'; });
-    if (!adaWaktuValid) throw new Error('Semua waktu sholat kosong');
-
     var now = today.getHours() * 60 + today.getMinutes();
     var aktifIdx = 0;
 
     for (var i = 0; i < sholat.length; i++) {
-      if (sholat[i].time !== '--:--' && now >= toMenit(sholat[i].time)) aktifIdx = i;
+      if (now >= toMenit(sholat[i].time)) aktifIdx = i;
     }
 
     card.style.display = 'block';
-
     var namaHariArr = ['Ahad','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
-    var teksTanggal = namaHariArr[today.getDay()] + ', ' + today.toLocaleDateString('id-ID', {
-      day:'numeric',
-      month:'long',
-      year:'numeric'
-    });
-
-    if (sumber === 'lokal') {
-      title.textContent = teksTanggal + ' • Perkiraan Lokal';
-    } else {
-      title.textContent = teksTanggal + ' • Metode Kemenag RI';
-    }
+    title.textContent = namaHariArr[today.getDay()] + ', ' + today.toLocaleDateString('id-ID', {day:'numeric', month:'long', year:'numeric'}) + (labelSumber ? ' · ' + labelSumber : '');
 
     var htmlJadwal = '';
-
     sholat.forEach(function(s, idx) {
       var isAktif = idx === aktifIdx;
       var extraHtml = '';
-
-      if (isAktif && s.time !== '--:--') {
+      if (isAktif) {
         var nextIdx = (idx + 1) % sholat.length;
-        var loopGuard = 0;
-
-        while (sholat[nextIdx].time === '--:--' && loopGuard < sholat.length) {
-          nextIdx = (nextIdx + 1) % sholat.length;
-          loopGuard++;
-        }
-
         var waktuBerikutnya = toMenit(sholat[nextIdx].time);
         var sisaMenit = waktuBerikutnya - now;
-
         if (sisaMenit <= 0) sisaMenit += 1440;
-
         var jamCountdown = Math.floor(sisaMenit / 60);
         var menitCountdown = sisaMenit % 60;
         var teksSisa = jamCountdown > 0 ? jamCountdown + 'j ' + menitCountdown + 'm lagi' : menitCountdown + 'm lagi';
+        extraHtml = '<div class="countdown-badge">⏳ ' + teksSisa + '</div>';
+      }
+      htmlJadwal += '<div class="sholat-item' + (isAktif ? ' aktif' : '') + '"><div class="sholat-name">' + s.name + '</div><div class="sholat-time">' + s.time + '</div>' + extraHtml + '</div>';
+    });
+    grid.innerHTML = htmlJadwal;
+  }
 
-        extraHtml = '<div class="c
+  function mapFromAladhanTimings(t) {
+    return [
+      {name:'Imsak', time: adjustTime(t.Imsak, 0)},
+      {name:'Subuh', time: adjustTime(t.Fajr, 0)},
+      {name:'Terbit', time: adjustTime(t.Sunrise, 0)},
+      {name:'Dhuha', time: adjustTime(t.Sunrise, 20)},
+      {name:'Dzuhur', time: adjustTime(t.Dhuhr, 0)},
+      {name:'Ashar', time: adjustTime(t.Asr, 0)},
+      {name:'Maghrib', time: adjustTime(t.Maghrib, 0)},
+      {name:'Isya', time: adjustTime(t.Isha, 0)}
+    ];
+  }
+
+  function mapFromBackendData(d) {
+    return [
+      {name:'Imsak', time: adjustTime(d.imsak || d.Imsak || d.subuh || d.Fajr, d.imsak ? 0 : -10)},
+      {name:'Subuh', time: adjustTime(d.subuh || d.Fajr || d.fajr, 0)},
+      {name:'Terbit', time: adjustTime(d.terbit || d.Sunrise || d.sunrise, 0)},
+      {name:'Dhuha', time: adjustTime(d.dhuha || d.terbit || d.Sunrise || d.sunrise, d.dhuha ? 0 : 20)},
+      {name:'Dzuhur', time: adjustTime(d.dzuhur || d.Dhuhr || d.dhuhr, 0)},
+      {name:'Ashar', time: adjustTime(d.ashar || d.Asr || d.asr, 0)},
+      {name:'Maghrib', time: adjustTime(d.maghrib || d.Maghrib, 0)},
+      {name:'Isya', time: adjustTime(d.isya || d.Isha || d.isha, 0)}
+    ];
+  }
+
+  async function fetchWithTimeout(url, ms) {
+    var controller = new AbortController();
+    var timer = setTimeout(function(){ controller.abort(); }, ms || 3500);
+    try {
+      var res = await fetch(url, { signal: controller.signal, cache: 'no-store' });
+      return res;
+    } finally {
+      clearTimeout(timer);
+    }
+  }
+
+  lat = cleanCoord(lat);
+  lon = cleanCoord(lon);
+
+  if (!lat || !lon) {
+    showMessage('Koordinat masjid belum diisi.');
+    return;
+  }
+
+  if (card && grid && title) {
+    card.style.display = 'block';
+    title.textContent = 'Jadwal Waktu Sholat';
+    grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;color:white;font-size:12px;padding:10px;">Memuat jadwal sholat...</div>';
+  }
+
+  var today = new Date();
+  var tanggal = today.getDate() + '-' + (today.getMonth() + 1) + '-' + today.getFullYear();
+  var directUrl = 'https://api.aladhan.com/v1/timings/' + tanggal + '?latitude=' + encodeURIComponent(lat) + '&longitude=' + encodeURIComponent(lon) + '&method=3';
+
+  try {
+    var res = await fetchWithTimeout(directUrl, 3500);
+    var j = await res.json();
+    if (j && j.code === 200 && j.data && j.data.timings) {
+      renderJadwal(mapFromAladhanTimings(j.data.timings), '');
+      return;
+    }
+  } catch(e) {
+    console.warn('Jadwal sholat Aladhan langsung gagal:', e);
+  }
+
+  try {
+    if (ID_MASJID) {
+      var backendUrl = API_URL + '?action=getJadwalSholat&id_masjid=' + encodeURIComponent(ID_MASJID) + '&_t=' + Date.now();
+      var res2 = await fetchWithTimeout(backendUrl, 4500);
+      var j2 = await res2.json();
+      if (j2 && j2.status === 'ok' && j2.data) {
+        renderJadwal(mapFromBackendData(j2.data), '');
+        return;
+      }
+    }
+  } catch(e2) {
+    console.warn('Jadwal sholat backend gagal:', e2);
+  }
+
+  showMessage('Jadwal sholat belum bisa dimuat. Periksa koneksi atau koordinat masjid.');
+}
+
+async function tampilOverlay() {
+  try {
+    var json = await apiFetch('getIklanGlobal', null, 'iklan_global');
+    if (json && json.status === 'ok' && json.data) {
+      var item = json.data; document.getElementById('overlay-title').textContent = item.judul || 'Pengumuman';
+      
+      var btnHtml = '<div style="display:flex; gap:10px; margin-top:0.75rem;">';
+      if(item.link_wa) {
+         var waLink = item.link_wa.startsWith('http') ? item.link_wa : 'https://wa.me/' + item.link_wa;
+         btnHtml += '<a href="' + waLink + '" target="_blank" class="overlay-btn" style="flex:1; background:#10B981; border:none; margin-top:0;">💬 Hubungi WA</a>';
+      }
+      if(item.link_web) {
+         var webLink = item.link_web.startsWith('http') ? item.link_web : 'https://' + item.link_web;
+         btnHtml += '<a href="' + webLink + '" target="_blank" class="overlay-btn" style="flex:1; margin-top:0; background:white; color:var(--primary); border:1px solid var(--border);">🌐 Cek Detail</a>';
+      }
+      btnHtml += '</div>';
+
+      document.getElementById('overlay-body').innerHTML = '<div class="overlay-iklan"><div class="overlay-iklan-icon">📢</div><div class="overlay-iklan-title">' + item.program + '</div><div class="overlay-iklan-sub">' + item.deskripsi + '</div></div>' + btnHtml;
+      document.getElementById('overlay').classList.remove('hide');
+    }
+  } catch(e) {}
+}
+
+async function init() {
+  var slug = getSlug();
+  try {
+    var id = await loadMasjid(slug);
+    if (!id) return;
+
+    var splash = document.getElementById('splash');
+    if (splash) { splash.classList.add('hide'); setTimeout(function(){ splash.style.display = 'none'; }, 600); }
+
+    await Promise.all([ loadSaldo(), loadTransaksi(), loadProgramAmal(), loadJadwal(), loadPengumuman(), loadGaleri() ]);
+    
+    var resSponsor = await apiFetch('getSponsorWeb', {_t: Date.now()}, null);
+    if(resSponsor && resSponsor.status === 'ok' && resSponsor.data.length > 0) {
+       var sponsorTeks = resSponsor.data.map(s => s.teks).join(' &nbsp;✦&nbsp; ');
+       document.getElementById('sponsor-web-container').innerHTML = sponsorTeks;
+       document.getElementById('sponsor-web-container').style.display = 'block';
+    }
+
+  } catch(e) {
+    var splash = document.getElementById('splash');
+    if (splash) { splash.classList.add('hide'); setTimeout(function(){ splash.style.display = 'none'; }, 600); }
+  }
+  setTimeout(function(){ tampilOverlay(); }, 3000);
+}
+
+init();
+</script>
+</body>
+</html>
