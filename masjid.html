@@ -397,7 +397,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 <div class="toast" id="toast">Nomor rekening disalin!</div>
 
 <script>
-var API_URL = 'https://script.google.com/macros/s/AKfycbxv6n8kruFEXFzlPE6Np7X_Ac4zcnyGwvqP2ckGOgljuDLSXwQgLnkn6_Zmpx3oBENAKg/exec';
+var API_URL = 'https://script.google.com/macros/s/AKfycbzwak_qeVoxi_AGW6yu71Az77_nNzC0g8HpXC37d_oc0Hzb4c8bnSalL_bkq1X6pY_02w/exec';
 
 var ID_MASJID = '';
 var CACHE_DURATION = 60000; 
@@ -847,11 +847,17 @@ async function loadJadwalSholat(lat, lon) {
     card.style.display = 'block';
 
     var namaHariArr = ['Ahad','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
-    title.textContent = namaHariArr[today.getDay()] + ', ' + today.toLocaleDateString('id-ID', {
+    var teksTanggal = namaHariArr[today.getDay()] + ', ' + today.toLocaleDateString('id-ID', {
       day:'numeric',
       month:'long',
       year:'numeric'
     });
+
+    if (sumber === 'lokal') {
+      title.textContent = teksTanggal + ' • Perkiraan Lokal';
+    } else {
+      title.textContent = teksTanggal + ' • Metode Kemenag RI';
+    }
 
     var htmlJadwal = '';
 
@@ -877,235 +883,4 @@ async function loadJadwalSholat(lat, lon) {
         var menitCountdown = sisaMenit % 60;
         var teksSisa = jamCountdown > 0 ? jamCountdown + 'j ' + menitCountdown + 'm lagi' : menitCountdown + 'm lagi';
 
-        extraHtml = '<div class="countdown-badge">⏳ ' + teksSisa + '</div>';
-      }
-
-      htmlJadwal += '<div class="sholat-item' + (isAktif ? ' aktif' : '') + '">' +
-        '<div class="sholat-name">' + s.name + '</div>' +
-        '<div class="sholat-time">' + s.time + '</div>' +
-        extraHtml +
-      '</div>';
-    });
-
-    grid.innerHTML = htmlJadwal;
-    if (sumber === 'lokal') console.warn('Jadwal sholat memakai fallback hitungan lokal.');
-  }
-
-  async function ambilDariAladhanLangsung() {
-    var today = new Date();
-    var tanggal = today.getDate() + '-' + (today.getMonth() + 1) + '-' + today.getFullYear();
-    var url = 'https://api.aladhan.com/v1/timings/' + tanggal +
-      '?latitude=' + encodeURIComponent(lat) +
-      '&longitude=' + encodeURIComponent(lon) +
-      '&method=3';
-
-    var res = await fetch(url);
-    var j = await res.json();
-
-    if (!j || Number(j.code) !== 200 || !j.data || !j.data.timings) {
-      throw new Error('Data Aladhan langsung tidak valid');
-    }
-
-    return j.data.timings;
-  }
-
-  async function ambilDariKodeGs() {
-    if (!ID_MASJID) throw new Error('ID masjid belum tersedia');
-
-    var url = API_URL + '?action=getJadwalSholat&id_masjid=' + encodeURIComponent(ID_MASJID) + '&_t=' + Date.now();
-    var res = await fetch(url);
-    var j = await res.json();
-
-    if (!j || j.status !== 'ok' || !j.data) {
-      throw new Error((j && j.message) ? j.message : 'Fallback kode.gs gagal');
-    }
-
-    return j.data;
-  }
-
-  function hitungJadwalLokal() {
-    var date = new Date();
-    var timezone = -date.getTimezoneOffset() / 60;
-    if (!isFinite(timezone)) timezone = 7;
-
-    function dtr(d) { return (d * Math.PI) / 180.0; }
-    function rtd(r) { return (r * 180.0) / Math.PI; }
-    function fixAngle(a) { return a - 360.0 * Math.floor(a / 360.0); }
-    function fixHour(a) { return a - 24.0 * Math.floor(a / 24.0); }
-    function dsin(d) { return Math.sin(dtr(d)); }
-    function dcos(d) { return Math.cos(dtr(d)); }
-    function dtan(d) { return Math.tan(dtr(d)); }
-    function darccos(x) { return rtd(Math.acos(Math.max(-1, Math.min(1, x)))); }
-    function darctan(x) { return rtd(Math.atan(x)); }
-    function darctan2(y, x) { return rtd(Math.atan2(y, x)); }
-    function darccot(x) { return rtd(Math.atan(1 / x)); }
-
-    function julian(year, month, day) {
-      if (month <= 2) { year -= 1; month += 12; }
-      var A = Math.floor(year / 100);
-      var B = 2 - A + Math.floor(A / 4);
-      return Math.floor(365.25 * (year + 4716)) + Math.floor(30.6001 * (month + 1)) + day + B - 1524.5;
-    }
-
-    var jDate = julian(date.getFullYear(), date.getMonth() + 1, date.getDate()) - lonNum / (15 * 24);
-
-    function sunPosition(jd) {
-      var D = jd - 2451545.0;
-      var g = fixAngle(357.529 + 0.98560028 * D);
-      var q = fixAngle(280.459 + 0.98564736 * D);
-      var L = fixAngle(q + 1.915 * dsin(g) + 0.020 * dsin(2 * g));
-      var e = 23.439 - 0.00000036 * D;
-      var RA = darctan2(dcos(e) * dsin(L), dcos(L)) / 15.0;
-      RA = fixHour(RA);
-      var decl = rtd(Math.asin(dsin(e) * dsin(L)));
-      var eqt = q / 15.0 - RA;
-      return { declination: decl, equation: eqt };
-    }
-
-    function midDay(time) {
-      var eqt = sunPosition(jDate + time).equation;
-      return fixHour(12 - eqt);
-    }
-
-    function sunAngleTime(angle, time, direction) {
-      var decl = sunPosition(jDate + time).declination;
-      var noon = midDay(time);
-      var numerator = -dsin(angle) - dsin(decl) * dsin(latNum);
-      var denominator = dcos(decl) * dcos(latNum);
-      var term = numerator / denominator;
-      var t = (1 / 15.0) * darccos(term);
-      return noon + (direction === 'ccw' ? -t : t);
-    }
-
-    function asrTime(factor, time) {
-      var decl = sunPosition(jDate + time).declination;
-      var angle = -darccot(factor + dtan(Math.abs(latNum - decl)));
-      return sunAngleTime(angle, time, 'cw');
-    }
-
-    function dayPortion(times) {
-      var result = {};
-      Object.keys(times).forEach(function(k) { result[k] = times[k] / 24.0; });
-      return result;
-    }
-
-    function computeTimes(times) {
-      var t = dayPortion(times);
-      return {
-        imsak: sunAngleTime(20, t.imsak, 'ccw') - (10 / 60),
-        fajr: sunAngleTime(20, t.fajr, 'ccw'),
-        sunrise: sunAngleTime(0.833, t.sunrise, 'ccw'),
-        dhuhr: midDay(t.dhuhr),
-        asr: asrTime(1, t.asr),
-        sunset: sunAngleTime(0.833, t.sunset, 'cw'),
-        maghrib: sunAngleTime(0.833, t.maghrib, 'cw'),
-        isha: sunAngleTime(18, t.isha, 'cw')
-      };
-    }
-
-    var times = { imsak: 5, fajr: 5, sunrise: 6, dhuhr: 12, asr: 13, sunset: 18, maghrib: 18, isha: 19 };
-    times = computeTimes(times);
-    times = computeTimes(times);
-
-    var timeDiff = timezone - lonNum / 15.0;
-    Object.keys(times).forEach(function(k) { times[k] = fixHour(times[k] + timeDiff); });
-
-    function timeToString(time) {
-      if (!isFinite(time)) return '--:--';
-      time = fixHour(time + 0.5 / 60.0);
-      var hours = Math.floor(time);
-      var minutes = Math.floor((time - hours) * 60.0);
-      return String(hours).padStart(2, '0') + ':' + String(minutes).padStart(2, '0');
-    }
-
-    return {
-      Imsak: timeToString(times.imsak),
-      Fajr: timeToString(times.fajr),
-      Sunrise: timeToString(times.sunrise),
-      Dhuhr: timeToString(times.dhuhr),
-      Asr: timeToString(times.asr),
-      Maghrib: timeToString(times.maghrib),
-      Isha: timeToString(times.isha)
-    };
-  }
-
-  try {
-    var timings = await ambilDariAladhanLangsung();
-    renderJadwal(timings, 'aladhan');
-    return;
-  } catch(e1) {
-    console.warn('Aladhan langsung gagal, mencoba fallback kode.gs:', e1);
-  }
-
-  try {
-    var fallbackTimings = await ambilDariKodeGs();
-    renderJadwal(fallbackTimings, 'kode.gs');
-    return;
-  } catch(e2) {
-    console.warn('Fallback kode.gs gagal, memakai hitungan lokal:', e2);
-  }
-
-  try {
-    var localTimings = hitungJadwalLokal();
-    renderJadwal(localTimings, 'lokal');
-    return;
-  } catch(e3) {
-    console.error('Jadwal sholat gagal total:', e3);
-    card.style.display = 'block';
-    title.textContent = 'Jadwal Waktu Sholat';
-    grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;color:white;font-size:12px;padding:10px;line-height:1.5;">Jadwal sholat belum bisa dimuat. Periksa koordinat masjid.</div>';
-  }
-}
-
-async function tampilOverlay() {
-  try {
-    var json = await apiFetch('getIklanGlobal', null, 'iklan_global');
-    if (json && json.status === 'ok' && json.data) {
-      var item = json.data; document.getElementById('overlay-title').textContent = item.judul || 'Pengumuman';
-      
-      var btnHtml = '<div style="display:flex; gap:10px; margin-top:0.75rem;">';
-      if(item.link_wa) {
-         var waLink = item.link_wa.startsWith('http') ? item.link_wa : 'https://wa.me/' + item.link_wa;
-         btnHtml += '<a href="' + waLink + '" target="_blank" class="overlay-btn" style="flex:1; background:#10B981; border:none; margin-top:0;">💬 Hubungi WA</a>';
-      }
-      if(item.link_web) {
-         var webLink = item.link_web.startsWith('http') ? item.link_web : 'https://' + item.link_web;
-         btnHtml += '<a href="' + webLink + '" target="_blank" class="overlay-btn" style="flex:1; margin-top:0; background:white; color:var(--primary); border:1px solid var(--border);">🌐 Cek Detail</a>';
-      }
-      btnHtml += '</div>';
-
-      document.getElementById('overlay-body').innerHTML = '<div class="overlay-iklan"><div class="overlay-iklan-icon">📢</div><div class="overlay-iklan-title">' + item.program + '</div><div class="overlay-iklan-sub">' + item.deskripsi + '</div></div>' + btnHtml;
-      document.getElementById('overlay').classList.remove('hide');
-    }
-  } catch(e) {}
-}
-
-async function init() {
-  var slug = getSlug();
-  try {
-    var id = await loadMasjid(slug);
-    if (!id) return;
-
-    var splash = document.getElementById('splash');
-    if (splash) { splash.classList.add('hide'); setTimeout(function(){ splash.style.display = 'none'; }, 600); }
-
-    await Promise.all([ loadSaldo(), loadTransaksi(), loadProgramAmal(), loadJadwal(), loadPengumuman(), loadGaleri() ]);
-    
-    var resSponsor = await apiFetch('getSponsorWeb', {_t: Date.now()}, null);
-    if(resSponsor && resSponsor.status === 'ok' && resSponsor.data.length > 0) {
-       var sponsorTeks = resSponsor.data.map(s => s.teks).join(' &nbsp;✦&nbsp; ');
-       document.getElementById('sponsor-web-container').innerHTML = sponsorTeks;
-       document.getElementById('sponsor-web-container').style.display = 'block';
-    }
-
-  } catch(e) {
-    var splash = document.getElementById('splash');
-    if (splash) { splash.classList.add('hide'); setTimeout(function(){ splash.style.display = 'none'; }, 600); }
-  }
-  setTimeout(function(){ tampilOverlay(); }, 3000);
-}
-
-init();
-</script>
-</body>
-</html>
+        extraHtml = '<div class="c
