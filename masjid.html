@@ -765,13 +765,6 @@ async function loadJadwalSholat(lat, lon) {
   var grid = document.getElementById('sholat-grid');
   var title = document.getElementById('sholat-date');
 
-  function showMessage(msg) {
-    if (!card || !grid || !title) return;
-    card.style.display = 'block';
-    title.textContent = 'Jadwal Waktu Sholat';
-    grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;color:white;font-size:12px;padding:10px;line-height:1.6;">' + msg + '</div>';
-  }
-
   function cleanCoord(v) {
     return String(v || '').replace(',', '.').replace(/[^0-9.\-]/g, '').trim();
   }
@@ -801,6 +794,7 @@ async function loadJadwalSholat(lat, lon) {
 
   function renderJadwal(sholat, labelSumber) {
     if (!card || !grid || !title || !sholat || !sholat.length) return;
+
     var today = new Date();
     var now = today.getHours() * 60 + today.getMinutes();
     var aktifIdx = 0;
@@ -858,9 +852,85 @@ async function loadJadwalSholat(lat, lon) {
     ];
   }
 
+  function degToRad(d) { return d * Math.PI / 180; }
+  function radToDeg(r) { return r * 180 / Math.PI; }
+  function fixAngle(a) { return ((a % 360) + 360) % 360; }
+  function fixHour(h) { return ((h % 24) + 24) % 24; }
+  function two(n) { return String(Math.floor(n)).padStart(2, '0'); }
+  function timeFloatToString(t) {
+    if (!isFinite(t)) return '--:--';
+    t = fixHour(t + 0.5 / 60);
+    var h = Math.floor(t);
+    var m = Math.floor((t - h) * 60);
+    return two(h) + ':' + two(m);
+  }
+
+  function sunPosition(jd) {
+    var D = jd - 2451545.0;
+    var g = fixAngle(357.529 + 0.98560028 * D);
+    var q = fixAngle(280.459 + 0.98564736 * D);
+    var L = fixAngle(q + 1.915 * Math.sin(degToRad(g)) + 0.020 * Math.sin(degToRad(2 * g)));
+    var e = 23.439 - 0.00000036 * D;
+    var RA = radToDeg(Math.atan2(Math.cos(degToRad(e)) * Math.sin(degToRad(L)), Math.cos(degToRad(L)))) / 15;
+    RA = fixHour(RA);
+    var decl = radToDeg(Math.asin(Math.sin(degToRad(e)) * Math.sin(degToRad(L))));
+    var eqt = q / 15 - RA;
+    return { declination: decl, equation: eqt };
+  }
+
+  function julianDate(y, m, d) {
+    if (m <= 2) { y -= 1; m += 12; }
+    var A = Math.floor(y / 100);
+    var B = 2 - A + Math.floor(A / 4);
+    return Math.floor(365.25 * (y + 4716)) + Math.floor(30.6001 * (m + 1)) + d + B - 1524.5;
+  }
+
+  function hourAngle(angle, latNum, decl, direction) {
+    var term = (-Math.sin(degToRad(angle)) - Math.sin(degToRad(latNum)) * Math.sin(degToRad(decl))) / (Math.cos(degToRad(latNum)) * Math.cos(degToRad(decl)));
+    if (term < -1 || term > 1) return NaN;
+    var h = radToDeg(Math.acos(term)) / 15;
+    return direction === 'ccw' ? -h : h;
+  }
+
+  function asrHourAngle(factor, latNum, decl) {
+    var angle = -radToDeg(Math.atan(1 / (factor + Math.tan(Math.abs(degToRad(latNum - decl))))));
+    return hourAngle(angle, latNum, decl, 'cw');
+  }
+
+  function buildLocalApprox(latNum, lonNum) {
+    var now = new Date();
+    var jd = julianDate(now.getFullYear(), now.getMonth() + 1, now.getDate());
+    var pos = sunPosition(jd);
+    var tz = -now.getTimezoneOffset() / 60;
+    var noon = fixHour(12 + tz - lonNum / 15 - pos.equation);
+    var sunriseOffset = hourAngle(0.833, latNum, pos.declination, 'ccw');
+    var sunsetOffset = hourAngle(0.833, latNum, pos.declination, 'cw');
+    var fajrOffset = hourAngle(18, latNum, pos.declination, 'ccw');
+    var ishaOffset = hourAngle(17, latNum, pos.declination, 'cw');
+    var asrOffset = asrHourAngle(1, latNum, pos.declination);
+
+    var subuh = noon + fajrOffset;
+    var terbit = noon + sunriseOffset;
+    var dzuhur = noon;
+    var ashar = noon + asrOffset;
+    var maghrib = noon + sunsetOffset;
+    var isya = noon + ishaOffset;
+
+    return [
+      {name:'Imsak', time: timeFloatToString(subuh - (10 / 60))},
+      {name:'Subuh', time: timeFloatToString(subuh)},
+      {name:'Terbit', time: timeFloatToString(terbit)},
+      {name:'Dhuha', time: timeFloatToString(terbit + (20 / 60))},
+      {name:'Dzuhur', time: timeFloatToString(dzuhur)},
+      {name:'Ashar', time: timeFloatToString(ashar)},
+      {name:'Maghrib', time: timeFloatToString(maghrib)},
+      {name:'Isya', time: timeFloatToString(isya)}
+    ];
+  }
+
   async function fetchWithTimeout(url, ms) {
     var controller = new AbortController();
-    var timer = setTimeout(function(){ controller.abort(); }, ms || 3500);
+    var timer = setTimeout(function(){ controller.abort(); }, ms || 10000);
     try {
       var res = await fetch(url, { signal: controller.signal, cache: 'no-store' });
       return res;
@@ -871,24 +941,26 @@ async function loadJadwalSholat(lat, lon) {
 
   lat = cleanCoord(lat);
   lon = cleanCoord(lon);
+  var latNum = Number(lat);
+  var lonNum = Number(lon);
 
-  if (!lat || !lon) {
-    showMessage('Koordinat masjid belum diisi.');
+  if (!lat || !lon || isNaN(latNum) || isNaN(lonNum)) {
+    if (card && grid && title) {
+      card.style.display = 'block';
+      title.textContent = 'Jadwal Waktu Sholat';
+      grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;color:white;font-size:12px;padding:10px;line-height:1.6;">Koordinat masjid belum valid.</div>';
+    }
     return;
   }
 
-  if (card && grid && title) {
-    card.style.display = 'block';
-    title.textContent = 'Jadwal Waktu Sholat';
-    grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;color:white;font-size:12px;padding:10px;">Memuat jadwal sholat...</div>';
-  }
+  renderJadwal(buildLocalApprox(latNum, lonNum), 'Perkiraan Lokal');
 
   var today = new Date();
   var tanggal = today.getDate() + '-' + (today.getMonth() + 1) + '-' + today.getFullYear();
   var directUrl = 'https://api.aladhan.com/v1/timings/' + tanggal + '?latitude=' + encodeURIComponent(lat) + '&longitude=' + encodeURIComponent(lon) + '&method=3';
 
   try {
-    var res = await fetchWithTimeout(directUrl, 3500);
+    var res = await fetchWithTimeout(directUrl, 10000);
     var j = await res.json();
     if (j && j.code === 200 && j.data && j.data.timings) {
       renderJadwal(mapFromAladhanTimings(j.data.timings), '');
@@ -901,7 +973,7 @@ async function loadJadwalSholat(lat, lon) {
   try {
     if (ID_MASJID) {
       var backendUrl = API_URL + '?action=getJadwalSholat&id_masjid=' + encodeURIComponent(ID_MASJID) + '&_t=' + Date.now();
-      var res2 = await fetchWithTimeout(backendUrl, 4500);
+      var res2 = await fetchWithTimeout(backendUrl, 10000);
       var j2 = await res2.json();
       if (j2 && j2.status === 'ok' && j2.data) {
         renderJadwal(mapFromBackendData(j2.data), '');
@@ -911,8 +983,6 @@ async function loadJadwalSholat(lat, lon) {
   } catch(e2) {
     console.warn('Jadwal sholat backend gagal:', e2);
   }
-
-  showMessage('Jadwal sholat belum bisa dimuat. Periksa koneksi atau koordinat masjid.');
 }
 
 async function tampilOverlay() {
