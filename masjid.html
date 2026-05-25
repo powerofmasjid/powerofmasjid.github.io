@@ -397,9 +397,10 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 <div class="toast" id="toast">Nomor rekening disalin!</div>
 
 <script>
-var API_URL = 'https://script.google.com/macros/s/AKfycbxv6n8kruFEXFzlPE6Np7X_Ac4zcnyGwvqP2ckGOgljuDLSXwQgLnkn6_Zmpx3oBENAKg/exec';
+var API_URL = 'https://script.google.com/macros/s/AKfycbw48-aYX2jcRp5lT6cicKmpJ_xtAUKG19RwzFlir39pYVCUa7nYhaEP3w6688xUFpXt4g/exec';
 
 var ID_MASJID = '';
+var JADWAL_KOREKSI = { imsak:0, subuh:0, syuruq:0, dhuha:0, dzuhur:0, ashar:0, maghrib:0, isya:0 };
 var CACHE_DURATION = 60000; 
 var PENGUMUMAN_INTERVAL = null;
 
@@ -488,6 +489,18 @@ async function loadMasjid(slug) {
   var json = await apiFetch('getMasjidBySlug', {slug: slug}, 'masjid_' + slug);
   if (json.status !== 'ok') { document.getElementById('splash').classList.add('hide'); document.getElementById('error-wrap').classList.add('show'); return null; }
   var d = json.data; ID_MASJID = d.id_masjid; window.WA_MASJID = d.telepon_wa || '';
+
+  var koreksiObj = d.koreksi_jadwal_sholat || {};
+  JADWAL_KOREKSI = {
+    imsak: Number(d.koreksi_imsak !== undefined ? d.koreksi_imsak : (koreksiObj.imsak || 0)) || 0,
+    subuh: Number(d.koreksi_subuh !== undefined ? d.koreksi_subuh : (koreksiObj.subuh || 0)) || 0,
+    syuruq: Number(d.koreksi_syuruq !== undefined ? d.koreksi_syuruq : (koreksiObj.syuruq || 0)) || 0,
+    dhuha: Number(d.koreksi_dhuha !== undefined ? d.koreksi_dhuha : (koreksiObj.dhuha || 0)) || 0,
+    dzuhur: Number(d.koreksi_dzuhur !== undefined ? d.koreksi_dzuhur : (koreksiObj.dzuhur || 0)) || 0,
+    ashar: Number(d.koreksi_ashar !== undefined ? d.koreksi_ashar : (koreksiObj.ashar || 0)) || 0,
+    maghrib: Number(d.koreksi_maghrib !== undefined ? d.koreksi_maghrib : (koreksiObj.maghrib || 0)) || 0,
+    isya: Number(d.koreksi_isya !== undefined ? d.koreksi_isya : (koreksiObj.isya || 0)) || 0
+  };
 
   document.getElementById('nama-masjid').textContent = d.nama; 
   var barisAlamat = [];
@@ -819,22 +832,39 @@ async function loadJadwalSholat(lat, lon) {
     sholat.forEach(function(s, idx) {
       var isAktif = idx === aktifIdx;
       var isNext = idx === nextIdxAktif;
-      var extraHtml = isNext ? '<div class="countdown-badge">⏳ ' + teksSisa + '</div>' : '';
+      var extraHtml = isNext ? '<div class="countdown-badge">⏳ menuju ' + s.name + '<br>' + teksSisa + '</div>' : '';
       htmlJadwal += '<div class="sholat-item' + (isAktif ? ' aktif' : '') + '"><div class="sholat-name">' + s.name + '</div><div class="sholat-time">' + s.time + '</div>' + extraHtml + '</div>';
     });
     grid.innerHTML = htmlJadwal;
   }
 
+  function getKoreksi(key) {
+    var k = JADWAL_KOREKSI || {};
+    return Number(k[key] || 0) || 0;
+  }
+
+  function adaKoreksiJadwal() {
+    var k = JADWAL_KOREKSI || {};
+    return ['imsak','subuh','syuruq','dhuha','dzuhur','ashar','maghrib','isya'].some(function(key) {
+      return Number(k[key] || 0) !== 0;
+    });
+  }
+
+  function sumberLabel(label) {
+    if (label) return label;
+    return adaKoreksiJadwal() ? 'Disesuaikan DKM' : '';
+  }
+
   function mapFromAladhanTimings(t) {
     return [
-      {name:'Imsak', time: adjustTime(t.Imsak, 0)},
-      {name:'Subuh', time: adjustTime(t.Fajr, 0)},
-      {name:'Terbit', time: adjustTime(t.Sunrise, 0)},
-      {name:'Dhuha', time: adjustTime(t.Sunrise, 20)},
-      {name:'Dzuhur', time: adjustTime(t.Dhuhr, 0)},
-      {name:'Ashar', time: adjustTime(t.Asr, 0)},
-      {name:'Maghrib', time: adjustTime(t.Maghrib, 0)},
-      {name:'Isya', time: adjustTime(t.Isha, 0)}
+      {name:'Imsak', time: adjustTime(t.Imsak, getKoreksi('imsak'))},
+      {name:'Subuh', time: adjustTime(t.Fajr, getKoreksi('subuh'))},
+      {name:'Syuruq', time: adjustTime(t.Sunrise, getKoreksi('syuruq'))},
+      {name:'Dhuha', time: adjustTime(t.Sunrise, 20 + getKoreksi('dhuha'))},
+      {name:'Dzuhur', time: adjustTime(t.Dhuhr, getKoreksi('dzuhur'))},
+      {name:'Ashar', time: adjustTime(t.Asr, getKoreksi('ashar'))},
+      {name:'Maghrib', time: adjustTime(t.Maghrib, getKoreksi('maghrib'))},
+      {name:'Isya', time: adjustTime(t.Isha, getKoreksi('isya'))}
     ];
   }
 
@@ -842,8 +872,8 @@ async function loadJadwalSholat(lat, lon) {
     return [
       {name:'Imsak', time: adjustTime(d.imsak || d.Imsak || d.subuh || d.Fajr, d.imsak ? 0 : -10)},
       {name:'Subuh', time: adjustTime(d.subuh || d.Fajr || d.fajr, 0)},
-      {name:'Terbit', time: adjustTime(d.terbit || d.Sunrise || d.sunrise, 0)},
-      {name:'Dhuha', time: adjustTime(d.dhuha || d.terbit || d.Sunrise || d.sunrise, d.dhuha ? 0 : 20)},
+      {name:'Syuruq', time: adjustTime(d.syuruq || d.terbit || d.Sunrise || d.sunrise, 0)},
+      {name:'Dhuha', time: adjustTime(d.dhuha || d.syuruq || d.terbit || d.Sunrise || d.sunrise, d.dhuha ? 0 : 20)},
       {name:'Dzuhur', time: adjustTime(d.dzuhur || d.Dhuhr || d.dhuhr, 0)},
       {name:'Ashar', time: adjustTime(d.ashar || d.Asr || d.asr, 0)},
       {name:'Maghrib', time: adjustTime(d.maghrib || d.Maghrib, 0)},
@@ -916,14 +946,14 @@ async function loadJadwalSholat(lat, lon) {
     var isya = noon + ishaOffset;
 
     return [
-      {name:'Imsak', time: timeFloatToString(subuh - (10 / 60))},
-      {name:'Subuh', time: timeFloatToString(subuh)},
-      {name:'Terbit', time: timeFloatToString(terbit)},
-      {name:'Dhuha', time: timeFloatToString(terbit + (20 / 60))},
-      {name:'Dzuhur', time: timeFloatToString(dzuhur)},
-      {name:'Ashar', time: timeFloatToString(ashar)},
-      {name:'Maghrib', time: timeFloatToString(maghrib)},
-      {name:'Isya', time: timeFloatToString(isya)}
+      {name:'Imsak', time: adjustTime(timeFloatToString(subuh - (10 / 60)), getKoreksi('imsak'))},
+      {name:'Subuh', time: adjustTime(timeFloatToString(subuh), getKoreksi('subuh'))},
+      {name:'Syuruq', time: adjustTime(timeFloatToString(terbit), getKoreksi('syuruq'))},
+      {name:'Dhuha', time: adjustTime(timeFloatToString(terbit + (20 / 60)), getKoreksi('dhuha'))},
+      {name:'Dzuhur', time: adjustTime(timeFloatToString(dzuhur), getKoreksi('dzuhur'))},
+      {name:'Ashar', time: adjustTime(timeFloatToString(ashar), getKoreksi('ashar'))},
+      {name:'Maghrib', time: adjustTime(timeFloatToString(maghrib), getKoreksi('maghrib'))},
+      {name:'Isya', time: adjustTime(timeFloatToString(isya), getKoreksi('isya'))}
     ];
   }
 
@@ -952,7 +982,7 @@ async function loadJadwalSholat(lat, lon) {
     return;
   }
 
-  renderJadwal(buildLocalApprox(latNum, lonNum), 'Perkiraan Lokal');
+  renderJadwal(buildLocalApprox(latNum, lonNum), sumberLabel('Perkiraan Lokal'));
 
   var today = new Date();
   var tanggal = today.getDate() + '-' + (today.getMonth() + 1) + '-' + today.getFullYear();
@@ -962,7 +992,7 @@ async function loadJadwalSholat(lat, lon) {
     var res = await fetchWithTimeout(directUrl, 10000);
     var j = await res.json();
     if (j && j.code === 200 && j.data && j.data.timings) {
-      renderJadwal(mapFromAladhanTimings(j.data.timings), '');
+      renderJadwal(mapFromAladhanTimings(j.data.timings), sumberLabel(''));
       return;
     }
   } catch(e) {
@@ -975,7 +1005,7 @@ async function loadJadwalSholat(lat, lon) {
       var res2 = await fetchWithTimeout(backendUrl, 10000);
       var j2 = await res2.json();
       if (j2 && j2.status === 'ok' && j2.data) {
-        renderJadwal(mapFromBackendData(j2.data), '');
+        renderJadwal(mapFromBackendData(j2.data), sumberLabel(''));
         return;
       }
     }
