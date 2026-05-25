@@ -269,13 +269,14 @@
   <div class="footer"><div class="footer-label">INFO</div><div style="flex:1; overflow:hidden;"><div class="marquee-text" id="tv-pengumuman"></div></div></div>
 
 <script>
-const API_URL = 'https://script.google.com/macros/s/AKfycbzwak_qeVoxi_AGW6yu71Az77_nNzC0g8HpXC37d_oc0Hzb4c8bnSalL_bkq1X6pY_02w/exec';
+const API_URL = 'https://script.google.com/macros/s/AKfycbw48-aYX2jcRp5lT6cicKmpJ_xtAUKG19RwzFlir39pYVCUa7nYhaEP3w6688xUFpXt4g/exec';
 
 let ID_MASJID = ''; let globalSholatList = []; let LIST_JADWAL = [];
 let playlist = []; let playIndex = 0; let masterTimer;
 let isIqomahMode = false; let iqomahTargetTime = null; let adzanTargetTime = null; 
 let phase = "NORMAL"; 
 let jedaConfig = { Subuh: 10, Dzuhur: 10, Ashar: 10, Maghrib: 10, Isya: 10 };
+let koreksiJadwal = { Imsak: 0, Subuh: 0, Syuruq: 0, Dhuha: 0, Dzuhur: 0, Ashar: 0, Maghrib: 0, Isya: 0 };
 
 let CURRENT_TEMA = '';
 let CURRENT_DESAIN = 'desain-modern';
@@ -572,6 +573,18 @@ async function loadData() {
         Ashar: parseInt(jM.data.jeda_ashar) || 10, Maghrib: parseInt(jM.data.jeda_maghrib) || 10,
         Isya: parseInt(jM.data.jeda_isya) || 10
       };
+
+      const k = jM.data.koreksi_jadwal_sholat || {};
+      koreksiJadwal = {
+        Imsak: Number(jM.data.koreksi_imsak !== undefined ? jM.data.koreksi_imsak : (k.imsak || 0)) || 0,
+        Subuh: Number(jM.data.koreksi_subuh !== undefined ? jM.data.koreksi_subuh : (k.subuh || 0)) || 0,
+        Syuruq: Number(jM.data.koreksi_syuruq !== undefined ? jM.data.koreksi_syuruq : (k.syuruq || 0)) || 0,
+        Dhuha: Number(jM.data.koreksi_dhuha !== undefined ? jM.data.koreksi_dhuha : (k.dhuha || 0)) || 0,
+        Dzuhur: Number(jM.data.koreksi_dzuhur !== undefined ? jM.data.koreksi_dzuhur : (k.dzuhur || 0)) || 0,
+        Ashar: Number(jM.data.koreksi_ashar !== undefined ? jM.data.koreksi_ashar : (k.ashar || 0)) || 0,
+        Maghrib: Number(jM.data.koreksi_maghrib !== undefined ? jM.data.koreksi_maghrib : (k.maghrib || 0)) || 0,
+        Isya: Number(jM.data.koreksi_isya !== undefined ? jM.data.koreksi_isya : (k.isya || 0)) || 0
+      };
       
       if(jM.data.latitude && jM.data.longitude) calcSholat(jM.data.latitude, jM.data.longitude);
     }
@@ -680,18 +693,24 @@ async function calcSholat(lat, lon) {
     var res = await fetch(url); var j = await res.json();
     if(j.code === 200) {
       var t = j.data.timings;
-      var KOREKSI_MENIT = 0;
-      function sesuaikanWaktu(timeStr, tambahLagi = 0) {
-         let [h, m] = timeStr.split(':').map(Number);
-         m += (KOREKSI_MENIT + tambahLagi);
+      function sesuaikanWaktu(timeStr, koreksiMenit = 0, tambahLagi = 0) {
+         let bersih = String(timeStr || '').split(' ')[0];
+         let [h, m] = bersih.split(':').map(Number);
+         if (isNaN(h) || isNaN(m)) return '--:--';
+         m += (Number(koreksiMenit || 0) + Number(tambahLagi || 0));
          h += Math.floor(m / 60); m = ((m % 60) + 60) % 60; h = ((h % 24) + 24) % 24;
          return String(h).padStart(2,'0') + ':' + String(m).padStart(2,'0');
       }
 
       globalSholatList = [
-        {n:'Imsak', t:sesuaikanWaktu(t.Imsak)}, {n:'Subuh', t:sesuaikanWaktu(t.Fajr)}, {n:'Terbit', t:sesuaikanWaktu(t.Sunrise)},
-        {n:'Dhuha', t:sesuaikanWaktu(t.Sunrise, 20)}, {n:'Dzuhur', t:sesuaikanWaktu(t.Dhuhr)},
-        {n:'Ashar', t:sesuaikanWaktu(t.Asr)}, {n:'Maghrib', t:sesuaikanWaktu(t.Maghrib)}, {n:'Isya', t:sesuaikanWaktu(t.Isha)}
+        {n:'Imsak', t:sesuaikanWaktu(t.Imsak, koreksiJadwal.Imsak)},
+        {n:'Subuh', t:sesuaikanWaktu(t.Fajr, koreksiJadwal.Subuh)},
+        {n:'Syuruq', t:sesuaikanWaktu(t.Sunrise, koreksiJadwal.Syuruq)},
+        {n:'Dhuha', t:sesuaikanWaktu(t.Sunrise, koreksiJadwal.Dhuha, 20)},
+        {n:'Dzuhur', t:sesuaikanWaktu(t.Dhuhr, koreksiJadwal.Dzuhur)},
+        {n:'Ashar', t:sesuaikanWaktu(t.Asr, koreksiJadwal.Ashar)},
+        {n:'Maghrib', t:sesuaikanWaktu(t.Maghrib, koreksiJadwal.Maghrib)},
+        {n:'Isya', t:sesuaikanWaktu(t.Isha, koreksiJadwal.Isya)}
       ];
       
       const now = d.getHours()*60 + d.getMinutes(); let cur = -1;
