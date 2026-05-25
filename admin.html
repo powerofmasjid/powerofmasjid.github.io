@@ -495,20 +495,20 @@
                     Isi angka menit untuk menyesuaikan jadwal dengan acuan masjid. Contoh: <b>8</b> berarti mundur 8 menit, <b>-3</b> berarti maju 3 menit. Kosongkan atau isi 0 kalau tidak ada koreksi.
                 </div>
                 <div class="form-row">
-                    <div class="form-group"><label class="form-label">Imsak</label><input type="number" class="form-input" id="prof-koreksi-imsak" value="0"></div>
-                    <div class="form-group"><label class="form-label">Subuh</label><input type="number" class="form-input" id="prof-koreksi-subuh" value="0"></div>
+                    <div class="form-group"><label class="form-label">Imsak</label><input type="text" inputmode="text" class="form-input" id="prof-koreksi-imsak" value="0" placeholder="0 / -3 / 8" oninput="bersihkanAngkaKoreksi(this)"></div>
+                    <div class="form-group"><label class="form-label">Subuh</label><input type="text" inputmode="text" class="form-input" id="prof-koreksi-subuh" value="0" placeholder="0 / -3 / 8" oninput="bersihkanAngkaKoreksi(this)"></div>
                 </div>
                 <div class="form-row" style="margin-top:5px;">
-                    <div class="form-group"><label class="form-label">Syuruq</label><input type="number" class="form-input" id="prof-koreksi-syuruq" value="0"></div>
-                    <div class="form-group"><label class="form-label">Dhuha</label><input type="number" class="form-input" id="prof-koreksi-dhuha" value="0"></div>
+                    <div class="form-group"><label class="form-label">Syuruq</label><input type="text" inputmode="text" class="form-input" id="prof-koreksi-syuruq" value="0" placeholder="0 / -3 / 8" oninput="bersihkanAngkaKoreksi(this)"></div>
+                    <div class="form-group"><label class="form-label">Dhuha</label><input type="text" inputmode="text" class="form-input" id="prof-koreksi-dhuha" value="0" placeholder="0 / -3 / 8" oninput="bersihkanAngkaKoreksi(this)"></div>
                 </div>
                 <div class="form-row" style="margin-top:5px;">
-                    <div class="form-group"><label class="form-label">Dzuhur</label><input type="number" class="form-input" id="prof-koreksi-dzuhur" value="0"></div>
-                    <div class="form-group"><label class="form-label">Ashar</label><input type="number" class="form-input" id="prof-koreksi-ashar" value="0"></div>
+                    <div class="form-group"><label class="form-label">Dzuhur</label><input type="text" inputmode="text" class="form-input" id="prof-koreksi-dzuhur" value="0" placeholder="0 / -3 / 8" oninput="bersihkanAngkaKoreksi(this)"></div>
+                    <div class="form-group"><label class="form-label">Ashar</label><input type="text" inputmode="text" class="form-input" id="prof-koreksi-ashar" value="0" placeholder="0 / -3 / 8" oninput="bersihkanAngkaKoreksi(this)"></div>
                 </div>
                 <div class="form-row" style="margin-top:5px;">
-                    <div class="form-group"><label class="form-label">Maghrib</label><input type="number" class="form-input" id="prof-koreksi-maghrib" value="0"></div>
-                    <div class="form-group"><label class="form-label">Isya</label><input type="number" class="form-input" id="prof-koreksi-isya" value="0"></div>
+                    <div class="form-group"><label class="form-label">Maghrib</label><input type="text" inputmode="text" class="form-input" id="prof-koreksi-maghrib" value="0" placeholder="0 / -3 / 8" oninput="bersihkanAngkaKoreksi(this)"></div>
+                    <div class="form-group"><label class="form-label">Isya</label><input type="text" inputmode="text" class="form-input" id="prof-koreksi-isya" value="0" placeholder="0 / -3 / 8" oninput="bersihkanAngkaKoreksi(this)"></div>
                 </div>
             </div>
 
@@ -543,6 +543,17 @@
         el.textContent = m; 
         el.className = 'toast show'; 
         setTimeout(() => el.className = 'toast', 3000); 
+    }
+
+    function bersihkanAngkaKoreksi(el) {
+        var v = String(el.value || '');
+        v = v.replace(/[^0-9\-]/g, '');
+        v = v.replace(/(?!^)\-/g, '');
+        if (v.length > 1 && v[0] === '0' && v[1] !== '-') {
+            v = String(parseInt(v, 10));
+            if (v === 'NaN') v = '0';
+        }
+        el.value = v;
     }
 
     function setLoading(btn, load) { 
