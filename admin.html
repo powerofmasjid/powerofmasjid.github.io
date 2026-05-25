@@ -109,14 +109,14 @@
     <div class="login-card">
         <img src="Logo%20Power%20of%20Masjid.png" class="logo-pow-img">
         <div class="login-title">Panel Admin Masjid</div>
-        <div class="login-sub">Masuk menggunakan Email dan PIN masjid Anda.</div>
+        <div class="login-sub">Masuk menggunakan Gmail dan PIN masjid Anda.</div>
         <div class="form-group" style="text-align:left;">
-            <label class="form-label">Alamat Email</label>
-            <input type="email" class="form-input" id="login-gmail">
+            <label class="form-label">Alamat Gmail</label>
+            <input type="email" class="form-input" id="login-gmail" placeholder="Contoh: pengurus@gmail.com">
         </div>
         <div class="form-group" style="text-align:left;">
             <label class="form-label">PIN (6 Digit)</label>
-            <input type="password" class="form-input" id="login-pin" maxlength="6">
+            <input type="password" class="form-input" id="login-pin" maxlength="6" placeholder="Contoh: 123456">
         </div>
         <button class="btn-submit" onclick="prosesLogin()" id="btn-login">Masuk</button>
     </div>
@@ -138,7 +138,7 @@
     <div class="modal-card">
         <div class="modal-icon">📄</div>
         <div class="modal-title">Laporan PDF Siap!</div>
-        <div class="modal-text">Pilih tindakan selanjutnya untuk file laporan Anda.</div>
+        <div class="modal-text">Pilih tindakan selanjutnya untuk file laporan Anda. Laporan bisa langsung dikirim ke Grup WA DKM.</div>
         <div style="display:flex; flex-direction:column; gap:10px;">
             <button class="btn-submit" style="margin-top:0;" onclick="unduhPdf()">📥 Download File ke Perangkat</button>
             <button class="btn-submit" style="background:#25D366; margin-top:0;" onclick="sharePdfKeWA()">📲 Kirim File ke WhatsApp</button>
@@ -174,6 +174,7 @@
                 <strong style="font-size:14px; color:#92400E;">🚀 Misi Kesiapan Layar TV</strong>
                 <span id="onb-persen" style="font-size:14px; font-weight:bold; color:#D97706;">0%</span>
             </div>
+            <div style="font-size:11px; color:#92400E; margin-bottom:10px;">Layar TV Masjid masih sepi. Selesaikan misi di bawah ini agar TV Anda aktif penuh!</div>
             <div style="background:#FEF3C7; height:8px; border-radius:10px; overflow:hidden; margin-bottom:12px;">
                 <div id="onb-bar" style="background:#F59E0B; height:100%; width:0%; transition:width 1s;"></div>
             </div>
@@ -196,23 +197,24 @@
             </div>
             <div class="form-group">
                 <label class="form-label">Keterangan</label>
-                <input type="text" class="form-input" id="trx-keterangan">
+                <input type="text" class="form-input" id="trx-keterangan" placeholder="Contoh: Kotak Amal Jumat / Pembayaran Listrik">
             </div>
             <div class="form-group">
                 <label class="form-label">Jumlah (Rp)</label>
-                <input type="number" class="form-input" id="trx-jumlah">
+                <input type="number" class="form-input" id="trx-jumlah" placeholder="Contoh: 150000">
             </div>
             <div class="form-group" id="form-upload-bukti" style="display:none">
                 <label class="form-label">Upload Bukti Nota</label>
                 <input type="file" accept="image/*" class="form-input" onchange="uploadKeDrive(this, 'trx-bukti', 'st-trx')">
-                <div id="st-trx" class="status-upload">⏳ Menunggu Server...</div>
-                <input type="text" class="form-input" id="trx-bukti" readonly style="margin-top:5px; font-size:10px;">
+                <div id="st-trx" class="status-upload">⏳ Mohon tunggu! Foto sedang meluncur ke Google Drive...</div>
+                <input type="text" class="form-input" id="trx-bukti" readonly placeholder="Otomatis terisi setelah foto siap" style="margin-top:5px; font-size:10px;">
             </div>
             <button class="btn-submit" onclick="simpanTransaksi(this)" id="btn-trx">💾 Simpan Kas</button>
             
             <div class="divider"></div>
             
             <div class="section-title">Buku Kas Digital (Bulanan)</div>
+            <div class="info-hint" style="margin-bottom: 10px;">Pilih bulan untuk mencetak Laporan Pemasukan & Pengeluaran.</div>
             <div class="form-row">
                 <select class="form-select" id="pdf-bulan">
                     <option value="1">Januari</option><option value="2">Februari</option><option value="3">Maret</option>
@@ -230,7 +232,7 @@
 
         <div id="tab-amal" style="display:none">
             <div class="profil-section">
-                <h3>1. Buat Program</h3>
+                <h3>1. Buka Lapak (Buat Program)</h3>
                 <div class="form-group">
                     <label class="form-label">Tipe Program</label>
                     <select class="form-select" id="amal-tipe" onchange="toggleHargaTarget()">
@@ -241,19 +243,19 @@
                 </div>
                 <div class="form-group">
                     <label class="form-label">Judul Program</label>
-                    <input type="text" class="form-input" id="amal-judul">
+                    <input type="text" class="form-input" id="amal-judul" placeholder="Contoh: Sapi Kolektif 2026 / Infaq Karpet Baru">
                 </div>
                 <div class="form-group">
                     <label class="form-label">Deskripsi Program</label>
-                    <textarea class="form-textarea" id="amal-deskripsi"></textarea>
+                    <textarea class="form-textarea" id="amal-deskripsi" placeholder="Contoh: Mari berpartisipasi dalam pengadaan karpet masjid..."></textarea>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Nomor WA Panitia Program</label>
-                    <input type="text" class="form-input" id="amal-wa-panitia">
+                    <label class="form-label">Nomor WA Panitia Program (Opsional)</label>
+                    <input type="text" class="form-input" id="amal-wa-panitia" placeholder="Contoh: 08123456789 (Kosongkan jika pakai WA utama)">
                 </div>
                 <div class="form-group" id="wrap-amal-harga">
                     <label class="form-label" id="label-amal-harga">Harga / Target Dana (Rp)</label>
-                    <input type="number" class="form-input" id="amal-harga">
+                    <input type="number" class="form-input" id="amal-harga" placeholder="Contoh: 3500000">
                 </div>
                 <div class="form-row">
                     <div class="form-group"><label class="form-label">Tgl Mulai</label><input type="date" class="form-input" id="amal-mulai"></div>
@@ -280,7 +282,7 @@
                 <input type="hidden" id="amal-prog-id-edit">
 
                 <div id="form-kurban" style="display:none; margin-top:15px; border-top:1px dashed #ccc; padding-top:15px;">
-                    <div class="form-group"><label class="form-label">Nama Shohibul Qurban</label><input type="text" class="form-input" id="krb-nama"></div>
+                    <div class="form-group"><label class="form-label">Nama Shohibul Qurban</label><input type="text" class="form-input" id="krb-nama" placeholder="Contoh: Bapak H. Ahmad"></div>
                     <div class="form-group"><label class="form-label">Jenis Kurban</label>
                         <select class="form-select" id="krb-jenis">
                             <option value="Sapi Kolektif">Sapi Kolektif (1/7)</option>
@@ -288,11 +290,11 @@
                             <option value="Kambing">Kambing / Domba (Utuh)</option>
                         </select>
                     </div>
-                    <div class="form-group"><label class="form-label">No. Telepon / WA</label><input type="text" class="form-input" id="krb-wa"></div>
+                    <div class="form-group"><label class="form-label">No. Telepon / WA</label><input type="text" class="form-input" id="krb-wa" placeholder="Contoh: 08123456789"></div>
                 </div>
 
                 <div id="form-zakat" style="display:none; margin-top:15px; border-top:1px dashed #ccc; padding-top:15px;">
-                    <div class="form-group"><label class="form-label">Nama Kepala Keluarga</label><input type="text" class="form-input" id="zkt-nama"></div>
+                    <div class="form-group"><label class="form-label">Nama Kepala Keluarga</label><input type="text" class="form-input" id="zkt-nama" placeholder="Contoh: Bapak H. Ahmad"></div>
                     <div class="form-group"><label class="form-label">Jumlah Jiwa</label><input type="number" class="form-input" id="zkt-jiwa" value="1" oninput="hitungZakatBeras()"></div>
                     <div class="form-group"><label class="form-label">Bentuk Zakat</label>
                         <select class="form-select" id="zkt-jenis" onchange="toggleZakatNominal()">
@@ -300,15 +302,15 @@
                             <option value="BERAS">Beras</option>
                         </select>
                     </div>
-                    <div class="form-group" id="wrap-zkt-nominal"><label class="form-label">Nominal Uang (Rp)</label><input type="number" class="form-input" id="zkt-nominal"></div>
+                    <div class="form-group" id="wrap-zkt-nominal"><label class="form-label">Nominal Uang (Rp)</label><input type="number" class="form-input" id="zkt-nominal" placeholder="Contoh: 150000"></div>
                     <div class="form-group" id="wrap-zkt-beras" style="display:none"><label class="form-label">Total Beras (Paten 3.5 Liter/Jiwa)</label><input type="text" class="form-input" id="zkt-beras-total" readonly style="background:#f3f4f6; font-weight:bold; color:var(--primary);"></div>
                 </div>
 
                 <div id="form-infaq" style="display:none; margin-top:15px; border-top:1px dashed #ccc; padding-top:15px;">
-                    <div class="form-group"><label class="form-label">Nama Donatur</label><input type="text" class="form-input" id="inf-nama"></div>
+                    <div class="form-group"><label class="form-label">Nama Donatur</label><input type="text" class="form-input" id="inf-nama" placeholder="Contoh: Hamba Allah / Pak Budi"></div>
                     <div class="form-group"><label class="form-label">Bentuk Sumbangan</label><select class="form-select" id="inf-jenis" onchange="toggleInfaqBarang()"><option value="uang">Uang Tunai</option><option value="barang">Barang / Material</option></select></div>
-                    <div class="form-group" id="wrap-inf-uang"><label class="form-label">Nominal Sumbangan (Rp)</label><input type="number" class="form-input" id="inf-nominal"></div>
-                    <div class="form-group" id="wrap-inf-barang" style="display:none"><label class="form-label">Keterangan Barang</label><input type="text" class="form-input" id="inf-catatan"></div>
+                    <div class="form-group" id="wrap-inf-uang"><label class="form-label">Nominal Sumbangan (Rp)</label><input type="number" class="form-input" id="inf-nominal" placeholder="Contoh: 500000"></div>
+                    <div class="form-group" id="wrap-inf-barang" style="display:none"><label class="form-label">Keterangan Barang</label><input type="text" class="form-input" id="inf-catatan" placeholder="Contoh: 10 Sak Semen"></div>
                 </div>
 
                 <button class="btn-submit" id="btn-simpan-data-amal" style="display:none; background:var(--accent); color:#4A3810; margin-top:10px;" onclick="simpanDataAmal(this)">💾 Simpan Data Jamaah</button>
@@ -319,10 +321,10 @@
         <div id="tab-jadwal" style="display:none">
             <div class="section-title">Kelola Jadwal</div>
             <input type="hidden" id="jdw-id-edit">
-            <div class="form-group"><label class="form-label">Nama Kegiatan</label><input type="text" class="form-input" id="jdw-nama"></div>
-            <div class="form-group"><label class="form-label">Jadwal / Waktu Bebas</label><input type="text" class="form-input" id="jdw-jadwal"></div>
-            <div class="form-group"><label class="form-label">Lokasi</label><input type="text" class="form-input" id="jdw-lokasi"></div>
-            <div class="form-group"><label class="form-label">Keterangan</label><textarea class="form-textarea" id="jdw-keterangan"></textarea></div>
+            <div class="form-group"><label class="form-label">Nama Kegiatan</label><input type="text" class="form-input" id="jdw-nama" placeholder="Contoh: Kajian Tafsir Jalalain"></div>
+            <div class="form-group"><label class="form-label">Jadwal / Waktu Bebas</label><input type="text" class="form-input" id="jdw-jadwal" placeholder="Contoh: Setiap Ba'da Maghrib"></div>
+            <div class="form-group"><label class="form-label">Lokasi</label><input type="text" class="form-input" id="jdw-lokasi" placeholder="Contoh: Ruang Utama Masjid"></div>
+            <div class="form-group"><label class="form-label">Keterangan</label><textarea class="form-textarea" id="jdw-keterangan" placeholder="Contoh: Terbuka untuk umum..."></textarea></div>
             <button class="btn-submit" onclick="simpanJadwal(this)">💾 Simpan Jadwal</button>
             <div class="divider"></div><div id="list-jadwal-admin"></div>
         </div>
@@ -330,8 +332,8 @@
         <div id="tab-pengumuman" style="display:none">
             <div class="section-title">Papan Pengumuman Berita</div>
             <input type="hidden" id="peng-id-edit">
-            <div class="form-group"><label class="form-label">Judul Berita</label><input type="text" class="form-input" id="peng-judul"></div>
-            <div class="form-group"><label class="form-label">Isi Detail Berita</label><textarea class="form-textarea" id="peng-isi"></textarea></div>
+            <div class="form-group"><label class="form-label">Judul Berita</label><input type="text" class="form-input" id="peng-judul" placeholder="Contoh: Pengajian Rutin Jumat Malam"></div>
+            <div class="form-group"><label class="form-label">Isi Detail Berita</label><textarea class="form-textarea" id="peng-isi" placeholder="Contoh: Diharapkan seluruh jamaah hadir tepat waktu..."></textarea></div>
             <div class="form-row">
                 <div class="form-group"><label class="form-label">Mulai Tampil</label><input type="date" class="form-input" id="peng-mulai"></div>
                 <div class="form-group"><label class="form-label">Selesai Tampil</label><input type="date" class="form-input" id="peng-selesai"></div>
@@ -349,16 +351,17 @@
                     <option value="FLYER">🖼️ Poster / Flyer</option>
                     <option value="VIDEO_YOUTUBE">▶️ Video YouTube</option>
                 </select>
+                <span class="info-hint" id="hint-galeri">Pilih "Poster / Flyer" agar gambar tampil memenuhi layar TV Masjid.</span>
             </div>
-            <div class="form-group"><label class="form-label">Judul Media</label><input type="text" class="form-input" id="gal-judul"></div>
+            <div class="form-group"><label class="form-label">Judul Media</label><input type="text" class="form-input" id="gal-judul" placeholder="Contoh: Poster Kajian Ustadz Abdul Somad"></div>
             
             <div class="form-group" id="wrap-upload-gal">
                 <label class="form-label">Pilih Foto / Flyer</label>
                 <input type="file" accept="image/*" class="form-input" onchange="uploadKeDrive(this, 'gal-url', 'stg')">
-                <div id="stg" class="status-upload">⏳ Menunggu Server...</div>
+                <div id="stg" class="status-upload">⏳ Mohon tunggu! Foto sedang meluncur ke Google Drive...</div>
             </div>
             
-            <div class="form-group" id="wrap-url-gal"><label class="form-label">URL Media (Otomatis/YouTube)</label><input type="text" class="form-input" id="gal-url"></div>
+            <div class="form-group" id="wrap-url-gal"><label class="form-label">URL Media (Otomatis/YouTube)</label><input type="text" class="form-input" id="gal-url" placeholder="Akan terisi otomatis jika upload foto, atau masukkan link YouTube"></div>
 
             <div class="form-row" id="wrap-tgl-flyer" style="display:none;">
                 <div class="form-group"><label class="form-label">Mulai Tayang</label><input type="date" class="form-input" id="gal-mulai"></div>
@@ -373,6 +376,7 @@
             
             <div class="profil-section">
                 <h3>Tautan Website & Tampilan</h3>
+                <div class="info-hint" style="margin-bottom: 8px;">Gunakan link ini untuk dibagikan ke seluruh jamaah.</div>
                 <div class="form-row" style="grid-template-columns: 1fr auto; margin-bottom: 15px;">
                     <input type="text" class="form-input" id="link-web" readonly style="background:#f3f4f6; color:#6b7280; font-size:12px; font-weight:500;">
                     <button class="btn-submit" style="margin-top:0; padding:10px; background:var(--accent); color:#4A3810;" onclick="salinLinkWeb()">📄 Salin Link</button>
@@ -381,35 +385,35 @@
                 <div class="form-group">
                     <label class="form-label">Upload Logo Masjid</label>
                     <input type="file" accept="image/*" class="form-input" onchange="uploadKeDrive(this, 'prof-logo', 'sl')">
-                    <div id="sl" class="status-upload">⏳ Menunggu Server...</div>
+                    <div id="sl" class="status-upload">⏳ Mohon tunggu! Foto sedang meluncur ke Google Drive...</div>
                     <input type="text" class="form-input" id="prof-logo" readonly style="margin-top:5px; font-size:10px;">
                 </div>
 
                 <div class="form-group">
                     <label class="form-label">Upload QRIS Masjid</label>
                     <input type="file" accept="image/*" class="form-input" onchange="uploadKeDrive(this, 'prof-qris', 'sq')">
-                    <div id="sq" class="status-upload">⏳ Menunggu Server...</div>
+                    <div id="sq" class="status-upload">⏳ Mohon tunggu! Foto sedang meluncur ke Google Drive...</div>
                     <input type="text" class="form-input" id="prof-qris" readonly style="margin-top:5px; font-size:10px;">
                 </div>
             </div>
 
             <div class="profil-section">
                 <h3>Identitas Masjid</h3>
-                <div class="form-group"><label class="form-label">Nama Masjid</label><input type="text" class="form-input" id="prof-nama"></div>
-                <div class="form-group"><label class="form-label">Alamat Lengkap</label><input type="text" class="form-input" id="prof-alamat"></div>
+                <div class="form-group"><label class="form-label">Nama Masjid</label><input type="text" class="form-input" id="prof-nama" placeholder="Contoh: Masjid Agung Al-Falah"></div>
+                <div class="form-group"><label class="form-label">Alamat Lengkap</label><input type="text" class="form-input" id="prof-alamat" placeholder="Contoh: Jl. Raya Bogor No. 12"></div>
                 
                 <div class="form-row" style="margin-bottom:0.875rem;">
-                    <div class="form-group" style="margin-bottom:0;"><label class="form-label">Kelurahan</label><input type="text" class="form-input" id="prof-kelurahan"></div>
-                    <div class="form-group" style="margin-bottom:0;"><label class="form-label">Kecamatan</label><input type="text" class="form-input" id="prof-kecamatan"></div>
+                    <div class="form-group" style="margin-bottom:0;"><label class="form-label">Kelurahan</label><input type="text" class="form-input" id="prof-kelurahan" placeholder="Contoh: Tanjung Barat"></div>
+                    <div class="form-group" style="margin-bottom:0;"><label class="form-label">Kecamatan</label><input type="text" class="form-input" id="prof-kecamatan" placeholder="Contoh: Jagakarsa"></div>
                 </div>
 
-                <div class="form-group"><label class="form-label">Kota / Kabupaten</label><input type="text" class="form-input" id="prof-kota"></div>
+                <div class="form-group"><label class="form-label">Kota / Kabupaten</label><input type="text" class="form-input" id="prof-kota" placeholder="Contoh: Jakarta Selatan"></div>
                 
-                <div class="form-group"><label class="form-label">Nomor WA Utama Masjid</label><input type="text" class="form-input" id="prof-wa"></div>
+                <div class="form-group"><label class="form-label">Nomor WA Utama Masjid</label><input type="text" class="form-input" id="prof-wa" placeholder="Contoh: 081234567890"></div>
                 
                 <div class="form-group">
                     <label class="form-label">Deskripsi Singkat</label>
-                    <textarea class="form-textarea" id="prof-deskripsi" maxlength="120" oninput="updateDescCounter()"></textarea>
+                    <textarea class="form-textarea" id="prof-deskripsi" maxlength="120" oninput="updateDescCounter()" placeholder="Contoh: Masjid kebanggaan warga perumahan indah..."></textarea>
                     <div class="desc-counter" id="desc-counter">Sisa karakter: 120/120</div>
                 </div>
             </div>
@@ -419,29 +423,29 @@
                 <div class="form-group">
                     <label class="form-label">1. Warna Tema</label>
                     <select class="form-select" id="prof-tema">
-                        <option value="">Zamrud</option>
-                        <option value="emas">Emas</option>
-                        <option value="safir">Safir</option>
-                        <option value="tembaga">Tembaga</option>
-                        <option value="perak">Perak</option>
-                        <option value="putih">Putih Bersih</option>
-                        <option value="abuterang">Abu Terang</option>
+                        <option value="">Zamrud (Hijau Elegan - Gelap)</option>
+                        <option value="emas">Emas (Klasik Mewah - Gelap)</option>
+                        <option value="safir">Safir (Biru Profesional - Gelap)</option>
+                        <option value="tembaga">Tembaga (Maroon Hangat - Gelap)</option>
+                        <option value="perak">Perak (Hitam Monokrom - Gelap)</option>
+                        <option value="putih">Putih Bersih (Light Mode - Terang)</option>
+                        <option value="abuterang">Abu Terang (Light Mode - Terang)</option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">2. Desain Layout Website</label>
+                    <label class="form-label">2. Desain Layout Website (HP Jamaah)</label>
                     <select class="form-select" id="prof-desain-web">
-                        <option value="modern">Modern</option>
-                        <option value="klasik">Klasik</option>
-                        <option value="minimalis">Minimalis</option>
+                        <option value="modern">Modern (Default)</option>
+                        <option value="klasik">Klasik Timur Tengah</option>
+                        <option value="minimalis">Minimalis Bersih</option>
                     </select>
                 </div>
                 <div class="form-group">
                     <label class="form-label">3. Desain Layout Layar TV</label>
                     <select class="form-select" id="prof-desain-tv">
-                        <option value="modern">Modern</option>
-                        <option value="klasik">Klasik</option>
-                        <option value="minimalis">Minimalis</option>
+                        <option value="modern">Modern (Layout Persegi Panjang)</option>
+                        <option value="klasik">Klasik (Mandala Ornament)</option>
+                        <option value="minimalis">Minimalis (Full Visual)</option>
                     </select>
                 </div>
             </div>
@@ -449,27 +453,30 @@
             <div class="profil-section">
                 <h3>Rekening Bank Masjid</h3>
                 <div class="form-row">
-                    <input type="text" class="form-input" id="prof-rek1-bank">
-                    <input type="text" class="form-input" id="prof-rek1-nomor">
+                    <input type="text" class="form-input" id="prof-rek1-bank" placeholder="Nama Bank 1 (Misal: BSI)">
+                    <input type="text" class="form-input" id="prof-rek1-nomor" placeholder="No Rekening 1">
                 </div>
                 <div class="form-row" style="margin-top:10px">
-                    <input type="text" class="form-input" id="prof-rek2-bank">
-                    <input type="text" class="form-input" id="prof-rek2-nomor">
+                    <input type="text" class="form-input" id="prof-rek2-bank" placeholder="Nama Bank 2">
+                    <input type="text" class="form-input" id="prof-rek2-nomor" placeholder="No Rekening 2">
                 </div>
                 <div class="form-row" style="margin-top:10px">
-                    <input type="text" class="form-input" id="prof-rek3-bank">
-                    <input type="text" class="form-input" id="prof-rek3-nomor">
+                    <input type="text" class="form-input" id="prof-rek3-bank" placeholder="Nama Bank 3">
+                    <input type="text" class="form-input" id="prof-rek3-nomor" placeholder="No Rekening 3">
                 </div>
             </div>
 
             <div class="profil-section">
                 <h3>Lokasi Maps & Jeda Iqomah</h3>
+                <div class="alert-warning">
+                    💡 <b>Cara Ambil Titik:</b><br>Buka Google Maps, cari lokasi masjid, klik tahan (long press) lokasinya. Salin angka yang muncul.
+                </div>
                 <div class="form-row" style="margin-top:10px; margin-bottom: 20px;">
-                    <input type="text" class="form-input" id="prof-lat">
-                    <input type="text" class="form-input" id="prof-lon">
+                    <input type="text" class="form-input" id="prof-lat" placeholder="Latitude (Contoh: -6.2345)">
+                    <input type="text" class="form-input" id="prof-lon" placeholder="Longitude (Contoh: 106.8765)">
                 </div>
 
-                <div style="font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 10px;">Atur Jeda Iqomah:</div>
+                <div style="font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 10px;">Atur Jeda Iqomah (dalam hitungan menit):</div>
                 <div class="form-row">
                     <div class="form-group"><label class="form-label">Subuh</label><input type="number" class="form-input" id="prof-jeda-subuh" value="10"></div>
                     <div class="form-group"><label class="form-label">Dzuhur</label><input type="number" class="form-input" id="prof-jeda-dzuhur" value="10"></div>
@@ -481,6 +488,28 @@
                 <div class="form-row" style="margin-top:5px;">
                     <div class="form-group"><label class="form-label">Isya</label><input type="number" class="form-input" id="prof-jeda-isya" value="10"></div>
                 </div>
+
+                <div class="divider"></div>
+                <div style="font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 6px;">Koreksi Jadwal Sholat (menit)</div>
+                <div class="alert-warning" style="margin-bottom:10px;">
+                    Isi angka menit untuk menyesuaikan jadwal dengan acuan masjid. Contoh: <b>8</b> berarti mundur 8 menit, <b>-3</b> berarti maju 3 menit. Kosongkan atau isi 0 kalau tidak ada koreksi.
+                </div>
+                <div class="form-row">
+                    <div class="form-group"><label class="form-label">Imsak</label><input type="number" class="form-input" id="prof-koreksi-imsak" value="0"></div>
+                    <div class="form-group"><label class="form-label">Subuh</label><input type="number" class="form-input" id="prof-koreksi-subuh" value="0"></div>
+                </div>
+                <div class="form-row" style="margin-top:5px;">
+                    <div class="form-group"><label class="form-label">Syuruq</label><input type="number" class="form-input" id="prof-koreksi-syuruq" value="0"></div>
+                    <div class="form-group"><label class="form-label">Dhuha</label><input type="number" class="form-input" id="prof-koreksi-dhuha" value="0"></div>
+                </div>
+                <div class="form-row" style="margin-top:5px;">
+                    <div class="form-group"><label class="form-label">Dzuhur</label><input type="number" class="form-input" id="prof-koreksi-dzuhur" value="0"></div>
+                    <div class="form-group"><label class="form-label">Ashar</label><input type="number" class="form-input" id="prof-koreksi-ashar" value="0"></div>
+                </div>
+                <div class="form-row" style="margin-top:5px;">
+                    <div class="form-group"><label class="form-label">Maghrib</label><input type="number" class="form-input" id="prof-koreksi-maghrib" value="0"></div>
+                    <div class="form-group"><label class="form-label">Isya</label><input type="number" class="form-input" id="prof-koreksi-isya" value="0"></div>
+                </div>
             </div>
 
             <button class="btn-submit" onclick="simpanProfil(this)">💾 Simpan Semua Pengaturan Profil</button>
@@ -491,7 +520,8 @@
 <div class="toast" id="toast">Berhasil!</div>
 
 <script>
-    var API_URL = 'https://script.google.com/macros/s/AKfycbzwak_qeVoxi_AGW6yu71Az77_nNzC0g8HpXC37d_oc0Hzb4c8bnSalL_bkq1X6pY_02w/exec';
+    // URL API BARU SESUAI HASIL KERJA KITA
+    var API_URL = 'https://script.google.com/macros/s/AKfycbw48-aYX2jcRp5lT6cicKmpJ_xtAUKG19RwzFlir39pYVCUa7nYhaEP3w6688xUFpXt4g/exec';
     
     var KUNCI_RAHASIA = 'POW_MASJID_SECURE_2026'; 
     var ADMIN_DATA = null, ID_MASJID = '', LAST_5_TRX = [], LIST_PROGRAM = [];
@@ -698,34 +728,24 @@
     }
 
     function prosesLogin() {
-        var g = document.getElementById('login-gmail').value.trim();
-        var p = document.getElementById('login-pin').value.trim();
+        var g = document.getElementById('login-gmail').value;
+        var p = document.getElementById('login-pin').value;
         var btn = document.getElementById('btn-login'); 
-        
-        if (!g || !p) { alert("Tolong isi Email dan PIN dulu!"); return; }
         
         setLoading(btn, true);
         
-        fetch(API_URL + '?action=login&email=' + encodeURIComponent(g) + '&pin=' + p)
+        fetch(API_URL + '?action=cekAdmin&gmail=' + encodeURIComponent(g) + '&pin=' + p)
         .then(r => r.json())
         .then(j => {
             setLoading(btn, false); 
             if (j.status === 'ok') { 
-                ADMIN_DATA = { 
-                    id_masjid: j.id_masjid, 
-                    nama: j.nama, 
-                    slug: j.slug 
-                }; 
-                ID_MASJID = j.id_masjid; 
-                localStorage.setItem('pow_admin', JSON.stringify(ADMIN_DATA)); 
+                ADMIN_DATA = j.data; 
+                ID_MASJID = j.data.id_masjid; 
+                localStorage.setItem('pow_admin', JSON.stringify(j.data)); 
                 tampilAdmin(); 
             } else {
-                alert("❌ LOGIN DITOLAK SERVER:\nAlasan: " + j.message);
+                showToast(j.message);
             }
-        })
-        .catch(err => {
-            setLoading(btn, false);
-            alert("⚠️ GAGAL TERHUBUNG KE MESIN:\nDetail error: " + err);
         });
     }
 
@@ -1549,6 +1569,7 @@
             var baseWebUrl = curUrl.substring(0, curUrl.lastIndexOf("/")) + "/masjid.html?masjid=" + (ADMIN_DATA.slug || '');
             document.getElementById('link-web').value = baseWebUrl;
             
+            // IDENTITAS
             document.getElementById('prof-nama').value = d.nama || ''; 
             document.getElementById('prof-alamat').value = d.alamat || ''; 
             document.getElementById('prof-kelurahan').value = d.kelurahan || ''; 
@@ -1558,13 +1579,16 @@
             document.getElementById('prof-deskripsi').value = d.deskripsi || ''; 
             updateDescCounter(); 
             
+            // LAYOUT & TEMA
             document.getElementById('prof-tema').value = d.tema || '';
             document.getElementById('prof-desain-web').value = d.tema_desain_web || 'modern'; 
             document.getElementById('prof-desain-tv').value = d.tema_desain_tv || 'modern';
             
+            // MEDIA LOGO & QRIS
             document.getElementById('prof-logo').value = d.logo_url || ''; 
             document.getElementById('prof-qris').value = d.qris_url || ''; 
             
+            // REKENING BANK
             document.getElementById('prof-rek1-bank').value = d.rek1_bank || ''; 
             document.getElementById('prof-rek1-nomor').value = d.rek1_nomor || ''; 
             document.getElementById('prof-rek2-bank').value = d.rek2_bank || ''; 
@@ -1572,6 +1596,7 @@
             document.getElementById('prof-rek3-bank').value = d.rek3_bank || ''; 
             document.getElementById('prof-rek3-nomor').value = d.rek3_nomor || ''; 
             
+            // MAPS & IQOMAH
             document.getElementById('prof-lat').value = d.latitude || ''; 
             document.getElementById('prof-lon').value = d.longitude || '';
             document.getElementById('prof-jeda-subuh').value = d.jeda_subuh || 10; 
@@ -1579,6 +1604,16 @@
             document.getElementById('prof-jeda-ashar').value = d.jeda_ashar || 10; 
             document.getElementById('prof-jeda-maghrib').value = d.jeda_maghrib || 10;
             document.getElementById('prof-jeda-isya').value = d.jeda_isya || 10;
+
+            // KOREKSI JADWAL SHOLAT
+            document.getElementById('prof-koreksi-imsak').value = d.koreksi_imsak || 0;
+            document.getElementById('prof-koreksi-subuh').value = d.koreksi_subuh || 0;
+            document.getElementById('prof-koreksi-syuruq').value = d.koreksi_syuruq || 0;
+            document.getElementById('prof-koreksi-dhuha').value = d.koreksi_dhuha || 0;
+            document.getElementById('prof-koreksi-dzuhur').value = d.koreksi_dzuhur || 0;
+            document.getElementById('prof-koreksi-ashar').value = d.koreksi_ashar || 0;
+            document.getElementById('prof-koreksi-maghrib').value = d.koreksi_maghrib || 0;
+            document.getElementById('prof-koreksi-isya').value = d.koreksi_isya || 0;
         });
     }
 
@@ -1617,7 +1652,16 @@
             jeda_dzuhur: document.getElementById('prof-jeda-dzuhur').value, 
             jeda_ashar: document.getElementById('prof-jeda-ashar').value, 
             jeda_maghrib: document.getElementById('prof-jeda-maghrib').value, 
-            jeda_isya: document.getElementById('prof-jeda-isya').value 
+            jeda_isya: document.getElementById('prof-jeda-isya').value,
+
+            koreksi_imsak: document.getElementById('prof-koreksi-imsak').value || 0,
+            koreksi_subuh: document.getElementById('prof-koreksi-subuh').value || 0,
+            koreksi_syuruq: document.getElementById('prof-koreksi-syuruq').value || 0,
+            koreksi_dhuha: document.getElementById('prof-koreksi-dhuha').value || 0,
+            koreksi_dzuhur: document.getElementById('prof-koreksi-dzuhur').value || 0,
+            koreksi_ashar: document.getElementById('prof-koreksi-ashar').value || 0,
+            koreksi_maghrib: document.getElementById('prof-koreksi-maghrib').value || 0,
+            koreksi_isya: document.getElementById('prof-koreksi-isya').value || 0
         };
         
         setLoading(btn, true); 
