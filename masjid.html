@@ -478,26 +478,18 @@ function matenginLinkDrive(url) {
 }
 
 function ambilYoutubeId(url) {
-    url = String(url || '').trim();
-    if(!url) return '';
-
-    var match;
-
-    match = url.match(/youtube\.com\/shorts\/([A-Za-z0-9_-]{6,})/i);
-    if(match) return match[1];
-
-    match = url.match(/[?&]v=([A-Za-z0-9_-]{6,})/i);
-    if(match) return match[1];
-
-    match = url.match(/youtu\.be\/([A-Za-z0-9_-]{6,})/i);
-    if(match) return match[1];
-
-    match = url.match(/youtube\.com\/embed\/([A-Za-z0-9_-]{6,})/i);
-    if(match) return match[1];
-
-    if(/^[A-Za-z0-9_-]{6,}$/.test(url)) return url;
-
-    return '';
+  url = String(url || '').trim();
+  var match = url.match(/youtu\.be\/([A-Za-z0-9_-]{6,})/i);
+  if (match) return match[1];
+  match = url.match(/youtube\.com\/shorts\/([A-Za-z0-9_-]{6,})/i);
+  if (match) return match[1];
+  match = url.match(/youtube\.com\/live\/([A-Za-z0-9_-]{6,})/i);
+  if (match) return match[1];
+  match = url.match(/youtube\.com\/embed\/([A-Za-z0-9_-]{6,})/i);
+  if (match) return match[1];
+  match = url.match(/[?&]v=([A-Za-z0-9_-]{6,})/i);
+  if (match) return match[1];
+  return '';
 }
 
 async function apiFetch(action, params, cacheKey) {
@@ -739,7 +731,7 @@ async function loadGaleri() {
   
   videos.slice(0, 2).forEach(function(v){
     var ytId = ambilYoutubeId(v.url);
-    if(!ytId) return;
+    if (!ytId) return;
     var youtubeUrl = 'https://www.youtube.com/watch?v=' + ytId;
     videoHtml += '<div class="video-item"><iframe src="https://www.youtube-nocookie.com/embed/' + ytId + '?rel=0&playsinline=1" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe></div><div class="video-caption">' + v.judul + '</div><a class="video-open-btn" href="' + youtubeUrl + '" target="_blank" rel="noopener">▶ Buka di YouTube</a>';
   });

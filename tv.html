@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="id">
 <head>
 <meta charset="UTF-8">
@@ -100,9 +100,12 @@
   .info-body { flex: 1; overflow: hidden; position: relative; }
   
   .agenda-scroll-wrapper { width: 100%; height: 100%; position: relative; overflow: hidden; padding: 20px; }
-  .agenda-scroll-content { position: absolute; width: calc(100% - 40px); animation: scrollUp 20s linear infinite; }
-  .agenda-item { background: rgba(255,255,255,0.05); padding: 20px; border-radius: 12px; margin-bottom: 15px; border-left: 5px solid var(--gold); box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
-  .agenda-judul { font-size: 26px; font-weight: 700; color: white; margin-bottom: 5px; line-height: 1.2; }
+  .agenda-scroll-content { width: 100%; }
+  .agenda-list-static { width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; gap: 14px; animation: fadeIn 0.8s ease-in-out; }
+  .agenda-item { background: rgba(255,255,255,0.05); padding: 18px 20px; border-radius: 12px; border-left: 5px solid var(--gold); box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+  .agenda-judul { font-size: 24px; font-weight: 800; color: white; margin-bottom: 7px; line-height: 1.25; }
+  .agenda-meta { color: var(--gold); font-size: 18px; font-weight: 700; line-height: 1.35; }
+  .agenda-page-label { font-size: 15px; color: rgba(255,255,255,0.65); text-align: center; margin-top: 6px; font-weight: 700; letter-spacing: 1px; }
   @keyframes scrollUp { 0% { transform: translateY(100%); } 100% { transform: translateY(-100%); } }
 
   .hikmah-wrap { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; padding: 30px; text-align: center; animation: fadeIn 1s ease-in-out; }
@@ -266,7 +269,7 @@
     </div>
   </div>
 
-  <div class="footer"><div class="footer-label">INFO</div><div style="flex:1; overflow:hidden;"><div class="marquee-text" id="tv-pengumuman"></div></div></div>
+  <div class="footer" id="footer-info"><div class="footer-label">INFO</div><div style="flex:1; overflow:hidden;"><div class="marquee-text" id="tv-pengumuman"></div></div></div>
 
 <script>
 const API_URL = 'https://script.google.com/macros/s/AKfycbw48-aYX2jcRp5lT6cicKmpJ_xtAUKG19RwzFlir39pYVCUa7nYhaEP3w6688xUFpXt4g/exec';
@@ -292,29 +295,73 @@ const MUTIARA_HIKMAH = [
 ];
 
 let showingAgenda = true;
+let agendaBatchIndex = 0;
+let hikmahIndex = 0;
+const AGENDA_PER_HALAMAN = 3;
+
+function escapeHtml(text) {
+   return String(text || '').replace(/[&<>'"]/g, function(c) {
+      return ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]);
+   });
+}
+
+function getAgendaBatches() {
+   const batches = [];
+   for (let i = 0; i < LIST_JADWAL.length; i += AGENDA_PER_HALAMAN) {
+      batches.push(LIST_JADWAL.slice(i, i + AGENDA_PER_HALAMAN));
+   }
+   return batches;
+}
+
+function renderAgendaBatch(panel) {
+   const batches = getAgendaBatches();
+   if (batches.length === 0) return false;
+
+   if (agendaBatchIndex >= batches.length) agendaBatchIndex = 0;
+   const batch = batches[agendaBatchIndex];
+   const htmlAgenda = batch.map(k => {
+      const nama = escapeHtml(k.nama_kegiatan);
+      const jadwal = escapeHtml(k.jadwal);
+      const lokasi = escapeHtml(k.lokasi);
+      const meta = [jadwal, lokasi].filter(Boolean).join(' | ');
+      return `<div class="agenda-item"><div class="agenda-judul">${nama}</div><div class="agenda-meta">${meta}</div></div>`;
+   }).join('');
+
+   const label = batches.length > 1 ? `<div class="agenda-page-label">HALAMAN ${agendaBatchIndex + 1} / ${batches.length}</div>` : '';
+   panel.innerHTML = `
+      <div class="info-header">AGENDA MASJID RUTIN</div>
+      <div class="info-body">
+         <div class="agenda-scroll-wrapper"><div class="agenda-list-static">${htmlAgenda}${label}</div></div>
+      </div>`;
+
+   agendaBatchIndex++;
+   return true;
+}
+
+function renderHikmah(panel) {
+   const rand = MUTIARA_HIKMAH[hikmahIndex % MUTIARA_HIKMAH.length];
+   hikmahIndex++;
+   panel.innerHTML = `
+      <div class="info-body" style="display:flex;">
+          <div class="hikmah-wrap">
+              <div class="hikmah-icon">❝</div>
+              <div class="hikmah-isi">"${escapeHtml(rand.isi)}"</div>
+              <div class="hikmah-sumber">${escapeHtml(rand.judul)}</div>
+          </div>
+      </div>`;
+}
+
 function rotateInfoPanel() {
    const panel = document.getElementById('panel-info');
    if (showingAgenda && LIST_JADWAL.length > 0) {
-       let htmlAgendaLain = LIST_JADWAL.map(k => `<div class="agenda-item"><div class="agenda-judul">${k.nama_kegiatan}</div><div style="color:var(--gold); font-size:20px; font-weight:600;">${k.jadwal} | ${k.lokasi}</div></div>`).join('');
-       panel.innerHTML = `
-          <div class="info-header">AGENDA MASJID RUTIN</div>
-          <div class="info-body">
-             <div class="agenda-scroll-wrapper"><div class="agenda-scroll-content">${htmlAgendaLain}</div></div>
-          </div>`;
+      renderAgendaBatch(panel);
+      showingAgenda = false;
    } else {
-       let rand = MUTIARA_HIKMAH[Math.floor(Math.random() * MUTIARA_HIKMAH.length)];
-       panel.innerHTML = `
-          <div class="info-body" style="display:flex;">
-              <div class="hikmah-wrap">
-                  <div class="hikmah-icon">❝</div>
-                  <div class="hikmah-isi">"${rand.isi}"</div>
-                  <div class="hikmah-sumber">${rand.judul}</div>
-              </div>
-          </div>`;
+      renderHikmah(panel);
+      showingAgenda = LIST_JADWAL.length > 0;
    }
-   if(LIST_JADWAL.length > 0) { showingAgenda = !showingAgenda; } else { showingAgenda = false; }
 }
-setInterval(rotateInfoPanel, 25000);
+setInterval(rotateInfoPanel, 24000);
 
 let audioCtx;
 function initAudio() { if(!audioCtx) { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } if(audioCtx.state === 'suspended') { audioCtx.resume(); } }
@@ -347,12 +394,24 @@ function matenginLink(url) {
   if (match) id = match[1]; return id ? 'https://drive.google.com/thumbnail?id=' + id + '&sz=w1920' : url;
 }
 
+function ambilYoutubeId(url) {
+  url = String(url || '').trim();
+  let match = url.match(/youtu\.be\/([A-Za-z0-9_-]{6,})/i);
+  if (match) return match[1];
+  match = url.match(/youtube\.com\/shorts\/([A-Za-z0-9_-]{6,})/i);
+  if (match) return match[1];
+  match = url.match(/youtube\.com\/live\/([A-Za-z0-9_-]{6,})/i);
+  if (match) return match[1];
+  match = url.match(/youtube\.com\/embed\/([A-Za-z0-9_-]{6,})/i);
+  if (match) return match[1];
+  match = url.match(/[?&]v=([A-Za-z0-9_-]{6,})/i);
+  if (match) return match[1];
+  return '';
+}
+
 function getYoutubeEmbed(url) {
-  let vidId = ''; 
-  if(url.includes('youtu.be/')) vidId = url.split('youtu.be/')[1].split('?')[0]; 
-  else if(url.includes('v=')) vidId = url.split('v=')[1].split('&')[0]; 
-  else if(url.includes('live/')) vidId = url.split('live/')[1].split('?')[0];
-  return vidId ? `https://www.youtube.com/embed/${vidId}?autoplay=1&mute=1&controls=0&rel=0&loop=1&playlist=${vidId}` : '';
+  const vidId = ambilYoutubeId(url);
+  return vidId ? `https://www.youtube.com/embed/${vidId}?autoplay=1&mute=1&controls=0&rel=0&playsinline=1` : '';
 }
 
 function updateTime() {
@@ -478,14 +537,18 @@ function jalankanTV() {
      let isLive = m.url.toLowerCase().includes('live');
      let tipeVisual = String(m.tipe).toUpperCase();
      
-     if (isLive) { document.body.classList.add('mode-live'); nextDelay = 3600000; } 
-     else if (tipeVisual.includes('FLYER') || tipeVisual.includes('POSTER') || tipeVisual.includes('BROSUR')) { document.body.classList.add('mode-widescreen'); nextDelay = 15000; } 
+     if (isLive) { document.body.classList.add('mode-live'); nextDelay = 10800000; } 
+     else if (tipeVisual.includes('FLYER') || tipeVisual.includes('POSTER') || tipeVisual.includes('BROSUR')) { document.body.classList.add('mode-widescreen'); nextDelay = 25000; } 
      else if (isYt) { nextDelay = 90000; } 
      else { nextDelay = 15000; } 
      
      let pMedia = document.getElementById('konten-media');
-     if(isYt) pMedia.innerHTML = `<iframe class="media-img" src="${getYoutubeEmbed(m.url)}" allow="autoplay"></iframe>`;
-     else pMedia.innerHTML = `<img class="media-img" src="${matenginLink(m.url)}"><div class="media-overlay"><div class="media-title">${m.judul}</div></div>`;
+     if(isYt) {
+        const embed = getYoutubeEmbed(m.url);
+        pMedia.innerHTML = embed ? `<iframe class="media-img" src="${embed}" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>` : `<div style="font-size:34px; font-weight:800; color:white; text-align:center; padding:40px;">Video YouTube belum bisa dibaca</div>`;
+     } else {
+        pMedia.innerHTML = `<img class="media-img" src="${matenginLink(m.url)}"><div class="media-overlay"><div class="media-title">${escapeHtml(m.judul)}</div></div>`;
+     }
      pMedia.classList.add('active');
   } 
   else if (currentItem.type === 'AMAL') {
@@ -547,11 +610,46 @@ function jalankanTV() {
      
      document.getElementById('panel-amal').innerHTML = html;
      document.body.classList.add('mode-amal');
-     nextDelay = 15000; 
+     nextDelay = 25000; 
   }
   
   playIndex++;
   masterTimer = setTimeout(jalankanTV, nextDelay);
+}
+
+
+function aturRunningInfo(teks) {
+  const footer = document.getElementById('footer-info');
+  const pengumumanEl = document.getElementById('tv-pengumuman');
+  teks = String(teks || '').trim();
+
+  pengumumanEl.onanimationend = null;
+  pengumumanEl.style.animation = 'none';
+
+  if (!teks) {
+    pengumumanEl.innerText = '';
+    footer.style.display = 'none';
+    return;
+  }
+
+  footer.style.display = 'flex';
+  pengumumanEl.innerText = teks;
+
+  const durasi = Math.min(Math.max(55, teks.length * 0.32), 150);
+
+  function mulaiJalan() {
+    footer.style.display = 'flex';
+    pengumumanEl.style.animation = 'none';
+    void pengumumanEl.offsetWidth;
+    pengumumanEl.style.animation = `marquee ${durasi}s linear 1`;
+  }
+
+  pengumumanEl.onanimationend = function() {
+    footer.style.display = 'none';
+    setTimeout(mulaiJalan, 30000);
+  };
+
+  mulaiJalan();
 }
 
 async function loadData() {
@@ -643,19 +741,13 @@ async function loadData() {
         }
     });
 
-    if (normItems.length === 0) { normItems.push({ type: 'DEFAULT' }); }
-
     let interleavedPlaylist = []; 
-    let nIdx = 0;
-    
-    for (let i = 0; i < fullItems.length; i++) {
-        interleavedPlaylist.push(normItems[nIdx % normItems.length]);
-        nIdx++;
-        interleavedPlaylist.push(fullItems[i]);
-    }
-    while (nIdx < normItems.length) {
-        interleavedPlaylist.push(normItems[nIdx]);
-        nIdx++;
+    const maxLen = Math.max(normItems.length, fullItems.length, 1);
+
+    for (let i = 0; i < maxLen; i++) {
+        interleavedPlaylist.push({ type: 'DEFAULT' });
+        if (normItems[i]) interleavedPlaylist.push(normItems[i]);
+        if (fullItems[i]) interleavedPlaylist.push(fullItems[i]);
     }
     
     playlist = interleavedPlaylist;
@@ -665,12 +757,7 @@ async function loadData() {
       gabunganPengumuman = resP.data.map(p => `✦ ${p.judul}: ${(p.isi || "").replace(/(\r\n|\n|\r)/gm, " ")}`).join('   ✦   ');
     }
     
-    let pengumumanEl = document.getElementById('tv-pengumuman');
-    pengumumanEl.innerText = gabunganPengumuman;
-    if (gabunganPengumuman.length > 0) {
-        let kecepatanMarquee = Math.max(40, gabunganPengumuman.length * 0.2); 
-        pengumumanEl.style.animationDuration = kecepatanMarquee + 's';
-    }
+    aturRunningInfo(gabunganPengumuman);
 
     document.getElementById('loading-screen').classList.add('hide');
     
