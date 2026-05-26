@@ -170,7 +170,8 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 .foto-caption{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,0.6));color:white;font-size:10px;padding:12px 6px 4px;}
 .video-item{border-radius:10px;overflow:hidden;height:200px;margin-bottom:8px;background:black;}
 .video-item iframe{width:100%;height:100%;border:none;display:block;}
-.video-caption{font-size:12px;color:var(--muted);text-align:center;margin-bottom:10px;}
+.video-caption{font-size:12px;color:var(--muted);text-align:center;margin-bottom:8px;}
+.video-open-btn{display:block;text-align:center;margin:0 auto 12px;padding:8px 12px;border-radius:999px;background:var(--primary);color:white;text-decoration:none;font-size:12px;font-weight:700;max-width:210px;}
 
 .lightbox{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.95);z-index:10000;flex-direction:column;}
 .lightbox.show{display:flex;}
@@ -476,6 +477,29 @@ function matenginLinkDrive(url) {
     return url; 
 }
 
+function ambilYoutubeId(url) {
+    url = String(url || '').trim();
+    if(!url) return '';
+
+    var match;
+
+    match = url.match(/youtube\.com\/shorts\/([A-Za-z0-9_-]{6,})/i);
+    if(match) return match[1];
+
+    match = url.match(/[?&]v=([A-Za-z0-9_-]{6,})/i);
+    if(match) return match[1];
+
+    match = url.match(/youtu\.be\/([A-Za-z0-9_-]{6,})/i);
+    if(match) return match[1];
+
+    match = url.match(/youtube\.com\/embed\/([A-Za-z0-9_-]{6,})/i);
+    if(match) return match[1];
+
+    if(/^[A-Za-z0-9_-]{6,}$/.test(url)) return url;
+
+    return '';
+}
+
 async function apiFetch(action, params, cacheKey) {
   if (cacheKey) { var cached = cacheGet(cacheKey); if (cached) return cached; }
   var url = API_URL + '?action=' + action;
@@ -714,8 +738,10 @@ async function loadGaleri() {
   }
   
   videos.slice(0, 2).forEach(function(v){
-    var ytId = v.url.replace('https://www.youtube.com/watch?v=','').replace('https://youtu.be/','').split('&')[0].split('?')[0];
-    videoHtml += '<div class="video-item"><iframe src="https://www.youtube.com/embed/' + ytId + '" allowfullscreen loading="lazy"></iframe></div><div class="video-caption">' + v.judul + '</div>';
+    var ytId = ambilYoutubeId(v.url);
+    if(!ytId) return;
+    var youtubeUrl = 'https://www.youtube.com/watch?v=' + ytId;
+    videoHtml += '<div class="video-item"><iframe src="https://www.youtube-nocookie.com/embed/' + ytId + '?rel=0&playsinline=1" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe></div><div class="video-caption">' + v.judul + '</div><a class="video-open-btn" href="' + youtubeUrl + '" target="_blank" rel="noopener">▶ Buka di YouTube</a>';
   });
 
   if (fotoHtml || videoHtml) {
