@@ -209,18 +209,58 @@ a{text-decoration:none;}
 </footer>
 
 <script>
-const API_URL = 'https://script.google.com/macros/s/AKfycbzwak_qeVoxi_AGW6yu71Az77_nNzC0g8HpXC37d_oc0Hzb4c8bnSalL_bkq1X6pY_02w/exec';
+const API_URL = 'https://script.google.com/macros/s/AKfycbw48-aYX2jcRp5lT6cicKmpJ_xtAUKG19RwzFlir39pYVCUa7nYhaEP3w6688xUFpXt4g/exec';
+
+function isMasjidContoh(m) {
+  var slug = String(m.slug || '').toLowerCase().trim();
+  return slug === 'contoh-tanjungbarat';
+}
+
+async function cekMasjidAktif(m) {
+  try {
+    var id = encodeURIComponent(m.id_masjid || '');
+    if (!id || isMasjidContoh(m)) return false;
+
+    var hasil = await Promise.all([
+      fetch(API_URL + '?action=getTransaksi&id_masjid=' + id + '&_t=' + Date.now()).then(r => r.json()).catch(() => ({data:[]})),
+      fetch(API_URL + '?action=getJadwal&id_masjid=' + id + '&_t=' + Date.now()).then(r => r.json()).catch(() => ({data:[]})),
+      fetch(API_URL + '?action=getGaleri&id_masjid=' + id + '&_t=' + Date.now()).then(r => r.json()).catch(() => ({data:[]}))
+    ]);
+
+    var transaksi = hasil[0].data || [];
+    var jadwal = hasil[1].data || [];
+    var galeri = hasil[2].data || [];
+
+    return transaksi.length > 0 && jadwal.length > 0 && galeri.length > 0;
+  } catch (e) {
+    return false;
+  }
+}
 
 async function loadDaftarMasjid() {
   const container = document.getElementById('daftar-masjid');
   try {
     const res = await fetch(API_URL + '?action=getAllMasjid&_t=' + Date.now());
     const json = await res.json();
-    
-    if (json.status === 'ok' && json.data.length > 0) {
-      const reversedData = json.data.reverse(); 
 
-      container.innerHTML = reversedData.map(m => {
+    if (json.status === 'ok' && json.data.length > 0) {
+      const semuaMasjid = json.data.filter(m => !isMasjidContoh(m));
+
+      const hasilAktif = await Promise.all(
+        semuaMasjid.map(async m => {
+          const aktif = await cekMasjidAktif(m);
+          return aktif ? m : null;
+        })
+      );
+
+      const masjidAktif = hasilAktif.filter(Boolean).reverse();
+
+      if (masjidAktif.length === 0) {
+        container.innerHTML = '<div style="grid-column: 1/-1; text-align:center; color:var(--muted); padding: 2rem; border: 1px dashed var(--border); border-radius: 12px;">Belum ada masjid aktif yang siap ditampilkan.</div>';
+        return;
+      }
+
+      container.innerHTML = masjidAktif.map(m => {
         const lokasi = [m.kelurahan, m.kota].filter(Boolean).join(', ');
         return `
         <div class="masjid-card">
@@ -235,10 +275,10 @@ async function loadDaftarMasjid() {
         `;
       }).join('');
     } else {
-      container.innerHTML = '<div style="grid-column: 1/-1; text-align:center; color:var(--muted); padding: 2rem; border: 1px dashed var(--border); border-radius: 12px;">Belum ada masjid yang terdaftar.</div>';
+      container.innerHTML = '<div style="grid-column: 1/-1; text-align:center; color:var(--muted); padding: 2rem; border: 1px dashed var(--border); border-radius: 12px;">Belum ada masjid aktif yang siap ditampilkan.</div>';
     }
   } catch(e) {
-    container.innerHTML = '<div style="grid-column: 1/-1; text-align:center; color:#DC2626; padding: 2rem;">Gagal memuat daftar masjid. Pastikan koneksi internet stabil.</div>';
+    container.innerHTML = '<div style="grid-column: 1/-1; text-align:center; color:#DC2626; padding: 2rem;">Gagal memuat daftar masjid aktif. Pastikan koneksi internet stabil.</div>';
   }
 }
 
