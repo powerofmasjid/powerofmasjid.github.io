@@ -384,6 +384,125 @@ input::placeholder {
     line-height: 1.45;
 }
 
+
+.detail-link {
+    color: var(--gold-light);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    cursor: pointer;
+    font-weight: 800;
+}
+
+.consent-mini {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    background: rgba(201,168,76,0.09);
+    border: 1px solid rgba(201,168,76,0.25);
+    border-radius: 14px;
+    padding: 12px;
+    margin: 4px 0 12px;
+}
+
+.consent-mini input {
+    width: 18px;
+    height: 18px;
+    flex: 0 0 auto;
+    margin-top: 2px;
+    accent-color: var(--gold);
+}
+
+.consent-mini label {
+    margin: 0;
+    font-size: 12px;
+    line-height: 1.5;
+    color: rgba(255,255,255,0.82);
+    font-weight: 600;
+}
+
+.btn-detail {
+    width: 100%;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(201,168,76,0.32);
+    color: var(--gold-light);
+    border-radius: 10px;
+    padding: 11px;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 800;
+    cursor: pointer;
+    margin-top: -4px;
+    margin-bottom: 16px;
+}
+
+.modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.72);
+    z-index: 9999;
+    padding: 18px;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-overlay.show {
+    display: flex;
+}
+
+.modal-card {
+    width: 100%;
+    max-width: 430px;
+    max-height: 88vh;
+    overflow-y: auto;
+    background: #0E2F1D;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+}
+
+.modal-title {
+    font-family: 'Amiri', serif;
+    font-size: 24px;
+    color: white;
+    margin-bottom: 8px;
+    text-align: center;
+}
+
+.modal-subtitle {
+    font-size: 12px;
+    color: var(--muted);
+    text-align: center;
+    line-height: 1.5;
+    margin-bottom: 14px;
+}
+
+.modal-list {
+    padding-left: 18px;
+    color: rgba(255,255,255,0.82);
+    font-size: 12px;
+    line-height: 1.65;
+    margin: 12px 0;
+}
+
+.modal-list li {
+    margin-bottom: 7px;
+}
+
+.btn-close-modal {
+    width: 100%;
+    padding: 13px;
+    background: var(--gold);
+    color: #071B10;
+    border: none;
+    border-radius: 12px;
+    font-weight: 800;
+    font-family: inherit;
+    cursor: pointer;
+    margin-top: 12px;
+}
+
 @media (max-width: 430px) {
     body {
         padding: 12px;
@@ -433,9 +552,9 @@ input::placeholder {
                 <div class="badge">REZEKI BERKAH</div>
             </div>
 
-            <h1>Ambil Rezeki Berkah</h1>
+            <h1>Ambil Kode Berkah</h1>
             <p class="subtitle">
-                Baca ketentuan singkat, lalu isi nama dan nomor WhatsApp untuk mendapatkan Kode Berkah.
+                Isi nama dan nomor WhatsApp untuk mendapatkan Kode Berkah.
             </p>
 
             <div class="info-program">
@@ -444,37 +563,14 @@ input::placeholder {
                     <div class="info-value" id="info-program">-</div>
                 </div>
                 <div class="info-row">
-                    <div class="info-label">Sahabat Berkah</div>
-                    <div class="info-value" id="info-sponsor">-</div>
-                </div>
-                <div class="info-row">
-                    <div class="info-label">Manfaat</div>
+                    <div class="info-label">Yang Akan Didapat</div>
                     <div class="info-desc" id="info-manfaat">-</div>
-                </div>
-                <div class="info-row">
-                    <div class="info-label">Masjid Lokasi Distribusi</div>
-                    <div class="info-value" id="info-masjid">-</div>
-                </div>
-                <div class="info-row">
-                    <div class="info-label">Titik Ambil Berkah</div>
-                    <div class="info-value" id="info-merchant">-</div>
-                    <div class="info-desc" id="info-alamat-merchant"></div>
                 </div>
             </div>
 
-            <div class="consent-box">
-                <div class="consent-title">Persetujuan Jamaah</div>
-                <ol class="consent-list">
-                    <li>Nama dan nomor WhatsApp Anda digunakan untuk keperluan program Rezeki Berkah.</li>
-                    <li>Data Anda dapat dibagikan kepada Sahabat Berkah sebagai penyelenggara atau pendukung program.</li>
-                    <li>Data Anda tidak akan dijual kepada pihak lain di luar program ini.</li>
-                    <li>Dengan melanjutkan, Anda menyetujui ketentuan program Rezeki Berkah.</li>
-                </ol>
-                <div class="consent-check">
-                    <input type="checkbox" id="setuju_jamaah" onchange="toggleTombolKlaim()">
-                    <label for="setuju_jamaah">Saya sudah membaca dan menyetujui ketentuan program Rezeki Berkah.</label>
-                </div>
-            </div>
+            <button type="button" class="btn-detail" onclick="bukaDetailProgram()">
+                Lihat detail program
+            </button>
 
             <input type="hidden" id="id_campaign">
             <input type="hidden" id="id_masjid">
@@ -489,13 +585,16 @@ input::placeholder {
                 <input type="tel" id="wa_jamaah" placeholder="0812xxxxxx">
             </div>
 
+            <div class="consent-mini">
+                <input type="checkbox" id="setuju_jamaah" onchange="toggleTombolKlaim()">
+                <label for="setuju_jamaah">
+                    Saya sudah membaca <span class="detail-link" onclick="event.preventDefault(); bukaKetentuanProgram();">ketentuan program</span>.
+                </label>
+            </div>
+
             <button class="btn" id="btn-klaim" onclick="ambilKodeBerkah()" disabled>
                 AMBIL KODE BERKAH
             </button>
-
-            <div class="note">
-                Kode Berkah hanya berlaku untuk program ini dan mengikuti kuota yang tersedia. Gunakan dengan amanah.
-            </div>
         </div>
 
         <div id="area-kode" class="hidden">
@@ -586,6 +685,43 @@ input::placeholder {
     </div>
 </div>
 
+<div class="modal-overlay" id="detail-modal">
+    <div class="modal-card">
+        <div class="modal-title" id="modal-title">Detail Program</div>
+        <div class="modal-subtitle" id="modal-subtitle">Informasi lengkap Rezeki Berkah.</div>
+        <div class="info-program">
+            <div class="info-row">
+                <div class="info-label">Sahabat Berkah</div>
+                <div class="info-value" id="detail-sponsor">-</div>
+            </div>
+            <div class="info-row">
+                <div class="info-label">Masjid Lokasi Distribusi</div>
+                <div class="info-value" id="detail-masjid">-</div>
+            </div>
+            <div class="info-row">
+                <div class="info-label">Titik Ambil Berkah</div>
+                <div class="info-value" id="detail-merchant">-</div>
+                <div class="info-desc" id="detail-alamat-merchant"></div>
+            </div>
+        </div>
+        <button class="btn-close-modal" onclick="tutupModal()">Tutup</button>
+    </div>
+</div>
+
+<div class="modal-overlay" id="ketentuan-modal">
+    <div class="modal-card">
+        <div class="modal-title">Ketentuan Program</div>
+        <div class="modal-subtitle">Ringkasan persetujuan sebelum mengambil Kode Berkah.</div>
+        <ol class="modal-list">
+            <li>Nama dan nomor WhatsApp digunakan untuk keperluan program Rezeki Berkah.</li>
+            <li>Data dapat dibagikan kepada Sahabat Berkah sebagai penyelenggara atau pendukung program.</li>
+            <li>Data tidak dijual kepada pihak lain di luar program ini.</li>
+            <li>Dengan melanjutkan, jamaah menyetujui ketentuan program Rezeki Berkah.</li>
+        </ol>
+        <button class="btn-close-modal" onclick="tutupModal()">Saya Mengerti</button>
+    </div>
+</div>
+
 <script>
 const API_URL = 'https://script.google.com/macros/s/AKfycbxwdVtxSlOmgDi-UL73fYA345Q7fFpV-5FgBQqU91bHjktCtft7FCXAhQAcgMOr8GnUyA/exec';
 
@@ -593,6 +729,17 @@ let DATA_PROGRAM = null;
 let KODE_BERKAH = '';
 let ID_CAMPAIGN = '';
 let ID_MASJID = '';
+
+
+document.addEventListener('click', function(e) {
+    if (e.target.classList && e.target.classList.contains('modal-overlay')) {
+        tutupModal();
+    }
+});
+
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') tutupModal();
+});
 
 window.addEventListener('load', function() {
     ID_CAMPAIGN = getParam('camp') || getParam('campaign') || '';
@@ -701,6 +848,11 @@ async function loadProgramPublic() {
     }
 }
 
+function setTextIfExists(id, text) {
+    const el = document.getElementById(id);
+    if (el) el.textContent = text || '-';
+}
+
 function renderProgramInfo() {
     const namaProgram = DATA_PROGRAM.nama_program || DATA_PROGRAM.NAMA_PROGRAM || 'Program Rezeki Berkah';
     const sponsor = DATA_PROGRAM.nama_sponsor || DATA_PROGRAM.NAMA_SPONSOR || DATA_PROGRAM.nama_perusahaan || DATA_PROGRAM.NAMA_PERUSAHAAN || 'Sahabat Berkah';
@@ -710,17 +862,36 @@ function renderProgramInfo() {
     const masjid = DATA_PROGRAM.nama_masjid || DATA_PROGRAM.NAMA_MASJID || DATA_PROGRAM.lokasi_scan || DATA_PROGRAM.LOKASI_SCAN || 'Masjid lokasi distribusi';
     const merchant = DATA_PROGRAM.nama_merchant || DATA_PROGRAM.NAMA_MERCHANT || DATA_PROGRAM.nama_warung_toko || DATA_PROGRAM.NAMA_WARUNG_TOKO || 'Titik Ambil Berkah';
     const alamatMerchant = DATA_PROGRAM.alamat_merchant || DATA_PROGRAM.ALAMAT_MERCHANT || DATA_PROGRAM.alamat_cabang || DATA_PROGRAM.ALAMAT_CABANG || '';
+    const sponsorText = merk ? sponsor + ' — ' + merk : sponsor;
+    const manfaatText = jenis ? jenis + ': ' + deskripsi : deskripsi;
 
-    document.getElementById('info-program').textContent = namaProgram;
-    document.getElementById('info-sponsor').textContent = merk ? sponsor + ' — ' + merk : sponsor;
-    document.getElementById('info-manfaat').textContent = jenis ? jenis + ': ' + deskripsi : deskripsi;
-    document.getElementById('info-masjid').textContent = masjid;
-    document.getElementById('info-merchant').textContent = merchant;
-    document.getElementById('info-alamat-merchant').textContent = alamatMerchant;
+    setTextIfExists('info-program', namaProgram);
+    setTextIfExists('info-manfaat', manfaatText);
 
-    document.getElementById('hasil-program').textContent = namaProgram;
-    document.getElementById('hasil-merchant').textContent = merchant;
-    document.getElementById('hasil-alamat-merchant').textContent = alamatMerchant;
+    setTextIfExists('detail-sponsor', sponsorText);
+    setTextIfExists('detail-masjid', masjid);
+    setTextIfExists('detail-merchant', merchant);
+    setTextIfExists('detail-alamat-merchant', alamatMerchant);
+
+    setTextIfExists('hasil-program', namaProgram);
+    setTextIfExists('hasil-merchant', merchant);
+    setTextIfExists('hasil-alamat-merchant', alamatMerchant);
+}
+
+function bukaDetailProgram() {
+    const modal = document.getElementById('detail-modal');
+    if (modal) modal.classList.add('show');
+}
+
+function bukaKetentuanProgram() {
+    const modal = document.getElementById('ketentuan-modal');
+    if (modal) modal.classList.add('show');
+}
+
+function tutupModal() {
+    document.querySelectorAll('.modal-overlay').forEach(function(modal) {
+        modal.classList.remove('show');
+    });
 }
 
 
