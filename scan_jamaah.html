@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="id">
 <head>
 <meta charset="UTF-8">
@@ -334,6 +334,56 @@ input::placeholder {
     font-size: 11px;
 }
 
+.consent-box {
+    background: rgba(201,168,76,0.10);
+    border: 1px solid rgba(201,168,76,0.32);
+    border-radius: 16px;
+    padding: 14px;
+    margin-bottom: 16px;
+}
+
+.consent-title {
+    font-size: 13px;
+    font-weight: 800;
+    color: var(--gold-light);
+    margin-bottom: 8px;
+}
+
+.consent-list {
+    padding-left: 18px;
+    margin-bottom: 12px;
+}
+
+.consent-list li {
+    font-size: 12px;
+    color: rgba(255,255,255,0.78);
+    line-height: 1.55;
+    margin-bottom: 6px;
+}
+
+.consent-check {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    background: rgba(0,0,0,0.20);
+    border-radius: 12px;
+    padding: 10px;
+}
+
+.consent-check input {
+    width: auto;
+    margin-top: 3px;
+    accent-color: var(--gold);
+}
+
+.consent-check label {
+    margin: 0;
+    font-size: 12px;
+    font-weight: 700;
+    color: rgba(255,255,255,0.86);
+    line-height: 1.45;
+}
+
 @media (max-width: 430px) {
     body {
         padding: 12px;
@@ -385,7 +435,7 @@ input::placeholder {
 
             <h1>Ambil Rezeki Berkah</h1>
             <p class="subtitle">
-                Silakan isi nama dan nomor WhatsApp untuk mendapatkan Kode Berkah.
+                Baca ketentuan singkat, lalu isi nama dan nomor WhatsApp untuk mendapatkan Kode Berkah.
             </p>
 
             <div class="info-program">
@@ -412,6 +462,20 @@ input::placeholder {
                 </div>
             </div>
 
+            <div class="consent-box">
+                <div class="consent-title">Persetujuan Jamaah</div>
+                <ol class="consent-list">
+                    <li>Nama dan nomor WhatsApp Anda digunakan untuk keperluan program Rezeki Berkah.</li>
+                    <li>Data Anda dapat dibagikan kepada Sahabat Berkah sebagai penyelenggara atau pendukung program.</li>
+                    <li>Data Anda tidak akan dijual kepada pihak lain di luar program ini.</li>
+                    <li>Dengan melanjutkan, Anda menyetujui ketentuan program Rezeki Berkah.</li>
+                </ol>
+                <div class="consent-check">
+                    <input type="checkbox" id="setuju_jamaah" onchange="toggleTombolKlaim()">
+                    <label for="setuju_jamaah">Saya sudah membaca dan menyetujui ketentuan program Rezeki Berkah.</label>
+                </div>
+            </div>
+
             <input type="hidden" id="id_campaign">
             <input type="hidden" id="id_masjid">
 
@@ -425,7 +489,7 @@ input::placeholder {
                 <input type="tel" id="wa_jamaah" placeholder="0812xxxxxx">
             </div>
 
-            <button class="btn" id="btn-klaim" onclick="ambilKodeBerkah()">
+            <button class="btn" id="btn-klaim" onclick="ambilKodeBerkah()" disabled>
                 AMBIL KODE BERKAH
             </button>
 
@@ -523,7 +587,7 @@ input::placeholder {
 </div>
 
 <script>
-const API_URL = 'https://script.google.com/macros/s/AKfycbzwak_qeVoxi_AGW6yu71Az77_nNzC0g8HpXC37d_oc0Hzb4c8bnSalL_bkq1X6pY_02w/exec';
+const API_URL = 'https://script.google.com/macros/s/AKfycbxwdVtxSlOmgDi-UL73fYA345Q7fFpV-5FgBQqU91bHjktCtft7FCXAhQAcgMOr8GnUyA/exec';
 
 let DATA_PROGRAM = null;
 let KODE_BERKAH = '';
@@ -659,10 +723,20 @@ function renderProgramInfo() {
     document.getElementById('hasil-alamat-merchant').textContent = alamatMerchant;
 }
 
+
+function toggleTombolKlaim() {
+    const cek = document.getElementById('setuju_jamaah');
+    const btn = document.getElementById('btn-klaim');
+    if (!cek || !btn) return;
+    btn.disabled = !cek.checked;
+}
+
 async function ambilKodeBerkah() {
     const nama = document.getElementById('nama_jamaah').value.trim();
     const waInput = document.getElementById('wa_jamaah').value.trim();
     const wa = normalizeWa(waInput);
+    const setuju = document.getElementById('setuju_jamaah').checked;
+    const waktuSetuju = new Date().toISOString();
 
     if (!nama) {
         alert('Nama wajib diisi.');
@@ -671,6 +745,11 @@ async function ambilKodeBerkah() {
 
     if (!wa || wa.length < 10) {
         alert('Nomor WhatsApp belum benar.');
+        return;
+    }
+
+    if (!setuju) {
+        alert('Anda perlu menyetujui ketentuan program terlebih dahulu.');
         return;
     }
 
@@ -688,7 +767,10 @@ async function ambilKodeBerkah() {
             nama_jamaah: nama,
             no_wa: wa,
             wa_jamaah: wa,
-            lokasi_scan: masjidName
+            lokasi_scan: masjidName,
+            persetujuan: 'YA',
+            waktu_setuju: waktuSetuju,
+            user_agent: navigator.userAgent || ''
         });
 
         if (json.status === 'ok') {
@@ -713,7 +795,7 @@ async function ambilKodeBerkah() {
         alert('Gagal membuat Kode Berkah. Periksa koneksi internet.');
     }
 
-    btn.disabled = false;
+    btn.disabled = !document.getElementById('setuju_jamaah').checked;
     btn.textContent = 'AMBIL KODE BERKAH';
 }
 
