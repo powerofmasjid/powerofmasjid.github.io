@@ -74,8 +74,8 @@
         .profil-section { background: white; border: 1px solid var(--border); border-radius: 14px; padding: 1rem; margin-bottom: 1rem; }
         .profil-section h3 { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 0.875rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border); }
 
-        .toast { position: fixed; bottom: 1.5rem; left: 50%; transform: translateX(-50%) translateY(80px); background: var(--text); color: white; font-size: 13px; padding: 10px 20px; border-radius: 20px; transition: 0.3s; z-index: 999; }
-        .toast.show { transform: translateX(-50%) translateY(0); }
+        .toast { position: fixed; top: 18px; right: 18px; transform: translateX(120%); background: white; color: var(--text); font-size: 13px; font-weight: 700; padding: 13px 16px; border-radius: 14px; transition: 0.28s ease; z-index: 10001; max-width: calc(100vw - 36px); box-shadow: 0 18px 38px rgba(0,0,0,0.22); border: 1px solid rgba(15,76,42,0.12); }
+        .toast.show { transform: translateX(0); }
         .divider { height: 1px; background: var(--border); margin: 1rem 0; }
 
         .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 10000; align-items: center; justify-content: center; padding: 1rem; }
@@ -521,7 +521,7 @@
 
 <script>
     // URL API BARU SESUAI HASIL KERJA KITA
-    var API_URL = 'https://script.google.com/macros/s/AKfycbw48-aYX2jcRp5lT6cicKmpJ_xtAUKG19RwzFlir39pYVCUa7nYhaEP3w6688xUFpXt4g/exec';
+    var API_URL = 'https://script.google.com/macros/s/AKfycbxwdVtxSlOmgDi-UL73fYA345Q7fFpV-5FgBQqU91bHjktCtft7FCXAhQAcgMOr8GnUyA/exec';
     
     var KUNCI_RAHASIA = 'POW_MASJID_SECURE_2026'; 
     var ADMIN_DATA = null, ID_MASJID = '', LAST_5_TRX = [], LIST_PROGRAM = [];
@@ -623,7 +623,7 @@
                 showToast('Gagal membagikan ke WA'); 
             } 
         } else { 
-            alert('Browser tidak mendukung, silakan download manual.'); 
+            showToast('Browser tidak mendukung. Silakan download manual.'); 
         } 
     }
 
@@ -743,7 +743,7 @@
         var p = document.getElementById('login-pin').value.trim();
         var btn = document.getElementById('btn-login'); 
         
-        if (!g || !p) { alert("Tolong isi Email dan PIN dulu!"); return; }
+        if (!g || !p) { showToast('Tolong isi Email dan PIN dulu.'); return; }
         
         setLoading(btn, true);
         
@@ -761,12 +761,12 @@
                 localStorage.setItem('pow_admin', JSON.stringify(ADMIN_DATA)); 
                 tampilAdmin(); 
             } else {
-                alert("❌ LOGIN DITOLAK SERVER:\nAlasan: " + (j.message || 'Email atau PIN salah'));
+                showToast('Login ditolak: ' + (j.message || 'Email atau PIN salah'));
             }
         })
         .catch(err => {
             setLoading(btn, false);
-            alert("⚠️ GAGAL TERHUBUNG KE MESIN:\nDetail error: " + err);
+            showToast('Gagal terhubung ke server. Periksa koneksi internet.');
         });
     }
 

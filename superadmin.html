@@ -522,24 +522,82 @@ select.form-control option {
 
 .toast {
   position: fixed;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%) translateY(100px);
-  background: white;
+  top: 18px;
+  right: 18px;
+  transform: translateX(120%);
+  background: rgba(255,255,255,0.96);
   color: var(--bg-dark);
   font-size: 13px;
-  font-weight: 600;
-  padding: 12px 24px;
-  border-radius: 20px;
-  transition: transform 0.3s;
+  font-weight: 700;
+  padding: 13px 16px;
+  border-radius: 14px;
+  transition: transform 0.28s ease, opacity 0.28s ease;
   z-index: 9999;
-  max-width: 90%;
-  text-align: center;
+  max-width: calc(100vw - 36px);
+  text-align: left;
+  box-shadow: 0 18px 38px rgba(0,0,0,0.28);
+  border: 1px solid rgba(201,168,76,0.22);
+  opacity: 0;
 }
 
 .toast.show {
-  transform: translateX(-50%) translateY(0);
+  transform: translateX(0);
+  opacity: 1;
 }
+
+.confirm-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.72);
+  z-index: 10000;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+}
+
+.confirm-overlay.show { display: flex; }
+
+.confirm-card {
+  width: 100%;
+  max-width: 360px;
+  background: #0E2F1D;
+  color: white;
+  border: 1px solid rgba(201,168,76,0.35);
+  border-radius: 20px;
+  padding: 20px;
+  box-shadow: 0 24px 55px rgba(0,0,0,0.48);
+  text-align: center;
+}
+
+.confirm-icon {
+  width: 46px;
+  height: 46px;
+  margin: 0 auto 12px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(239,68,68,0.12);
+  color: #FCA5A5;
+  border: 1px solid rgba(239,68,68,0.35);
+  font-size: 24px;
+  font-weight: 900;
+}
+
+.confirm-title { font-size: 18px; font-weight: 800; margin-bottom: 8px; }
+.confirm-text { font-size: 13px; line-height: 1.55; color: rgba(255,255,255,0.76); margin-bottom: 16px; }
+.confirm-actions { display: flex; gap: 10px; }
+.confirm-btn {
+  flex: 1;
+  border: 0;
+  border-radius: 12px;
+  padding: 12px;
+  font-weight: 800;
+  cursor: pointer;
+}
+.confirm-cancel { background: rgba(255,255,255,0.08); color: white; border: 1px solid rgba(255,255,255,0.14); }
+.confirm-danger { background: #DC2626; color: white; }
 </style>
 </head>
 
@@ -888,8 +946,21 @@ select.form-control option {
 
 <div class="toast" id="toast">Notifikasi</div>
 
+<div class="confirm-overlay" id="confirm-modal">
+  <div class="confirm-card">
+    <div class="confirm-icon">!</div>
+    <div class="confirm-title">Konfirmasi Hapus</div>
+    <div class="confirm-text" id="confirm-text">Yakin ingin menghapus data ini?</div>
+    <div class="confirm-actions">
+      <button class="confirm-btn confirm-cancel" id="confirm-cancel">Batal</button>
+      <button class="confirm-btn confirm-danger" id="confirm-ok">Ya, Hapus</button>
+    </div>
+  </div>
+</div>
+
+
 <script>
-const API_URL = 'https://script.google.com/macros/s/AKfycbw48-aYX2jcRp5lT6cicKmpJ_xtAUKG19RwzFlir39pYVCUa7nYhaEP3w6688xUFpXt4g/exec';
+const API_URL = 'https://script.google.com/macros/s/AKfycbxwdVtxSlOmgDi-UL73fYA345Q7fFpV-5FgBQqU91bHjktCtft7FCXAhQAcgMOr8GnUyA/exec';
 const TARGET_EKSPEDISI = 100;
 
 let allMasjidData = [];
@@ -932,6 +1003,30 @@ function cekLogin() {
 function logout() {
   localStorage.removeItem('superadmin_token');
   location.reload();
+}
+
+function showConfirm(message) {
+  return new Promise(resolve => {
+    const modal = document.getElementById('confirm-modal');
+    const text = document.getElementById('confirm-text');
+    const ok = document.getElementById('confirm-ok');
+    const cancel = document.getElementById('confirm-cancel');
+    if (!modal || !ok || !cancel) return resolve(false);
+    text.textContent = message || 'Yakin ingin menghapus data ini?';
+    modal.classList.add('show');
+
+    function close(result) {
+      modal.classList.remove('show');
+      ok.onclick = null;
+      cancel.onclick = null;
+      modal.onclick = null;
+      resolve(result);
+    }
+
+    ok.onclick = () => close(true);
+    cancel.onclick = () => close(false);
+    modal.onclick = e => { if (e.target === modal) close(false); };
+  });
 }
 
 function showToast(msg) {
@@ -1365,7 +1460,7 @@ async function simpanIklan() {
 
 async function hapusIklan(id) {
   if (!id) return showToast('ID iklan tidak ditemukan');
-  if (!confirm('Hapus iklan ini?')) return;
+  if (!(await showConfirm('Hapus iklan ini?'))) return;
 
   try {
     const json = await postData({
@@ -1491,7 +1586,7 @@ async function tambahSponsorTV() {
 
 async function hapusSponsorTV(id) {
   if (!id) return showToast('ID sponsor tidak ditemukan');
-  if (!confirm('Hapus sponsor TV ini?')) return;
+  if (!(await showConfirm('Hapus sponsor TV ini?'))) return;
 
   try {
     const json = await postData({
@@ -1577,7 +1672,7 @@ async function tambahSponsorWeb() {
 
 async function hapusSponsorWeb(id) {
   if (!id) return showToast('ID sponsor tidak ditemukan');
-  if (!confirm('Hapus sponsor website ini?')) return;
+  if (!(await showConfirm('Hapus sponsor website ini?'))) return;
 
   try {
     const json = await postData({
@@ -2009,8 +2104,8 @@ async function loadLaporanRezekiBerkah() {
           <td>${escapeHtml(sponsor)}</td>
           <td>${escapeHtml(merchant)}</td>
           <td><span class="status-pill ${statusClass}">${escapeHtml(statusLabel)}</span></td>
-          <td>${escapeHtml(normalizeDate(waktuBuat))}</td>
-          <td>${escapeHtml(normalizeDate(waktuRedeem))}</td>
+          <td>${escapeHtml(normalizeDate(waktuBuat) || '-')}</td>
+          <td>${escapeHtml(normalizeDate(waktuRedeem) || '-')}</td>
         </tr>
       `;
     }).join('');
@@ -2020,9 +2115,9 @@ async function loadLaporanRezekiBerkah() {
 }
 
 function ubahStatusBerkah(status) {
-  const s = String(status || '').toUpperCase();
+  const s = String(status || '').toUpperCase().trim();
   if (s === 'TERPAKAI' || s === 'SUDAH_DITUKAR' || s === 'SUDAH_DIAMBIL') return 'Sudah Diambil';
-  if (s === 'BARU' || s === 'AKTIF' || s === 'BELUM_DITUKAR') return 'Kode Dibuat';
+  if (s === 'KODE_DIBUAT' || s === 'BARU' || s === 'AKTIF' || s === 'BELUM_DITUKAR') return 'Kode Dibuat';
   if (s === 'HANGUS') return 'Masa Berkah Berakhir';
   return status || 'Kode Dibuat';
 }
