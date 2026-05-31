@@ -2104,8 +2104,8 @@ async function loadLaporanRezekiBerkah() {
           <td>${escapeHtml(sponsor)}</td>
           <td>${escapeHtml(merchant)}</td>
           <td><span class="status-pill ${statusClass}">${escapeHtml(statusLabel)}</span></td>
-          <td>${escapeHtml(normalizeDate(waktuBuat) || '-')}</td>
-          <td>${escapeHtml(normalizeDate(waktuRedeem) || '-')}</td>
+          <td>${escapeHtml(normalizeDate(waktuBuat))}</td>
+          <td>${escapeHtml(normalizeDate(waktuRedeem))}</td>
         </tr>
       `;
     }).join('');
@@ -2115,9 +2115,9 @@ async function loadLaporanRezekiBerkah() {
 }
 
 function ubahStatusBerkah(status) {
-  const s = String(status || '').toUpperCase().trim();
+  const s = String(status || '').toUpperCase();
   if (s === 'TERPAKAI' || s === 'SUDAH_DITUKAR' || s === 'SUDAH_DIAMBIL') return 'Sudah Diambil';
-  if (s === 'KODE_DIBUAT' || s === 'BARU' || s === 'AKTIF' || s === 'BELUM_DITUKAR') return 'Kode Dibuat';
+  if (s === 'BARU' || s === 'AKTIF' || s === 'BELUM_DITUKAR') return 'Kode Dibuat';
   if (s === 'HANGUS') return 'Masa Berkah Berakhir';
   return status || 'Kode Dibuat';
 }
