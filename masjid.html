@@ -254,79 +254,198 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 .desain-minimalis .sholat-item.aktif .sholat-time { color: var(--primary-dark); }
 
 
-/* === PATCH RESPONSIVE DESKTOP & JADWAL SHOLAT FIX ===
-   Tujuan: mobile tetap stabil, desktop melebar mengikuti layar,
-   jadwal sholat tidak kepotong, teks alamat/deskripsi fleksibel. */
-.header .alamat,
-.header .deskripsi{
-  max-width: min(920px, 92vw);
-  margin-left: auto;
-  margin-right: auto;
-  overflow-wrap: anywhere;
-  word-break: normal;
-}
-.header .deskripsi{
-  font-size: clamp(12px, 1.2vw, 14px);
-  line-height: 1.65;
-}
-.header .alamat{
-  font-size: clamp(12px, 1.15vw, 14px);
-  line-height: 1.65;
-}
-.sholat-card{overflow: visible;}
-.sholat-grid{
-  display:grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 8px;
-}
-.sholat-item{min-width:0; overflow:visible; padding:10px 4px;}
-.sholat-name{
-  white-space: normal;
-  overflow-wrap: break-word;
-  line-height:1.25;
-}
-.sholat-time{
-  font-size: clamp(12px, 3.2vw, 14px);
-  white-space: nowrap;
-  letter-spacing: .5px;
-}
-.countdown-badge{
-  max-width:100%;
-  white-space: normal;
-  line-height:1.25;
-  word-break: keep-all;
-}
-@media (max-width: 360px){
-  .sholat-grid{grid-template-columns: repeat(2, minmax(0, 1fr));}
-  .sholat-time{font-size:15px;}
-}
-@media (min-width: 769px){
-  .container-app{
-    max-width: min(1120px, calc(100vw - 48px));
-    border-radius: 0 0 24px 24px;
+/* =========================================================
+   PATCH DESKTOP-ONLY POWER OF MASJID
+   Tujuan:
+   - Tampilan HP tetap mengikuti kode asli.
+   - Perubahan hanya aktif pada layar desktop/tablet lebar.
+   - Jadwal sholat dikembalikan seperti semula: 4 kolom per baris, dua baris.
+   ========================================================= */
+@media (min-width: 900px) {
+  body {
+    background:
+      radial-gradient(circle at top left, rgba(27,107,58,0.08), transparent 34%),
+      radial-gradient(circle at top right, rgba(201,168,76,0.10), transparent 30%),
+      var(--bg);
   }
-  .header{padding-left:48px; padding-right:48px;}
-  .main{padding-left:48px; padding-right:48px;}
-  .sholat-grid{grid-template-columns: repeat(8, minmax(0, 1fr)); gap:10px;}
-  .sholat-item{padding:12px 6px;}
-  .sholat-time{font-size: clamp(13px, 1.25vw, 16px);}
-  .sholat-name{font-size:11px;}
+
+  .header,
+  .main,
+  .footer,
+  #sponsor-web-container {
+    max-width: 1120px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .header {
+    margin-top: 28px;
+    border-radius: 28px 28px 0 0;
+    padding: 3rem 3rem 4.4rem;
+    box-shadow: 0 18px 45px rgba(15,66,40,0.18);
+  }
+
+  .logo-wrap {
+    width: 104px;
+    height: 104px;
+    margin-bottom: 1.25rem;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+  }
+
+  .header h1 {
+    font-size: 32px;
+    max-width: 900px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .header .alamat {
+    font-size: 15px;
+    max-width: 900px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.75;
+  }
+
+  .header .deskripsi {
+    font-size: 14px;
+    max-width: 860px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.75;
+  }
+
+  .badge-pow,
+  .btn-wa-header {
+    font-size: 13px;
+    padding: 8px 18px;
+  }
+
+  .main {
+    padding: 0 2rem 3rem;
+    margin-top: -2.6rem;
+  }
+
+  .sholat-card {
+    padding: 1.35rem 1.45rem;
+    border-radius: 20px;
+    margin-bottom: 1.6rem;
+    overflow: visible;
+    box-shadow: 0 16px 38px rgba(15,66,40,0.16);
+  }
+
+  .sholat-title {
+    font-size: 12px;
+    margin-bottom: 1rem;
+  }
+
+  .sholat-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .sholat-item {
+    min-width: 0;
+    padding: 12px 8px;
+    border-radius: 14px;
+  }
+
+  .sholat-item.aktif {
+    transform: scale(1.025);
+  }
+
+  .sholat-name {
+    font-size: 11px;
+    white-space: nowrap;
+  }
+
+  .sholat-time {
+    font-size: clamp(12px, 1.15vw, 16px);
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+    overflow: visible;
+  }
+
+  .countdown-badge {
+    font-size: 9px;
+    padding: 3px 7px;
+    white-space: nowrap;
+  }
+
+  .card,
+  .saldo-card,
+  .banner-umum {
+    border-radius: 18px;
+    box-shadow: 0 12px 34px rgba(0,0,0,0.055);
+  }
+
+  .section {
+    margin-bottom: 1.6rem;
+  }
+
+  .section-head h2 {
+    font-size: 14px;
+  }
+
+  .peng-wrap,
+  .swipe-wrap {
+    margin-left: 0;
+    margin-right: 0;
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .peng-slide {
+    flex-basis: 48%;
+  }
+
+  .swipe-card {
+    flex-basis: 48%;
+  }
+
+  .saldo-card {
+    padding: 2rem;
+  }
+
+  .saldo-amount {
+    font-size: 44px;
+  }
+
+  .trx-item,
+  .jadwal-item {
+    padding: 1.1rem 1.25rem;
+  }
+
+  .foto-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .foto-item {
+    height: 190px;
+  }
+
+  .video-item {
+    height: 320px;
+  }
+
+  .footer {
+    border-radius: 0 0 28px 28px;
+    margin-bottom: 28px;
+  }
 }
-@media (min-width: 1100px){
-  .main{
-    display:grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1.25rem 1.5rem;
-    align-items:start;
+
+@media (min-width: 1200px) {
+  .header,
+  .main,
+  .footer,
+  #sponsor-web-container {
+    max-width: 1180px;
   }
-  .main > .sholat-card,
-  .main > #list-pengumuman,
-  .main > #list-program-amal,
-  .main > .saldo-card,
-  .main > .section#section-galeri{
-    grid-column: 1 / -1;
+
+  .main {
+    padding-left: 2.25rem;
+    padding-right: 2.25rem;
   }
-  .main > .section{margin-bottom:0;}
 }
 
 </style>
@@ -947,7 +1066,7 @@ async function loadJadwalSholat(lat, lon) {
 
   function sumberLabel(label) {
     if (label) return label;
-    return ''; // label sumber/koreksi disembunyikan agar jadwal tetap bersih
+    return ''; // label koreksi disembunyikan dari tampilan jamaah
   }
 
   function mapFromAladhanTimings(t) {
