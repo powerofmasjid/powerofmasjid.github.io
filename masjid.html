@@ -253,14 +253,6 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 .desain-minimalis .sholat-item.aktif .sholat-name { color: var(--primary); }
 .desain-minimalis .sholat-item.aktif .sholat-time { color: var(--primary-dark); }
 
-
-/* =========================================================
-   PATCH DESKTOP-ONLY POWER OF MASJID
-   Tujuan:
-   - Tampilan HP tetap mengikuti kode asli.
-   - Perubahan hanya aktif pada layar desktop/tablet lebar.
-   - Jadwal sholat dikembalikan seperti semula: 4 kolom per baris, dua baris.
-   ========================================================= */
 @media (min-width: 900px) {
   body {
     background:
@@ -566,6 +558,21 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
     <div class="card" id="list-jadwal"><div class="kosong">Memuat...</div></div>
   </div>
 
+  <!-- FITUR BARU: FORM PENDAFTARAN NOTIFIKASI -->
+  <div class="section" id="form-notif-section">
+    <div class="card" style="background: linear-gradient(135deg, var(--primary), var(--primary-dark)); padding: 1.5rem; text-align: center; border: 1px solid var(--accent);">
+      <div style="font-size: 28px; margin-bottom: 8px;">📲</div>
+      <h3 style="font-size: 15px; font-weight: 700; color: white; margin-bottom: 6px;">Pengingat Jadwal & Info Masjid</h3>
+      <p style="font-size: 12px; color: rgba(255,255,255,0.85); margin-bottom: 15px; line-height: 1.5;">Daftarkan nomor WhatsApp Anda untuk menerima pesan otomatis jadwal kajian dan info penting dari DKM.</p>
+      <div style="text-align: left; margin-bottom: 12px;">
+        <input type="text" id="notif-nama" placeholder="Nama Panggilan (Contoh: Bapak Budi)" style="width: 100%; padding: 12px; border-radius: 10px; border: none; margin-bottom: 8px; font-family: inherit; font-size: 13px; outline: none;">
+        <input type="tel" id="notif-wa" placeholder="Nomor WhatsApp (Contoh: 0812...)" style="width: 100%; padding: 12px; border-radius: 10px; border: none; font-family: inherit; font-size: 13px; outline: none;">
+      </div>
+      <button onclick="daftarNotifikasi(this)" style="width: 100%; background: var(--accent); color: var(--primary-dark); font-weight: 700; border: none; padding: 12px; border-radius: 10px; cursor: pointer; font-size: 13px; font-family: inherit; transition: 0.2s;">DAFTAR SEKARANG</button>
+    </div>
+  </div>
+  <!-- END FITUR BARU -->
+
   <div class="section" id="section-galeri" style="display:none">
     <div class="section-head">
       <div class="section-head-left"><div class="dot"></div><h2>Dokumentasi Kegiatan</h2></div>
@@ -594,7 +601,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 <div class="toast" id="toast">Nomor rekening disalin!</div>
 
 <script>
-var API_URL = 'https://script.google.com/macros/s/AKfycbxwdVtxSlOmgDi-UL73fYA345Q7fFpV-5FgBQqU91bHjktCtft7FCXAhQAcgMOr8GnUyA/exec';
+var API_URL = 'https://script.google.com/macros/s/AKfycbw4NKtVPvYcEcnf7KJiggwPYX4oeHs92mShAMOCN3vMneC2NAmVc84DJo9X6xsCUUoIfQ/exec';
 
 var ID_MASJID = '';
 var JADWAL_KOREKSI = { imsak:0, subuh:0, syuruq:0, dhuha:0, dzuhur:0, ashar:0, maghrib:0, isya:0 };
@@ -1066,7 +1073,7 @@ async function loadJadwalSholat(lat, lon) {
 
   function sumberLabel(label) {
     if (label) return label;
-    return ''; // label koreksi disembunyikan dari tampilan jamaah
+    return ''; 
   }
 
   function mapFromAladhanTimings(t) {
@@ -1249,6 +1256,59 @@ async function tampilOverlay() {
       document.getElementById('overlay').classList.remove('hide');
     }
   } catch(e) {}
+}
+
+function showToastMsg(m) {
+  var t = document.getElementById('toast');
+  t.textContent = m;
+  t.classList.add('show');
+  setTimeout(function(){ t.classList.remove('show'); }, 3000);
+}
+
+// ==========================================
+// FUNGSI BARU: PENDAFTARAN NOTIFIKASI MANDIRI
+// ==========================================
+function daftarNotifikasi(btn) {
+  var nama = document.getElementById('notif-nama').value.trim();
+  var wa = document.getElementById('notif-wa').value.trim();
+  
+  if(!nama || !wa) { 
+    showToastMsg("Nama dan WhatsApp wajib diisi!"); 
+    return; 
+  }
+
+  var oriText = btn.innerHTML;
+  btn.innerHTML = "⏳ Mendaftarkan...";
+  btn.disabled = true;
+
+  fetch(API_URL, {
+    method: 'POST',
+    body: JSON.stringify({
+      api_key: 'POW_MASJID_SECURE_2026', // Bypass key untuk pendaftaran publik
+      action: 'addJamaahMandiri',
+      id_masjid: ID_MASJID,
+      nama: nama,
+      no_wa: wa
+    })
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(res) {
+    btn.innerHTML = oriText;
+    btn.disabled = false;
+    
+    if(res.status === 'ok') {
+      showToastMsg("Alhamdulillah, nomor berhasil didaftarkan!");
+      document.getElementById('notif-nama').value = '';
+      document.getElementById('notif-wa').value = '';
+    } else {
+      showToastMsg("Terjadi kesalahan, silakan coba lagi.");
+    }
+  })
+  .catch(function(e) {
+    btn.innerHTML = oriText;
+    btn.disabled = false;
+    showToastMsg("Gagal menyambung ke server. Periksa internet Anda.");
+  });
 }
 
 async function init() {
