@@ -698,10 +698,18 @@ select.form-control option {
           <label>Email Pengurus</label>
           <input type="email" class="form-control" id="reg-email" placeholder="dkm@gmail.com">
         </div>
+        
+        <!-- MODIFIKASI: BAGIAN PIN OTOMATIS BERDASARKAN TOMBOL -->
         <div class="form-group">
-          <label>PIN DKM</label>
-          <input type="number" class="form-control" id="reg-pin" placeholder="123456">
+          <label>PIN DKM (Otomatis)</label>
+          <div style="display: flex; gap: 10px;">
+            <input type="text" class="form-control" id="reg-pin" placeholder="Klik tombol di samping 👉" readonly style="color:var(--gold); font-weight:bold; letter-spacing: 2px;">
+            <button class="btn-copy" type="button" onclick="buatDanSalinPIN()" id="btnSalin" style="width: auto; margin-top: 0; padding: 12px 20px; white-space: nowrap;">Buat & Salin PIN</button>
+          </div>
+          <small style="font-size: 11px; color: rgba(255,255,255,0.6); margin-top: 6px; display: block;">Klik tombol untuk mencetak PIN acak, lalu berikan kepada pengurus DKM.</small>
         </div>
+        <!-- END MODIFIKASI PIN -->
+
         <button class="btn-primary" id="btn-tambah" onclick="tambahMasjidBaru()">SIMPAN MASJID BARU</button>
       </div>
     </div>
@@ -960,7 +968,8 @@ select.form-control option {
 
 
 <script>
-const API_URL = 'https://script.google.com/macros/s/AKfycbxwdVtxSlOmgDi-UL73fYA345Q7fFpV-5FgBQqU91bHjktCtft7FCXAhQAcgMOr8GnUyA/exec';
+// PASTIKAN LINK INI ADALAH LINK DEPLOYMENT TERBARU BAPAK
+const API_URL = 'https://script.google.com/macros/s/AKfycbw4NKtVPvYcEcnf7KJiggwPYX4oeHs92mShAMOCN3vMneC2NAmVc84DJo9X6xsCUUoIfQ/exec';
 const TARGET_EKSPEDISI = 100;
 
 let allMasjidData = [];
@@ -1329,7 +1338,7 @@ async function tambahMasjidBaru() {
   const pin = document.getElementById('reg-pin').value.trim();
 
   if (!nama || !kelurahan || !kecamatan || !slug || !email || !pin) {
-    return showToast('Lengkapi semua data masjid');
+    return showToast('Lengkapi semua data masjid dan pastikan PIN telah dibuat');
   }
 
   const btn = document.getElementById('btn-tambah');
@@ -1358,7 +1367,14 @@ async function tambahMasjidBaru() {
       document.getElementById('reg-kecamatan').value = '';
       document.getElementById('reg-slug').value = '';
       document.getElementById('reg-email').value = '';
-      document.getElementById('reg-pin').value = '';
+      
+      // Kembalikan PIN menjadi kosong untuk masjid berikutnya
+      document.getElementById('reg-pin').value = ''; 
+      const btnSalin = document.getElementById('btnSalin');
+      if(btnSalin) {
+        btnSalin.innerHTML = 'Buat & Salin PIN';
+      }
+      
       loadDashboardData();
     } else {
       showToast(json.message || 'Gagal menyimpan masjid');
@@ -2157,6 +2173,41 @@ function copyLaporanRezekiBerkah() {
   });
 
   copyText(lines.join('\n'));
+}
+
+// ==========================================================
+// FUNGSI BARU: SEKALI KLIK LANGSUNG BUAT & SALIN
+// ==========================================================
+
+function buatDanSalinPIN() {
+  const pinInput = document.getElementById('reg-pin');
+  
+  // 1. Jika kosong, buatkan angka acaknya dulu
+  if (!pinInput.value) {
+    const min = 100000;
+    const max = 999999;
+    pinInput.value = Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+
+  // 2. Langsung salin ke clipboard HP/Laptop
+  copyText(pinInput.value);
+  
+  // 3. Beri efek visual pada tombol
+  const btn = document.getElementById('btnSalin');
+  const teksAsli = btn.innerHTML; // Menyimpan teks awal (Buat & Salin PIN)
+  
+  btn.innerHTML = 'Tersalin!';
+  btn.style.background = '#10B981';
+  btn.style.color = 'white';
+  btn.style.borderColor = '#10B981';
+  
+  // Kembalikan tombol seperti semula setelah 2 detik
+  setTimeout(() => {
+    btn.innerHTML = 'Salin Ulang';
+    btn.style.background = '';
+    btn.style.color = '';
+    btn.style.borderColor = '';
+  }, 2000);
 }
 </script>
 
