@@ -1433,7 +1433,6 @@
         tampilkanModalPdf(doc, fileName);
     }
 
-    // MODIFIKASI: FUNGSI JADWAL
     function loadJadwalAdmin() { 
         fetch(API_URL+'?action=getJadwal&id_masjid='+ID_MASJID+'&_t='+Date.now())
         .then(r=>r.json())
@@ -1510,7 +1509,7 @@
         window.scrollTo({top:0, behavior:'smooth'});
     }
 
-    // MODIFIKASI: FUNGSI TRIGGER BROADCAST WA
+    // MODIFIKASI: FUNGSI TRIGGER BROADCAST WA (SUDAH AKTIF)
     function blastWAJadwal(idx) {
         var d = LIST_JADWAL[idx];
         document.getElementById('modal-delete-icon').innerHTML = '📲';
@@ -1523,11 +1522,32 @@
         
         btnConfirm.onclick = function() {
             batalHapus();
-            showToast("Mempersiapkan pengiriman...");
-            setTimeout(() => {
-                showToast("Sistem Blast WA sedang disiapkan untuk Fase 5!");
-                // (Di Fase 5, kita akan panggil URL API untuk mengirim semua pesan di sini)
-            }, 1000);
+            showToast("⏳ Sedang menyebarkan pesan WA ke jamaah...");
+            
+            var payload = {
+                api_key: KUNCI_RAHASIA,
+                action: 'triggerBlastWA',
+                id_masjid: ID_MASJID,
+                nama_kegiatan: d.nama_kegiatan,
+                hari: d.hari,
+                jadwal: d.jadwal
+            };
+
+            fetch(API_URL, {
+                method: 'POST',
+                body: JSON.stringify(payload)
+            })
+            .then(r => r.json())
+            .then(res => {
+                if(res.status === 'ok') {
+                    showToast('✅ ' + res.message); // Menampilkan sukses dari backend
+                } else {
+                    showToast('❌ Gagal: ' + res.message);
+                }
+            })
+            .catch(err => {
+                showToast('❌ Gagal terhubung ke server');
+            });
         };
         
         document.getElementById('delete-modal').classList.add('show');
