@@ -587,6 +587,30 @@ input::placeholder {
             </div>
         </div>
 
+        <!-- AREA SPONSOR (JEDA 5 DETIK) -->
+        <div id="area-sponsor" class="hidden">
+            <div style="text-align:center;">
+                <div class="badge">DIPERSEMBAHKAN OLEH</div>
+            </div>
+            
+            <h1 id="sponsor-nama-tampil">Memuat...</h1>
+            <p class="subtitle" id="sponsor-merk-tampil" style="color: var(--gold-light); font-weight: bold;"></p>
+
+            <!-- Ruang untuk Poster/Flyer Sponsor -->
+            <div class="kode-box" style="padding: 40px 20px; border-color: rgba(255,255,255,0.2); background: rgba(0,0,0,0.5);">
+                <span style="color: rgba(255,255,255,0.4); font-size: 12px; font-style: italic;">[ Ruang Visual Iklan Sponsor ]</span>
+            </div>
+
+            <div id="teks-tunggu" class="note" style="text-align: center; color: var(--warning); font-weight: bold;">
+                Lanjut isi data dalam <span id="angka-hitung" style="font-size: 16px;">5</span> detik...
+            </div>
+
+            <button class="btn btn-success hidden" id="tombol-lanjut" onclick="lanjutKeForm()">
+                LANJUT ISI DATA
+            </button>
+        </div>
+        <!-- AKHIR AREA SPONSOR -->
+
         <div id="area-klaim" class="hidden">
             <div style="text-align:center;">
                 <div class="badge">REZEKI BERKAH</div>
@@ -771,6 +795,7 @@ input::placeholder {
 </div>
 
 <script>
+// PASTIKAN ANDA MENGGANTI URL DI BAWAH INI SESUAI DENGAN KODE.GS ANDA JIKA BERBEDA
 const API_URL = 'https://script.google.com/macros/s/AKfycbw4NKtVPvYcEcnf7KJiggwPYX4oeHs92mShAMOCN3vMneC2NAmVc84DJo9X6xsCUUoIfQ/exec';
 
 let DATA_PROGRAM = null;
@@ -805,7 +830,7 @@ function getParam(name) {
 }
 
 function showArea(id) {
-    ['area-loading', 'area-error', 'area-klaim', 'area-kode', 'area-ambil', 'area-sukses'].forEach(function(areaId) {
+    ['area-loading', 'area-error', 'area-sponsor', 'area-klaim', 'area-kode', 'area-ambil', 'area-sukses'].forEach(function(areaId) {
         document.getElementById(areaId).classList.add('hidden');
     });
 
@@ -890,7 +915,11 @@ async function loadProgramPublic() {
         }
 
         renderProgramInfo();
-        showArea('area-klaim');
+        
+        // MODIFIKASI: Pindah ke area sponsor dan jalankan hitung mundur
+        showArea('area-sponsor'); 
+        mulaiHitungMundur();
+
     } catch (e) {
         setError('Gagal memuat Program Rezeki Berkah. Periksa koneksi internet lalu coba lagi.');
     }
@@ -924,6 +953,10 @@ function renderProgramInfo() {
     setTextIfExists('hasil-program', namaProgram);
     setTextIfExists('hasil-merchant', merchant);
     setTextIfExists('hasil-alamat-merchant', alamatMerchant);
+    
+    // MODIFIKASI: Mengirim data nama & merk ke layar Sponsor
+    setTextIfExists('sponsor-nama-tampil', sponsor);
+    setTextIfExists('sponsor-merk-tampil', merk);
 }
 
 function bukaDetailProgram() {
@@ -1108,6 +1141,33 @@ function updateLiveTime() {
         second: '2-digit'
     });
 }
+
+// =======================================================
+// MODIFIKASI: FUNGSI HITUNG MUNDUR & PINDAH KE FORM
+// =======================================================
+function mulaiHitungMundur() {
+    let waktu = 5;
+    let elAngka = document.getElementById('angka-hitung');
+    let teksTunggu = document.getElementById('teks-tunggu');
+    let tombolLanjut = document.getElementById('tombol-lanjut');
+
+    let hitung = setInterval(function() {
+        waktu--;
+        if(elAngka) elAngka.textContent = waktu;
+        
+        if (waktu <= 0) {
+            clearInterval(hitung);
+            if(teksTunggu) teksTunggu.classList.add('hidden');
+            if(tombolLanjut) tombolLanjut.classList.remove('hidden');
+        }
+    }, 1000);
+}
+
+function lanjutKeForm() {
+    showArea('area-klaim');
+}
+// =======================================================
+
 </script>
 
 </body>
