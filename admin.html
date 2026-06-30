@@ -98,6 +98,19 @@
         .btn-amal-action { display: flex; gap: 8px; margin-top: 8px; }
         .btn-amal-action button { flex: 1; padding: 8px; border-radius: 8px; font-size: 11px; font-weight: 600; cursor: pointer; border: none; transition: 0.3s; }
         .desc-counter { font-size: 11px; color: var(--muted); text-align: right; margin-top: 4px; font-weight: 500; }
+        
+        /* CSS TAMBAHAN UNTUK TABEL JAMAAH */
+        .table-container { overflow-x: auto; margin-top: 15px; background: white; border-radius: 12px; border: 1px solid var(--border); }
+        .table-jamaah { width: 100%; border-collapse: collapse; text-align: left; font-size: 12px; }
+        .table-jamaah th { background: var(--primary-light); color: var(--primary-dark); padding: 10px; font-weight: 600; border-bottom: 2px solid var(--primary); }
+        .table-jamaah td { padding: 10px; border-bottom: 1px solid var(--border); color: var(--text); }
+        .table-jamaah tr:last-child td { border-bottom: none; }
+        .table-jamaah select { padding: 4px; border-radius: 4px; border: 1px solid #ccc; font-size: 11px; margin-right: 5px; }
+        .badge-jamaah { padding: 4px 8px; border-radius: 4px; font-size: 10px; font-weight: bold; color: white; display: inline-block;}
+        .kategori-BARU { background: #9CA3AF; } /* Abu-abu */
+        .kategori-RUTIN { background: #10B981; } /* Hijau */
+        .kategori-DONATUR { background: #3B82F6; } /* Biru */
+        .kategori-TAMU { background: #F59E0B; } /* Kuning */
     </style>
 </head>
 <body>
@@ -167,6 +180,8 @@
         <div class="nav-tab" onclick="gotoTab('jadwal')">📅 Jadwal</div>
         <div class="nav-tab" onclick="gotoTab('pengumuman')">📢 Pengumuman</div>
         <div class="nav-tab" onclick="gotoTab('galeri')">📸 Galeri</div>
+        <!-- MENU BARU: DATA JAMAAH -->
+        <div class="nav-tab" onclick="gotoTab('jamaah')" style="color: #1B6B3A; font-weight: bold; background: #e8f5e9;">👥 Data Jamaah</div>
         <div class="nav-tab" onclick="gotoTab('profil')">⚙️ Profil</div>
     </div>
 
@@ -329,7 +344,6 @@
                 <input type="text" class="form-input" id="jdw-nama" placeholder="Contoh: Kajian Tafsir Jalalain">
             </div>
             
-            <!-- MODIFIKASI: BAGIAN HARI & WAKTU -->
             <div class="form-row">
                 <div class="form-group">
                     <label class="form-label">Hari Pelaksanaan</label>
@@ -350,7 +364,6 @@
                     <input type="text" class="form-input" id="jdw-jadwal" placeholder="Contoh: Ba'da Maghrib / 09:00 WIB">
                 </div>
             </div>
-            <!-- END MODIFIKASI HARI -->
 
             <div class="form-group"><label class="form-label">Lokasi</label><input type="text" class="form-input" id="jdw-lokasi" placeholder="Contoh: Ruang Utama Masjid"></div>
             <div class="form-group"><label class="form-label">Keterangan</label><textarea class="form-textarea" id="jdw-keterangan" placeholder="Contoh: Terbuka untuk umum, sediakan alat tulis..."></textarea></div>
@@ -403,6 +416,34 @@
             <button class="btn-submit" onclick="simpanGaleri(this)">💾 Simpan Galeri</button>
             <div class="divider"></div><div id="list-gal-admin"></div>
         </div>
+        
+        <!-- ========================================== -->
+        <!-- AREA BARU: TAB DATA JAMAAH (CRM)          -->
+        <!-- ========================================== -->
+        <div id="tab-jamaah" style="display:none">
+            <div class="section-title">Kelola Database Jamaah</div>
+            <div class="info-hint" style="margin-bottom: 15px;">Berikut adalah daftar warga yang masuk melalui pendaftaran website, amal, maupun program Rezeki Berkah. Pastikan label Kategori sudah benar agar fitur Kirim Pengingat WA tidak nyasar.</div>
+            
+            <button class="btn-submit" style="background:#1B6B3A; color:white; margin-bottom: 10px;" onclick="loadDataJamaah(this)">🔄 Segarkan Data</button>
+
+            <div class="table-container">
+                <table class="table-jamaah">
+                    <thead>
+                        <tr>
+                            <th>Nama Lengkap</th>
+                            <th>No. WhatsApp</th>
+                            <th>Sumber Pendaftaran</th>
+                            <th>Kategori Label</th>
+                            <th>Aksi Kelola</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabel-jamaah-body">
+                        <tr><td colspan="5" style="text-align: center;">Tekan "Segarkan Data" untuk memuat...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- ========================================== -->
 
         <div id="tab-profil" style="display:none">
             
@@ -552,14 +593,15 @@
 <div class="toast" id="toast">Berhasil!</div>
 
 <script>
-    // URL API BARU
     var API_URL = 'https://script.google.com/macros/s/AKfycbw4NKtVPvYcEcnf7KJiggwPYX4oeHs92mShAMOCN3vMneC2NAmVc84DJo9X6xsCUUoIfQ/exec';
     
     var KUNCI_RAHASIA = 'POW_MASJID_SECURE_2026'; 
     var ADMIN_DATA = null, ID_MASJID = '', LAST_5_TRX = [], LIST_PROGRAM = [];
     var LIST_JADWAL = [], LIST_PENGUMUMAN = [], LIST_DATA_AMAL = [], LIST_GALERI = []; 
+    var USER_TOKEN = ''; // Ditambahkan untuk menyimpan token admin yang aktif
+    
     var targetDelete = null; 
-    var targetBlast = null; // Menampung data jadwal yang akan di-blast
+    var targetBlast = null; 
     var globalPdfBlob = null; 
     var globalPdfFilename = '';
 
@@ -593,7 +635,7 @@
         if(!btn) return; 
         if(load) { 
             btn.dataset.ori = btn.innerHTML; 
-            btn.innerHTML = '⏳ Menunggu Server...'; 
+            btn.innerHTML = '⏳ Menunggu...'; 
             btn.disabled = true; 
         } else { 
             btn.innerHTML = btn.dataset.ori; 
@@ -660,7 +702,6 @@
         } 
     }
 
-    // MODAL KONFIRMASI HAPUS
     function konfirmasiHapus(actionStr, idItem, tipeProg='') { 
         targetDelete = { action: actionStr, id: idItem, tipe: tipeProg }; 
         document.getElementById('modal-delete-icon').innerHTML = '🗑️';
@@ -674,7 +715,7 @@
 
     function eksekusiHapus() {
         if(!targetDelete) return; 
-        var d = { api_key: KUNCI_RAHASIA, action: targetDelete.action, id_masjid: ID_MASJID };
+        var d = { api_key: KUNCI_RAHASIA, token: USER_TOKEN, action: targetDelete.action, id_masjid: ID_MASJID };
         
         if(targetDelete.action.includes('Kurban') || targetDelete.action.includes('Zakat') || targetDelete.action.includes('Infaq') || targetDelete.action === 'deleteProgramAmal') {
             d.id = targetDelete.id;
@@ -739,7 +780,7 @@
                 
                 fetch(API_URL, { 
                     method: 'POST', 
-                    body: JSON.stringify({ action: 'uploadMedia', api_key: KUNCI_RAHASIA, filename: file.name, base64: base64 }) 
+                    body: JSON.stringify({ action: 'uploadMedia', api_key: KUNCI_RAHASIA, token: USER_TOKEN, filename: file.name, base64: base64 }) 
                 })
                 .then(r => r.json())
                 .then(res => { 
@@ -757,9 +798,10 @@
     }
 
     function gotoTab(t) {
-        var tabs = ['transaksi','amal','jadwal','pengumuman','galeri','profil'];
+        var tabs = ['transaksi','amal','jadwal','pengumuman','galeri','jamaah','profil'];
         tabs.forEach(id => {
-            document.getElementById('tab-'+id).style.display = (id === t) ? 'block' : 'none';
+            var el = document.getElementById('tab-'+id);
+            if(el) el.style.display = (id === t) ? 'block' : 'none';
         });
         
         var tabElements = document.querySelectorAll('.nav-tab');
@@ -776,6 +818,7 @@
         if(t === 'jadwal') loadJadwalAdmin(); 
         if(t === 'pengumuman') loadPengumumanAdmin(); 
         if(t === 'galeri') loadGaleriAdmin(); 
+        if(t === 'jamaah') loadDataJamaah(); // PANGGIL FUNGSI JAMAAH SAAT TAB DIKLIK
         if(t === 'profil') loadProfilAdmin();
     }
 
@@ -793,10 +836,12 @@
         .then(j => {
             setLoading(btn, false); 
             if (j.status === 'ok') { 
+                USER_TOKEN = j.token; // Simpan Token DKM
                 ADMIN_DATA = { 
                     id_masjid: j.id_masjid, 
                     nama: j.nama, 
-                    slug: j.slug 
+                    slug: j.slug,
+                    token: j.token
                 }; 
                 ID_MASJID = j.id_masjid; 
                 localStorage.setItem('pow_admin', JSON.stringify(ADMIN_DATA)); 
@@ -815,6 +860,7 @@
         document.getElementById('login-wrap').classList.remove('show'); 
         document.getElementById('admin-content').style.display = 'block'; 
         document.getElementById('admin-nama-display').textContent = ADMIN_DATA.nama; 
+        USER_TOKEN = ADMIN_DATA.token;
         loadProfilAdmin(); 
         loadTransaksiAdmin(); 
         cekOnboarding(); 
@@ -867,6 +913,7 @@
     function simpanTransaksi(btn) {
         var d = { 
             api_key: KUNCI_RAHASIA, 
+            token: USER_TOKEN,
             action: 'addTransaksi', 
             id_masjid: ID_MASJID, 
             tanggal: document.getElementById('trx-tanggal').value, 
@@ -1035,7 +1082,13 @@
                 LIST_PROGRAM = j.data; 
                 var sel = document.getElementById('pilih-program');
                 var lastSelected = sel.value;
-                sel.innerHTML = '<option value="">-- Pilih Program Dulu --</option>' + j.data.map(p => `<option value="${p.id}" data-tipe="${p.tipe}">[${p.tipe}] ${p.judul}</option>`).join(''); 
+                
+                // MODIFIKASI: Menambahkan label [SELESAI] untuk program yang sudah lewat waktunya
+                sel.innerHTML = '<option value="">-- Pilih Program Dulu --</option>' + j.data.map(p => {
+                    var labelWaktu = p.status_waktu === 'SELESAI' ? ' 🏁 [SELESAI]' : ' 🟢 [AKTIF]';
+                    return `<option value="${p.id}" data-tipe="${p.tipe}">${labelWaktu} [${p.tipe}] ${p.judul}</option>`;
+                }).join(''); 
+                
                 if(lastSelected) {
                     sel.value = lastSelected;
                     gantiFormAmal();
@@ -1055,6 +1108,7 @@
         
         var d = { 
             api_key: KUNCI_RAHASIA, 
+            token: USER_TOKEN,
             action: 'addProgramAmal', 
             id_masjid: ID_MASJID, 
             tipe: document.getElementById('amal-tipe').value, 
@@ -1197,7 +1251,7 @@
         var tp = sel.options[sel.selectedIndex].getAttribute('data-tipe'); 
         if(!id_prog) return;
         
-        var d = { api_key: KUNCI_RAHASIA, id_masjid: ID_MASJID, id_program: id_prog };
+        var d = { api_key: KUNCI_RAHASIA, token: USER_TOKEN, id_masjid: ID_MASJID, id_program: id_prog };
         
         if(tp === 'KURBAN') { 
             d.action = 'addKurban'; 
@@ -1460,10 +1514,11 @@
     function simpanJadwal(btn) { 
         var d = { 
             api_key: KUNCI_RAHASIA, 
+            token: USER_TOKEN,
             action: 'addJadwal', 
             id_masjid: ID_MASJID, 
             nama_kegiatan: document.getElementById('jdw-nama').value, 
-            hari: document.getElementById('jdw-hari').value, // Ditambahkan parameter Hari
+            hari: document.getElementById('jdw-hari').value,
             jadwal: document.getElementById('jdw-jadwal').value, 
             lokasi: document.getElementById('jdw-lokasi').value,
             keterangan: document.getElementById('jdw-keterangan').value
@@ -1501,7 +1556,7 @@
         var d = LIST_JADWAL[idx]; 
         document.getElementById('jdw-id-edit').value = d.id; 
         document.getElementById('jdw-nama').value = d.nama_kegiatan; 
-        document.getElementById('jdw-hari').value = d.hari || ''; // Set hari ke form
+        document.getElementById('jdw-hari').value = d.hari || ''; 
         document.getElementById('jdw-jadwal').value = d.jadwal; 
         document.getElementById('jdw-lokasi').value = d.lokasi; 
         document.getElementById('jdw-keterangan').value = d.keterangan; 
@@ -1509,7 +1564,6 @@
         window.scrollTo({top:0, behavior:'smooth'});
     }
 
-    // MODIFIKASI: FUNGSI TRIGGER BROADCAST WA (SUDAH AKTIF)
     function blastWAJadwal(idx) {
         var d = LIST_JADWAL[idx];
         document.getElementById('modal-delete-icon').innerHTML = '📲';
@@ -1526,6 +1580,7 @@
             
             var payload = {
                 api_key: KUNCI_RAHASIA,
+                token: USER_TOKEN,
                 action: 'triggerBlastWA',
                 id_masjid: ID_MASJID,
                 nama_kegiatan: d.nama_kegiatan,
@@ -1540,7 +1595,7 @@
             .then(r => r.json())
             .then(res => {
                 if(res.status === 'ok') {
-                    showToast('✅ ' + res.message); // Menampilkan sukses dari backend
+                    showToast('✅ ' + res.message);
                 } else {
                     showToast('❌ Gagal: ' + res.message);
                 }
@@ -1575,6 +1630,7 @@
     function simpanPengumuman(btn) { 
         var d = { 
             api_key: KUNCI_RAHASIA, 
+            token: USER_TOKEN,
             action: 'addPengumuman', 
             id_masjid: ID_MASJID, 
             tipe: 'UMUM', 
@@ -1644,6 +1700,7 @@
         var tp = document.getElementById('gal-tipe').value;
         var d = { 
             api_key: KUNCI_RAHASIA, 
+            token: USER_TOKEN,
             action: 'addGaleri', 
             id_masjid: ID_MASJID, 
             judul: document.getElementById('gal-judul').value, 
@@ -1674,6 +1731,104 @@
             cekOnboarding(); 
         }); 
     }
+
+    // ==========================================
+    // FUNGSI BARU: DATA JAMAAH (CRM DKM)
+    // ==========================================
+    function loadDataJamaah(btn = null) {
+        if(btn) setLoading(btn, true);
+        document.getElementById('tabel-jamaah-body').innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 15px;">⏳ Sedang memuat data...</td></tr>';
+        
+        fetch(API_URL + '?action=getJamaah&id_masjid=' + ID_MASJID + '&token=' + USER_TOKEN + '&_t=' + Date.now())
+            .then(res => res.json())
+            .then(res => {
+                if(btn) setLoading(btn, false);
+                if (res.status === 'ok') {
+                    let html = '';
+                    if (res.data.length === 0) {
+                        html = '<tr><td colspan="5" style="text-align: center; padding: 15px;">Belum ada data jamaah tersimpan.</td></tr>';
+                    } else {
+                        res.data.forEach(item => {
+                            let badgeClass = `kategori-${item.kategori || 'BARU'}`;
+                            html += `
+                                <tr>
+                                    <td style="font-weight: bold;">${item.nama}</td>
+                                    <td>${item.no_wa}</td>
+                                    <td style="font-size: 11px; color: #666;">${item.sumber}</td>
+                                    <td><span class="badge-jamaah ${badgeClass}">${item.kategori || 'BARU'}</span></td>
+                                    <td>
+                                        <select onchange="ubahKategori('${item.no_wa}', this.value)">
+                                            <option value="">Ubah Status...</option>
+                                            <option value="RUTIN">Jadikan Jamaah Rutin</option>
+                                            <option value="DONATUR">Jadikan Donatur</option>
+                                            <option value="TAMU">Tamu/Musafir (Jangan WA)</option>
+                                        </select>
+                                        <button onclick="hapusJamaah('${item.no_wa}')" style="background: #EF4444; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 11px;">Hapus</button>
+                                    </td>
+                                </tr>
+                            `;
+                        });
+                    }
+                    document.getElementById('tabel-jamaah-body').innerHTML = html;
+                } else {
+                    document.getElementById('tabel-jamaah-body').innerHTML = `<tr><td colspan="5" style="text-align: center; color: red;">Gagal memuat: ${res.message}</td></tr>`;
+                }
+            }).catch(err => {
+                if(btn) setLoading(btn, false);
+                document.getElementById('tabel-jamaah-body').innerHTML = '<tr><td colspan="5" style="text-align: center; color: red;">Koneksi bermasalah.</td></tr>';
+            });
+    }
+
+    function ubahKategori(noWa, kategoriBaru) {
+        if (!kategoriBaru) return;
+        if (!confirm('Ubah kategori jamaah ini?')) return;
+        
+        let payload = {
+            api_key: KUNCI_RAHASIA,
+            action: 'updateKategoriJamaah', 
+            token: USER_TOKEN,
+            id_masjid: ID_MASJID, 
+            no_wa: noWa, 
+            kategori: kategoriBaru
+        };
+        
+        showToast('⏳ Menyimpan kategori...');
+        fetch(API_URL, { method: 'POST', body: JSON.stringify(payload) })
+            .then(res => res.json())
+            .then(res => {
+                if (res.status === 'ok') {
+                    showToast('✅ Status berhasil diubah');
+                    loadDataJamaah();
+                } else {
+                    showToast('❌ Gagal mengubah: ' + res.message);
+                }
+            });
+    }
+
+    function hapusJamaah(noWa) {
+        if (!confirm('Yakin ingin menghapus kontak ini dari database masjid?')) return;
+        
+        let payload = {
+            api_key: KUNCI_RAHASIA,
+            action: 'deleteJamaah', 
+            token: USER_TOKEN,
+            id_masjid: ID_MASJID, 
+            no_wa: noWa
+        };
+        
+        showToast('⏳ Menghapus kontak...');
+        fetch(API_URL, { method: 'POST', body: JSON.stringify(payload) })
+            .then(res => res.json())
+            .then(res => {
+                if (res.status === 'ok') {
+                    showToast('✅ Kontak berhasil dihapus');
+                    loadDataJamaah();
+                } else {
+                    showToast('❌ Gagal menghapus: ' + res.message);
+                }
+            });
+    }
+    // ==========================================
 
     function salinLinkWeb() { 
         navigator.clipboard.writeText(document.getElementById('link-web').value)
@@ -1740,6 +1895,7 @@
     function simpanProfil(btn) {
         var d = { 
             api_key: KUNCI_RAHASIA, 
+            token: USER_TOKEN,
             action: 'updateMasjid', 
             id_masjid: ID_MASJID, 
             slug: ADMIN_DATA.slug, 
@@ -1809,6 +1965,7 @@
         if (s) { 
             ADMIN_DATA = JSON.parse(s); 
             ID_MASJID = ADMIN_DATA.id_masjid; 
+            USER_TOKEN = ADMIN_DATA.token;
             tampilAdmin(); 
         } else {
             document.getElementById('login-wrap').classList.add('show'); 
