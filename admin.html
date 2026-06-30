@@ -99,7 +99,6 @@
         .btn-amal-action button { flex: 1; padding: 8px; border-radius: 8px; font-size: 11px; font-weight: 600; cursor: pointer; border: none; transition: 0.3s; }
         .desc-counter { font-size: 11px; color: var(--muted); text-align: right; margin-top: 4px; font-weight: 500; }
         
-        /* CSS TAMBAHAN UNTUK TABEL JAMAAH */
         .table-container { overflow-x: auto; margin-top: 15px; background: white; border-radius: 12px; border: 1px solid var(--border); }
         .table-jamaah { width: 100%; border-collapse: collapse; text-align: left; font-size: 12px; }
         .table-jamaah th { background: var(--primary-light); color: var(--primary-dark); padding: 10px; font-weight: 600; border-bottom: 2px solid var(--primary); }
@@ -107,10 +106,10 @@
         .table-jamaah tr:last-child td { border-bottom: none; }
         .table-jamaah select { padding: 4px; border-radius: 4px; border: 1px solid #ccc; font-size: 11px; margin-right: 5px; }
         .badge-jamaah { padding: 4px 8px; border-radius: 4px; font-size: 10px; font-weight: bold; color: white; display: inline-block;}
-        .kategori-BARU { background: #9CA3AF; } /* Abu-abu */
-        .kategori-RUTIN { background: #10B981; } /* Hijau */
-        .kategori-DONATUR { background: #3B82F6; } /* Biru */
-        .kategori-TAMU { background: #F59E0B; } /* Kuning */
+        .kategori-BARU { background: #9CA3AF; } 
+        .kategori-RUTIN { background: #10B981; } 
+        .kategori-DONATUR { background: #3B82F6; } 
+        .kategori-TAMU { background: #F59E0B; } 
     </style>
 </head>
 <body>
@@ -137,7 +136,6 @@
     </div>
 </div>
 
-<!-- Modal Hapus & Konfirmasi Umum -->
 <div class="modal-overlay" id="delete-modal">
     <div class="modal-card">
         <div class="modal-icon" id="modal-delete-icon">🗑️</div>
@@ -180,7 +178,6 @@
         <div class="nav-tab" onclick="gotoTab('jadwal')">📅 Jadwal</div>
         <div class="nav-tab" onclick="gotoTab('pengumuman')">📢 Pengumuman</div>
         <div class="nav-tab" onclick="gotoTab('galeri')">📸 Galeri</div>
-        <!-- MENU BARU: DATA JAMAAH -->
         <div class="nav-tab" onclick="gotoTab('jamaah')" style="color: #1B6B3A; font-weight: bold; background: #e8f5e9;">👥 Data Jamaah</div>
         <div class="nav-tab" onclick="gotoTab('profil')">⚙️ Profil</div>
     </div>
@@ -396,7 +393,8 @@
                     <option value="FLYER">🖼️ Poster / Flyer</option>
                     <option value="VIDEO_YOUTUBE">▶️ Video YouTube</option>
                 </select>
-                <span class="info-hint" id="hint-galeri">Pilih "Poster / Flyer" agar gambar tampil memenuhi layar TV Masjid.</span>
+                <!-- MODIFIKASI: Teks Info Kuota Galeri -->
+                <span class="info-hint" id="hint-galeri">Pilih "Poster / Flyer" agar gambar tampil memenuhi layar TV.<br><b style="color:#d35400;">Batas Maksimal Kuota Media:</b><br>• Foto: 4 File<br>• Flyer: 2 File<br>• Video: 2 File</span>
             </div>
             <div class="form-group"><label class="form-label">Judul Media</label><input type="text" class="form-input" id="gal-judul" placeholder="Contoh: Poster Kajian Ustadz Abdul Somad"></div>
             
@@ -417,9 +415,6 @@
             <div class="divider"></div><div id="list-gal-admin"></div>
         </div>
         
-        <!-- ========================================== -->
-        <!-- AREA BARU: TAB DATA JAMAAH (CRM)          -->
-        <!-- ========================================== -->
         <div id="tab-jamaah" style="display:none">
             <div class="section-title">Kelola Database Jamaah</div>
             <div class="info-hint" style="margin-bottom: 15px;">Berikut adalah daftar warga yang masuk melalui pendaftaran website, amal, maupun program Rezeki Berkah. Pastikan label Kategori sudah benar agar fitur Kirim Pengingat WA tidak nyasar.</div>
@@ -443,7 +438,6 @@
                 </table>
             </div>
         </div>
-        <!-- ========================================== -->
 
         <div id="tab-profil" style="display:none">
             
@@ -598,7 +592,7 @@
     var KUNCI_RAHASIA = 'POW_MASJID_SECURE_2026'; 
     var ADMIN_DATA = null, ID_MASJID = '', LAST_5_TRX = [], LIST_PROGRAM = [];
     var LIST_JADWAL = [], LIST_PENGUMUMAN = [], LIST_DATA_AMAL = [], LIST_GALERI = []; 
-    var USER_TOKEN = ''; // Ditambahkan untuk menyimpan token admin yang aktif
+    var USER_TOKEN = ''; 
     
     var targetDelete = null; 
     var targetBlast = null; 
@@ -818,7 +812,7 @@
         if(t === 'jadwal') loadJadwalAdmin(); 
         if(t === 'pengumuman') loadPengumumanAdmin(); 
         if(t === 'galeri') loadGaleriAdmin(); 
-        if(t === 'jamaah') loadDataJamaah(); // PANGGIL FUNGSI JAMAAH SAAT TAB DIKLIK
+        if(t === 'jamaah') loadDataJamaah(); 
         if(t === 'profil') loadProfilAdmin();
     }
 
@@ -836,7 +830,7 @@
         .then(j => {
             setLoading(btn, false); 
             if (j.status === 'ok') { 
-                USER_TOKEN = j.token; // Simpan Token DKM
+                USER_TOKEN = j.token; 
                 ADMIN_DATA = { 
                     id_masjid: j.id_masjid, 
                     nama: j.nama, 
@@ -1083,7 +1077,6 @@
                 var sel = document.getElementById('pilih-program');
                 var lastSelected = sel.value;
                 
-                // MODIFIKASI: Menambahkan label [SELESAI] untuk program yang sudah lewat waktunya
                 sel.innerHTML = '<option value="">-- Pilih Program Dulu --</option>' + j.data.map(p => {
                     var labelWaktu = p.status_waktu === 'SELESAI' ? ' 🏁 [SELESAI]' : ' 🟢 [AKTIF]';
                     return `<option value="${p.id}" data-tipe="${p.tipe}">${labelWaktu} [${p.tipe}] ${p.judul}</option>`;
@@ -1696,8 +1689,30 @@
         }); 
     }
 
+    // ==========================================
+    // MODIFIKASI: GEMBOK KUOTA GALERI
+    // ==========================================
     function simpanGaleri(btn) { 
         var tp = document.getElementById('gal-tipe').value;
+        
+        // Cek Kuota
+        var countFoto = LIST_GALERI.filter(g => g.tipe === 'FOTO').length;
+        var countFlyer = LIST_GALERI.filter(g => g.tipe === 'FLYER').length;
+        var countVideo = LIST_GALERI.filter(g => g.tipe === 'VIDEO_YOUTUBE').length;
+
+        if (tp === 'FOTO' && countFoto >= 4) {
+            showToast('❌ Kuota Foto Penuh (Maks 4). Hapus foto lama dulu.');
+            return;
+        }
+        if (tp === 'FLYER' && countFlyer >= 2) {
+            showToast('❌ Kuota Flyer Penuh (Maks 2). Hapus flyer lama dulu.');
+            return;
+        }
+        if (tp === 'VIDEO_YOUTUBE' && countVideo >= 2) {
+            showToast('❌ Kuota Video Penuh (Maks 2). Hapus video lama dulu.');
+            return;
+        }
+
         var d = { 
             api_key: KUNCI_RAHASIA, 
             token: USER_TOKEN,
@@ -1731,10 +1746,8 @@
             cekOnboarding(); 
         }); 
     }
+    // ==========================================
 
-    // ==========================================
-    // FUNGSI BARU: DATA JAMAAH (CRM DKM)
-    // ==========================================
     function loadDataJamaah(btn = null) {
         if(btn) setLoading(btn, true);
         document.getElementById('tabel-jamaah-body').innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 15px;">⏳ Sedang memuat data...</td></tr>';
@@ -1828,7 +1841,6 @@
                 }
             });
     }
-    // ==========================================
 
     function salinLinkWeb() { 
         navigator.clipboard.writeText(document.getElementById('link-web').value)
