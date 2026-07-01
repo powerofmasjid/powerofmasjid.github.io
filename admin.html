@@ -1680,6 +1680,52 @@
         document.getElementById('delete-modal').classList.add('show');
     }
 
+
+    function blastWAPengumuman(idx) {
+        var d = LIST_PENGUMUMAN[idx];
+        document.getElementById('modal-delete-icon').innerHTML = '📢';
+        document.getElementById('modal-delete-title').innerText = 'Kirim WA Pengumuman';
+        document.getElementById('modal-delete-text').innerText = `Sistem akan mengirim pengumuman ini ke seluruh nomor jamaah terdaftar:\n\n"${d.judul}"\n\nLanjutkan pengiriman?`;
+        
+        var btnConfirm = document.getElementById('btn-confirm-delete');
+        btnConfirm.className = 'btn-modal btn-modal-wa';
+        btnConfirm.innerText = 'Ya, Kirim Sekarang';
+        
+        btnConfirm.onclick = function() {
+            batalHapus();
+            showToast("⏳ Sedang mengirim pengumuman WA ke jamaah.");
+            
+            var payload = {
+                api_key: KUNCI_RAHASIA,
+                token: USER_TOKEN,
+                action: 'triggerBlastWAPengumuman',
+                id_masjid: ID_MASJID,
+                id_pengumuman: d.id,
+                judul: d.judul,
+                isi: d.isi,
+                tanggal_selesai: d.tanggal_selesai
+            };
+
+            fetch(API_URL, {
+                method: 'POST',
+                body: JSON.stringify(payload)
+            })
+            .then(r => r.json())
+            .then(res => {
+                if(res.status === 'ok') {
+                    showToast('✅ ' + res.message);
+                } else {
+                    showToast('❌ Gagal: ' + res.message);
+                }
+            })
+            .catch(err => {
+                showToast('❌ Gagal terhubung ke server');
+            });
+        };
+        
+        document.getElementById('delete-modal').classList.add('show');
+    }
+
     function loadPengumumanAdmin() { 
         fetch(API_URL+'?action=getPengumuman&id_masjid='+ID_MASJID+'&_t='+Date.now())
         .then(r=>r.json())
@@ -1691,6 +1737,7 @@
                     <div class="item-card-title">${x.judul}</div>
                     <div class="item-card-footer" style="font-size:10px; color:#6b7280;">Berakhir: ${new Date(x.tanggal_selesai).toLocaleDateString('id-ID')}</div>
                     <div class="action-buttons">
+                        <button class="btn-action btn-blast" onclick="event.stopPropagation(); blastWAPengumuman(${idx})">📲 Kirim WA Pengumuman</button>
                         <button class="btn-action btn-edit" onclick="event.stopPropagation(); editPengumuman(${idx})">✏️ Edit</button>
                         <button class="btn-action btn-del" onclick="event.stopPropagation(); konfirmasiHapus('deletePengumuman', '${x.id}')">🗑️ Hapus</button>
                     </div>
