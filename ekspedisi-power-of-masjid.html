@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Ekspedisi Power of Masjid</title>
+<meta name="description" content="Halaman Ekspedisi Power of Masjid untuk relawan persiapan dan rekomendasi masjid dalam rangka Milad 10 Tahun Yayasan Nasi Jum'at.">
+<meta property="og:title" content="Ekspedisi Power of Masjid">
+<meta property="og:description" content="Pilih jalur keterlibatan: relawan persiapan atau rekomendasi masjid untuk proses pendataan dan kurasi Ekspedisi Power of Masjid.">
+<meta property="og:image" content="https://powerofmasjid.github.io/Logo%20Power%20of%20Masjid.png">
+<meta property="og:url" content="https://powerofmasjid.github.io/ekspedisi-power-of-masjid.html">
+<meta property="og:type" content="website">
+
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --primary: #1B6B3A;
+  --primary-dark: #0F4228;
+  --primary-light: #E8F5EE;
+  --accent: #C9A84C;
+  --accent-light: #FBF3E0;
+  --bg: #F7F7F5;
+  --white: #FFFFFF;
+  --text: #1A1A1A;
+  --muted: #6B7280;
+  --border: #E5E7EB;
+  --danger-soft: #FEF2F2;
+  --danger: #991B1B;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: var(--text); line-height: 1.65; }
+a { text-decoration: none; color: inherit; }
+.container { max-width: 1120px; margin: 0 auto; padding: 0 1.5rem; }
+
+.navbar { background: rgba(255,255,255,0.96); padding: 1rem 0; position: sticky; top: 0; z-index: 100; border-bottom: 1px solid var(--border); box-shadow: 0 2px 10px rgba(0,0,0,0.02); backdrop-filter: blur(8px); }
+.nav-inner { display: flex; justify-content: space-between; align-items: center; gap: 18px; }
+.nav-brand { display: flex; align-items: center; gap: 14px; }
+.nav-brand img { height: 45px; width: auto; }
+.nav-brand span { font-size: 20px; font-weight: 800; color: var(--primary-dark); letter-spacing: 0.2px; }
+.nav-links { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; justify-content: flex-end; }
+.nav-links a { font-size: 14px; font-weight: 700; color: var(--primary-dark); padding: 10px 14px; border-radius: 999px; transition: 0.2s ease; }
+.nav-links a:hover { background: var(--primary-light); color: var(--primary); }
+.nav-links .active { background: var(--accent-light); border: 1px solid rgba(201,168,76,0.45); }
+
+.hero { padding: 5.5rem 0 4.5rem; background: radial-gradient(circle at top left, rgba(201,168,76,0.18), transparent 30%), linear-gradient(180deg, var(--primary-light) 0%, var(--bg) 88%); }
+.badge { display: inline-flex; align-items: center; gap: 8px; background: var(--white); color: var(--primary-dark); padding: 10px 18px; border: 1px solid rgba(201,168,76,0.65); border-radius: 999px; font-size: 14px; font-weight: 800; margin-bottom: 1.4rem; box-shadow: 0 8px 20px rgba(201,168,76,0.14); }
+.hero h1 { font-family: 'Amiri', serif; font-size: clamp(40px, 7vw, 68px); color: var(--primary-dark); line-height: 1.05; max-width: 900px; margin-bottom: 1.2rem; }
+.hero h1 span { color: var(--accent); }
+.hero p { font-size: 18px; color: var(--muted); max-width: 880px; margin-bottom: 1.6rem; }
+.hero-note { max-width: 880px; background: var(--white); border: 1px solid var(--border); border-left: 5px solid var(--accent); padding: 18px 20px; border-radius: 18px; color: var(--primary-dark); font-size: 15px; }
+.hero-cta { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 2rem; }
+
+.btn { padding: 14px 22px; border-radius: 12px; font-size: 15px; font-weight: 800; transition: all 0.25s ease; display: inline-flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; border: 1px solid transparent; }
+.btn-primary { background: var(--primary); color: var(--white); box-shadow: 0 8px 20px rgba(27,107,58,0.22); }
+.btn-primary:hover { background: var(--primary-dark); transform: translateY(-2px); }
+.btn-outline { background: var(--white); color: var(--primary); border: 2px solid var(--primary); }
+.btn-outline:hover { background: var(--primary-light); transform: translateY(-2px); }
+.btn-gold { background: var(--accent); color: var(--primary-dark); border-color: var(--accent); box-shadow: 0 8px 20px rgba(201,168,76,0.22); }
+.btn-gold:hover { filter: brightness(0.98); transform: translateY(-2px); }
+
+.section { padding: 5rem 0; }
+.section-white { background: var(--white); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+.section-title { font-size: 34px; font-weight: 800; color: var(--primary-dark); margin-bottom: 0.8rem; letter-spacing: -0.3px; }
+.section-lead { color: var(--muted); max-width: 830px; font-size: 16px; margin-bottom: 2.3rem; }
+
+.choice-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
+.choice-card { background: var(--white); border: 1px solid var(--border); border-radius: 22px; padding: 30px; box-shadow: 0 16px 40px rgba(15,66,40,0.08); position: relative; overflow: hidden; }
+.choice-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 6px; background: linear-gradient(90deg, var(--primary), var(--accent)); }
+.choice-card h2 { color: var(--primary-dark); font-size: 26px; margin-bottom: 10px; line-height: 1.2; }
+.choice-card p { color: var(--muted); margin-bottom: 20px; }
+.pill-row { display: flex; flex-wrap: wrap; gap: 9px; margin: 18px 0 24px; }
+.pill { background: var(--primary-light); color: var(--primary-dark); border: 1px solid rgba(27,107,58,0.12); padding: 7px 11px; border-radius: 999px; font-size: 13px; font-weight: 700; }
+.pill.gold { background: var(--accent-light); border-color: rgba(201,168,76,0.35); }
+
+.info-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+.info-card { background: var(--white); border: 1px solid var(--border); border-radius: 18px; padding: 20px; }
+.info-card h3 { color: var(--primary-dark); font-size: 18px; margin-bottom: 8px; }
+.info-card p { color: var(--muted); font-size: 14px; }
+
+.notice { border-radius: 22px; padding: 28px; background: var(--primary-dark); color: var(--white); margin-top: 24px; }
+.notice h2 { font-size: 26px; margin-bottom: 10px; }
+.notice p { color: rgba(255,255,255,0.86); }
+.notice ul { margin-top: 14px; padding-left: 1.1rem; color: rgba(255,255,255,0.88); }
+.notice li { margin-bottom: 8px; }
+
+.warning { border-radius: 18px; padding: 18px 20px; background: #FFFBEB; border: 1px solid #FDE68A; color: #713F12; margin-top: 18px; font-size: 14px; }
+
+.footer { background: var(--white); padding: 3rem 0 2rem; border-top: 1px solid var(--border); text-align: center; color: var(--muted); font-size: 14px; }
+
+@media (min-width: 992px) {
+  .hero p { font-size: 19px; }
+}
+
+@media (max-width: 900px) {
+  .choice-grid, .info-grid { grid-template-columns: 1fr; }
+  .nav-inner { align-items: flex-start; flex-direction: column; }
+  .nav-links { justify-content: flex-start; }
+}
+
+@media (max-width: 640px) {
+  .container { padding: 0 1.1rem; }
+  .hero { padding: 4rem 0 3rem; }
+  .section { padding: 3.6rem 0; }
+  .section-title { font-size: 28px; }
+  .choice-card { padding: 24px; }
+  .btn { width: 100%; }
+  .nav-links a { padding: 8px 10px; }
+}
+</style>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="container nav-inner">
+    <a href="./" class="nav-brand" aria-label="Kembali ke beranda Power of Masjid">
+      <img src="Logo Power of Masjid.png" alt="Power of Masjid">
+      <span>Power of Masjid</span>
+    </a>
+    <div class="nav-links" aria-label="Navigasi Ekspedisi Power of Masjid">
+      <a href="./">Beranda</a>
+      <a href="#relawan">Relawan Persiapan</a>
+      <a href="#rekomendasi">Rekomendasikan Masjid</a>
+      <a href="#catatan" class="active">Catatan Penting</a>
+    </div>
+  </div>
+</nav>
+
+<main>
+  <section class="hero">
+    <div class="container">
+      <div class="badge">🌙 Milad 10 Tahun Yayasan Nasi Jum'at</div>
+      <h1>Ekspedisi <span>Power of Masjid</span></h1>
+      <p>
+        Halaman ini disiapkan khusus untuk Ekspedisi Power of Masjid. Di sini sahabat kebaikan dapat memilih jalur keterlibatan: membantu sebagai relawan persiapan atau merekomendasikan masjid untuk masuk proses pendataan panitia. Website utama Power of Masjid tetap berfokus pada digitalisasi dan penguatan ekosistem masjid.
+      </p>
+      <div class="hero-note">
+        Masjid yang direkomendasikan akan masuk proses pendataan dan kurasi panitia. Rekomendasi maupun aktivasi website Power of Masjid tidak otomatis membuat masjid terpilih atau menerima bantuan.
+      </div>
+      <div class="hero-cta">
+        <a href="#relawan" class="btn btn-primary">Saya ingin jadi relawan</a>
+        <a href="#rekomendasi" class="btn btn-outline">Saya ingin rekomendasikan masjid</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="pilihan">
+    <div class="container">
+      <h2 class="section-title">Pilih Jalur Keterlibatan</h2>
+      <p class="section-lead">
+        Untuk tahap awal, pengisian data menggunakan Google Form agar ringan, mudah direkap, dan tidak menambah beban sistem utama Power of Masjid.
+      </p>
+
+      <div class="choice-grid">
+        <article class="choice-card" id="relawan">
+          <h2>Open Recruitment Relawan Persiapan</h2>
+          <p>
+            Untuk sahabat kebaikan yang siap membantu pekerjaan persiapan program, bukan relawan hari-H atau relawan acara besar. Relawan akan diarahkan sesuai kebutuhan unit kerja.
+          </p>
+          <div class="pill-row">
+            <span class="pill">Masjid & Nominasi</span>
+            <span class="pill">Sponsor & Kemitraan</span>
+            <span class="pill">Program & Pembinaan</span>
+            <span class="pill">Lapangan & Logistik</span>
+            <span class="pill">Keuangan & Administrasi</span>
+            <span class="pill">Dokumentasi & Media</span>
+          </div>
+          <a class="btn btn-primary" href="https://docs.google.com/forms/d/e/1FAIpQLSdW8THTFdNDI0LDWJRnTYQBxJFYNVNfALht9ANAqgoNsTbgMA/viewform?usp=publish-editor" target="_blank" rel="noopener">Saya Siap Menjadi Relawan</a>
+        </article>
+
+        <article class="choice-card" id="rekomendasi">
+          <h2>Rekomendasikan Masjidmu</h2>
+          <p>
+            Untuk masyarakat yang ingin mengusulkan masjid agar masuk proses pendataan awal Ekspedisi Power of Masjid. Panitia tetap melakukan kurasi dan verifikasi sebelum keputusan apa pun.
+          </p>
+          <div class="pill-row">
+            <span class="pill gold">Karpet / perlengkapan</span>
+            <span class="pill gold">Kipas / AC</span>
+            <span class="pill gold">Renovasi ringan</span>
+            <span class="pill gold">Dukungan marbot</span>
+            <span class="pill gold">Program jamaah</span>
+            <span class="pill gold">Digitalisasi masjid</span>
+          </div>
+          <a class="btn btn-gold" href="https://docs.google.com/forms/d/e/1FAIpQLSfT43JPnS1Y5wt5ZS8496RLVecsSqUovrHGrZZARtkjkZyG3w/viewform?usp=publish-editor" target="_blank" rel="noopener">Rekomendasikan Masjid</a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-white" aria-labelledby="unit-title">
+    <div class="container">
+      <h2 class="section-title" id="unit-title">Unit Persiapan yang Dibantu Relawan</h2>
+      <p class="section-lead">
+        Relawan persiapan membantu pekerjaan nyata sesuai kemampuan dan waktu luang. Tidak semua pendaftar harus menguasai semuanya.
+      </p>
+      <div class="info-grid">
+        <div class="info-card"><h3>Masjid & Nominasi</h3><p>Membantu pendataan masjid, rekap kebutuhan, komunikasi awal, dan pengecekan kelengkapan informasi.</p></div>
+        <div class="info-card"><h3>Sponsor & Kemitraan</h3><p>Membantu penyusunan data calon mitra, catatan follow up, dan persiapan bahan komunikasi.</p></div>
+        <div class="info-card"><h3>Program & Pembinaan</h3><p>Membantu menyusun ide kegiatan, kebutuhan pembinaan, dan tindak lanjut program untuk masjid.</p></div>
+        <div class="info-card"><h3>Lapangan & Logistik</h3><p>Membantu koordinasi kebutuhan barang, rencana kunjungan, dan persiapan teknis lapangan bila diperlukan.</p></div>
+        <div class="info-card"><h3>Keuangan & Administrasi</h3><p>Membantu rekap data, arsip dokumen, notulen, dan laporan sederhana untuk panitia.</p></div>
+        <div class="info-card"><h3>Dokumentasi, Media & Kampanye</h3><p>Membantu caption, desain ringan, dokumentasi, publikasi, video pendek, dan kampanye media sosial.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="catatan">
+    <div class="container">
+      <h2 class="section-title">Catatan Penting</h2>
+      <p class="section-lead">
+        Bagian ini dibuat agar pendaftar relawan dan pemberi rekomendasi memahami batasan program sejak awal.
+      </p>
+
+      <div class="notice">
+        <h2>Untuk Rekomendasi Masjid</h2>
+        <p>
+          Rekomendasi dari masyarakat membantu panitia menemukan masjid yang layak masuk pendataan awal. Namun rekomendasi bukan keputusan akhir.
+        </p>
+        <ul>
+          <li>Masjid yang direkomendasikan akan masuk proses pendataan dan kurasi panitia.</li>
+          <li>Aktivasi website Power of Masjid dapat menjadi bagian dari proses pendataan, tetapi tidak otomatis membuat masjid terpilih.</li>
+          <li>Kriteria detail seleksi bersifat internal dan tidak ditampilkan ke publik.</li>
+          <li>Estimasi kebutuhan bantuan hanya membantu panitia memahami skala kebutuhan, bukan jaminan nilai bantuan.</li>
+        </ul>
+      </div>
+
+      <div class="warning">
+        <strong>Untuk relawan:</strong> konsumsi dan operasional saat bertugas adalah bagian dari tanggung jawab program bila kegiatan sudah berjalan, bukan reward utama. Apresiasi relawan dapat berupa sertifikat, pengalaman, jejaring, dokumentasi resmi, pelatihan, atau surat rekomendasi bila memungkinkan.
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="container">
+    &copy; 2026 Power of Masjid — Yayasan Nasi Jum'at.<br>
+    Memakmurkan Masjid, Menguatkan Umat.
+  </div>
+</footer>
+
+</body>
+</html>

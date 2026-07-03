@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="id">
 <head>
 <meta charset="UTF-8">
@@ -35,6 +35,14 @@ a { text-decoration: none; }
 /* Navbar */
 .navbar { background: var(--white); padding: 1.2rem 0; position: sticky; top: 0; z-index: 100; border-bottom: 1px solid var(--border); box-shadow: 0 2px 10px rgba(0,0,0,0.02); }
 .nav-inner { display: flex; justify-content: space-between; align-items: center; }
+
+
+/* Simple Header Link */
+.nav-menu { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
+.nav-link { color: var(--primary-dark); font-size: 14px; font-weight: 700; padding: 10px 14px; border-radius: 999px; transition: 0.2s; }
+.nav-link:hover { background: var(--primary-light); color: var(--primary); }
+.nav-link-ekspedisi { background: var(--accent-light); color: var(--primary-dark); border: 1px solid rgba(201,168,76,0.45); }
+.nav-link-ekspedisi:hover { background: var(--accent); color: var(--primary-dark); }
 
 /* Hero Section */
 .hero { padding: 6rem 0 5rem; text-align: center; background: linear-gradient(180deg, var(--primary-light) 0%, var(--bg) 100%); }
@@ -131,7 +139,10 @@ a { text-decoration: none; }
   .section-title { font-size: 26px; margin-bottom: 2.5rem; }
   .cta-bottom h2 { font-size: 30px; }
   .cta-bottom p { font-size: 16px; }
+  .nav-inner { gap: 14px; align-items: flex-start; }
+  .nav-menu { width: 100%; justify-content: flex-start; }
 }
+
 </style>
 </head>
 <body>
@@ -141,6 +152,9 @@ a { text-decoration: none; }
     <div class="nav-brand" style="display: flex; align-items: center; gap: 15px;">
       <img src="Logo Power of Masjid.png" alt="Power of Masjid" style="height: 45px; width: auto;">
       <span style="font-size: 20px; font-weight: 700; color: var(--primary-dark); letter-spacing: 0.5px;">Power of Masjid</span>
+    </div>
+    <div class="nav-menu">
+      <a href="ekspedisi-power-of-masjid.html" class="nav-link nav-link-ekspedisi">🌙 Ekspedisi Power of Masjid</a>
     </div>
   </div>
 </nav>
@@ -157,6 +171,9 @@ a { text-decoration: none; }
       </a>
       <a href="masjid.html?masjid=contoh-tanjungbarat" target="_blank" class="btn btn-outline">
         👀 Lihat Contoh Website
+      </a>
+      <a href="ekspedisi-power-of-masjid.html" class="btn btn-outline">
+        🌙 Ekspedisi Power of Masjid
       </a>
     </div>
   </div>
