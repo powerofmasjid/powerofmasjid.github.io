@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pendaftaran Ekspedisi Power of Masjid</title>
+  <meta name="description" content="Pendaftaran relawan persiapan dan rekomendasi masjid untuk Ekspedisi Power of Masjid oleh Yayasan Nasi Jum'at." />
+  <style>
+    :root {
+      --green: #0f5f46;
+      --green-dark: #0a3f30;
+      --green-soft: #e9f6f1;
+      --gold: #d4a017;
+      --text: #17342b;
+      --muted: #5f746d;
+      --bg: #f7fbf8;
+      --white: #ffffff;
+      --border: #dcebe4;
+      --shadow: 0 18px 50px rgba(15, 95, 70, 0.12);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      color: var(--text);
+      background: var(--bg);
+      line-height: 1.6;
+    }
+
+    a { color: inherit; }
+
+    .topbar {
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+
+    .wrap {
+      width: min(1120px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .nav {
+      min-height: 68px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 800;
+      color: var(--green-dark);
+      text-decoration: none;
+      letter-spacing: -0.2px;
+    }
+
+    .brand-mark {
+      width: 36px;
+      height: 36px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--green), var(--gold));
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 900;
+    }
+
+    .nav-actions {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .nav-actions a {
+      font-size: 14px;
+      font-weight: 700;
+      text-decoration: none;
+      color: var(--green);
+      padding: 9px 12px;
+      border-radius: 999px;
+    }
+
+    .nav-actions a:hover { background: var(--green-soft); }
+
+    .hero {
+      padding: 64px 0 38px;
+      background:
+        radial-gradient(circle at top left, rgba(212,160,23,0.17), transparent 32%),
+        linear-gradient(180deg, #ffffff, var(--bg));
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--green-soft);
+      color: var(--green-dark);
+      padding: 8px 14px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      font-size: 14px;
+      font-weight: 800;
+      margin-bottom: 18px;
+    }
+
+    h1 {
+      font-size: clamp(34px, 6vw, 58px);
+      line-height: 1.05;
+      margin: 0 0 18px;
+      letter-spacing: -1.4px;
+      color: var(--green-dark);
+      max-width: 880px;
+    }
+
+    .lead {
+      max-width: 880px;
+      font-size: 18px;
+      color: var(--muted);
+      margin: 0;
+    }
+
+    .hero-note {
+      margin-top: 22px;
+      padding: 16px 18px;
+      background: #fff9e9;
+      border: 1px solid #f2dda5;
+      border-radius: 18px;
+      color: #725713;
+      max-width: 880px;
+      font-size: 15px;
+    }
+
+    .section { padding: 44px 0; }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 22px;
+    }
+
+    .card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+      padding: 28px;
+    }
+
+    .card h2 {
+      margin: 0 0 10px;
+      color: var(--green-dark);
+      font-size: 28px;
+      line-height: 1.15;
+    }
+
+    .card p { color: var(--muted); margin: 0 0 18px; }
+
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 9px;
+      margin: 18px 0 22px;
+    }
+
+    .pill {
+      display: inline-flex;
+      padding: 7px 11px;
+      border-radius: 999px;
+      background: var(--green-soft);
+      color: var(--green-dark);
+      border: 1px solid var(--border);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .btn-row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      align-items: center;
+      margin-top: 20px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 18px;
+      border-radius: 999px;
+      text-decoration: none;
+      font-weight: 800;
+      border: 1px solid transparent;
+      transition: 0.2s ease;
+    }
+
+    .btn-primary {
+      background: var(--green);
+      color: white;
+    }
+
+    .btn-primary:hover { background: var(--green-dark); transform: translateY(-1px); }
+
+    .btn-secondary {
+      background: white;
+      color: var(--green);
+      border-color: var(--border);
+    }
+
+    .btn-secondary:hover { background: var(--green-soft); transform: translateY(-1px); }
+
+    .detail {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+      margin-top: 20px;
+    }
+
+    .mini {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 18px;
+    }
+
+    .mini h3 {
+      margin: 0 0 7px;
+      color: var(--green-dark);
+      font-size: 17px;
+    }
+
+    .mini p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .safe-copy {
+      background: var(--green-dark);
+      color: white;
+      border-radius: 24px;
+      padding: 28px;
+      margin-top: 24px;
+    }
+
+    .safe-copy h2 { margin: 0 0 10px; font-size: 26px; }
+    .safe-copy p { margin: 0; color: rgba(255,255,255,0.84); }
+
+    footer {
+      padding: 30px 0;
+      color: var(--muted);
+      border-top: 1px solid var(--border);
+      background: white;
+      font-size: 14px;
+    }
+
+    @media (max-width: 820px) {
+      .nav { align-items: flex-start; flex-direction: column; padding: 14px 0; }
+      .nav-actions { justify-content: flex-start; }
+      .hero { padding-top: 42px; }
+      .grid, .detail { grid-template-columns: 1fr; }
+      .card { padding: 22px; }
+      .btn { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="wrap nav">
+      <a class="brand" href="./">
+        <span class="brand-mark">P</span>
+        <span>Power of Masjid</span>
+      </a>
+      <nav class="nav-actions" aria-label="Navigasi utama">
+        <a href="./">Beranda</a>
+        <a href="#relawan">Relawan</a>
+        <a href="#rekomendasi">Rekomendasikan Masjid</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="wrap">
+        <div class="badge">Milad 10 Tahun Yayasan Nasi Jum'at</div>
+        <h1>Pendaftaran Ekspedisi Power of Masjid</h1>
+        <p class="lead">
+          Ekspedisi Power of Masjid adalah ikhtiar Yayasan Nasi Jum'at untuk menjaring dan mendampingi masjid agar semakin aktif, tertata, dan terhubung dengan ekosistem kebaikan.
+        </p>
+        <div class="hero-note">
+          Masjid yang direkomendasikan akan masuk proses pendataan dan kurasi panitia. Rekomendasi maupun aktivasi website tidak otomatis membuat masjid terpilih.
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap grid">
+        <article class="card" id="relawan">
+          <h2>Daftar Relawan Persiapan</h2>
+          <p>
+            Untuk sahabat kebaikan yang ingin membantu pekerjaan persiapan, bukan relawan hari-H atau acara besar. Relawan akan diarahkan sesuai kebutuhan unit kerja.
+          </p>
+          <div class="pill-row">
+            <span class="pill">Pendataan Masjid</span>
+            <span class="pill">Sponsor</span>
+            <span class="pill">Administrasi</span>
+            <span class="pill">Media</span>
+            <span class="pill">Logistik</span>
+          </div>
+          <div class="btn-row">
+            <a class="btn btn-primary" href="https://docs.google.com/forms/d/e/1FAIpQLSdW8THTFdNDI0LDWJRnTYQBxJFYNVNfALht9ANAqgoNsTbgMA/viewform?usp=publish-editor" target="_blank" rel="noopener">Daftar sebagai Relawan</a>
+          </div>
+        </article>
+
+        <article class="card" id="rekomendasi">
+          <h2>Rekomendasikan Masjidmu</h2>
+          <p>
+            Masyarakat dapat merekomendasikan masjid yang dinilai layak masuk proses pendataan. Panitia akan melakukan kurasi dan verifikasi sebelum keputusan apa pun.
+          </p>
+          <div class="pill-row">
+            <span class="pill">Karpet</span>
+            <span class="pill">Kipas/AC</span>
+            <span class="pill">Renovasi ringan</span>
+            <span class="pill">Program Jamaah</span>
+            <span class="pill">Digitalisasi</span>
+          </div>
+          <div class="btn-row">
+            <a class="btn btn-primary" href="https://docs.google.com/forms/d/e/1FAIpQLSfT43JPnS1Y5wt5ZS8496RLVecsSqUovrHGrZZARtkjkZyG3w/viewform?usp=publish-editor" target="_blank" rel="noopener">Rekomendasikan Masjid</a>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="unit-relawan">
+      <div class="wrap">
+        <h2 id="unit-relawan" style="font-size:32px; color:var(--green-dark); margin:0 0 8px;">Unit yang Bisa Dibantu Relawan</h2>
+        <p style="color:var(--muted); max-width:850px; margin:0 0 20px;">
+          Relawan persiapan membantu pekerjaan nyata sesuai kemampuan dan waktu luang. Tidak semua pendaftar harus menguasai semuanya.
+        </p>
+        <div class="detail">
+          <div class="mini"><h3>Masjid & Nominasi</h3><p>Pendataan masjid, komunikasi awal, dan rekap kebutuhan.</p></div>
+          <div class="mini"><h3>Sponsor & Kemitraan</h3><p>Membantu data calon mitra, catatan follow up, dan bahan komunikasi.</p></div>
+          <div class="mini"><h3>Program & Pembinaan</h3><p>Menyusun ide program, kebutuhan jamaah, dan tindak lanjut pembinaan.</p></div>
+          <div class="mini"><h3>Lapangan & Logistik</h3><p>Koordinasi kebutuhan barang, kunjungan, dan persiapan teknis lapangan.</p></div>
+          <div class="mini"><h3>Keuangan & Administrasi</h3><p>Rekap data, arsip dokumen, dan laporan sederhana.</p></div>
+          <div class="mini"><h3>Dokumentasi, Media & Kampanye</h3><p>Caption, desain ringan, dokumentasi, video pendek, dan publikasi.</p></div>
+        </div>
+
+        <div class="safe-copy">
+          <h2>Catatan Penting</h2>
+          <p>
+            Konsumsi dan operasional saat bertugas adalah bagian dari tanggung jawab program bila kegiatan sudah berjalan, bukan reward utama. Apresiasi relawan dapat berupa sertifikat, pengalaman, jejaring, dokumentasi resmi, pelatihan, atau surat rekomendasi bila memungkinkan.
+          </p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      © 2026 Power of Masjid — Yayasan Nasi Jum'at. Memakmurkan Masjid, Menguatkan Umat.
+    </div>
+  </footer>
+</body>
+</html>
