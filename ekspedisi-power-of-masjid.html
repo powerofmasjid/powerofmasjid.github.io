@@ -10,16 +10,45 @@
 <meta property="og:image" content="https://powerofmasjid.github.io/logo%20EPOM.png">
 <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-:root{--primary:#1B6B3A;--primary-dark:#0F4228;--primary-deep:#0B3320;--primary-light:#E8F5EE;--accent:#C9A84C;--accent-soft:#FBF3E0;--bg:#F7F7F5;--white:#fff;--text:#1A1A1A;--muted:#6B7280;--border:#E5E7EB;--shadow:0 18px 50px rgba(15,66,40,.12)}
-*{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}body{font-family:'Plus Jakarta Sans',sans-serif;background:linear-gradient(180deg,#f7fbf8 0%,#f6f2e8 45%,#f7f7f5 100%);color:var(--text);line-height:1.6;overflow-x:hidden}a{text-decoration:none;color:inherit}.container{max-width:1120px;margin:0 auto;padding:0 1.5rem}
-.navbar{background:rgba(255,255,255,.95);backdrop-filter:blur(12px);position:sticky;top:0;z-index:100;border-bottom:1px solid var(--border);box-shadow:0 8px 24px rgba(0,0,0,.04);padding:.85rem 0}.nav-inner{display:flex;align-items:center;justify-content:space-between;gap:1rem}.brand-wrap{display:flex;align-items:center;gap:14px;min-width:0}.brand-logo{height:46px;width:auto;object-fit:contain}.brand-divider{width:1px;height:40px;background:#e6e6e6}.nav-menu{display:flex;align-items:center;gap:8px}.nav-menu a{font-size:14px;font-weight:800;color:var(--primary-dark);padding:10px 13px;border-radius:999px;transition:.2s}.nav-menu a:hover{background:var(--primary-light)}.nav-menu .nav-accent{background:var(--accent-soft);color:#765b12;border:1px solid rgba(201,168,76,.32)}.nav-toggle{display:none;width:48px;height:48px;border:1px solid var(--border);border-radius:14px;background:var(--white);color:var(--primary-dark);font-size:28px;font-weight:800;align-items:center;justify-content:center;box-shadow:0 6px 18px rgba(0,0,0,.06)}
-.hero{position:relative;overflow:hidden;text-align:center;padding:3.8rem 0 2.7rem;background:radial-gradient(circle at top left,rgba(27,107,58,.13),transparent 35%),radial-gradient(circle at top right,rgba(201,168,76,.18),transparent 32%)}.hero-card{max-width:850px;margin:0 auto}.hero-logo-wrap{display:inline-flex;align-items:center;justify-content:center;background:#fff;border:1px solid rgba(201,168,76,.22);border-radius:34px;padding:18px;box-shadow:var(--shadow);margin-bottom:18px}.hero-logo{width:min(72vw,360px);height:auto;display:block;object-fit:contain;border-radius:18px}.milad-pill{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:#fff9ea;border:1px solid rgba(201,168,76,.38);border-radius:999px;padding:10px 18px;color:var(--primary-dark);font-weight:800;margin:4px 0 14px;box-shadow:0 8px 22px rgba(201,168,76,.10)}
-.epom-hero-title{margin:12px 0 14px;text-align:center;line-height:1.04;letter-spacing:-.6px;font-family:'Amiri',serif}.epom-hero-title .line-1,.epom-hero-title .line-2{display:block}.epom-hero-title .line-1{font-size:3rem;font-weight:700;color:var(--primary-dark)}.epom-hero-title .line-2{font-size:3.25rem;font-weight:700;color:var(--accent)}.hero-short{max-width:690px;margin:0 auto;color:var(--muted);font-size:1.04rem;line-height:1.85}.readmore{margin:22px auto 0;max-width:640px;background:#fff;border:1px solid var(--border);border-radius:22px;box-shadow:0 10px 28px rgba(0,0,0,.04);overflow:hidden}.readmore summary{list-style:none;cursor:pointer;padding:18px 22px;color:var(--primary-dark);font-weight:800;display:flex;justify-content:space-between;align-items:center;gap:14px}.readmore summary::-webkit-details-marker{display:none}.readmore summary:after{content:'+';font-size:25px;color:var(--accent);line-height:1}.readmore[open] summary:after{content:'–'}.readmore-body{padding:0 22px 20px;color:var(--muted);line-height:1.82;text-align:left}.readmore-body b{color:var(--primary-dark);font-weight:800}
-.section{padding:3.5rem 0}.section-title{text-align:center;font-size:2.1rem;font-weight:800;color:var(--primary-dark);margin-bottom:2rem}.choice-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:24px}.choice-card{background:#fff;border:1px solid var(--border);border-top:6px solid var(--primary);border-radius:28px;padding:28px;box-shadow:var(--shadow);overflow:hidden}.choice-card.gold{border-top-color:var(--accent)}.choice-title{font-size:2rem;line-height:1.15;color:var(--primary-dark);font-weight:800;margin-bottom:14px}.choice-desc{color:var(--muted);font-size:1.02rem;line-height:1.85;margin-bottom:20px}.pill-list{display:flex;flex-wrap:wrap;gap:12px;margin:18px 0 24px}.unit-pill{display:inline-flex;align-items:center;justify-content:center;padding:11px 16px;border-radius:999px;background:#e4f1ea;border:1px solid #cfe2d8;color:#0f5c3a;font-weight:800;font-size:.96rem;text-align:center}.benefit-pill{background:#fff8df;border-color:#eadcae;color:#725c17}.btn-main{display:inline-flex;align-items:center;justify-content:center;width:100%;padding:17px 22px;border-radius:18px;background:var(--primary);color:#fff;font-weight:800;font-size:1.04rem;box-shadow:0 14px 30px rgba(27,107,58,.22);transition:.2s}.btn-main:hover{transform:translateY(-2px);background:var(--primary-dark)}.btn-main.gold{background:var(--accent);color:var(--primary-deep);box-shadow:0 14px 30px rgba(201,168,76,.22)}
-.detail-card{margin:24px 0 22px;border:1px solid #e1e3e6;border-radius:22px;background:#fff;padding:22px 20px;box-shadow:0 10px 30px rgba(0,0,0,.04)}.detail-card-head h3{margin:0 0 10px;font-size:1.32rem;line-height:1.35;color:#0f5c3a;font-weight:800}.detail-card-head p{margin:0 0 16px;font-size:.97rem;line-height:1.7;color:var(--muted)}.detail-toggle{display:inline-flex;align-items:center;justify-content:center;width:100%;padding:13px 18px;border:none;border-radius:14px;background:#0f5c3a;color:#fff;font-weight:800;font-size:.98rem;cursor:pointer}.detail-card-body{display:none;margin-top:18px;padding-top:16px;border-top:1px solid #ececec}.detail-card-body.show{display:block}.detail-card-body ul{margin:0;padding-left:20px;color:var(--muted)}.detail-card-body li{margin-bottom:12px;line-height:1.8}.note-box{background:#fff;border:1px solid var(--border);border-radius:24px;padding:26px;box-shadow:0 10px 30px rgba(0,0,0,.04)}.note-box h2{font-size:1.7rem;color:var(--primary-dark);margin-bottom:12px}.note-box ul{padding-left:20px;color:var(--muted);line-height:1.85}.note-box li{margin-bottom:9px}.footer{background:#fff;border-top:1px solid var(--border);padding:34px 0;text-align:center;color:var(--muted);font-size:14px}
-@media (max-width:992px){.nav-menu{position:absolute;top:100%;left:1rem;right:1rem;background:#fff;border:1px solid var(--border);border-radius:18px;box-shadow:var(--shadow);padding:12px;display:none;flex-direction:column;align-items:stretch}.nav-menu.show{display:flex}.nav-menu a{padding:14px 16px;border-radius:12px}.nav-toggle{display:flex}}
-@media (max-width:768px){.container{padding:0 1.15rem}.navbar{padding:.75rem 0}.brand-logo{height:40px}.brand-divider{height:34px}.hero{padding:2.3rem 0 2rem}.hero-logo-wrap{border-radius:28px;padding:12px;margin-bottom:15px}.hero-logo{width:min(78vw,300px)}.milad-pill{font-size:.88rem;padding:9px 14px}.epom-hero-title{line-height:1.02;margin-top:10px}.epom-hero-title .line-1{font-size:2.35rem}.epom-hero-title .line-2{font-size:2.15rem;max-width:330px;margin:0 auto}.hero-short{font-size:1rem;line-height:1.75}.readmore{border-radius:20px}.readmore summary{padding:16px 18px;font-size:1rem}.readmore-body{padding:0 18px 18px}.section{padding:2.7rem 0}.section-title{font-size:1.7rem}.choice-grid{grid-template-columns:1fr;gap:22px}.choice-card{border-radius:26px;padding:24px 18px}.choice-title{font-size:2rem}.choice-desc{font-size:1rem}.pill-list{display:flex;flex-direction:column;align-items:stretch;gap:12px;margin:18px 0 24px}.unit-pill{width:100%;min-height:50px;padding:12px 18px;font-size:1rem}.detail-card{padding:20px 17px;border-radius:22px}.detail-card-head h3{font-size:1.22rem}.detail-toggle{width:100%;padding:14px 16px}.btn-main{font-size:1rem;padding:16px 18px}.note-box{padding:22px 18px}}
-@media (max-width:380px){.brand-logo{height:35px}.nav-toggle{width:44px;height:44px}.epom-hero-title .line-1{font-size:2.05rem}.epom-hero-title .line-2{font-size:1.95rem}.choice-title{font-size:1.75rem}.hero-logo{width:min(78vw,270px)}}
+:root{
+  --primary:#1B6B3A;
+  --primary-dark:#0F4228;
+  --primary-deep:#0B3320;
+  --primary-soft:#E8F5EE;
+  --accent:#C9A84C;
+  --accent-soft:#FBF3E0;
+  --cream:#FBFAF5;
+  --bg:#F7F7F5;
+  --white:#FFFFFF;
+  --text:#19221D;
+  --muted:#6B7280;
+  --border:#E5E7EB;
+  --shadow:0 18px 45px rgba(15,66,40,.10);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:linear-gradient(180deg,#F4FBF6 0%,#FBFAF5 42%,#F7F7F5 100%);color:var(--text);line-height:1.65;overflow-x:hidden}
+a{text-decoration:none;color:inherit}.container{max-width:1120px;margin:0 auto;padding:0 1.5rem}
+
+/* Header */
+.navbar{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.96);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);box-shadow:0 8px 28px rgba(0,0,0,.05)}
+.nav-inner{height:78px;display:flex;align-items:center;justify-content:space-between;gap:16px}.brand-wrap{display:flex;align-items:center;gap:13px;min-width:0}.brand-logo{height:46px;width:auto;object-fit:contain;display:block}.brand-divider{width:1px;height:42px;background:#E5E7EB}.nav-menu{display:flex;align-items:center;gap:8px}.nav-menu a{font-size:14px;font-weight:800;color:var(--primary-dark);padding:10px 13px;border-radius:999px;transition:.2s}.nav-menu a:hover{background:var(--primary-soft)}.nav-menu .nav-accent{background:var(--accent-soft);border:1px solid rgba(201,168,76,.35);color:#745815}.nav-toggle{display:none;width:50px;height:50px;border:1px solid var(--border);border-radius:16px;background:#fff;color:var(--primary-dark);font-size:28px;font-weight:800;align-items:center;justify-content:center;box-shadow:0 8px 22px rgba(0,0,0,.07)}
+
+/* Hero */
+.hero{position:relative;overflow:hidden;padding:3.6rem 0 2.4rem;text-align:center;background:radial-gradient(circle at 5% 12%,rgba(27,107,58,.12),transparent 28%),radial-gradient(circle at 92% 16%,rgba(201,168,76,.18),transparent 32%)}
+.hero::after{content:"";position:absolute;left:-22%;right:-22%;bottom:-72px;height:120px;background:var(--white);border-radius:50% 50% 0 0/100% 100% 0 0;opacity:.65}.hero-inner{position:relative;z-index:1;max-width:880px;margin:0 auto}.hero-logo-panel{display:inline-flex;align-items:center;justify-content:center;background:#fff;border:1px solid rgba(201,168,76,.23);border-radius:36px;padding:18px;box-shadow:var(--shadow);margin-bottom:18px}.hero-logo{width:min(72vw,330px);height:auto;display:block;object-fit:contain;border-radius:20px}.milad-pill{display:inline-flex;align-items:center;justify-content:center;background:#fff8e8;border:1px solid rgba(201,168,76,.36);color:var(--primary-dark);border-radius:999px;padding:9px 17px;font-weight:800;font-size:.95rem;margin-bottom:15px;box-shadow:0 8px 24px rgba(201,168,76,.09)}.hero-title{font-family:'Amiri',serif;font-weight:700;line-height:1.04;margin:0 auto 14px;letter-spacing:-.5px}.hero-title span{display:block}.hero-title .green{font-size:3.35rem;color:var(--primary-dark)}.hero-title .gold{font-size:3.5rem;color:var(--accent)}.hero-lead{max-width:680px;margin:0 auto;color:var(--muted);font-size:1.06rem;line-height:1.8}.hero-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:22px}.btn{display:inline-flex;align-items:center;justify-content:center;border-radius:16px;font-weight:800;padding:14px 21px;transition:.22s}.btn-primary{background:var(--primary);color:#fff;box-shadow:0 12px 26px rgba(27,107,58,.22)}.btn-primary:hover{background:var(--primary-dark);transform:translateY(-2px)}.btn-light{background:#fff;color:var(--primary-dark);border:1px solid var(--border)}.btn-light:hover{border-color:var(--accent);transform:translateY(-2px)}
+
+/* Intro */
+.intro-section{padding:2.5rem 0 1.2rem}.intro-card{max-width:980px;margin:0 auto;background:rgba(255,255,255,.96);border:1px solid var(--border);border-radius:30px;box-shadow:var(--shadow);overflow:hidden}.intro-summary{padding:28px 28px 20px;text-align:left}.section-kicker{display:inline-flex;align-items:center;gap:8px;background:var(--primary-soft);color:var(--primary-dark);border-radius:999px;padding:7px 13px;font-size:.82rem;font-weight:800;margin-bottom:14px}.intro-summary h2{font-size:2rem;line-height:1.25;color:var(--primary-dark);font-weight:800;margin-bottom:12px}.intro-summary p{color:var(--muted);font-size:1rem;line-height:1.8;max-width:840px}.intro-highlight{display:grid;grid-template-columns:repeat(3,1fr);gap:13px;padding:0 28px 24px}.mini-info{background:linear-gradient(180deg,#fff,#FAFAF7);border:1px solid var(--border);border-radius:20px;padding:16px}.mini-info strong{display:block;color:var(--primary-dark);font-size:1rem;margin-bottom:6px}.mini-info span{display:block;color:var(--muted);font-size:.92rem;line-height:1.55}.more-box{border-top:1px dashed var(--border);padding:0 28px 24px}.more-content{display:none;padding:18px 0 0;color:var(--muted);line-height:1.82}.more-content.show{display:block}.more-content p{margin-bottom:12px}.more-content ul{padding-left:20px}.more-content li{margin-bottom:8px}.more-action{margin-top:18px}.toggle-btn{width:100%;border:none;border-radius:16px;background:var(--primary);color:#fff;padding:14px 18px;font-weight:800;font-size:.98rem;cursor:pointer;box-shadow:0 10px 22px rgba(27,107,58,.16)}.toggle-btn.gold{background:var(--accent);color:var(--primary-deep);box-shadow:0 10px 22px rgba(201,168,76,.18)}
+
+/* Cards */
+.section{padding:3.2rem 0}.section-title{text-align:center;font-size:2.2rem;line-height:1.25;color:var(--primary-dark);font-weight:800;margin-bottom:2.1rem}.choice-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:24px}.choice-card{background:#fff;border:1px solid var(--border);border-top:6px solid var(--primary);border-radius:30px;padding:28px;box-shadow:var(--shadow);overflow:hidden}.choice-card.gold{border-top-color:var(--accent)}.choice-title{font-size:2rem;line-height:1.2;color:var(--primary-dark);font-weight:800;margin-bottom:12px}.choice-desc{color:var(--muted);font-size:1rem;line-height:1.78;margin-bottom:18px}.pill-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:16px 0 22px}.unit-pill{display:flex;align-items:center;justify-content:center;min-height:46px;border-radius:999px;background:#E6F3EC;border:1px solid #CFE2D8;color:var(--primary-dark);font-size:.92rem;font-weight:800;text-align:center;padding:10px 13px}.benefit-pill{background:#FFF8DF;border-color:#EADCAE;color:#6F5615}.detail-card{margin:21px 0 22px;border:1px solid #E5E7EB;border-radius:24px;background:linear-gradient(180deg,#fff,#FCFCFA);padding:20px;box-shadow:0 10px 30px rgba(0,0,0,.035)}.detail-head h3{font-size:1.25rem;line-height:1.35;color:var(--primary-dark);font-weight:800;margin-bottom:8px}.detail-head p{font-size:.96rem;color:var(--muted);line-height:1.65}.detail-body{display:none;margin-top:16px;padding-top:15px;border-top:1px solid #ECECEC}.detail-body.show{display:block}.detail-body ul{padding-left:20px;color:var(--muted);line-height:1.75}.detail-body li{margin-bottom:10px}.button-row{margin-top:16px}.form-btn{display:flex;align-items:center;justify-content:center;width:100%;min-height:56px;border-radius:18px;background:var(--primary);color:#fff;font-weight:800;font-size:1.02rem;box-shadow:0 13px 26px rgba(27,107,58,.22);transition:.22s}.form-btn:hover{transform:translateY(-2px);background:var(--primary-dark)}.form-btn.gold{background:var(--accent);color:var(--primary-deep);box-shadow:0 13px 26px rgba(201,168,76,.22)}
+
+.note-section{padding:1.2rem 0 3.8rem}.note-card{background:#fff;border:1px solid var(--border);border-radius:28px;box-shadow:0 14px 34px rgba(0,0,0,.045);padding:28px}.note-card h2{font-size:1.7rem;color:var(--primary-dark);margin-bottom:12px}.note-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.note-item{background:#FAFAF7;border:1px solid #EEEFEA;border-radius:18px;padding:15px;color:var(--muted);font-size:.95rem;line-height:1.6}.note-item b{color:var(--primary-dark)}.footer{background:#fff;border-top:1px solid var(--border);padding:34px 0;text-align:center;color:var(--muted);font-size:14px}
+
+@media(max-width:992px){.nav-menu{position:absolute;top:100%;left:1rem;right:1rem;background:#fff;border:1px solid var(--border);border-radius:20px;box-shadow:var(--shadow);padding:12px;display:none;flex-direction:column;align-items:stretch}.nav-menu.show{display:flex}.nav-menu a{padding:14px 16px;border-radius:14px}.nav-toggle{display:flex}.choice-grid{grid-template-columns:1fr}.intro-highlight{grid-template-columns:1fr}.note-grid{grid-template-columns:1fr}}
+@media(max-width:768px){.container{padding:0 1.15rem}.nav-inner{height:72px}.brand-logo{height:38px}.brand-divider{height:34px}.nav-toggle{width:48px;height:48px;border-radius:16px}.hero{padding:2.25rem 0 1.6rem}.hero-logo-panel{border-radius:28px;padding:12px;margin-bottom:15px}.hero-logo{width:min(76vw,276px)}.milad-pill{font-size:.84rem;padding:8px 13px;margin-bottom:13px}.hero-title .green{font-size:2.45rem}.hero-title .gold{font-size:2.28rem;max-width:330px;margin:0 auto}.hero-lead{font-size:.98rem;line-height:1.72}.hero-actions{margin-top:18px}.hero-actions .btn{width:100%;padding:14px 16px}.intro-section{padding:2rem 0 .7rem}.intro-card{border-radius:26px}.intro-summary{padding:22px 20px 16px}.section-kicker{font-size:.78rem}.intro-summary h2{font-size:1.48rem;line-height:1.35}.intro-summary p{font-size:.96rem;line-height:1.72}.intro-highlight{padding:0 20px 20px}.mini-info{padding:14px;border-radius:18px}.more-box{padding:0 20px 20px}.more-content{font-size:.95rem;line-height:1.72}.section{padding:2.5rem 0}.section-title{font-size:1.65rem;margin-bottom:1.5rem}.choice-card{padding:23px 18px;border-radius:26px}.choice-title{font-size:1.78rem}.choice-desc{font-size:.97rem;line-height:1.7}.pill-list{grid-template-columns:1fr;gap:10px}.unit-pill{width:100%;min-height:49px;font-size:.98rem}.detail-card{border-radius:22px;padding:18px}.detail-head h3{font-size:1.16rem}.detail-head p{font-size:.94rem}.toggle-btn{padding:14px 16px}.form-btn{min-height:55px}.note-section{padding:.8rem 0 3rem}.note-card{border-radius:24px;padding:22px 18px}.note-card h2{font-size:1.42rem}.note-item{font-size:.93rem}.footer{font-size:13px;padding:28px 0}}
+@media(max-width:380px){.brand-logo{height:34px}.hero-title .green{font-size:2.12rem}.hero-title .gold{font-size:2rem}.choice-title{font-size:1.58rem}.hero-logo{width:min(76vw,250px)}}
 </style>
 </head>
 <body>
@@ -33,32 +62,57 @@
     <button class="nav-toggle" type="button" aria-label="Buka menu" onclick="toggleMenu()">☰</button>
     <div class="nav-menu" id="navMenu">
       <a href="index.html">Beranda</a>
-      <a href="#relawan">Relawan Persiapan</a>
-      <a href="#rekomendasi">Rekomendasikan Masjid</a>
-      <a href="#catatan">Catatan Penting</a>
+      <a href="#tentang">Tentang Ekspedisi</a>
+      <a href="#relawan">Relawan</a>
+      <a href="#rekomendasi">Rekomendasi Masjid</a>
       <a class="nav-accent" href="https://wa.me/628211043809" target="_blank" rel="noopener">Kontak</a>
     </div>
   </div>
 </nav>
 <header class="hero">
-  <div class="container hero-card">
-    <div class="hero-logo-wrap"><img class="hero-logo" src="logo%20EPOM.png" alt="Ekspedisi Power of Masjid"></div>
+  <div class="container hero-inner">
+    <div class="hero-logo-panel"><img class="hero-logo" src="logo%20EPOM.png" alt="Ekspedisi Power of Masjid"></div>
     <div class="milad-pill">Milad 10 Tahun Yayasan Nasi Jum'at</div>
-    <h1 class="epom-hero-title"><span class="line-1">Ekspedisi</span><span class="line-2">Power of Masjid</span></h1>
-    <p class="hero-short">Pilih jalur keterlibatan: membantu sebagai relawan persiapan atau merekomendasikan masjid untuk masuk proses pendataan panitia.</p>
-    <details class="readmore">
-      <summary>Tentang Ekspedisi Power of Masjid</summary>
-      <div class="readmore-body">
-        <p><b>Ekspedisi Power of Masjid</b> adalah rangkaian gerakan Milad 10 Tahun Yayasan Nasi Jum’at untuk mendata, mengkurasi, dan menyiapkan masjid-masjid yang membutuhkan penguatan melalui jalur Power of Masjid.</p>
-        <p>Program ini membuka dua jalur keterlibatan: masyarakat dapat menjadi <b>relawan persiapan</b> yang membantu unit kerja, atau <b>merekomendasikan masjid</b> yang dinilai layak masuk proses pendataan panitia.</p>
-        <p>Masjid yang direkomendasikan akan masuk proses pendataan dan kurasi. Rekomendasi maupun aktivasi website Power of Masjid tidak otomatis membuat masjid terpilih atau menerima bantuan.</p>
-      </div>
-    </details>
+    <h1 class="hero-title"><span class="green">Ekspedisi</span><span class="gold">Power of Masjid</span></h1>
+    <p class="hero-lead">Gerakan pendataan, kurasi, dan penguatan masjid dalam rangka Milad 10 Tahun Yayasan Nasi Jum'at.</p>
+    <div class="hero-actions">
+      <a class="btn btn-primary" href="#relawan">Daftar Relawan</a>
+      <a class="btn btn-light" href="#rekomendasi">Rekomendasikan Masjid</a>
+    </div>
   </div>
 </header>
 <main>
+<section class="intro-section" id="tentang">
+  <div class="container">
+    <article class="intro-card">
+      <div class="intro-summary">
+        <div class="section-kicker">Tentang Ekspedisi</div>
+        <h2>Menjangkau masjid, menyiapkan manfaat, dan menguatkan ekosistem kebaikan.</h2>
+        <p>Ekspedisi Power of Masjid adalah rangkaian gerakan Milad 10 Tahun Yayasan Nasi Jum'at untuk menjaring rekomendasi masjid, menguatkan pendataan, dan menyiapkan jalur kolaborasi yang lebih rapi.</p>
+      </div>
+      <div class="intro-highlight">
+        <div class="mini-info"><strong>Relawan Persiapan</strong><span>Membantu unit kerja sebelum program berjalan di lapangan.</span></div>
+        <div class="mini-info"><strong>Rekomendasi Masjid</strong><span>Masyarakat dapat mengusulkan masjid yang layak masuk proses pendataan.</span></div>
+        <div class="mini-info"><strong>Kurasi Panitia</strong><span>Rekomendasi tidak otomatis membuat masjid terpilih atau menerima bantuan.</span></div>
+      </div>
+      <div class="more-box">
+        <div class="more-content" id="tentangDetail">
+          <p>Program ini membuka dua jalur keterlibatan. Pertama, masyarakat dapat menjadi relawan persiapan yang membantu pekerjaan nyata di unit-unit program. Kedua, masyarakat dapat merekomendasikan masjid yang dinilai membutuhkan penguatan.</p>
+          <p>Masjid yang direkomendasikan akan masuk proses pendataan dan kurasi panitia. Aktivasi website Power of Masjid dapat menjadi bagian dari proses pendataan, namun tidak menjadi jaminan bahwa masjid otomatis terpilih.</p>
+          <ul>
+            <li>Fokus program adalah penguatan masjid secara bertahap dan terukur.</li>
+            <li>Kriteria detail seleksi tetap menjadi pertimbangan internal panitia.</li>
+            <li>Setiap rekomendasi membantu panitia memahami kebutuhan masjid di berbagai wilayah.</li>
+          </ul>
+        </div>
+        <div class="more-action"><button class="toggle-btn" type="button" onclick="togglePanel('tentangDetail', this)">Lihat selengkapnya</button></div>
+      </div>
+    </article>
+  </div>
+</section>
 <section class="section" id="relawan">
   <div class="container">
+    <h2 class="section-title">Pilih Jalur Keterlibatan</h2>
     <div class="choice-grid">
       <article class="choice-card">
         <h2 class="choice-title">Relawan Persiapan</h2>
@@ -72,12 +126,11 @@
           <span class="unit-pill">Dokumentasi & Media</span>
         </div>
         <div class="detail-card">
-          <div class="detail-card-head">
-            <h3>Lihat kualifikasi dan jobdesk</h3>
-            <p>Pelajari peran, kebutuhan, dan bentuk kontribusi relawan persiapan.</p>
-            <button class="detail-toggle" type="button" onclick="togglePanel('relawanDetail', this)">Lihat selengkapnya</button>
+          <div class="detail-head">
+            <h3>Kualifikasi dan jobdesk</h3>
+            <p>Ringkasan peran, kebutuhan, dan bentuk kontribusi relawan persiapan.</p>
           </div>
-          <div class="detail-card-body" id="relawanDetail">
+          <div class="detail-body" id="relawanDetail">
             <ul>
               <li>Membantu pendataan masjid, rekap kebutuhan, dan komunikasi awal.</li>
               <li>Mendukung kampanye publik, dokumentasi, desain ringan, caption, atau video pendek.</li>
@@ -86,8 +139,9 @@
               <li>Bersedia membantu online, offline, atau hybrid sesuai kondisi dan kebutuhan panitia.</li>
             </ul>
           </div>
+          <div class="button-row"><button class="toggle-btn" type="button" onclick="togglePanel('relawanDetail', this)">Lihat selengkapnya</button></div>
         </div>
-        <a class="btn-main" href="https://docs.google.com/forms/d/e/1FAIpQLSdW8THTFdNDI0LDWJRnTYQBxJFYNVNfALht9ANAqgoNsTbgMA/viewform?usp=publish-editor" target="_blank" rel="noopener">Isi Form Relawan</a>
+        <a class="form-btn" href="https://docs.google.com/forms/d/e/1FAIpQLSdW8THTFdNDI0LDWJRnTYQBxJFYNVNfALht9ANAqgoNsTbgMA/viewform?usp=publish-editor" target="_blank" rel="noopener">Isi Form Relawan</a>
       </article>
       <article class="choice-card gold" id="rekomendasi">
         <h2 class="choice-title">Rekomendasikan Masjidmu</h2>
@@ -101,12 +155,11 @@
           <span class="unit-pill benefit-pill">Digitalisasi masjid</span>
         </div>
         <div class="detail-card">
-          <div class="detail-card-head">
+          <div class="detail-head">
             <h3>Yang perlu dipahami</h3>
             <p>Rekomendasi membantu panitia mendata, bukan jaminan masjid terpilih atau langsung menerima bantuan.</p>
-            <button class="detail-toggle" type="button" onclick="togglePanel('masjidDetail', this)">Lihat selengkapnya</button>
           </div>
-          <div class="detail-card-body" id="masjidDetail">
+          <div class="detail-body" id="masjidDetail">
             <ul>
               <li>Masjid yang direkomendasikan akan masuk proses pendataan dan kurasi panitia.</li>
               <li>Aktivasi website Power of Masjid dapat menjadi bagian dari proses pendataan, namun tidak otomatis membuat masjid terpilih.</li>
@@ -114,24 +167,24 @@
               <li>Estimasi kebutuhan hanya membantu panitia memahami skala kebutuhan, bukan jaminan nilai bantuan.</li>
             </ul>
           </div>
+          <div class="button-row"><button class="toggle-btn gold" type="button" onclick="togglePanel('masjidDetail', this)">Lihat selengkapnya</button></div>
         </div>
-        <a class="btn-main gold" href="https://docs.google.com/forms/d/e/1FAIpQLSfT43JPnS1Y5wt5ZS8496RLVecsSqUovrHGrZZARtkjkZyG3w/viewform?usp=publish-editor" target="_blank" rel="noopener">Rekomendasikan Masjid</a>
+        <a class="form-btn gold" href="https://docs.google.com/forms/d/e/1FAIpQLSfT43JPnS1Y5wt5ZS8496RLVecsSqUovrHGrZZARtkjkZyG3w/viewform?usp=publish-editor" target="_blank" rel="noopener">Rekomendasikan Masjid</a>
       </article>
     </div>
   </div>
 </section>
-<section class="section" id="catatan">
+<section class="note-section" id="catatan">
   <div class="container">
-    <div class="note-box">
+    <article class="note-card">
       <h2>Catatan Penting</h2>
-      <ul>
-        <li>Ekspedisi Power of Masjid disiapkan dalam rangka Milad 10 Tahun Yayasan Nasi Jum'at.</li>
-        <li>Relawan yang dibutuhkan adalah relawan persiapan yang membantu unit kerja, bukan relawan acara besar atau hari-H.</li>
-        <li>Rekomendasi masjid tidak otomatis membuat masjid terpilih atau menerima bantuan.</li>
-        <li>Masjid yang direkomendasikan akan masuk proses pendataan dan kurasi panitia.</li>
-        <li>Kriteria detail seleksi tidak ditampilkan ke publik.</li>
-      </ul>
-    </div>
+      <div class="note-grid">
+        <div class="note-item"><b>Relawan</b><br>Yang dibutuhkan adalah relawan persiapan yang membantu unit kerja.</div>
+        <div class="note-item"><b>Rekomendasi</b><br>Masjid yang direkomendasikan tetap masuk proses pendataan dan kurasi panitia.</div>
+        <div class="note-item"><b>Seleksi</b><br>Kriteria detail tidak ditampilkan ke publik dan menjadi pertimbangan internal.</div>
+        <div class="note-item"><b>Website</b><br>Aktivasi website dapat menjadi bagian proses, namun tidak otomatis membuat masjid terpilih.</div>
+      </div>
+    </article>
   </div>
 </section>
 </main>
