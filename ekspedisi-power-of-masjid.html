@@ -4,10 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Ekspedisi Power of Masjid - Milad 10 Tahun YNJ</title>
-<meta name="description" content="Ekspedisi Power of Masjid adalah perjalanan Milad 10 Tahun Yayasan Nasi Jum'at untuk mengajak umat memakmurkan masjid melalui belajar, website masjid, bantuan, dan pendampingan digital.">
+<meta name="description" content="Ekspedisi Power of Masjid adalah perjalanan Milad 10 Tahun Yayasan Nasi Jum’at untuk mengajak umat kembali memakmurkan masjid, mengaktifkan website masjid, membuka jalan bantuan, dan melanjutkan pendampingan digital.">
 <meta property="og:title" content="Ekspedisi Power of Masjid">
-<meta property="og:description" content="Perjalanan belajar, menguatkan, membantu, dan mendampingi masjid agar semakin hidup, tertata, digital, dan berdampak.">
+<meta property="og:description" content="Perjalanan belajar, membantu, dan mendampingi masjid agar kembali hidup, tertata, digital, dan bergerak dari satu titik ke titik berikutnya.">
 <meta property="og:image" content="https://powerofmasjid.github.io/logo%20EPOM.png">
+<meta property="og:url" content="https://powerofmasjid.github.io/ekspedisi-power-of-masjid.html">
 <meta property="og:type" content="website">
 <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -15,185 +16,304 @@
   --primary:#1B6B3A;
   --primary-dark:#0F4228;
   --primary-deep:#0B3320;
-  --primary-soft:#E8F5EE;
+  --primary-light:#E8F5EE;
   --accent:#C9A84C;
-  --accent-dark:#92701E;
   --accent-soft:#FBF3E0;
   --bg:#F7F7F5;
   --white:#FFFFFF;
   --text:#1A1A1A;
   --muted:#6B7280;
   --border:#E5E7EB;
-  --shadow:0 18px 48px rgba(15,66,40,.12);
-  --soft-shadow:0 10px 28px rgba(15,66,40,.08);
+  --shadow:0 18px 50px rgba(15,66,40,.11);
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
-body{font-family:'Plus Jakarta Sans',sans-serif;background:linear-gradient(180deg,#F7FBF8 0%,#F8F4EA 42%,#F7F7F5 100%);color:var(--text);line-height:1.65;overflow-x:hidden}
+body{
+  font-family:'Plus Jakarta Sans',sans-serif;
+  background:linear-gradient(180deg,#f8fbf8 0%,#f5f1e6 42%,#f7f7f5 100%);
+  color:var(--text);
+  line-height:1.65;
+  overflow-x:hidden;
+}
 a{text-decoration:none;color:inherit}
 .container{max-width:1120px;margin:0 auto;padding:0 1.5rem}
 
 /* Header */
-.navbar{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.96);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);box-shadow:0 8px 24px rgba(0,0,0,.04);padding:.82rem 0}
+.navbar{
+  background:rgba(255,255,255,.95);
+  backdrop-filter:blur(12px);
+  position:sticky;
+  top:0;
+  z-index:100;
+  border-bottom:1px solid var(--border);
+  box-shadow:0 8px 24px rgba(0,0,0,.04);
+  padding:.85rem 0;
+}
 .nav-inner{display:flex;align-items:center;justify-content:space-between;gap:1rem}
-.brand-wrap{display:flex;align-items:center;gap:12px;min-width:0}
-.brand-logo{height:45px;width:auto;object-fit:contain;display:block}
-.brand-divider{height:40px;width:1px;background:#e7e7e2}
-.brand-text{font-size:15px;font-weight:800;color:var(--primary-dark);white-space:nowrap}
-.nav-menu{display:flex;align-items:center;gap:7px}
-.nav-menu a{font-size:14px;font-weight:800;color:var(--primary-dark);padding:10px 12px;border-radius:999px;transition:.2s}
-.nav-menu a:hover{background:var(--primary-soft)}
-.nav-menu .nav-accent{background:var(--accent-soft);color:#765b12;border:1px solid rgba(201,168,76,.30)}
+.brand-wrap{display:flex;align-items:center;gap:14px;min-width:0}
+.brand-logo{height:46px;width:auto;object-fit:contain;display:block}
+.brand-divider{width:1px;height:40px;background:#e6e6e6}
+.nav-menu{display:flex;align-items:center;gap:8px}
+.nav-menu a{font-size:14px;font-weight:800;color:var(--primary-dark);padding:10px 13px;border-radius:999px;transition:.2s}
+.nav-menu a:hover{background:var(--primary-light)}
+.nav-menu .nav-accent{background:var(--accent-soft);color:#765b12;border:1px solid rgba(201,168,76,.32)}
 .nav-toggle{display:none;width:48px;height:48px;border:1px solid var(--border);border-radius:14px;background:var(--white);color:var(--primary-dark);font-size:28px;font-weight:800;align-items:center;justify-content:center;box-shadow:0 6px 18px rgba(0,0,0,.06)}
 
-/* Buttons */
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;border-radius:16px;padding:15px 23px;font-size:15px;font-weight:800;border:1px solid transparent;transition:.2s;cursor:pointer;text-align:center}
-.btn:hover{transform:translateY(-2px)}
-.btn-primary{background:var(--primary);color:#fff;box-shadow:0 12px 28px rgba(27,107,58,.24)}
-.btn-gold{background:var(--accent);color:var(--primary-deep);box-shadow:0 12px 28px rgba(201,168,76,.24)}
-.btn-outline{background:#fff;color:var(--primary-dark);border-color:rgba(27,107,58,.24)}
+/* General */
+.section{padding:4.4rem 0}
+.eyebrow{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  background:#fff9ea;
+  border:1px solid rgba(201,168,76,.38);
+  border-radius:999px;
+  padding:9px 16px;
+  color:var(--primary-dark);
+  font-weight:800;
+  font-size:.9rem;
+}
+.section-head{text-align:center;max-width:810px;margin:0 auto 2rem}
+.section-title{font-size:2.25rem;line-height:1.18;color:var(--primary-dark);font-weight:800;margin:.9rem 0 .7rem}
+.section-lead{color:var(--muted);font-size:1.05rem;line-height:1.85}
 
 /* Hero */
-.hero{position:relative;overflow:hidden;padding:4.1rem 0 3.1rem;text-align:center;background:
-  radial-gradient(circle at top left,rgba(27,107,58,.16),transparent 34%),
-  radial-gradient(circle at top right,rgba(201,168,76,.20),transparent 35%)}
-.hero::before{content:"";position:absolute;left:-130px;bottom:-210px;width:420px;height:420px;border-radius:50%;background:rgba(27,107,58,.07)}
-.hero::after{content:"";position:absolute;right:-160px;bottom:-180px;width:420px;height:420px;border-radius:50%;background:rgba(201,168,76,.10)}
-.hero .container{position:relative;z-index:1}
-.hero-logo-card{display:inline-flex;align-items:center;justify-content:center;background:#fff;border:1px solid rgba(201,168,76,.25);border-radius:34px;padding:15px;box-shadow:var(--shadow);margin-bottom:18px}
-.hero-logo{width:min(74vw,330px);height:auto;display:block;object-fit:contain;border-radius:20px}
-.milad-pill{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:#fff9ea;border:1px solid rgba(201,168,76,.38);border-radius:999px;padding:9px 16px;color:var(--primary-dark);font-size:14px;font-weight:800;margin-bottom:14px;box-shadow:0 8px 22px rgba(201,168,76,.10)}
-.hero-title{font-family:'Amiri',serif;line-height:1.02;letter-spacing:-.7px;margin:0 auto 18px;color:var(--primary-dark)}
+.hero{
+  position:relative;
+  overflow:hidden;
+  text-align:center;
+  padding:3.8rem 0 3.2rem;
+  background:
+    radial-gradient(circle at top left,rgba(27,107,58,.14),transparent 34%),
+    radial-gradient(circle at top right,rgba(201,168,76,.18),transparent 34%);
+}
+.hero-card{max-width:900px;margin:0 auto}
+.hero-logo-wrap{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  background:#fff;
+  border:1px solid rgba(201,168,76,.24);
+  border-radius:34px;
+  padding:16px;
+  box-shadow:var(--shadow);
+  margin-bottom:18px;
+}
+.hero-logo{width:min(72vw,330px);height:auto;display:block;object-fit:contain;border-radius:18px}
+.hero-title{
+  margin:14px 0 14px;
+  text-align:center;
+  line-height:1.03;
+  letter-spacing:-.7px;
+  font-family:'Amiri',serif;
+}
 .hero-title span{display:block}
-.hero-title .line-one{font-size:3.2rem;font-weight:700;color:var(--primary-dark)}
-.hero-title .line-two{font-size:3.35rem;font-weight:700;color:var(--accent)}
-.hero-lead{max-width:770px;margin:0 auto;color:#4B5563;font-size:1.12rem;line-height:1.88}
-.hero-cta{display:flex;gap:13px;justify-content:center;flex-wrap:wrap;margin-top:28px}
+.hero-title .line-1{font-size:clamp(2.25rem,8vw,4.1rem);font-weight:700;color:var(--primary-dark)}
+.hero-title .line-2{font-size:clamp(2.1rem,8.5vw,4.25rem);font-weight:700;color:var(--accent);white-space:nowrap}
+.hero-subtitle{max-width:760px;margin:0 auto;color:var(--muted);font-size:1.08rem;line-height:1.85}
+.hero-actions{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:26px}
+.btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  padding:15px 22px;
+  border-radius:16px;
+  font-weight:800;
+  font-size:1rem;
+  transition:.2s;
+  border:1px solid transparent;
+}
+.btn:hover{transform:translateY(-2px)}
+.btn-primary{background:var(--primary);color:#fff;box-shadow:0 14px 30px rgba(27,107,58,.22)}
+.btn-gold{background:var(--accent);color:var(--primary-deep);box-shadow:0 14px 30px rgba(201,168,76,.22)}
+.btn-soft{background:#fff;color:var(--primary-dark);border-color:var(--border)}
 
-/* Sections */
-.section{padding:4.4rem 0}
-.section.compact{padding:3.4rem 0}
-.section-head{max-width:790px;margin:0 auto 2.4rem;text-align:center}
-.kicker{display:inline-flex;align-items:center;justify-content:center;background:var(--primary-soft);color:var(--primary-dark);border:1px solid rgba(27,107,58,.14);border-radius:999px;padding:7px 14px;font-size:13px;font-weight:800;margin-bottom:14px}
-.section-title{font-size:2.25rem;line-height:1.18;color:var(--primary-dark);font-weight:800;margin-bottom:12px}
-.section-desc{font-size:1.05rem;color:var(--muted);line-height:1.85}
-
-/* Intro */
-.intro-panel{background:#fff;border:1px solid var(--border);border-radius:30px;box-shadow:var(--shadow);overflow:hidden}
-.intro-grid{display:grid;grid-template-columns:1.08fr .92fr;gap:0}
-.intro-main{padding:34px}
-.intro-main h2{font-size:2rem;line-height:1.22;color:var(--primary-dark);font-weight:800;margin-bottom:16px}
-.intro-main p{color:#4B5563;font-size:1.04rem;line-height:1.88;margin-bottom:14px}
-.intro-highlight{background:linear-gradient(135deg,var(--primary-dark),var(--primary));color:#fff;padding:34px;display:flex;flex-direction:column;justify-content:center}
-.intro-highlight h3{font-size:1.55rem;line-height:1.3;margin-bottom:14px;color:#fff}
-.intro-highlight p{color:rgba(255,255,255,.86);line-height:1.82}
-
-/* Reveal cards */
-.reveal-row{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:24px}
-.reveal-card{background:#fff;border:1px solid var(--border);border-radius:24px;padding:24px;box-shadow:var(--soft-shadow)}
-.reveal-icon{width:52px;height:52px;border-radius:16px;background:var(--accent-soft);display:flex;align-items:center;justify-content:center;font-size:24px;margin-bottom:16px}
-.reveal-card h3{font-size:1.18rem;line-height:1.36;color:var(--primary-dark);font-weight:800;margin-bottom:10px}
-.reveal-card p{font-size:.98rem;color:var(--muted);line-height:1.75}
-details.more{margin-top:16px;border-top:1px dashed var(--border);padding-top:14px}
-details.more summary{cursor:pointer;list-style:none;color:var(--primary);font-weight:800;font-size:.95rem;display:inline-flex;align-items:center;gap:7px}
-details.more summary::-webkit-details-marker{display:none}
-details.more summary::after{content:"+";display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:var(--primary-soft);font-weight:800}
-details.more[open] summary::after{content:"−"}
-details.more .more-content{margin-top:12px;color:#58606D;line-height:1.8;font-size:.96rem}
+/* Cards and detail */
+.info-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:24px;align-items:stretch}
+.info-card,.soft-card,.note-box{
+  background:#fff;
+  border:1px solid var(--border);
+  border-radius:28px;
+  box-shadow:var(--shadow);
+  padding:28px;
+}
+.info-card h2,.soft-card h3,.note-box h2{color:var(--primary-dark);line-height:1.25;font-weight:800}
+.info-card h2{font-size:2rem;margin-bottom:14px}
+.info-card p,.soft-card p,.note-box p{color:var(--muted);line-height:1.85}
+.highlight-quote{
+  margin-top:20px;
+  border-left:5px solid var(--accent);
+  padding:16px 18px;
+  background:#fff9ea;
+  border-radius:0 18px 18px 0;
+  color:var(--primary-dark);
+  font-weight:800;
+  line-height:1.75;
+}
+details.clean-detail{
+  margin-top:18px;
+  background:#f9faf8;
+  border:1px solid var(--border);
+  border-radius:20px;
+  overflow:hidden;
+}
+details.clean-detail summary{
+  list-style:none;
+  cursor:pointer;
+  padding:15px 18px;
+  color:var(--primary-dark);
+  font-weight:800;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+}
+details.clean-detail summary::-webkit-details-marker{display:none}
+details.clean-detail summary:after{content:'+';font-size:24px;color:var(--accent);line-height:1}
+details.clean-detail[open] summary:after{content:'–'}
+.detail-content{padding:0 18px 18px;color:var(--muted);line-height:1.85}
+.detail-content p{margin-top:10px}
 
 /* Journey */
-.journey{background:#fff;border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
-.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
-.step{position:relative;background:var(--bg);border:1px solid var(--border);border-radius:24px;padding:24px;min-height:210px;box-shadow:0 9px 22px rgba(0,0,0,.035)}
-.step-num{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--primary);color:#fff;font-weight:800;margin-bottom:16px}
-.step h3{font-size:1.12rem;line-height:1.35;color:var(--primary-dark);font-weight:800;margin-bottom:10px}
-.step p{font-size:.97rem;color:var(--muted);line-height:1.75}
+.journey-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:26px}
+.journey-card{
+  background:#fff;
+  border:1px solid var(--border);
+  border-radius:24px;
+  padding:22px;
+  box-shadow:0 12px 34px rgba(15,66,40,.07);
+  position:relative;
+  overflow:hidden;
+}
+.journey-card:before{
+  content:'';
+  position:absolute;
+  top:0;
+  left:0;
+  width:100%;
+  height:5px;
+  background:linear-gradient(90deg,var(--primary),var(--accent));
+}
+.step-num{
+  width:40px;
+  height:40px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:var(--primary-light);
+  color:var(--primary-dark);
+  font-weight:800;
+  margin-bottom:14px;
+}
+.journey-card h3{font-size:1.1rem;color:var(--primary-dark);font-weight:800;margin-bottom:8px;line-height:1.35}
+.journey-card p{font-size:.95rem;color:var(--muted);line-height:1.75}
 
-/* Website & Sponsor */
-.split-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:stretch}
-.info-card{background:#fff;border:1px solid var(--border);border-radius:28px;padding:30px;box-shadow:var(--shadow)}
-.info-card.gold{background:linear-gradient(180deg,#fff 0%,#fff9ea 100%);border-color:rgba(201,168,76,.35)}
-.info-card h2{font-size:1.8rem;line-height:1.25;color:var(--primary-dark);font-weight:800;margin-bottom:14px}
-.info-card p{color:#4B5563;line-height:1.86;margin-bottom:13px}
-.mini-list{display:grid;gap:12px;margin-top:18px}
-.mini-list div{background:rgba(27,107,58,.055);border:1px solid rgba(27,107,58,.08);border-radius:16px;padding:13px 15px;color:var(--primary-dark);font-weight:700;line-height:1.55}
-.info-card.gold .mini-list div{background:#fff;border-color:rgba(201,168,76,.30)}
+/* Website reason */
+.split-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:22px;align-items:start}
+.reason-list{display:grid;gap:12px;margin-top:18px}
+.reason-item{
+  display:flex;
+  gap:12px;
+  align-items:flex-start;
+  background:#f7fbf8;
+  border:1px solid #dbeadf;
+  border-radius:18px;
+  padding:14px 15px;
+}
+.reason-icon{font-weight:800;color:var(--primary);font-size:1.2rem;line-height:1.2}
+.reason-item strong{display:block;color:var(--primary-dark);font-size:.98rem;margin-bottom:3px}
+.reason-item span{display:block;color:var(--muted);font-size:.93rem;line-height:1.6}
 
-/* Participation */
-.participation{background:linear-gradient(180deg,#fff 0%,#F7F7F5 100%)}
+/* Involvement */
 .choice-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:24px}
-.choice-card{background:#fff;border:1px solid var(--border);border-top:6px solid var(--primary);border-radius:30px;padding:30px;box-shadow:var(--shadow)}
+.choice-card{background:#fff;border:1px solid var(--border);border-top:6px solid var(--primary);border-radius:28px;padding:28px;box-shadow:var(--shadow);overflow:hidden}
 .choice-card.gold{border-top-color:var(--accent)}
-.choice-card h2{font-size:2rem;line-height:1.16;color:var(--primary-dark);font-weight:800;margin-bottom:12px}
-.choice-card p{font-size:1rem;color:var(--muted);line-height:1.82;margin-bottom:18px}
-.pill-list{display:flex;flex-wrap:wrap;gap:10px;margin:18px 0 22px}
-.unit-pill{display:inline-flex;align-items:center;justify-content:center;padding:10px 14px;border-radius:999px;background:#E4F1EA;border:1px solid #CFE2D8;color:#0F5C3A;font-weight:800;font-size:.93rem;text-align:center}
-.benefit-pill{background:#FFF8DF;border-color:#EADCAE;color:#725C17}
+.choice-title{font-size:2rem;line-height:1.15;color:var(--primary-dark);font-weight:800;margin-bottom:14px}
+.choice-desc{color:var(--muted);font-size:1.02rem;line-height:1.85;margin-bottom:20px}
+.pill-list{display:flex;flex-wrap:wrap;gap:12px;margin:18px 0 24px}
+.unit-pill{display:inline-flex;align-items:center;justify-content:center;padding:11px 16px;border-radius:999px;background:#e4f1ea;border:1px solid #cfe2d8;color:#0f5c3a;font-weight:800;font-size:.96rem;text-align:center}
+.benefit-pill{background:#fff8df;border-color:#eadcae;color:#725c17}
+.btn-main{display:inline-flex;align-items:center;justify-content:center;width:100%;padding:17px 22px;border-radius:18px;background:var(--primary);color:#fff;font-weight:800;font-size:1.04rem;box-shadow:0 14px 30px rgba(27,107,58,.22);transition:.2s}
+.btn-main:hover{transform:translateY(-2px);background:var(--primary-dark)}
+.btn-main.gold{background:var(--accent);color:var(--primary-deep);box-shadow:0 14px 30px rgba(201,168,76,.22)}
 
-/* Notes & CTA */
-.note-box{background:#fff;border:1px solid var(--border);border-radius:28px;padding:30px;box-shadow:var(--soft-shadow)}
-.note-box h2{font-size:1.7rem;color:var(--primary-dark);margin-bottom:16px;font-weight:800}
-.note-box ul{list-style:none;display:grid;gap:12px}
-.note-box li{display:flex;gap:10px;color:#56606B;line-height:1.75}
-.note-box li::before{content:"✓";font-weight:800;color:var(--primary)}
-.cta-panel{margin-top:24px;background:var(--primary-dark);color:#fff;border-radius:28px;padding:30px;text-align:center;box-shadow:var(--shadow)}
-.cta-panel h2{font-size:1.9rem;line-height:1.25;margin-bottom:10px}
-.cta-panel p{color:rgba(255,255,255,.84);max-width:720px;margin:0 auto 22px;line-height:1.8}
-.cta-actions{display:flex;flex-wrap:wrap;gap:12px;justify-content:center}
-.cta-actions .btn-outline{background:transparent;color:#fff;border-color:rgba(255,255,255,.35)}
-
+.note-box ul{padding-left:20px;color:var(--muted);line-height:1.85;margin-top:12px}
+.note-box li{margin-bottom:9px}
 .footer{background:#fff;border-top:1px solid var(--border);padding:34px 0;text-align:center;color:var(--muted);font-size:14px}
 
 @media (max-width:992px){
-  .nav-menu{position:absolute;top:100%;left:1rem;right:1rem;background:#fff;border:1px solid var(--border);border-radius:18px;box-shadow:var(--shadow);padding:12px;display:none;flex-direction:column;align-items:stretch}.nav-menu.show{display:flex}.nav-menu a{padding:14px 16px;border-radius:12px}.nav-toggle{display:flex}.brand-text{display:none}
-  .intro-grid,.split-grid{grid-template-columns:1fr}
-  .reveal-row,.steps{grid-template-columns:repeat(2,1fr)}
+  .nav-menu{position:absolute;top:100%;left:1rem;right:1rem;background:#fff;border:1px solid var(--border);border-radius:18px;box-shadow:var(--shadow);padding:12px;display:none;flex-direction:column;align-items:stretch}
+  .nav-menu.show{display:flex}
+  .nav-menu a{padding:14px 16px;border-radius:12px}
+  .nav-toggle{display:flex}
+  .info-grid,.split-grid{grid-template-columns:1fr}
+  .journey-grid{grid-template-columns:repeat(2,1fr)}
 }
 @media (max-width:768px){
-  .container{padding:0 1.15rem}.navbar{padding:.72rem 0}.brand-logo{height:39px}.brand-divider{height:34px}.nav-toggle{width:45px;height:45px;font-size:26px}
-  .hero{padding:2.45rem 0 2.3rem}.hero-logo-card{border-radius:26px;padding:11px;margin-bottom:14px}.hero-logo{width:min(80vw,292px)}.milad-pill{font-size:.86rem;padding:8px 13px}
-  .hero-title .line-one{font-size:2.45rem}.hero-title .line-two{font-size:2.24rem;max-width:345px;margin:0 auto}.hero-lead{font-size:1rem;line-height:1.78}.hero-cta{display:grid;grid-template-columns:1fr;gap:10px;margin-top:22px}.btn{width:100%;padding:15px 17px}
-  .section{padding:3.4rem 0}.section.compact{padding:2.8rem 0}.section-title{font-size:1.72rem}.section-desc{font-size:1rem}.intro-main,.intro-highlight,.info-card,.choice-card,.note-box,.cta-panel{padding:23px 18px;border-radius:24px}.intro-main h2,.info-card h2{font-size:1.55rem}.intro-highlight h3{font-size:1.34rem}
-  .reveal-row,.steps,.choice-grid{grid-template-columns:1fr}.reveal-card,.step{padding:21px 18px;border-radius:22px;min-height:auto}.pill-list{display:grid;grid-template-columns:1fr;gap:10px}.unit-pill{width:100%;min-height:48px;padding:12px 16px;font-size:.96rem}.choice-card h2{font-size:1.72rem}.cta-panel h2{font-size:1.55rem}.cta-actions{display:grid;grid-template-columns:1fr}.footer{font-size:13px}
+  .container{padding:0 1.15rem}
+  .navbar{padding:.75rem 0}
+  .brand-logo{height:40px}
+  .brand-divider{height:34px}
+  .hero{padding:2.25rem 0 2.4rem}
+  .hero-logo-wrap{border-radius:28px;padding:12px;margin-bottom:15px}
+  .hero-logo{width:min(78vw,292px)}
+  .eyebrow{font-size:.86rem;padding:9px 14px}
+  .hero-title{line-height:1.02;margin-top:11px}
+  .hero-subtitle{font-size:1rem;line-height:1.78}
+  .hero-actions{display:grid;grid-template-columns:1fr;gap:11px;margin-top:22px}
+  .btn{width:100%;padding:15px 18px}
+  .section{padding:3rem 0}
+  .section-title{font-size:1.72rem;margin-top:.8rem}
+  .section-lead{font-size:1rem}
+  .info-card,.soft-card,.note-box,.choice-card{border-radius:24px;padding:22px 18px}
+  .info-card h2{font-size:1.65rem}
+  .journey-grid{grid-template-columns:1fr;gap:15px}
+  .choice-grid{grid-template-columns:1fr;gap:22px}
+  .choice-title{font-size:1.75rem}
+  .pill-list{display:flex;flex-direction:column;align-items:stretch;gap:12px;margin:18px 0 24px}
+  .unit-pill{width:100%;min-height:50px;padding:12px 18px;font-size:1rem}
 }
-@media (max-width:380px){.brand-logo{height:34px}.hero-title .line-one{font-size:2.08rem}.hero-title .line-two{font-size:1.98rem}.section-title{font-size:1.55rem}}
+@media (max-width:380px){
+  .brand-logo{height:35px}
+  .nav-toggle{width:44px;height:44px}
+  .hero-title .line-1{font-size:2rem}
+  .hero-title .line-2{font-size:1.9rem}
+  .choice-title{font-size:1.62rem}
+}
 </style>
 </head>
 <body>
 <nav class="navbar">
   <div class="container nav-inner">
-    <a href="index.html" class="brand-wrap" aria-label="Power of Masjid dan Yayasan Nasi Jum'at">
+    <a href="index.html" class="brand-wrap" aria-label="Power of Masjid">
       <img class="brand-logo" src="Logo%20Power%20of%20Masjid.png" alt="Power of Masjid">
       <span class="brand-divider" aria-hidden="true"></span>
       <img class="brand-logo" src="Logo%20YNJ.png" alt="Yayasan Nasi Jum'at">
-      <span class="brand-text">Ekspedisi Power of Masjid</span>
     </a>
     <button class="nav-toggle" type="button" aria-label="Buka menu" onclick="toggleMenu()">☰</button>
     <div class="nav-menu" id="navMenu">
       <a href="index.html">Beranda</a>
-      <a href="#tentang">Tentang</a>
-      <a href="#alur">Alur Ekspedisi</a>
-      <a href="#sponsor">Sponsor & Mitra</a>
-      <a href="#terlibat" class="nav-accent">Ikut Terlibat</a>
+      <a href="#tentang">Tentang Ekspedisi</a>
+      <a href="#alur">Alur Perjalanan</a>
+      <a href="#terlibat">Ikut Terlibat</a>
+      <a class="nav-accent" href="https://wa.me/628211043809" target="_blank" rel="noopener">Tanya Panitia</a>
     </div>
   </div>
 </nav>
 
 <header class="hero">
-  <div class="container">
-    <div class="hero-logo-card">
-      <img class="hero-logo" src="logo%20EPOM.png" alt="Logo Ekspedisi Power of Masjid">
-    </div>
-    <div class="milad-pill">Milad 10 Tahun Yayasan Nasi Jum'at</div>
-    <h1 class="hero-title">
-      <span class="line-one">Ekspedisi</span>
-      <span class="line-two">Power of Masjid</span>
-    </h1>
-    <p class="hero-lead">Perjalanan belajar, menguatkan, membantu, dan mendampingi masjid agar semakin hidup, tertata, digital, dan berdampak bagi jamaah.</p>
-    <div class="hero-cta">
-      <a href="#tentang" class="btn btn-primary">Mulai Pahami Ekspedisi</a>
-      <a href="#terlibat" class="btn btn-gold">Ikut Terlibat</a>
-      <a href="#sponsor" class="btn btn-outline">Untuk Sponsor & Mitra</a>
+  <div class="container hero-card">
+    <div class="hero-logo-wrap"><img class="hero-logo" src="logo%20EPOM.png" alt="Ekspedisi Power of Masjid"></div>
+    <div class="eyebrow">Milad 10 Tahun Yayasan Nasi Jum'at</div>
+    <h1 class="hero-title"><span class="line-1">Ekspedisi</span><span class="line-2">Power of Masjid</span></h1>
+    <p class="hero-subtitle">Perjalanan mengajak umat kembali memakmurkan masjid: belajar, mengaktifkan website, memahami kebutuhan, membuka jalan bantuan, lalu mendampingi masjid agar terus bergerak secara digital.</p>
+    <div class="hero-actions">
+      <a class="btn btn-primary" href="#terlibat">Saya Ingin Ikut Terlibat</a>
+      <a class="btn btn-gold" href="#alur">Lihat Alur Ekspedisi</a>
+      <a class="btn btn-soft" href="index.html">Kembali ke Power of Masjid</a>
     </div>
   </div>
 </header>
@@ -201,111 +321,92 @@ details.more .more-content{margin-top:12px;color:#58606D;line-height:1.8;font-si
 <main>
 <section class="section" id="tentang">
   <div class="container">
-    <div class="intro-panel">
-      <div class="intro-grid">
-        <div class="intro-main">
-          <span class="kicker">Apa itu Ekspedisi Power of Masjid?</span>
-          <h2>Bukan sekadar program bantuan, tapi perjalanan memakmurkan masjid.</h2>
-          <p><b>Ekspedisi Power of Masjid</b> adalah gerakan Milad 10 Tahun Yayasan Nasi Jum'at untuk membuka kembali cara pandang bahwa masjid bukan hanya tempat sholat, tetapi tempat belajar, melayani, berjuang, dan bertumbuh bersama.</p>
-          <p>Dalam Ekspedisi ini, DKM dan masyarakat diajak masuk ke perjalanan: belajar memakmurkan masjid, mengaktifkan website Power of Masjid, memahami kebutuhan masjid, membuka jalan bantuan, lalu melanjutkannya dengan pendampingan digital.</p>
-          <details class="more">
-            <summary>Lihat selengkapnya</summary>
-            <div class="more-content">
-              <p>Ekspedisi berarti bergerak dari satu titik ke titik berikutnya. Semangatnya bukan berhenti pada satu masjid, tetapi membawa inspirasi agar semakin banyak masjid mulai tertata, terlihat, terdokumentasi, dan dekat dengan jamaahnya.</p>
-              <p>Masjid yang ingin masuk jalur Ekspedisi akan diarahkan untuk mengaktifkan website Power of Masjid sebagai syarat awal. Website ini menjadi pintu agar kegiatan, kebutuhan, dan potensi masjid mulai terlihat dengan rapi.</p>
-            </div>
-          </details>
-        </div>
-        <div class="intro-highlight">
-          <h3>Tujuan besarnya: umat kembali melihat masjid sebagai pusat perubahan.</h3>
-          <p>Masjid bukan hanya bangunan. Masjid adalah tempat sholat, tempat belajar, tempat jamaah saling menguatkan, tempat anak muda bertumbuh, dan tempat kebaikan dimulai.</p>
-        </div>
-      </div>
-    </div>
+    <div class="info-grid">
+      <article class="info-card">
+        <span class="eyebrow">Apa itu Ekspedisi?</span>
+        <h2>Bukan sekadar bantuan, tapi perjalanan memakmurkan masjid.</h2>
+        <p>Ekspedisi Power of Masjid adalah gerakan Milad 10 Tahun Yayasan Nasi Jum'at untuk membuka cara pandang bahwa masjid bukan hanya tempat sholat, tetapi juga tempat belajar, melayani, berjuang, dan bertumbuh bersama.</p>
+        <div class="highlight-quote">Dari satu titik ke titik berikutnya, Ekspedisi ini ingin menyalakan kembali semangat: kembali ke masjid, bergerak dari masjid, dan membangun perubahan mulai dari masjid.</div>
+        <details class="clean-detail">
+          <summary>Lihat selengkapnya</summary>
+          <div class="detail-content">
+            <p>Dalam Ekspedisi ini, DKM dan masyarakat diajak belajar dari tempat-tempat yang telah bergerak dalam memakmurkan masjid. Semangatnya bukan meniru secara mentah, tetapi membuka pikiran bahwa setiap masjid bisa mulai bergerak sesuai kemampuan dan kondisi masing-masing.</p>
+            <p>Masjid yang ingin masuk jalur proses diarahkan untuk mengaktifkan website Power of Masjid. Website menjadi pintu awal agar aktivitas, kebutuhan, dan potensi masjid mulai tertata dan terlihat.</p>
+          </div>
+        </details>
+      </article>
 
-    <div class="reveal-row" aria-label="Fokus utama Ekspedisi">
-      <article class="reveal-card">
-        <div class="reveal-icon">🕌</div>
-        <h3>Belajar Memakmurkan Masjid</h3>
-        <p>DKM dan tim diajak belajar dari tempat yang telah bergerak dalam menghidupkan masjid dan melayani jamaah.</p>
-      </article>
-      <article class="reveal-card">
-        <div class="reveal-icon">🌐</div>
-        <h3>Masjid Mulai Digital</h3>
-        <p>Website Power of Masjid menjadi langkah awal agar masjid tertata, terdokumentasi, dan lebih mudah dikenalkan.</p>
-      </article>
-      <article class="reveal-card">
-        <div class="reveal-icon">🤝</div>
-        <h3>Bantuan & Pendampingan</h3>
-        <p>Bantuan bukan akhir. Setelah itu masjid didorong terus bergerak melalui pendampingan digital dan dokumentasi.</p>
-      </article>
+      <aside class="soft-card">
+        <h3>Yang ingin dibangun</h3>
+        <div class="reason-list">
+          <div class="reason-item"><div class="reason-icon">01</div><div><strong>Umat kembali ke masjid</strong><span>Masjid dilihat kembali sebagai tempat memulai kebaikan, bukan hanya tempat datang sebentar lalu pergi.</span></div></div>
+          <div class="reason-item"><div class="reason-icon">02</div><div><strong>DKM belajar dan bergerak</strong><span>Pengurus masjid didorong agar lebih siap, rapi, terbuka, dan dekat dengan jamaah.</span></div></div>
+          <div class="reason-item"><div class="reason-icon">03</div><div><strong>Masjid mulai digital</strong><span>Website menjadi langkah awal agar kegiatan, kebutuhan, dan dokumentasi masjid mudah dikenalkan.</span></div></div>
+          <div class="reason-item"><div class="reason-icon">04</div><div><strong>Manfaat tidak berhenti sesaat</strong><span>Bantuan diarahkan agar berlanjut dengan pendampingan digital dan kebiasaan dokumentasi yang lebih baik.</span></div></div>
+        </div>
+      </aside>
     </div>
   </div>
 </section>
 
-<section class="section journey" id="alur">
+<section class="section" id="alur" style="background:rgba(255,255,255,.62);">
   <div class="container">
     <div class="section-head">
-      <span class="kicker">Alur Perjalanan Ekspedisi</span>
-      <h2 class="section-title">Dari belajar, bergerak, sampai menyebar ke titik berikutnya.</h2>
-      <p class="section-desc">Halaman ini dibuat agar masyarakat, DKM, relawan, dan sponsor memahami gambaran program sebelum ikut terlibat.</p>
+      <span class="eyebrow">Alur Perjalanan</span>
+      <h2 class="section-title">Ekspedisi berjalan dari belajar, bergerak, lalu menyebar.</h2>
+      <p class="section-lead">Agar orang yang membaca langsung paham: Ekspedisi ini bukan hanya pendaftaran, tapi rangkaian perjalanan untuk menghidupkan masjid dari satu titik ke titik lainnya.</p>
     </div>
-    <div class="steps">
-      <article class="step"><div class="step-num">1</div><h3>Membuka Kesadaran</h3><p>Mengajak umat kembali melihat masjid sebagai pusat sholat, pembinaan, pelayanan, kepedulian sosial, dan perubahan.</p></article>
-      <article class="step"><div class="step-num">2</div><h3>Belajar Memakmurkan Masjid</h3><p>DKM dan tim belajar dari tempat yang telah bergerak agar semangatnya bisa dibawa pulang sesuai kondisi masing-masing masjid.</p></article>
-      <article class="step"><div class="step-num">3</div><h3>Mengaktifkan Website</h3><p>Masjid diarahkan mengaktifkan website Power of Masjid agar data, kegiatan, kebutuhan, dan potensi masjid mulai tertata.</p></article>
-      <article class="step"><div class="step-num">4</div><h3>Kebutuhan Masjid Dipahami</h3><p>Panitia mempelajari kondisi, aktivitas, dan kesiapan masjid untuk menentukan bentuk dukungan yang paling sesuai.</p></article>
-      <article class="step"><div class="step-num">5</div><h3>Bantuan Disalurkan</h3><p>Masjid yang masuk tahap lanjutan dapat memperoleh bantuan sesuai kebutuhan, kesiapan, dan kemampuan program.</p></article>
-      <article class="step"><div class="step-num">6</div><h3>Pendampingan Digital</h3><p>Setelah bantuan, masjid tetap diarahkan menggunakan website, dokumentasi, dan komunikasi digital agar geraknya berlanjut.</p></article>
+
+    <div class="journey-grid">
+      <div class="journey-card"><div class="step-num">1</div><h3>Membuka cara pandang</h3><p>Masyarakat diajak melihat masjid sebagai pusat sholat, belajar, pelayanan, kepedulian, dan perubahan umat.</p></div>
+      <div class="journey-card"><div class="step-num">2</div><h3>Belajar memakmurkan masjid</h3><p>DKM dan tim belajar dari tempat yang telah bergerak dalam memakmurkan masjid, lalu membawa pulang semangatnya.</p></div>
+      <div class="journey-card"><div class="step-num">3</div><h3>Mengaktifkan website masjid</h3><p>Website Power of Masjid menjadi pintu awal agar masjid mulai tertata, terdokumentasi, dan terlihat aktivitasnya.</p></div>
+      <div class="journey-card"><div class="step-num">4</div><h3>Memahami kebutuhan masjid</h3><p>Panitia mempelajari kondisi, aktivitas, potensi jamaah, dan kebutuhan masjid untuk menentukan dukungan yang paling sesuai.</p></div>
+      <div class="journey-card"><div class="step-num">5</div><h3>Bantuan sesuai proses</h3><p>Masjid yang masuk tahap lanjutan dapat menerima dukungan sesuai kebutuhan, kesiapan, dan kemampuan program.</p></div>
+      <div class="journey-card"><div class="step-num">6</div><h3>Pendampingan digital berlanjut</h3><p>Setelah bantuan, masjid diarahkan terus memakai website, memperbarui informasi, dan membangun dokumentasi kegiatan.</p></div>
     </div>
   </div>
 </section>
 
-<section class="section compact" id="website-digital">
+<section class="section" id="website">
   <div class="container">
     <div class="split-grid">
       <article class="info-card">
-        <span class="kicker">Kenapa Website Menjadi Syarat Awal?</span>
-        <h2>Website membuat masjid terlihat, tertata, dan siap bergerak.</h2>
-        <p>Website Power of Masjid bukan sekadar halaman online. Website menjadi langkah awal agar aktivitas, kebutuhan, dan potensi masjid mulai terdokumentasi dengan rapi.</p>
-        <p>Karena itu, masjid yang ingin masuk jalur Ekspedisi diarahkan untuk mengaktifkan website Power of Masjid sebagai bagian dari proses awal.</p>
-        <details class="more">
+        <span class="eyebrow">Kenapa website jadi pintu awal?</span>
+        <h2>Karena masjid yang ingin bergerak perlu mulai terlihat dan tertata.</h2>
+        <p>Website Power of Masjid bukan sekadar halaman online. Website menjadi langkah awal agar masjid memiliki identitas digital, kegiatan yang terdokumentasi, informasi yang mudah dibagikan, dan gambaran kebutuhan yang lebih jelas.</p>
+        <details class="clean-detail">
           <summary>Lihat selengkapnya</summary>
-          <div class="more-content">
-            <p>Website aktif membantu panitia, relawan, jamaah, dan calon mitra melihat bahwa masjid mulai siap tertata. Namun website aktif tidak otomatis membuat masjid terpilih atau menerima bantuan. Keputusan tetap mengikuti proses dan kemampuan program.</p>
+          <div class="detail-content">
+            <p>Masjid yang ingin masuk jalur Ekspedisi diarahkan untuk mengaktifkan website Power of Masjid. Ini bukan formalitas, melainkan cara agar pengurus mulai terbiasa menyusun informasi, menampilkan kegiatan, dan membuka jalan komunikasi yang lebih rapi dengan jamaah.</p>
+            <p>Website aktif menjadi bagian dari kesiapan awal, tetapi tidak otomatis membuat masjid terpilih atau menerima bantuan. Bantuan tetap mengikuti proses panitia, kebutuhan masjid, dan kemampuan program.</p>
           </div>
         </details>
       </article>
-      <article class="info-card gold" id="sponsor">
-        <span class="kicker">Untuk Sponsor & Mitra Kebaikan</span>
-        <h2>Dukungan sponsor menjadi bagian dari perjalanan memakmurkan masjid.</h2>
-        <p>Ekspedisi Power of Masjid membuka ruang kolaborasi bagi sponsor, lembaga, komunitas, dan sahabat kebaikan yang ingin ikut menguatkan masjid secara lebih terarah.</p>
-        <div class="mini-list">
-          <div>Dukungan dapat berupa perlengkapan masjid, program jamaah, fasilitas, dukungan marbot, atau manfaat lain yang sesuai adab masjid.</div>
-          <div>Setiap dukungan diarahkan agar terdokumentasi, terukur, dan berlanjut melalui pendampingan digital.</div>
+      <aside class="soft-card">
+        <h3>Website membantu masjid untuk:</h3>
+        <div class="reason-list">
+          <div class="reason-item"><div class="reason-icon">✓</div><div><strong>Menampilkan kegiatan</strong><span>Jadwal, kajian, program sosial, dan informasi jamaah tidak lagi tercecer.</span></div></div>
+          <div class="reason-item"><div class="reason-icon">✓</div><div><strong>Mengenalkan kebutuhan</strong><span>Kebutuhan masjid bisa dipahami lebih rapi tanpa harus dijelaskan berulang-ulang.</span></div></div>
+          <div class="reason-item"><div class="reason-icon">✓</div><div><strong>Membangun kepercayaan</strong><span>Masjid terlihat lebih siap, transparan, dan mudah dipahami oleh jamaah maupun pihak yang ingin membantu.</span></div></div>
         </div>
-        <details class="more">
-          <summary>Lihat selengkapnya</summary>
-          <div class="more-content">
-            <p>Program ini menarik untuk sponsor karena tidak berhenti pada serah terima bantuan. Ada cerita gerakan, dokumentasi kegiatan, data agregat, dan proses pendampingan yang membuat dukungan lebih bermakna dan mudah dipertanggungjawabkan.</p>
-          </div>
-        </details>
-      </article>
+      </aside>
     </div>
   </div>
 </section>
 
-<section class="section participation" id="terlibat">
+<section class="section" id="terlibat" style="background:rgba(255,255,255,.62);">
   <div class="container">
     <div class="section-head">
-      <span class="kicker">Cara Ikut Terlibat</span>
-      <h2 class="section-title">Pilih peran yang paling sesuai.</h2>
-      <p class="section-desc">Setelah memahami arah Ekspedisi, masyarakat bisa ikut membantu melalui dua jalur awal berikut.</p>
+      <span class="eyebrow">Cara ikut bergerak</span>
+      <h2 class="section-title">Pilih jalur keterlibatan yang paling sesuai.</h2>
+      <p class="section-lead">Setelah memahami arah Ekspedisi, masyarakat bisa ikut membantu melalui dua pintu awal: menjadi relawan persiapan atau merekomendasikan masjid.</p>
     </div>
+
     <div class="choice-grid">
       <article class="choice-card">
-        <h2>Relawan Persiapan</h2>
-        <p>Untuk sahabat kebaikan yang siap membantu pekerjaan nyata di unit persiapan. Ini bukan relawan hari-H atau relawan acara besar.</p>
+        <h2 class="choice-title">Relawan Persiapan</h2>
+        <p class="choice-desc">Untuk sahabat kebaikan yang siap membantu pekerjaan nyata sebelum program berjalan. Ini bukan relawan hari-H atau relawan acara besar.</p>
         <div class="pill-list" aria-label="Unit relawan">
           <span class="unit-pill">Masjid & Nominasi</span>
           <span class="unit-pill">Sponsor & Kemitraan</span>
@@ -314,75 +415,64 @@ details.more .more-content{margin-top:12px;color:#58606D;line-height:1.8;font-si
           <span class="unit-pill">Administrasi</span>
           <span class="unit-pill">Dokumentasi & Media</span>
         </div>
-        <details class="more">
+        <details class="clean-detail">
           <summary>Lihat kualifikasi dan jobdesk</summary>
-          <div class="more-content">
-            <p>Relawan membantu pendataan masjid, komunikasi awal, rekap kebutuhan, media, dokumentasi, administrasi, sponsor, dan dukungan teknis ringan sesuai kebutuhan unit.</p>
-            <p>Relawan yang dicari bukan harus sempurna, tetapi siap belajar, bertanggung jawab, dan mau membantu kerja nyata.</p>
+          <div class="detail-content">
+            <p>Relawan membantu pendataan masjid, komunikasi awal, rekap kebutuhan, kampanye publik, dokumentasi, desain ringan, caption, video pendek, notulen, dan follow up internal sesuai kebutuhan unit.</p>
+            <p>Yang dicari bukan orang yang sempurna, tetapi orang yang bisa diajak bekerja rapi, bertanggung jawab, mau belajar, dan memahami bahwa memakmurkan masjid butuh kerja nyata.</p>
           </div>
         </details>
-        <div style="height:18px"></div>
-        <a class="btn btn-primary" href="https://docs.google.com/forms/d/e/1FAIpQLSdW8THTFdNDI0LDWJRnTYQBxJFYNVNfALht9ANAqgoNsTbgMA/viewform?usp=publish-editor" target="_blank" rel="noopener">Isi Form Relawan</a>
+        <a class="btn-main" href="https://docs.google.com/forms/d/e/1FAIpQLSdW8THTFdNDI0LDWJRnTYQBxJFYNVNfALht9ANAqgoNsTbgMA/viewform?usp=publish-editor" target="_blank" rel="noopener">Daftar sebagai Relawan</a>
       </article>
+
       <article class="choice-card gold">
-        <h2>Rekomendasikan Masjidmu</h2>
-        <p>Untuk masyarakat yang ingin mengusulkan masjid agar diperhatikan dan masuk proses awal Ekspedisi Power of Masjid.</p>
-        <div class="pill-list" aria-label="Contoh kebutuhan masjid">
-          <span class="unit-pill benefit-pill">Karpet / Perlengkapan</span>
+        <h2 class="choice-title">Rekomendasikan Masjidmu</h2>
+        <p class="choice-desc">Untuk masyarakat yang mengetahui masjid yang layak diperhatikan, dikuatkan, atau didampingi dalam jalur Ekspedisi Power of Masjid.</p>
+        <div class="pill-list" aria-label="Contoh bentuk kebutuhan">
+          <span class="unit-pill benefit-pill">Karpet / perlengkapan</span>
           <span class="unit-pill benefit-pill">Kipas / AC</span>
-          <span class="unit-pill benefit-pill">Renovasi Ringan</span>
-          <span class="unit-pill benefit-pill">Dukungan Marbot</span>
-          <span class="unit-pill benefit-pill">Program Jamaah</span>
-          <span class="unit-pill benefit-pill">Digitalisasi Masjid</span>
+          <span class="unit-pill benefit-pill">Renovasi ringan</span>
+          <span class="unit-pill benefit-pill">Dukungan marbot</span>
+          <span class="unit-pill benefit-pill">Program jamaah</span>
+          <span class="unit-pill benefit-pill">Digitalisasi masjid</span>
         </div>
-        <details class="more">
+        <details class="clean-detail">
           <summary>Lihat ketentuan rekomendasi</summary>
-          <div class="more-content">
-            <p>Rekomendasi tidak otomatis membuat masjid terpilih atau menerima bantuan. Panitia akan mempelajari data, kebutuhan, kesiapan, dan kondisi masjid terlebih dahulu.</p>
-            <p>Pemberi rekomendasi diharapkan menjelaskan alasan masjid layak diperhatikan dan bentuk bantuan yang diketahui.</p>
+          <div class="detail-content">
+            <p>Pemberi rekomendasi perlu menjelaskan alasan masjid tersebut layak diperhatikan, kondisi yang diketahui, serta bentuk kebutuhan yang terlihat. Masjid yang direkomendasikan akan dipelajari oleh panitia.</p>
+            <p>Rekomendasi tidak otomatis membuat masjid terpilih atau menerima bantuan. Website aktif menjadi bagian dari kesiapan awal, tetapi bukan jaminan bantuan.</p>
           </div>
         </details>
-        <div style="height:18px"></div>
-        <a class="btn btn-gold" href="https://docs.google.com/forms/d/e/1FAIpQLSfT43JPnS1Y5wt5ZS8496RLVecsSqUovrHGrZZARtkjkZyG3w/viewform?usp=publish-editor" target="_blank" rel="noopener">Rekomendasikan Masjid</a>
+        <a class="btn-main gold" href="https://docs.google.com/forms/d/e/1FAIpQLSfT43JPnS1Y5wt5ZS8496RLVecsSqUovrHGrZZARtkjkZyG3w/viewform?usp=publish-editor" target="_blank" rel="noopener">Rekomendasikan Masjid</a>
       </article>
     </div>
   </div>
 </section>
 
-<section class="section compact" id="catatan">
+<section class="section" id="catatan">
   <div class="container">
     <div class="note-box">
-      <h2>Catatan Penting</h2>
+      <span class="eyebrow">Catatan penting</span>
+      <h2 style="margin-top:12px;">Agar tidak salah memahami Ekspedisi</h2>
       <ul>
-        <li>Ekspedisi Power of Masjid disiapkan dalam rangka Milad 10 Tahun Yayasan Nasi Jum'at.</li>
+        <li>Ekspedisi Power of Masjid adalah gerakan Milad 10 Tahun Yayasan Nasi Jum'at untuk mengajak umat kembali memakmurkan masjid.</li>
         <li>Relawan yang dibutuhkan adalah relawan persiapan yang membantu unit kerja, bukan relawan acara besar atau hari-H.</li>
-        <li>Masjid yang direkomendasikan akan dipelajari oleh panitia dan tidak otomatis terpilih atau menerima bantuan.</li>
-        <li>Website aktif menjadi bagian dari proses awal, tetapi bukan jaminan bantuan.</li>
-        <li>Detail penentuan masjid dan bentuk bantuan menjadi bagian dari pertimbangan internal panitia.</li>
+        <li>Rekomendasi masjid tidak otomatis membuat masjid terpilih atau menerima bantuan.</li>
+        <li>Website Power of Masjid menjadi pintu awal penguatan digital, tetapi bukan jaminan bantuan.</li>
+        <li>Bantuan mengikuti proses panitia, kebutuhan masjid, kesiapan, dan kemampuan program.</li>
       </ul>
-    </div>
-    <div class="cta-panel">
-      <h2>Masih ingin bertanya tentang Ekspedisi?</h2>
-      <p>Hubungi panitia untuk informasi lebih lanjut, kolaborasi sponsor, atau pertanyaan seputar relawan dan rekomendasi masjid.</p>
-      <div class="cta-actions">
-        <a class="btn btn-gold" href="https://wa.me/628211043809" target="_blank" rel="noopener">Tanya Panitia via WhatsApp</a>
-        <a class="btn btn-outline" href="index.html">Kembali ke Website Power of Masjid</a>
+      <div class="hero-actions" style="justify-content:flex-start;margin-top:22px;">
+        <a class="btn btn-primary" href="https://wa.me/628211043809" target="_blank" rel="noopener">Tanya Panitia via WhatsApp</a>
       </div>
     </div>
   </div>
 </section>
 </main>
 
-<footer class="footer">
-  <div class="container">&copy; 2026 Power of Masjid — Yayasan Nasi Jum'at.<br>Memakmurkan Masjid, Menguatkan Umat.</div>
-</footer>
+<footer class="footer"><div class="container">&copy; 2026 Power of Masjid — Yayasan Nasi Jum'at.<br>Memakmurkan Masjid, Menguatkan Umat.</div></footer>
 <script>
 function toggleMenu(){document.getElementById('navMenu').classList.toggle('show');}
-document.addEventListener('click',function(e){
-  const nav=document.getElementById('navMenu');
-  const btn=document.querySelector('.nav-toggle');
-  if(nav&&btn&&!nav.contains(e.target)&&!btn.contains(e.target)){nav.classList.remove('show');}
-});
+document.addEventListener('click',function(e){const nav=document.getElementById('navMenu');const btn=document.querySelector('.nav-toggle');if(nav&&btn&&!nav.contains(e.target)&&!btn.contains(e.target)){nav.classList.remove('show');}});
 </script>
 </body>
 </html>
