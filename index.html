@@ -100,31 +100,142 @@ a{text-decoration:none;color:inherit}
 .footer-ekosistem h4{font-size:15px;color:var(--muted);text-transform:uppercase;letter-spacing:2px;margin-bottom:1rem;font-weight:800}
 .footer-bottom{text-align:center;color:var(--muted);font-size:15px}
 
-/* Popup */
-.modal-backdrop{position:fixed;inset:0;background:rgba(6,24,14,.62);backdrop-filter:blur(8px);z-index:999;display:none;align-items:center;justify-content:center;padding:18px}
-.modal-backdrop.show{display:flex}
-.milad-modal{width:min(920px,100%);background:#fff;border-radius:28px;box-shadow:0 30px 90px rgba(0,0,0,.28);overflow:hidden;border:1px solid rgba(201,168,76,.35);position:relative}
-.modal-close{position:absolute;right:16px;top:14px;width:38px;height:38px;border-radius:50%;border:1px solid var(--border);background:#fff;color:var(--primary-dark);font-size:22px;line-height:1;cursor:pointer;z-index:2}
-.modal-head{padding:28px 28px 22px;background:linear-gradient(135deg,var(--primary-dark),var(--primary));color:#fff;text-align:center;position:relative;overflow:hidden}
-.modal-head::after{content:'';position:absolute;inset:auto -60px -140px auto;width:280px;height:280px;background:rgba(201,168,76,.22);border-radius:50%}
-.modal-logos{display:flex;align-items:center;justify-content:center;gap:18px;margin-bottom:12px;position:relative;z-index:1}
-.modal-logos img{height:58px;width:auto;background:#fff;border-radius:16px;padding:8px;box-shadow:0 10px 25px rgba(0,0,0,.12)}
-.modal-head h2{font-size:28px;margin-bottom:6px;position:relative;z-index:1}
-.modal-head p{color:rgba(255,255,255,.86);max-width:640px;margin:0 auto;position:relative;z-index:1}
-.modal-body{padding:26px;background:linear-gradient(180deg,#fff,var(--bg))}
-.popup-choices{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-.popup-card{background:#fff;border:1px solid var(--border);border-radius:20px;padding:22px;box-shadow:0 12px 32px rgba(15,66,40,.08)}
-.popup-card h3{color:var(--primary-dark);font-size:20px;margin-bottom:8px}
-.popup-card p{color:var(--muted);font-size:14px;margin-bottom:18px;line-height:1.7}
-.popup-foot{text-align:center;color:var(--muted);font-size:12px;margin-top:16px}
-
+/* Popup Milad - kotak kecil, tidak menutupi seluruh halaman */
+.milad-popup-wrap{
+  position:fixed;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+  width:min(420px,calc(100vw - 28px));
+  z-index:9999;
+  display:none;
+  pointer-events:none;
+}
+.milad-popup-wrap.show{display:block;}
+.milad-popup{
+  width:100%;
+  background:#fff;
+  border-radius:22px;
+  border:1px solid rgba(201,168,76,.42);
+  box-shadow:0 18px 55px rgba(15,66,40,.24);
+  overflow:hidden;
+  pointer-events:auto;
+  max-height:calc(100vh - 32px);
+  overflow-y:auto;
+}
+.popup-close{
+  position:absolute;
+  right:10px;
+  top:10px;
+  width:34px;
+  height:34px;
+  border-radius:50%;
+  border:1px solid rgba(255,255,255,.45);
+  background:rgba(255,255,255,.94);
+  color:var(--primary-dark);
+  font-size:22px;
+  line-height:1;
+  cursor:pointer;
+  z-index:3;
+  box-shadow:0 8px 18px rgba(0,0,0,.12);
+}
+.popup-head{
+  padding:18px 18px 15px;
+  background:linear-gradient(135deg,var(--primary-dark),var(--primary));
+  color:#fff;
+  text-align:center;
+  position:relative;
+  overflow:hidden;
+}
+.popup-head::after{
+  content:'';
+  position:absolute;
+  right:-55px;
+  bottom:-90px;
+  width:180px;
+  height:180px;
+  border-radius:999px;
+  background:rgba(201,168,76,.18);
+}
+.popup-logo{
+  position:relative;
+  z-index:1;
+  display:block;
+  height:86px;
+  max-width:220px;
+  object-fit:contain;
+  margin:0 auto 10px;
+  background:#fff;
+  border-radius:16px;
+  padding:8px;
+  box-shadow:0 10px 22px rgba(0,0,0,.14);
+}
+.popup-head h2{
+  position:relative;
+  z-index:1;
+  font-size:19px;
+  line-height:1.25;
+  margin:0 0 5px;
+  font-weight:800;
+}
+.popup-head p{
+  position:relative;
+  z-index:1;
+  color:rgba(255,255,255,.88);
+  font-size:12.5px;
+  line-height:1.55;
+  max-width:330px;
+  margin:0 auto;
+}
+.popup-body{
+  padding:14px;
+  background:linear-gradient(180deg,#fff,var(--bg));
+}
+.popup-choice{
+  display:block;
+  background:#fff;
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:13px;
+  margin-bottom:10px;
+  box-shadow:0 8px 22px rgba(15,66,40,.07);
+}
+.popup-choice h3{
+  color:var(--primary-dark);
+  font-size:15.5px;
+  margin-bottom:4px;
+  font-weight:800;
+}
+.popup-choice p{
+  color:var(--muted);
+  font-size:12.5px;
+  line-height:1.55;
+  margin-bottom:10px;
+}
+.popup-choice .btn{
+  width:100%;
+  padding:11px 14px;
+  font-size:13px;
+  border-radius:12px;
+}
+.popup-skip{
+  display:block;
+  width:100%;
+  border:0;
+  background:transparent;
+  color:var(--muted);
+  font-weight:800;
+  font-size:12.5px;
+  padding:6px 0 2px;
+  cursor:pointer;
+}
+.popup-skip:hover{color:var(--primary-dark);}
 @media (min-width:992px){.hero h1{font-size:56px}.hero p{font-size:20px}.btn{font-size:16px;padding:16px 32px}.section-title{font-size:38px}}
 @media (max-width:992px){.grid-3{grid-template-columns:repeat(2,1fr)}.hero h1{font-size:46px}.nav-inner{align-items:flex-start;flex-direction:column}.nav-menu{justify-content:flex-start}}
 @media (max-width:768px){.container{padding:0 1.1rem}.grid-2,.grid-3,.popup-choices{grid-template-columns:1fr}.hero{padding:4rem 0}.hero h1{font-size:36px}.hero p{font-size:16px}.section{padding:4rem 0}.section-title{font-size:26px;margin-bottom:2.5rem}.cta-bottom h2{font-size:30px}.cta-bottom p{font-size:16px}.brand-text strong{font-size:16px}.ynj-logo{height:38px}.brand-logo{height:42px}.nav-link{font-size:12px;padding:9px 11px}.modal-head h2{font-size:23px}.modal-logos img{height:52px}}
 
-/* Mobile Menu & Popup Logo Fix */
+/* Mobile Menu */
 .nav-toggle{display:none;align-items:center;justify-content:center;width:42px;height:42px;border-radius:12px;border:1px solid var(--border);background:var(--white);color:var(--primary-dark);font-size:24px;font-weight:800;cursor:pointer;box-shadow:0 6px 18px rgba(0,0,0,.05)}
-.modal-logo-single img{height:118px!important;max-width:min(320px,75vw);object-fit:contain;border-radius:18px;padding:10px;background:#fff}
 @media(max-width:860px){
   .nav-inner{flex-direction:row!important;align-items:center!important;justify-content:space-between!important;flex-wrap:wrap;gap:10px}
   .brand-lockup{flex:1;gap:10px}.brand-text{display:none}.brand-divider{height:34px}.brand-logo{height:40px}.ynj-logo{height:38px}
@@ -156,30 +267,26 @@ a{text-decoration:none;color:inherit}
   </div>
 </nav>
 
-<div class="modal-backdrop" id="miladPopup" role="dialog" aria-modal="true" aria-labelledby="miladTitle">
-  <div class="milad-modal">
-    <button class="modal-close" type="button" onclick="closeMiladPopup()" aria-label="Tutup popup">×</button>
-    <div class="modal-head">
-      <div class="modal-logos modal-logo-single">
-        <img src="logo EPOM.png" alt="Logo Ekspedisi Power of Masjid">
-      </div>
+<div class="milad-popup-wrap" id="miladPopup" role="dialog" aria-modal="false" aria-labelledby="miladTitle">
+  <div class="milad-popup">
+    <button class="popup-close" type="button" onclick="closeMiladPopup()" aria-label="Tutup popup">×</button>
+    <div class="popup-head">
+      <img src="logo EPOM.png" alt="Logo Ekspedisi Power of Masjid" class="popup-logo">
       <h2 id="miladTitle">Milad 10 Tahun Yayasan Nasi Jum'at</h2>
-      <p>Pilih jalur yang ingin Anda lihat. Website utama tetap untuk digitalisasi masjid, sedangkan Ekspedisi Power of Masjid memiliki halaman khusus.</p>
+      <p>Pilih jalur yang ingin dibuka. Website utama tetap untuk digitalisasi masjid, Ekspedisi punya halaman khusus.</p>
     </div>
-    <div class="modal-body">
-      <div class="popup-choices">
-        <div class="popup-card">
-          <h3>Website Gratis untuk Masjid</h3>
-          <p>Untuk DKM yang ingin dibantu membuat website masjid, TV display, jadwal kegiatan, dan sistem informasi masjid tanpa ribet.</p>
-          <button class="btn btn-primary" type="button" onclick="chooseWebsiteGratis()">Lihat Website Gratis</button>
-        </div>
-        <div class="popup-card">
-          <h3>Ekspedisi Power of Masjid</h3>
-          <p>Untuk relawan persiapan dan masyarakat yang ingin merekomendasikan masjid dalam rangka Milad 10 Tahun YNJ.</p>
-          <a class="btn btn-gold" href="ekspedisi-power-of-masjid.html">Masuk Halaman Ekspedisi</a>
-        </div>
+    <div class="popup-body">
+      <div class="popup-choice">
+        <h3>Website Gratis untuk Masjid</h3>
+        <p>Untuk DKM yang ingin dibantu membuat website masjid, TV display, jadwal kegiatan, dan sistem informasi masjid.</p>
+        <button class="btn btn-primary" type="button" onclick="chooseWebsiteGratis()">Lihat Website Gratis</button>
       </div>
-      <div class="popup-foot">Popup ini hanya muncul sekali dalam satu sesi kunjungan.</div>
+      <div class="popup-choice">
+        <h3>Ekspedisi Power of Masjid</h3>
+        <p>Untuk relawan persiapan dan masyarakat yang ingin merekomendasikan masjid dalam rangka Milad 10 Tahun YNJ.</p>
+        <a class="btn btn-gold" href="ekspedisi-power-of-masjid.html">Masuk Halaman Ekspedisi</a>
+      </div>
+      <button class="popup-skip" type="button" onclick="closeMiladPopup()">Tutup, lanjut melihat website</button>
     </div>
   </div>
 </div>
