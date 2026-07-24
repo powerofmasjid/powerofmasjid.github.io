@@ -7,6 +7,11 @@
 <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&text=0123456789:jm%20lagi&display=swap" rel="stylesheet">
 
+<!-- TAMBAHAN PWA: Meta tag agar dikenali sebagai aplikasi HP -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#064E3B">
+<link rel="apple-touch-icon" href="Logo Power of Masjid.png">
+
 <style>
 /* =========================================================
    1. VARIABEL TEMA WARNA (DEFAULT: ZAMRUD PREMIUM)
@@ -93,7 +98,7 @@ body{font-family:var(--font-utama);background:var(--bg);color:var(--text);transi
 .sholat-time{font-family:'Orbitron', sans-serif; font-size:14px; font-weight:700; color:white; margin-top:4px; letter-spacing:1px;}
 .sholat-item.aktif .sholat-name{color:var(--primary-dark); font-weight:700;}
 .sholat-item.aktif .sholat-time{color:var(--primary-dark); font-weight:800;}
-.countdown-badge{display:inline-block; font-size:9px; font-weight:700; color:var(--primary-dark); background:rgba(255,255,255,0.8); padding:2px 6px; border-radius:10px; margin-top:6px; letter-spacing:0.5px;}
+.countdown-badge{display:inline-block; font-size:9px; font-weight:800; color:var(--primary-dark); background:rgba(255,255,255,0.9); padding:3px 8px; border-radius:10px; margin-top:6px; letter-spacing:0.5px; box-shadow:0 2px 5px rgba(0,0,0,0.1);}
 
 /* Komponen Card Umum */
 .card{
@@ -446,6 +451,16 @@ body{font-family:var(--font-utama);background:var(--bg);color:var(--text);transi
     <div class="card" id="list-jadwal"><div class="kosong">Memuat...</div></div>
   </div>
 
+  <!-- FITUR BARU: Titip Doa & Hajat -->
+  <div class="section">
+    <div class="card" style="background: var(--white); padding: 1.5rem; text-align: center; border: 1px solid var(--border);">
+      <div style="font-size: 28px; margin-bottom: 8px;">🤲</div>
+      <h3 style="font-size: 15px; font-weight: 700; color: var(--primary-dark); margin-bottom: 6px;">Layanan Titip Doa & Hajat</h3>
+      <p style="font-size: 12px; color: var(--muted); margin-bottom: 15px; line-height: 1.5;">Punya hajat atau doa yang ingin diaminkan bersama jamaah masjid? Sampaikan kepada pengurus.</p>
+      <button onclick="kirimTitipDoa()" style="width: 100%; background: var(--primary-light); color: var(--primary); font-weight: 800; border: 1px solid var(--primary); padding: 12px; border-radius: 10px; cursor: pointer; font-size: 13px; transition: 0.2s;">KIRIM TITIPAN DOA</button>
+    </div>
+  </div>
+
   <div class="section" id="form-notif-section">
     <div class="card" style="background: linear-gradient(135deg, var(--primary), var(--primary-dark)); padding: 1.5rem; text-align: center; border: 1px solid var(--accent);">
       <div style="font-size: 28px; margin-bottom: 8px;">📲</div>
@@ -494,6 +509,28 @@ var ID_MASJID = '';
 var JADWAL_KOREKSI = { imsak:0, subuh:0, syuruq:0, dhuha:0, dzuhur:0, ashar:0, maghrib:0, isya:0 };
 var CACHE_DURATION = 60000; 
 var PENGUMUMAN_INTERVAL = null;
+
+// Registrasi Service Worker PWA
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('sw.js').then(function(registration) {
+      console.log('ServiceWorker PWA berhasil didaftarkan: ', registration.scope);
+    }, function(err) {
+      console.log('ServiceWorker PWA gagal didaftarkan: ', err);
+    });
+  });
+}
+
+// Fungsi Buka Layanan Titip Doa
+function kirimTitipDoa() {
+    var nomorWa = window.WA_MASJID;
+    if (!nomorWa) {
+        showToastMsg('Nomor WA Masjid belum diatur.');
+        return;
+    }
+    var text = "Assalamu'alaikum, saya jamaah masjid.\n\nIzin menitipkan doa/hajat agar diaminkan bersama jamaah lainnya:\n\n[Tulis doa Anda di sini]\n\nTerima kasih, jazakumullah khairan.";
+    window.open('https://wa.me/' + nomorWa + '?text=' + encodeURIComponent(text), '_blank');
+}
 
 function animateValue(obj, start, end, duration, prefix = '', suffix = '') {
     let startTimestamp = null;
@@ -881,18 +918,16 @@ async function loadJadwal() {
   }
 }
 
+// FUNGSI BARU: Live Countdown Waktu Sholat di Web
+let liveSholatTimer = null;
+
 async function loadJadwalSholat(lat, lon) {
   var card = document.getElementById('sholat-card');
   var grid = document.getElementById('sholat-grid');
   var title = document.getElementById('sholat-date');
 
-  function cleanCoord(v) {
-    return String(v || '').replace(',', '.').replace(/[^0-9.\-]/g, '').trim();
-  }
-
-  function cleanTime(v) {
-    return String(v || '').split(' ')[0].trim();
-  }
+  function cleanCoord(v) { return String(v || '').replace(',', '.').replace(/[^0-9.\-]/g, '').trim(); }
+  function cleanTime(v) { return String(v || '').split(' ')[0].trim(); }
 
   function adjustTime(timeStr, addMinutes) {
     timeStr = cleanTime(timeStr);
@@ -913,37 +948,44 @@ async function loadJadwalSholat(lat, lon) {
     return (parseInt(p[0], 10) * 60) + parseInt(p[1], 10);
   }
 
+  // MODIFIKASI: Menambahkan Live Countdown
   function renderJadwal(sholat, labelSumber) {
     if (!card || !grid || !title || !sholat || !sholat.length) return;
 
-    var today = new Date();
-    var now = today.getHours() * 60 + today.getMinutes();
-    var aktifIdx = 0;
+    function draw() {
+        var today = new Date();
+        var now = today.getHours() * 60 + today.getMinutes();
+        var aktifIdx = 0;
 
-    for (var i = 0; i < sholat.length; i++) {
-      if (now >= toMenit(sholat[i].time)) aktifIdx = i;
+        for (var i = 0; i < sholat.length; i++) {
+          if (now >= toMenit(sholat[i].time)) aktifIdx = i;
+        }
+
+        card.style.display = 'block';
+        var namaHariArr = ['Ahad','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
+        title.textContent = namaHariArr[today.getDay()] + ', ' + today.toLocaleDateString('id-ID', {day:'numeric', month:'long', year:'numeric'}) + (labelSumber ? ' · ' + labelSumber : '');
+
+        var nextIdxAktif = (aktifIdx + 1) % sholat.length;
+        var waktuBerikutnya = toMenit(sholat[nextIdxAktif].time);
+        var sisaMenit = waktuBerikutnya - now;
+        if (sisaMenit <= 0) sisaMenit += 1440;
+        var jamCountdown = Math.floor(sisaMenit / 60);
+        var menitCountdown = sisaMenit % 60;
+        var teksSisa = jamCountdown > 0 ? jamCountdown + 'j ' + menitCountdown + 'm lagi' : menitCountdown + 'm lagi';
+
+        var htmlJadwal = '';
+        sholat.forEach(function(s, idx) {
+          var isAktif = idx === aktifIdx;
+          var isNext = idx === nextIdxAktif;
+          var extraHtml = isNext ? '<div class="countdown-badge">⏳ ' + teksSisa + '</div>' : '';
+          htmlJadwal += '<div class="sholat-item' + (isAktif ? ' aktif' : '') + '"><div class="sholat-name">' + s.name + '</div><div class="sholat-time">' + s.time + '</div>' + extraHtml + '</div>';
+        });
+        grid.innerHTML = htmlJadwal;
     }
 
-    card.style.display = 'block';
-    var namaHariArr = ['Ahad','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
-    title.textContent = namaHariArr[today.getDay()] + ', ' + today.toLocaleDateString('id-ID', {day:'numeric', month:'long', year:'numeric'}) + (labelSumber ? ' · ' + labelSumber : '');
-
-    var nextIdxAktif = (aktifIdx + 1) % sholat.length;
-    var waktuBerikutnya = toMenit(sholat[nextIdxAktif].time);
-    var sisaMenit = waktuBerikutnya - now;
-    if (sisaMenit <= 0) sisaMenit += 1440;
-    var jamCountdown = Math.floor(sisaMenit / 60);
-    var menitCountdown = sisaMenit % 60;
-    var teksSisa = jamCountdown > 0 ? jamCountdown + 'j ' + menitCountdown + 'm lagi' : menitCountdown + 'm lagi';
-
-    var htmlJadwal = '';
-    sholat.forEach(function(s, idx) {
-      var isAktif = idx === aktifIdx;
-      var isNext = idx === nextIdxAktif;
-      var extraHtml = isNext ? '<div class="countdown-badge">⏳ ' + teksSisa + '</div>' : '';
-      htmlJadwal += '<div class="sholat-item' + (isAktif ? ' aktif' : '') + '"><div class="sholat-name">' + s.name + '</div><div class="sholat-time">' + s.time + '</div>' + extraHtml + '</div>';
-    });
-    grid.innerHTML = htmlJadwal;
+    draw();
+    if(window.liveSholatTimer) clearInterval(window.liveSholatTimer);
+    window.liveSholatTimer = setInterval(draw, 60000); // Otomatis refresh tiap 1 menit
   }
 
   function getKoreksi(key) {

@@ -4,6 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin — Power of Masjid</title>
+    
+    <!-- TAMBAHAN PWA: Meta tag agar Admin DKM bisa install di HP -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#0F4228">
+    <link rel="apple-touch-icon" href="Logo Power of Masjid.png">
+
     <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
@@ -129,8 +135,8 @@
             <input type="email" class="form-input" id="login-gmail" placeholder="Contoh: pengurus@gmail.com">
         </div>
         <div class="form-group" style="text-align:left;">
-            <label class="form-label">PIN (6 Digit)</label>
-            <input type="password" class="form-input" id="login-pin" maxlength="6" placeholder="Contoh: 123456">
+            <label class="form-label">PIN (6-8 Digit)</label>
+            <input type="password" class="form-input" id="login-pin" placeholder="Contoh: 123456">
         </div>
         <button class="btn-submit" onclick="prosesLogin()" id="btn-login">Masuk</button>
     </div>
@@ -242,6 +248,14 @@
             <button class="btn-submit" id="btn-cetak-kas" style="background:#1B6B3A; color:white; margin-top:8px" onclick="generatePDFKas()">📄 Cetak Laporan Buku Kas</button>
             
             <div class="divider"></div>
+            
+            <!-- TAMBAHAN: Search Bar Transaksi -->
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                <div class="section-title" style="margin-bottom: 0;">Daftar Transaksi</div>
+            </div>
+            <input type="text" class="form-input" id="search-trx" placeholder="🔍 Cari keterangan transaksi..." onkeyup="filterTrx()" style="margin-bottom: 15px;">
+            <!-- END TAMBAHAN -->
+            
             <div id="list-trx-admin"></div>
         </div>
 
@@ -419,7 +433,6 @@
             <div class="section-title">Kelola Database Jamaah</div>
             <div class="info-hint" style="margin-bottom: 15px;">
                 Data ini dipakai untuk kebutuhan kegiatan masjid, pengingat WA, program amal, dan Rezeki Berkah.
-                Data detail tetap untuk internal masjid/admin, bukan untuk dibagikan ke sponsor.
             </div>
 
             <div class="profil-section">
@@ -495,7 +508,13 @@
 
             <div class="profil-section">
                 <h3>Daftar Jamaah</h3>
-                <button class="btn-submit" style="background:#1B6B3A; color:white; margin-bottom: 10px;" onclick="loadDataJamaah(this)">🔄 Segarkan Data</button>
+                
+                <!-- TAMBAHAN: Search Bar Jamaah -->
+                <div class="form-row" style="margin-bottom: 10px;">
+                    <button class="btn-submit" style="background:#1B6B3A; color:white; margin-top:0;" onclick="loadDataJamaah(this)">🔄 Segarkan Data</button>
+                    <input type="text" class="form-input" id="search-jamaah" placeholder="🔍 Cari nama atau no WA..." onkeyup="filterJamaah()" style="margin-top:0;">
+                </div>
+                <!-- END TAMBAHAN -->
 
                 <div class="table-container">
                     <table class="table-jamaah">
@@ -665,6 +684,7 @@
 <div class="toast" id="toast">Berhasil!</div>
 
 <script>
+    // PASTIKAN LINK INI SESUAI DENGAN DEPLOYMENT ANDA
     var API_URL = 'https://script.google.com/macros/s/AKfycbw4NKtVPvYcEcnf7KJiggwPYX4oeHs92mShAMOCN3vMneC2NAmVc84DJo9X6xsCUUoIfQ/exec';
     
     var KUNCI_RAHASIA = 'POW_MASJID_SECURE_2026'; 
@@ -677,6 +697,47 @@
     var targetBlast = null; 
     var globalPdfBlob = null; 
     var globalPdfFilename = '';
+
+    // Registrasi PWA (Agar panel Admin bisa di-install di HP)
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+            navigator.serviceWorker.register('sw.js').catch(function(err) {
+                console.log('PWA SW Admin Error: ', err);
+            });
+        });
+    }
+
+    // Fungsi Filter Transaksi (Live Search)
+    function filterTrx() {
+        var keyword = document.getElementById('search-trx').value.toLowerCase();
+        var cards = document.querySelectorAll('#list-trx-admin .item-card');
+        cards.forEach(function(card) {
+            var text = card.innerText.toLowerCase();
+            card.style.display = text.indexOf(keyword) > -1 ? '' : 'none';
+        });
+    }
+
+    // Fungsi Filter Jamaah (Live Search)
+    function filterJamaah() {
+        var keyword = document.getElementById('search-jamaah').value.toLowerCase();
+        var rows = document.querySelectorAll('#tabel-jamaah-body tr');
+        rows.forEach(function(row) {
+            if (row.cells.length > 1) { // abaikan baris loading/kosong
+                var text = row.innerText.toLowerCase();
+                row.style.display = text.indexOf(keyword) > -1 ? '' : 'none';
+            }
+        });
+    }
+
+    // Pengecekan Sesi Terpusat (Auto-Logout)
+    function cekSesi(j) {
+        if (j.status === 'error' && j.message && j.message.includes('Akses Ditolak')) {
+            showToast('Sesi login kedaluwarsa. Mengeluarkan akun...');
+            setTimeout(logout, 2000);
+            return false;
+        }
+        return true;
+    }
 
     function updateDescCounter() {
         var el = document.getElementById('prof-deskripsi');
@@ -802,6 +863,7 @@
         fetch(API_URL, { method: 'POST', body: JSON.stringify(d) })
         .then(r => r.json())
         .then(j => {
+            if(!cekSesi(j)) return;
             batalHapus(); 
             if(j.status === 'ok') { 
                 showToast('Data Berhasil Dihapus'); 
@@ -857,6 +919,7 @@
                 })
                 .then(r => r.json())
                 .then(res => { 
+                    if(!cekSesi(res)) return;
                     document.getElementById(statusId).style.display = 'none'; 
                     if(res.status === 'ok') { 
                         document.getElementById(targetId).value = res.url; 
@@ -1007,6 +1070,7 @@
         fetch(API_URL, { method: 'POST', body: JSON.stringify(d) })
         .then(r => r.json())
         .then(j => { 
+            if(!cekSesi(j)) { setLoading(btn, false); return; }
             setLoading(btn, false); 
             if(j.status === 'ok') { 
                 showToast('Transaksi Berhasil Disimpan'); 
@@ -1021,17 +1085,18 @@
     }
 
     function loadTransaksiAdmin() {
-        fetch(API_URL + '?action=getTransaksi&id_masjid=' + ID_MASJID + '&_t=' + Date.now())
+        fetch(API_URL + '?action=getTransaksi&id_masjid=' + ID_MASJID + '&token=' + USER_TOKEN + '&_t=' + Date.now())
         .then(r => r.json())
         .then(j => {
+            if(!cekSesi(j)) return;
             var el = document.getElementById('list-trx-admin'); 
             if (j.status !== 'ok' || j.data.length === 0) { 
                 el.innerHTML = '<div class="kosong">Belum ada transaksi kas dicatat.</div>'; 
                 return; 
             }
             
-            LAST_5_TRX = j.data.slice(0, 5); 
-            el.innerHTML = '<div style="font-size:12px; color:#6b7280; margin-bottom:8px;">5 Transaksi Terakhir</div>' + LAST_5_TRX.map((t, idx) => `
+            LAST_5_TRX = j.data.slice(0, 10); // Ambil 10 agar search lebih berguna
+            el.innerHTML = '<div style="font-size:12px; color:#6b7280; margin-bottom:8px;">10 Transaksi Terakhir</div>' + LAST_5_TRX.map((t, idx) => `
                 <div class="item-card" onclick="toggleAction(this)">
                     <div class="item-card-title">${t.keterangan}</div>
                     <div class="item-card-footer">
@@ -1068,9 +1133,10 @@
         var btn = document.getElementById('btn-cetak-kas');
         setLoading(btn, true);
         
-        fetch(API_URL + '?action=getTransaksi&id_masjid=' + ID_MASJID + '&_t=' + Date.now())
+        fetch(API_URL + '?action=getTransaksi&id_masjid=' + ID_MASJID + '&token=' + USER_TOKEN + '&_t=' + Date.now())
         .then(r => r.json())
         .then(j => {
+            if(!cekSesi(j)) { setLoading(btn, false); return; }
             setLoading(btn, false); 
             
             var all = j.data || [];
@@ -1148,9 +1214,10 @@
     }
 
     function loadProgramAmalAdmin() { 
-        fetch(API_URL + '?action=getProgramAmal&id_masjid=' + ID_MASJID + '&_t=' + Date.now())
+        fetch(API_URL + '?action=getProgramAmal&id_masjid=' + ID_MASJID + '&token=' + USER_TOKEN + '&_t=' + Date.now())
         .then(r => r.json())
         .then(j => { 
+            if(!cekSesi(j)) return;
             if(j.status === 'ok') { 
                 LIST_PROGRAM = j.data; 
                 var sel = document.getElementById('pilih-program');
@@ -1201,6 +1268,7 @@
         fetch(API_URL, { method: 'POST', body: JSON.stringify(d) })
         .then(r => r.json())
         .then(j => { 
+            if(!cekSesi(j)) { setLoading(btn, false); return; }
             setLoading(btn, false); 
             if(j.status === 'ok') { 
                 showToast('Program Dibuat / Diupdate!'); 
@@ -1365,6 +1433,7 @@
         fetch(API_URL, { method: 'POST', body: JSON.stringify(d) })
         .then(r => r.json())
         .then(j => { 
+            if(!cekSesi(j)) { setLoading(btn, false); return; }
             setLoading(btn, false); 
             if(j.status === 'ok') { 
                 showToast('Data Jamaah Tersimpan'); 
@@ -1390,9 +1459,10 @@
         
         var act = tp === 'KURBAN' ? 'getKurban' : (tp === 'ZAKAT' ? 'getZakat' : 'getInfaq');
         
-        fetch(API_URL + `?action=${act}&id_masjid=${ID_MASJID}&id_program=${id_prog}&_t=` + Date.now())
+        fetch(API_URL + `?action=${act}&id_masjid=${ID_MASJID}&id_program=${id_prog}&token=${USER_TOKEN}&_t=` + Date.now())
         .then(r => r.json())
         .then(j => {
+            if(!cekSesi(j)) return;
             var btnCetak = document.getElementById('btn-cetak-pdf');
             if(btnCetak) {
                 btnCetak.disabled = false;
@@ -1560,9 +1630,10 @@
     }
 
     function loadJadwalAdmin() { 
-        fetch(API_URL+'?action=getJadwal&id_masjid='+ID_MASJID+'&_t='+Date.now())
+        fetch(API_URL+'?action=getJadwal&id_masjid='+ID_MASJID+'&token='+USER_TOKEN+'&_t='+Date.now())
         .then(r=>r.json())
         .then(j=>{ 
+            if(!cekSesi(j)) return;
             if(j.data && j.data.length > 0) { 
                 LIST_JADWAL = j.data; 
                 document.getElementById('list-jadwal-admin').innerHTML = j.data.map((x, idx) => `
@@ -1609,7 +1680,9 @@
         
         setLoading(btn,true); 
         fetch(API_URL, { method:'POST', body:JSON.stringify(d) })
-        .then(() => { 
+        .then(r=>r.json())
+        .then(j => { 
+            if(!cekSesi(j)) { setLoading(btn, false); return; }
             setLoading(btn,false); 
             showToast('Jadwal Disimpan!'); 
             document.getElementById('jdw-id-edit').value = '';
@@ -1666,6 +1739,7 @@
             })
             .then(r => r.json())
             .then(res => {
+                if(!cekSesi(res)) return;
                 if(res.status === 'ok') {
                     showToast('✅ ' + res.message);
                 } else {
@@ -1712,6 +1786,7 @@
             })
             .then(r => r.json())
             .then(res => {
+                if(!cekSesi(res)) return;
                 if(res.status === 'ok') {
                     showToast('✅ ' + res.message);
                 } else {
@@ -1727,9 +1802,10 @@
     }
 
     function loadPengumumanAdmin() { 
-        fetch(API_URL+'?action=getPengumuman&id_masjid='+ID_MASJID+'&_t='+Date.now())
+        fetch(API_URL+'?action=getPengumuman&id_masjid='+ID_MASJID+'&token='+USER_TOKEN+'&_t='+Date.now())
         .then(r=>r.json())
         .then(j=>{ 
+            if(!cekSesi(j)) return;
             if(j.data) { 
                 LIST_PENGUMUMAN = j.data; 
                 document.getElementById('list-peng-admin').innerHTML = j.data.map((x, idx) => `
@@ -1767,7 +1843,9 @@
         
         setLoading(btn,true); 
         fetch(API_URL, { method:'POST', body:JSON.stringify(d) })
-        .then(() => { 
+        .then(r=>r.json())
+        .then(j => { 
+            if(!cekSesi(j)) { setLoading(btn, false); return; }
             setLoading(btn,false); 
             showToast('Pengumuman Disimpan!'); 
             document.getElementById('peng-id-edit').value = '';
@@ -1798,9 +1876,10 @@
     }
 
     function loadGaleriAdmin() { 
-        fetch(API_URL+'?action=getGaleri&id_masjid='+ID_MASJID+'&_t='+Date.now())
+        fetch(API_URL+'?action=getGaleri&id_masjid='+ID_MASJID+'&token='+USER_TOKEN+'&_t='+Date.now())
         .then(r=>r.json())
         .then(j=>{ 
+            if(!cekSesi(j)) return;
             if(j.data) { 
                 LIST_GALERI = j.data; 
                 document.getElementById('list-gal-admin').innerHTML = j.data.map((x, idx) => `
@@ -1815,13 +1894,9 @@
         }); 
     }
 
-    // ==========================================
-    // MODIFIKASI: GEMBOK KUOTA GALERI
-    // ==========================================
     function simpanGaleri(btn) { 
         var tp = document.getElementById('gal-tipe').value;
         
-        // Cek Kuota
         var countFoto = LIST_GALERI.filter(g => g.tipe === 'FOTO').length;
         var countFlyer = LIST_GALERI.filter(g => g.tipe === 'FLYER').length;
         var countVideo = LIST_GALERI.filter(g => g.tipe === 'VIDEO_YOUTUBE').length;
@@ -1863,7 +1938,9 @@
         
         setLoading(btn,true); 
         fetch(API_URL, { method:'POST', body:JSON.stringify(d) })
-        .then(() => { 
+        .then(r=>r.json())
+        .then(j => { 
+            if(!cekSesi(j)) { setLoading(btn, false); return; }
             setLoading(btn,false); 
             showToast('Galeri Disimpan!'); 
             document.getElementById('gal-judul').value = '';
@@ -1872,7 +1949,6 @@
             cekOnboarding(); 
         }); 
     }
-    // ==========================================
 
     function escapeHtmlJamaah(text) {
         return String(text || '').replace(/[&<>"']/g, function(match) {
@@ -1943,6 +2019,7 @@
             .then(res => res.json())
             .then(res => {
                 if (btn) setLoading(btn, false);
+                if (!cekSesi(res)) return;
 
                 if (res.status !== 'ok') {
                     document.getElementById('tabel-jamaah-body').innerHTML =
@@ -2043,6 +2120,7 @@
         fetch(API_URL, { method: 'POST', body: JSON.stringify(payload) })
             .then(res => res.json())
             .then(res => {
+                if(!cekSesi(res)) { setLoading(btn, false); return; }
                 setLoading(btn, false);
                 if (res.status === 'ok') {
                     showToast(mode === 'edit' ? '✅ Data jamaah diperbarui' : '✅ Jamaah berhasil ditambahkan');
@@ -2118,6 +2196,7 @@
         fetch(API_URL, { method: 'POST', body: JSON.stringify(payload) })
             .then(res => res.json())
             .then(res => {
+                if(!cekSesi(res)) return;
                 if (res.status === 'ok') {
                     showToast('✅ Kategori berhasil diubah');
                     loadDataJamaah();
@@ -2149,6 +2228,7 @@
         fetch(API_URL, { method: 'POST', body: JSON.stringify(payload) })
             .then(res => res.json())
             .then(res => {
+                if(!cekSesi(res)) return;
                 if (res.status === 'ok') {
                     showToast('✅ Kontak berhasil dihapus');
                     loadDataJamaah();
@@ -2165,9 +2245,10 @@
     }
 
     function loadProfilAdmin() {
-        fetch(API_URL+'?action=getMasjid&id_masjid='+ID_MASJID+'&_t='+Date.now())
+        fetch(API_URL+'?action=getMasjid&id_masjid='+ID_MASJID+'&token='+USER_TOKEN+'&_t='+Date.now())
         .then(r => r.json())
         .then(j => {
+            if(!cekSesi(j)) return;
             var d = j.data;
             var curUrl = window.location.href.split('?')[0];
             var baseWebUrl = curUrl.substring(0, curUrl.lastIndexOf("/")) + "/masjid.html?masjid=" + (ADMIN_DATA.slug || '');
@@ -2276,6 +2357,7 @@
         })
         .then(r => r.json())
         .then(j => { 
+            if(!cekSesi(j)) { setLoading(btn, false); return; }
             setLoading(btn, false); 
             if (j.status === 'ok') { 
                 showToast('Perubahan Profil Berhasil Disimpan!'); 

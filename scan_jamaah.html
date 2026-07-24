@@ -1009,8 +1009,9 @@ async function ambilKodeBerkah() {
         return;
     }
 
-    if (!wa || wa.length < 10) {
-        showNotice('Nomor WhatsApp belum benar.', 'warning');
+    // Validasi panjang nomor WA Indonesia yang wajar (10 - 14 digit)
+    if (!wa || wa.length < 10 || wa.length > 14) {
+        showNotice('Nomor WhatsApp tidak valid. Harus terdiri dari 10 hingga 14 digit angka.', 'warning');
         return;
     }
 
@@ -1020,6 +1021,10 @@ async function ambilKodeBerkah() {
     }
 
     const btn = document.getElementById('btn-klaim');
+
+    // Cegah Double-Entry (Spam Submit)
+    if (btn.disabled) return; 
+
     btn.disabled = true;
     btn.textContent = 'MEMBUAT KODE BERKAH...';
 
@@ -1103,7 +1108,7 @@ async function konfirmasiAmbilBerkah() {
 
     const btn = document.getElementById('btn-ambil');
     btn.disabled = true;
-    btn.textContent = 'MEMERIKSA KODE...';
+    btn.textContent = 'MEMERIKSA...';
 
     try {
         const json = await postData({

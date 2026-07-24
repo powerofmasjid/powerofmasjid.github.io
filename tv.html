@@ -69,7 +69,7 @@
   .header-right { text-align: right; flex-shrink: 0; text-shadow: 0 2px 10px rgba(0,0,0,0.5); }
   
   .jam-digital { font-size: 50px; font-weight: 700; color: var(--gold); font-family: 'Orbitron', sans-serif; line-height: 1; letter-spacing: 2px; text-shadow: 0 0 20px rgba(201,168,76,0.5); }
-  .tanggal-digital { font-size: 18px; color: white; margin-top: 5px; }
+  .tanggal-digital { font-size: 16px; color: white; margin-top: 5px; line-height: 1.3; }
 
   .sholat-bar { display: flex; background: rgba(0,0,0,0.4); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border); height: 95px; align-items: center; padding: 0 5px; flex-shrink: 0; gap: 6px; }
   .sholat-box { flex: 1; text-align: center; padding: 10px 0; border-radius: 12px; border: 1px solid transparent; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
@@ -129,6 +129,21 @@
   .media-title { font-family: var(--font-judul); font-size: 36px; font-weight: 800; color: white; text-shadow: 0 4px 20px black; }
 
   /* =========================================================
+     FITUR BARU: QR CORNER & TICKER BERJALAN
+     ========================================================= */
+  .qr-corner { position: fixed; bottom: 50px; right: 25px; background: rgba(255,255,255,0.95); padding: 10px; border-radius: 12px; z-index: 999; box-shadow: 0 10px 30px rgba(0,0,0,0.6); text-align: center; border: 3px solid var(--gold); transition: opacity 0.5s; }
+  .qr-corner img { width: 85px; height: 85px; display: block; margin: 0 auto; }
+  .qr-corner div { font-size: 10px; color: var(--bg-dark); font-weight: 800; margin-top: 5px; line-height: 1.2; letter-spacing: 0.5px; }
+
+  .ticker-wrap { display: flex; width: 100%; height: 38px; background: var(--gold); color: var(--bg-dark); z-index: 1000; flex-shrink: 0; box-shadow: 0 -2px 15px rgba(0,0,0,0.3); }
+  .ticker-label { background: var(--bg-dark); color: var(--gold); padding: 0 25px; display: flex; align-items: center; font-weight: 800; font-size: 14px; z-index: 2; border-right: 3px solid var(--gold); letter-spacing: 1.5px;}
+  .ticker-content { flex: 1; overflow: hidden; position: relative; display: flex; align-items: center; }
+  .ticker-text { position: absolute; white-space: nowrap; font-weight: 700; font-size: 15px; animation: marquee 30s linear infinite; }
+  @keyframes marquee { from { transform: translateX(100vw); } to { transform: translateX(-100%); } }
+
+  body.mode-iqomah .qr-corner, body.mode-iqomah .ticker-wrap { display: none !important; }
+
+  /* =========================================================
      3. LAYOUT KLASIK TIMUR TENGAH (MERUBAH TOTAL STRUKTUR KE GRID VERTICAL)
      ========================================================= */
   .desain-klasik {
@@ -138,10 +153,11 @@
   body.desain-klasik {
     display: grid;
     grid-template-columns: 320px 1fr;
-    grid-template-rows: auto 1fr;
+    grid-template-rows: auto 1fr auto; /* Tambahan 'auto' di akhir untuk ticker */
     grid-template-areas: 
       "sidebar main"
-      "sidebar main";
+      "sidebar main"
+      "ticker ticker";
   }
   body.desain-klasik .header {
     grid-area: auto;
@@ -176,6 +192,7 @@
   body.desain-klasik .card-saldo, body.desain-klasik .card-info, body.desain-klasik .right-panel { 
       border-radius: 40px 0 40px 0; border: 2px solid var(--gold); 
   }
+  body.desain-klasik .ticker-wrap { grid-column: 1 / span 2; grid-row: 3; }
 
   /* =========================================================
      4. LAYOUT MINIMALIS INDUSTRIAL (FOKUS KONTEN, SHOLAT DI BAWAH)
@@ -189,6 +206,7 @@
       border-bottom: none; 
       background: rgba(0,0,0,0.6); 
   }
+  body.desain-minimalis .ticker-wrap { order: 4; }
   
   body.desain-minimalis .logo-wrap { border: none; border-radius: 50%; }
   body.desain-minimalis .card-saldo, body.desain-minimalis .card-info, body.desain-minimalis .right-panel { 
@@ -273,6 +291,20 @@
     <div class="right-panel" id="tv-right-panel">
       <div class="content-right active" id="konten-media"></div>
     </div>
+  </div>
+
+  <!-- TAMBAHAN: Ticker Berjalan di Bawah -->
+  <div class="ticker-wrap">
+    <div class="ticker-label">INFO MASJID</div>
+    <div class="ticker-content">
+      <div class="ticker-text" id="ticker-text">Selamat datang di jaringan Power of Masjid. Memakmurkan Masjid, Menguatkan Umat.</div>
+    </div>
+  </div>
+
+  <!-- TAMBAHAN: QR Code Interaktif -->
+  <div id="qr-corner" class="qr-corner">
+    <img id="qr-img" src="" alt="QR Web">
+    <div>SCAN INFO<br>MASJID</div>
   </div>
 
 <script>
@@ -436,11 +468,24 @@ function getYoutubeEmbed(url) {
   return vidId ? `https://www.youtube.com/embed/${vidId}?autoplay=1&mute=1&controls=0&rel=0&playsinline=1` : '';
 }
 
+// TAMBAHAN: Fungsi Konversi Tanggal Hijriah
+function getHijriDate(date) {
+    try {
+        return new Intl.DateTimeFormat('id-TN-u-ca-islamic', {day: 'numeric', month: 'long', year: 'numeric'}).format(date);
+    } catch (e) {
+        return ''; 
+    }
+}
+
 function updateTime() {
   const n = new Date(); 
   document.getElementById('jam').innerText = n.toLocaleTimeString('id-ID', {hour12: false});
   const o = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }; 
-  document.getElementById('tanggal').innerText = n.toLocaleDateString('id-ID', o);
+  
+  // MODIFIKASI: Menambahkan Tanggal Hijriah di bawah Masehi
+  const tglMasehi = n.toLocaleDateString('id-ID', o);
+  const tglHijri = getHijriDate(n);
+  document.getElementById('tanggal').innerHTML = `${tglMasehi}<div style="color:var(--masuk); font-size:16px; font-weight:700; margin-top:3px;">${tglHijri}</div>`;
   
   if (phase === "NORMAL" && globalSholatList.length > 0) {
     const curTimeMs = n.getHours()*3600 + n.getMinutes()*60 + n.getSeconds();
@@ -458,6 +503,7 @@ function updateTime() {
 
     if (sholatMendatang) {
       phase = "PRA_ADZAN"; isIqomahMode = true;
+      document.body.classList.add('mode-iqomah'); // Sembunyikan Ticker & QR saat Iqomah
       document.getElementById('iqomah-screen').classList.remove('hide');
       document.getElementById('iq-header-title').innerText = "WAKTU SHOLAT";
       document.getElementById('iq-name').innerText = sholatMendatang.n;
@@ -482,6 +528,7 @@ function updateTime() {
                   document.getElementById('iq-timer').style.display = 'none';
                   setTimeout(() => { 
                       isIqomahMode = false; phase = "NORMAL";
+                      document.body.classList.remove('mode-iqomah');
                       document.getElementById('iqomah-screen').classList.add('hide');
                       document.getElementById('iq-timer').style.display = 'block';
                   }, 45 * 60000); 
@@ -515,6 +562,7 @@ function updateTime() {
               document.getElementById('iq-timer').classList.add('warning'); 
               setTimeout(() => { 
                   isIqomahMode = false; phase = "NORMAL";
+                  document.body.classList.remove('mode-iqomah');
                   document.getElementById('iqomah-screen').classList.add('hide');
                   document.getElementById('iq-timer').classList.remove('warning');
                   document.getElementById('iq-timer').style.color = "var(--masuk)"; 
@@ -673,6 +721,10 @@ async function loadData() {
       CURRENT_DESAIN = jM.data.tema_desain_tv ? 'desain-' + jM.data.tema_desain_tv : 'desain-modern';
       document.body.className = `${CURRENT_TEMA} ${CURRENT_DESAIN}`;
       
+      // TAMBAHAN: Generate QR Code berdasarkan Slug Masjid
+      const baseWebUrl = window.location.href.split('/').slice(0, -1).join('/') + '/masjid.html?masjid=' + getSlug();
+      document.getElementById('qr-img').src = 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=' + encodeURIComponent(baseWebUrl) + '&margin=0';
+      
       jedaConfig = {
         Subuh: parseInt(jM.data.jeda_subuh) || 10, Dzuhur: parseInt(jM.data.jeda_dzuhur) || 10,
         Ashar: parseInt(jM.data.jeda_ashar) || 10, Maghrib: parseInt(jM.data.jeda_maghrib) || 10,
@@ -708,6 +760,12 @@ async function loadData() {
         let saldoStr = Number(resS.data.saldo).toLocaleString("id-ID");
         document.getElementById('tv-saldo').innerText = "Rp " + saldoStr;
         if(saldoStr.length > 10) document.getElementById('tv-saldo').style.fontSize = "55px";
+    }
+
+    // TAMBAHAN: Update Teks Ticker dari Pengumuman
+    if(resP.status === 'ok' && resP.data.length > 0) {
+        let tickerText = resP.data.map(p => "✦ " + p.judul + " : " + p.isi).join(" &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ");
+        document.getElementById('ticker-text').innerHTML = tickerText + " &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ✦ Memakmurkan Masjid, Menguatkan Umat.";
     }
 
     if(resK.status === 'ok') {

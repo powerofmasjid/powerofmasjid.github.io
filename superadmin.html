@@ -5,6 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Superadmin — Power of Masjid</title>
 <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<!-- TAMBAHAN PWA: Meta tag agar dikenali sebagai aplikasi HP -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0A2F1C">
+<link rel="apple-touch-icon" href="Logo Power of Masjid.png">
+
 <style>
 :root {
   --bg-dark: #0A2F1C;
@@ -699,7 +705,6 @@ select.form-control option {
           <input type="email" class="form-control" id="reg-email" placeholder="dkm@gmail.com">
         </div>
         
-        <!-- MODIFIKASI: BAGIAN PIN OTOMATIS BERDASARKAN TOMBOL -->
         <div class="form-group">
           <label>PIN DKM (Otomatis)</label>
           <div style="display: flex; gap: 10px;">
@@ -708,7 +713,6 @@ select.form-control option {
           </div>
           <small style="font-size: 11px; color: rgba(255,255,255,0.6); margin-top: 6px; display: block;">Klik tombol untuk mencetak PIN acak, lalu berikan kepada pengurus DKM.</small>
         </div>
-        <!-- END MODIFIKASI PIN -->
 
         <button class="btn-primary" id="btn-tambah" onclick="tambahMasjidBaru()">SIMPAN MASJID BARU</button>
       </div>
@@ -966,7 +970,6 @@ select.form-control option {
   </div>
 </div>
 
-
 <script>
 // PASTIKAN LINK INI ADALAH LINK DEPLOYMENT TERBARU BAPAK
 const API_URL = 'https://script.google.com/macros/s/AKfycbw4NKtVPvYcEcnf7KJiggwPYX4oeHs92mShAMOCN3vMneC2NAmVc84DJo9X6xsCUUoIfQ/exec';
@@ -1086,11 +1089,22 @@ function normalizeDate(dateValue) {
   });
 }
 
+// PERBAIKAN PRIORITAS 1: Auto-logout jika sesi dari backend kedaluwarsa
 function postData(payload) {
   return fetch(API_URL, {
     method: 'POST',
     body: JSON.stringify(payload)
-  }).then(res => res.json());
+  })
+  .then(res => res.json())
+  .then(json => {
+    // Paksa logout jika server menolak akses karena sesi kedaluwarsa
+    if (json.status === 'error' && json.message && json.message.includes('Akses Ditolak')) {
+        showToast('Sesi login kedaluwarsa. Mengeluarkan akun...');
+        setTimeout(() => logout(), 2000);
+        throw new Error('Sesi kedaluwarsa');
+    }
+    return json;
+  });
 }
 
 function extractDateFromId(idMasjid) {
@@ -1368,7 +1382,6 @@ async function tambahMasjidBaru() {
       document.getElementById('reg-slug').value = '';
       document.getElementById('reg-email').value = '';
       
-      // Kembalikan PIN menjadi kosong untuk masjid berikutnya
       document.getElementById('reg-pin').value = ''; 
       const btnSalin = document.getElementById('btnSalin');
       if(btnSalin) {
@@ -2175,39 +2188,42 @@ function copyLaporanRezekiBerkah() {
   copyText(lines.join('\n'));
 }
 
-// ==========================================================
-// FUNGSI BARU: SEKALI KLIK LANGSUNG BUAT & SALIN
-// ==========================================================
-
 function buatDanSalinPIN() {
   const pinInput = document.getElementById('reg-pin');
   
-  // 1. Jika kosong, buatkan angka acaknya dulu
   if (!pinInput.value) {
     const min = 100000;
     const max = 999999;
     pinInput.value = Math.floor(Math.random() * (max - min + 1)) + min;
   }
 
-  // 2. Langsung salin ke clipboard HP/Laptop
   copyText(pinInput.value);
   
-  // 3. Beri efek visual pada tombol
   const btn = document.getElementById('btnSalin');
-  const teksAsli = btn.innerHTML; // Menyimpan teks awal (Buat & Salin PIN)
+  const teksAsli = btn.innerHTML; 
   
   btn.innerHTML = 'Tersalin!';
   btn.style.background = '#10B981';
   btn.style.color = 'white';
   btn.style.borderColor = '#10B981';
   
-  // Kembalikan tombol seperti semula setelah 2 detik
   setTimeout(() => {
     btn.innerHTML = 'Salin Ulang';
     btn.style.background = '';
     btn.style.color = '';
     btn.style.borderColor = '';
   }, 2000);
+}
+
+// TAMBAHAN PWA: Daftarkan Service Worker
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('sw.js').then(function(registration) {
+      console.log('ServiceWorker PWA berhasil didaftarkan: ', registration.scope);
+    }, function(err) {
+      console.log('ServiceWorker PWA gagal didaftarkan: ', err);
+    });
+  });
 }
 </script>
 

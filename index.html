@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="id">
 <head>
 <meta charset="UTF-8">
@@ -10,6 +10,12 @@
 <meta property="og:image" content="https://powerofmasjid.github.io/Logo%20Power%20of%20Masjid.png">
 <meta property="og:url" content="https://powerofmasjid.github.io/">
 <meta property="og:type" content="website">
+
+<!-- TAMBAHAN PWA: Meta tag agar Landing Page bisa di-install di HP -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#1B6B3A">
+<link rel="apple-touch-icon" href="Logo Power of Masjid.png">
+
 <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -165,14 +171,102 @@ a{text-decoration:none;color:inherit}.container{max-width:1200px;margin:0 auto;p
 </footer>
 
 <script>
+// PASTIKAN LINK INI SESUAI DENGAN DEPLOYMENT TERBARU BAPAK
 const API_URL = 'https://script.google.com/macros/s/AKfycbw4NKtVPvYcEcnf7KJiggwPYX4oeHs92mShAMOCN3vMneC2NAmVc84DJo9X6xsCUUoIfQ/exec';
+
+// Registrasi Service Worker untuk PWA
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('sw.js').catch(function(err) {
+      console.log('PWA SW Landing Error: ', err);
+    });
+  });
+}
+
 function toggleMenu(){document.getElementById('navMenu').classList.toggle('show');}
 document.addEventListener('click',function(e){const nav=document.getElementById('navMenu');const btn=document.querySelector('.nav-toggle');if(nav&&btn&&!nav.contains(e.target)&&!btn.contains(e.target)){nav.classList.remove('show');}});
 function closeMiladPopup(){const p=document.getElementById('miladPopup');if(p)p.classList.remove('show');try{sessionStorage.setItem('miladPopupClosed','1')}catch(e){}}
-window.addEventListener('load',function(){setTimeout(function(){try{if(sessionStorage.getItem('miladPopupClosed')==='1')return;}catch(e){}const p=document.getElementById('miladPopup');if(p)p.classList.add('show');},800);loadDaftarMasjid();});
-function isMasjidContoh(m){var slug=String(m.slug||'').toLowerCase().trim();return slug==='contoh-tanjungbarat';}
-async function cekMasjidAktif(m){try{var id=encodeURIComponent(m.id_masjid||'');if(!id||isMasjidContoh(m))return false;var hasil=await Promise.all([fetch(API_URL+'?action=getTransaksi&id_masjid='+id+'&_t='+Date.now()).then(r=>r.json()).catch(()=>({data:[]})),fetch(API_URL+'?action=getJadwal&id_masjid='+id+'&_t='+Date.now()).then(r=>r.json()).catch(()=>({data:[]})),fetch(API_URL+'?action=getGaleri&id_masjid='+id+'&_t='+Date.now()).then(r=>r.json()).catch(()=>({data:[]}))]);return (hasil[0].data||[]).length>0&&(hasil[1].data||[]).length>0&&(hasil[2].data||[]).length>0;}catch(e){return false;}}
-async function loadDaftarMasjid(){const container=document.getElementById('daftar-masjid');if(!container)return;try{const res=await fetch(API_URL+'?action=getAllMasjid&_t='+Date.now());const json=await res.json();if(json.status==='ok'&&json.data.length>0){const semuaMasjid=json.data.filter(m=>!isMasjidContoh(m));const hasilAktif=await Promise.all(semuaMasjid.map(async m=>await cekMasjidAktif(m)?m:null));const masjidAktif=hasilAktif.filter(Boolean).reverse();if(masjidAktif.length===0){container.innerHTML='<div style="grid-column:1/-1;text-align:center;color:var(--muted);padding:3rem;border:1px dashed var(--border);border-radius:12px;font-size:16px;">Belum ada masjid aktif yang siap ditampilkan.</div>';return;}container.innerHTML=masjidAktif.map(m=>{const lokasi=[m.kelurahan,m.kota].filter(Boolean).join(', ');return `<div class="masjid-card"><div class="masjid-name"><a href="masjid.html?masjid=${m.slug}"><span>🕌 ${m.nama}</span><span style="font-size:12px;opacity:.5;">↗</span></a></div><div class="masjid-loc">📍 ${lokasi||'Lokasi belum diatur'}</div></div>`;}).join('');}else{container.innerHTML='<div style="grid-column:1/-1;text-align:center;color:var(--muted);padding:3rem;border:1px dashed var(--border);border-radius:12px;font-size:16px;">Belum ada masjid aktif yang siap ditampilkan.</div>';}}catch(e){container.innerHTML='<div style="grid-column:1/-1;text-align:center;color:#DC2626;padding:3rem;font-size:16px;">Gagal memuat daftar masjid aktif. Pastikan koneksi internet stabil.</div>';}}
+
+window.addEventListener('load',function(){
+    setTimeout(function(){
+        try{if(sessionStorage.getItem('miladPopupClosed')==='1')return;}catch(e){}
+        const p=document.getElementById('miladPopup');if(p)p.classList.add('show');
+    }, 800);
+    loadDaftarMasjidTeroptimasi();
+});
+
+function isMasjidContoh(m){
+    var slug=String(m.slug||'').toLowerCase().trim();
+    return slug==='contoh-tanjungbarat';
+}
+
+// FUNGSI BARU: Menggunakan data caching agar API Google tidak overload
+async function loadDaftarMasjidTeroptimasi(){
+    const container = document.getElementById('daftar-masjid');
+    if (!container) return;
+
+    // Cek cache dulu (simpan data selama 24 jam)
+    const CACHE_KEY = 'cache_daftar_masjid_aktif';
+    try {
+        const cachedStr = localStorage.getItem(CACHE_KEY);
+        if (cachedStr) {
+            const cachedData = JSON.parse(cachedStr);
+            // Berlaku 24 Jam
+            if (Date.now() - cachedData.timestamp < 24 * 60 * 60 * 1000) {
+                renderMasjid(cachedData.data, container);
+                return;
+            }
+        }
+    } catch(e) {}
+
+    try {
+        // Ambil data dari getSuperadminData yang sudah berisi kriteria, jadi tidak perlu looping API per masjid
+        const res = await fetch(API_URL + '?action=getSuperadminData&api_key=POW_MASJID_SECURE_2026&_t=' + Date.now());
+        const json = await res.json();
+        
+        if(json.status === 'ok' && json.data && json.data.list_masjid) {
+            // Filter masjid yang sudah aktif (kriteria lengkap)
+            const semuaMasjid = json.data.list_masjid.filter(m => !isMasjidContoh(m) && Number(m.kriteriaCount) >= 3);
+            
+            if (semuaMasjid.length > 0) {
+                // Simpan ke Cache
+                try {
+                    localStorage.setItem(CACHE_KEY, JSON.stringify({
+                        timestamp: Date.now(),
+                        data: semuaMasjid
+                    }));
+                } catch(e) {}
+
+                renderMasjid(semuaMasjid.reverse(), container);
+            } else {
+                renderKosong(container);
+            }
+        } else {
+            renderKosong(container);
+        }
+    } catch(e) {
+        container.innerHTML='<div style="grid-column:1/-1;text-align:center;color:#DC2626;padding:3rem;font-size:16px;">Gagal memuat daftar masjid aktif. Pastikan koneksi internet stabil.</div>';
+    }
+}
+
+function renderMasjid(masjidList, container) {
+    container.innerHTML = masjidList.map(m => {
+        // Karena dari getSuperadminData tidak ada detail kelurahan/kota, kita tampilkan standar saja
+        return `<div class="masjid-card">
+                    <div class="masjid-name">
+                        <a href="masjid.html?masjid=${m.slug}">
+                            <span>🕌 ${m.nama}</span>
+                            <span style="font-size:12px;opacity:.5;">↗</span>
+                        </a>
+                    </div>
+                    <div class="masjid-loc">📍 Terdaftar dalam ekosistem aktif</div>
+                </div>`;
+    }).join('');
+}
+
+function renderKosong(container) {
+    container.innerHTML = '<div style="grid-column:1/-1;text-align:center;color:var(--muted);padding:3rem;border:1px dashed var(--border);border-radius:12px;font-size:16px;">Belum ada masjid aktif yang siap ditampilkan.</div>';
+}
 </script>
 </body>
 </html>
