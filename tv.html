@@ -171,22 +171,27 @@
     text-align: center;
   }
   body.desain-klasik .logo-wrap { border-radius: 20px 0 20px 0; border: 2px solid var(--gold); margin: 0 auto 15px; }
-  body.desain-klasik .info-masjid { text-align: center; align-items: center; }
+  body.desain-klasik .info-masjid { text-align: center; align-items: center; width: 100%; }
   body.desain-klasik .nama-masjid { font-size: 26px; white-space: normal; }
+  body.desain-klasik .alamat-masjid { font-size: 14px; white-space: normal; overflow: visible; text-overflow: clip; }
   body.desain-klasik .header-right { text-align: center; margin-top: 20px; }
   
   body.desain-klasik .sholat-bar {
     grid-column: 1; 
     grid-row: 2;
     flex-direction: column;
-    height: auto;
-    padding: 10px 20px 30px;
+    height: 100%;
+    padding: 10px 20px 20px;
     border-bottom: none;
     border-right: 1px solid var(--border);
     background: transparent;
-    gap: 12px;
+    gap: 6px;
+    overflow-y: auto;
+    justify-content: space-evenly;
   }
-  body.desain-klasik .sholat-box { width: 100%; padding: 12px 0; border-radius: 15px 0 15px 0; background: rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.05); }
+  body.desain-klasik .sholat-box { width: 100%; padding: 6px 0; border-radius: 15px 0 15px 0; background: rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.05); flex-shrink: 1; }
+  body.desain-klasik .sholat-name { font-size: 12px; }
+  body.desain-klasik .sholat-time { font-size: 26px; }
   
   body.desain-klasik .main { grid-column: 2; grid-row: 1 / span 2; }
   body.desain-klasik .card-saldo, body.desain-klasik .card-info, body.desain-klasik .right-panel { 
