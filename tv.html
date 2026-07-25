@@ -203,6 +203,16 @@
   }
   body.desain-klasik .sholat-name { font-size: clamp(9px, 1.3vh, 13px); line-height: 1.1; }
   body.desain-klasik .sholat-time { font-size: clamp(15px, 2.8vh, 28px); line-height: 1.1; }
+
+  /* Perbaikan: pastikan kotak sholat yang AKTIF tetap menonjol (latar emas, teks gelap) di layout klasik */
+  body.desain-klasik .sholat-box.aktif {
+    background: linear-gradient(135deg, var(--gold) 0%, #FFF 100%);
+    border: none;
+    transform: none;
+    box-shadow: 0 6px 20px rgba(201,168,76,0.5);
+  }
+  body.desain-klasik .sholat-box.aktif .sholat-name { color: var(--panel-bg); text-shadow: none; }
+  body.desain-klasik .sholat-box.aktif .sholat-time { color: var(--bg-dark); text-shadow: none; }
   
   body.desain-klasik .main { grid-column: 2; grid-row: 1 / span 2; }
   body.desain-klasik .card-saldo, body.desain-klasik .card-info, body.desain-klasik .right-panel { 
