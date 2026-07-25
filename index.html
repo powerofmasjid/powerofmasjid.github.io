@@ -220,13 +220,13 @@ async function loadDaftarMasjidTeroptimasi(){
     } catch(e) {}
 
     try {
-        // Ambil data dari getSuperadminData yang sudah berisi kriteria, jadi tidak perlu looping API per masjid
-        const res = await fetch(API_URL + '?action=getSuperadminData&api_key=POW_MASJID_SECURE_2026&_t=' + Date.now());
+        // Endpoint publik khusus (tanpa kunci rahasia) — hanya berisi nama & slug masjid aktif
+        const res = await fetch(API_URL + '?action=getDaftarMasjidAktifPublik&_t=' + Date.now());
         const json = await res.json();
         
         if(json.status === 'ok' && json.data && json.data.list_masjid) {
-            // Filter masjid yang sudah aktif (kriteria lengkap)
-            const semuaMasjid = json.data.list_masjid.filter(m => !isMasjidContoh(m) && Number(m.kriteriaCount) >= 3);
+            // Backend sudah memfilter aktif & kriteria lengkap, tinggal buang contoh (jaga-jaga)
+            const semuaMasjid = json.data.list_masjid.filter(m => !isMasjidContoh(m));
             
             if (semuaMasjid.length > 0) {
                 // Simpan ke Cache

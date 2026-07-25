@@ -687,7 +687,7 @@
     // PASTIKAN LINK INI SESUAI DENGAN DEPLOYMENT ANDA
     var API_URL = 'https://script.google.com/macros/s/AKfycbw4NKtVPvYcEcnf7KJiggwPYX4oeHs92mShAMOCN3vMneC2NAmVc84DJo9X6xsCUUoIfQ/exec';
     
-    var KUNCI_RAHASIA = 'POW_MASJID_SECURE_2026'; 
+    // KUNCI_RAHASIA sudah dihapus (backdoor superadmin yang bocor di frontend)
     var ADMIN_DATA = null, ID_MASJID = '', LAST_5_TRX = [], LIST_PROGRAM = [];
     var LIST_JADWAL = [], LIST_PENGUMUMAN = [], LIST_DATA_AMAL = [], LIST_GALERI = []; 
     var LIST_JAMAAH_ADMIN = [];
@@ -849,7 +849,7 @@
 
     function eksekusiHapus() {
         if(!targetDelete) return; 
-        var d = { api_key: KUNCI_RAHASIA, token: USER_TOKEN, action: targetDelete.action, id_masjid: ID_MASJID };
+        var d = { token: USER_TOKEN, action: targetDelete.action, id_masjid: ID_MASJID };
         
         if(targetDelete.action.includes('Kurban') || targetDelete.action.includes('Zakat') || targetDelete.action.includes('Infaq') || targetDelete.action === 'deleteProgramAmal') {
             d.id = targetDelete.id;
@@ -915,7 +915,7 @@
                 
                 fetch(API_URL, { 
                     method: 'POST', 
-                    body: JSON.stringify({ action: 'uploadMedia', api_key: KUNCI_RAHASIA, token: USER_TOKEN, filename: file.name, base64: base64 }) 
+                    body: JSON.stringify({ action: 'uploadMedia', token: USER_TOKEN, filename: file.name, base64: base64 }) 
                 })
                 .then(r => r.json())
                 .then(res => { 
@@ -1048,7 +1048,6 @@
 
     function simpanTransaksi(btn) {
         var d = { 
-            api_key: KUNCI_RAHASIA, 
             token: USER_TOKEN,
             action: 'addTransaksi', 
             id_masjid: ID_MASJID, 
@@ -1246,7 +1245,6 @@
         if (waPanitia) finalDesc += '|||WA:' + waPanitia;
         
         var d = { 
-            api_key: KUNCI_RAHASIA, 
             token: USER_TOKEN,
             action: 'addProgramAmal', 
             id_masjid: ID_MASJID, 
@@ -1391,7 +1389,7 @@
         var tp = sel.options[sel.selectedIndex].getAttribute('data-tipe'); 
         if(!id_prog) return;
         
-        var d = { api_key: KUNCI_RAHASIA, token: USER_TOKEN, id_masjid: ID_MASJID, id_program: id_prog };
+        var d = { token: USER_TOKEN, id_masjid: ID_MASJID, id_program: id_prog };
         
         if(tp === 'KURBAN') { 
             d.action = 'addKurban'; 
@@ -1656,7 +1654,6 @@
 
     function simpanJadwal(btn) { 
         var d = { 
-            api_key: KUNCI_RAHASIA, 
             token: USER_TOKEN,
             action: 'addJadwal', 
             id_masjid: ID_MASJID, 
@@ -1724,7 +1721,6 @@
             showToast("⏳ Sedang menyebarkan pesan WA ke jamaah...");
             
             var payload = {
-                api_key: KUNCI_RAHASIA,
                 token: USER_TOKEN,
                 action: 'triggerBlastWA',
                 id_masjid: ID_MASJID,
@@ -1770,7 +1766,6 @@
             showToast("⏳ Sedang mengirim pengumuman WA ke jamaah.");
             
             var payload = {
-                api_key: KUNCI_RAHASIA,
                 token: USER_TOKEN,
                 action: 'triggerBlastWAPengumuman',
                 id_masjid: ID_MASJID,
@@ -1824,7 +1819,6 @@
 
     function simpanPengumuman(btn) { 
         var d = { 
-            api_key: KUNCI_RAHASIA, 
             token: USER_TOKEN,
             action: 'addPengumuman', 
             id_masjid: ID_MASJID, 
@@ -1915,7 +1909,6 @@
         }
 
         var d = { 
-            api_key: KUNCI_RAHASIA, 
             token: USER_TOKEN,
             action: 'addGaleri', 
             id_masjid: ID_MASJID, 
@@ -2012,7 +2005,7 @@
             + '?action=getJamaah'
             + '&id_masjid=' + encodeURIComponent(ID_MASJID)
             + '&token=' + encodeURIComponent(USER_TOKEN || '')
-            + '&api_key=' + encodeURIComponent(KUNCI_RAHASIA || '')
+            
             + '&_t=' + Date.now();
 
         fetch(url)
@@ -2101,7 +2094,6 @@
         }
 
         var payload = {
-            api_key: KUNCI_RAHASIA,
             token: USER_TOKEN,
             action: mode === 'edit' ? 'updateJamaah' : 'addJamaahManual',
             id_masjid: ID_MASJID,
@@ -2184,7 +2176,6 @@
         if (!confirm('Ubah kategori jamaah ini?')) return;
 
         var payload = {
-            api_key: KUNCI_RAHASIA,
             action: 'updateKategoriJamaah',
             token: USER_TOKEN,
             id_masjid: ID_MASJID,
@@ -2217,7 +2208,6 @@
         if (!confirm('Yakin ingin menghapus kontak ini dari database masjid?')) return;
 
         var payload = {
-            api_key: KUNCI_RAHASIA,
             action: 'deleteJamaah',
             token: USER_TOKEN,
             id_masjid: ID_MASJID,
@@ -2304,7 +2294,6 @@
 
     function simpanProfil(btn) {
         var d = { 
-            api_key: KUNCI_RAHASIA, 
             token: USER_TOKEN,
             action: 'updateMasjid', 
             id_masjid: ID_MASJID, 
