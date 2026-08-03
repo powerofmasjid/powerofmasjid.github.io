@@ -105,12 +105,6 @@
         .btn-amal-action button { flex: 1; padding: 8px; border-radius: 8px; font-size: 11px; font-weight: 600; cursor: pointer; border: none; transition: 0.3s; }
         .desc-counter { font-size: 11px; color: var(--muted); text-align: right; margin-top: 4px; font-weight: 500; }
         
-        .table-container { overflow-x: auto; margin-top: 15px; background: white; border-radius: 12px; border: 1px solid var(--border); }
-        .table-jamaah { width: 100%; border-collapse: collapse; text-align: left; font-size: 12px; }
-        .table-jamaah th { background: var(--primary-light); color: var(--primary-dark); padding: 10px; font-weight: 600; border-bottom: 2px solid var(--primary); }
-        .table-jamaah td { padding: 10px; border-bottom: 1px solid var(--border); color: var(--text); }
-        .table-jamaah tr:last-child td { border-bottom: none; }
-        .table-jamaah select { padding: 4px; border-radius: 4px; border: 1px solid #ccc; font-size: 11px; margin-right: 5px; }
         .badge-jamaah { padding: 4px 8px; border-radius: 4px; font-size: 10px; font-weight: bold; color: white; display: inline-block;}
         .kategori-BARU { background: #9CA3AF; } 
         .kategori-RUTIN { background: #10B981; } 
@@ -249,12 +243,10 @@
             
             <div class="divider"></div>
             
-            <!-- TAMBAHAN: Search Bar Transaksi -->
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
                 <div class="section-title" style="margin-bottom: 0;">Daftar Transaksi</div>
             </div>
             <input type="text" class="form-input" id="search-trx" placeholder="🔍 Cari keterangan transaksi..." onkeyup="filterTrx()" style="margin-bottom: 15px;">
-            <!-- END TAMBAHAN -->
             
             <div id="list-trx-admin"></div>
         </div>
@@ -407,7 +399,6 @@
                     <option value="FLYER">🖼️ Poster / Flyer</option>
                     <option value="VIDEO_YOUTUBE">▶️ Video YouTube</option>
                 </select>
-                <!-- MODIFIKASI: Teks Info Kuota Galeri -->
                 <span class="info-hint" id="hint-galeri">Pilih "Poster / Flyer" agar gambar tampil memenuhi layar TV.<br><b style="color:#d35400;">Batas Maksimal Kuota Media:</b><br>• Foto: 4 File<br>• Flyer: 2 File<br>• Video: 2 File</span>
             </div>
             <div class="form-group"><label class="form-label">Judul Media</label><input type="text" class="form-input" id="gal-judul" placeholder="Contoh: Poster Kajian Ustadz Abdul Somad"></div>
@@ -429,112 +420,21 @@
             <div class="divider"></div><div id="list-gal-admin"></div>
         </div>
         
+        <!-- BAGIAN TAB JAMAAH YANG SUDAH DIROMBAK TOTAL -->
         <div id="tab-jamaah" style="display:none">
             <div class="section-title">Kelola Database Jamaah</div>
             <div class="info-hint" style="margin-bottom: 15px;">
-                Data ini dipakai untuk kebutuhan kegiatan masjid, pengingat WA, program amal, dan Rezeki Berkah.
+                Data otomatis masuk dari Pendaftaran Web, Infaq, Zakat, Kurban, dan Rezeki Berkah.
             </div>
 
-            <div class="profil-section">
-                <h3 id="judul-form-jamaah">Tambah Jamaah Manual</h3>
-                <input type="hidden" id="jamaah-mode" value="tambah">
-                <input type="hidden" id="jamaah-wa-lama" value="">
-
-                <div class="form-group">
-                    <label class="form-label">Nama Lengkap</label>
-                    <input type="text" class="form-input" id="jamaah-nama" placeholder="Contoh: Munawir">
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label class="form-label">Sapaan</label>
-                        <select class="form-select" id="jamaah-sapaan">
-                            <option value="Bapak/Ibu">Bapak/Ibu</option>
-                            <option value="Bapak">Bapak</option>
-                            <option value="Ibu">Ibu</option>
-                            <option value="Ustadz">Ustadz</option>
-                            <option value="Ustadzah">Ustadzah</option>
-                            <option value="Haji">Haji</option>
-                            <option value="Hajjah">Hajjah</option>
-                            <option value="Saudara">Saudara</option>
-                            <option value="Saudari">Saudari</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label">Nama Akrab</label>
-                        <input type="text" class="form-input" id="jamaah-nama-akrab" placeholder="Contoh: Munawir">
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">Nomor WhatsApp</label>
-                    <input type="text" class="form-input" id="jamaah-wa" placeholder="Contoh: 081234567890">
-                    <span class="info-hint">Boleh pakai 08, nanti sistem ubah ke format 62.</span>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label class="form-label">Sumber Data</label>
-                        <select class="form-select" id="jamaah-sumber">
-                            <option value="Input Manual Admin">Input Manual Admin</option>
-                            <option value="Pendaftaran Web">Pendaftaran Web</option>
-                            <option value="Rezeki Berkah">Rezeki Berkah</option>
-                            <option value="Infaq">Infaq</option>
-                            <option value="Zakat">Zakat</option>
-                            <option value="Kurban">Kurban</option>
-                            <option value="Kajian">Kajian</option>
-                            <option value="Program Amal">Program Amal</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label">Kategori Label</label>
-                        <select class="form-select" id="jamaah-kategori">
-                            <option value="DATA_MENTAH">Data Mentah / Baru</option>
-                            <option value="RUTIN">Jamaah Rutin</option>
-                            <option value="DONATUR">Donatur</option>
-                            <option value="RELAWAN">Relawan</option>
-                            <option value="PENERIMA_MANFAAT">Penerima Manfaat</option>
-                            <option value="TAMU">Tamu / Musafir</option>
-                            <option value="JANGAN_WA">Jangan Kirim WA</option>
-                        </select>
-                    </div>
-                </div>
-
-                <button class="btn-submit" onclick="simpanJamaahManual(this)" id="btn-simpan-jamaah">💾 Simpan Jamaah</button>
-                <button class="btn-submit" onclick="resetFormJamaah()" id="btn-reset-jamaah" style="display:none; background:#6B7280;">Batal Edit</button>
+            <div class="form-row" style="margin-bottom: 15px;">
+                <button class="btn-submit" style="background:#1B6B3A; color:white; margin-top:0;" onclick="loadDataJamaah(this)">🔄 Segarkan Data</button>
+                <input type="text" class="form-input" id="search-jamaah" placeholder="🔍 Cari nama atau no WA..." onkeyup="filterJamaah()" style="margin-top:0;">
             </div>
 
-            <div class="profil-section">
-                <h3>Daftar Jamaah</h3>
-                
-                <!-- TAMBAHAN: Search Bar Jamaah -->
-                <div class="form-row" style="margin-bottom: 10px;">
-                    <button class="btn-submit" style="background:#1B6B3A; color:white; margin-top:0;" onclick="loadDataJamaah(this)">🔄 Segarkan Data</button>
-                    <input type="text" class="form-input" id="search-jamaah" placeholder="🔍 Cari nama atau no WA..." onkeyup="filterJamaah()" style="margin-top:0;">
-                </div>
-                <!-- END TAMBAHAN -->
-
-                <div class="table-container">
-                    <table class="table-jamaah">
-                        <thead>
-                            <tr>
-                                <th>Nama</th>
-                                <th>No. WA</th>
-                                <th>Sapaan</th>
-                                <th>Sumber</th>
-                                <th>Kategori</th>
-                                <th>Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tabel-jamaah-body">
-                            <tr><td colspan="6" style="text-align: center; padding:15px;">Tekan "Segarkan Data" untuk memuat...</td></tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+            <div id="list-jamaah-admin"></div>
         </div>
+        <!-- AKHIR BAGIAN TAB JAMAAH -->
 
         <div id="tab-profil" style="display:none">
             
@@ -687,7 +587,6 @@
     // PASTIKAN LINK INI SESUAI DENGAN DEPLOYMENT ANDA
     var API_URL = 'https://script.google.com/macros/s/AKfycbw4NKtVPvYcEcnf7KJiggwPYX4oeHs92mShAMOCN3vMneC2NAmVc84DJo9X6xsCUUoIfQ/exec';
     
-    // KUNCI_RAHASIA sudah dihapus (backdoor superadmin yang bocor di frontend)
     var ADMIN_DATA = null, ID_MASJID = '', LAST_5_TRX = [], LIST_PROGRAM = [];
     var LIST_JADWAL = [], LIST_PENGUMUMAN = [], LIST_DATA_AMAL = [], LIST_GALERI = []; 
     var LIST_JAMAAH_ADMIN = [];
@@ -698,7 +597,7 @@
     var globalPdfBlob = null; 
     var globalPdfFilename = '';
 
-    // Registrasi PWA (Agar panel Admin bisa di-install di HP)
+    // Registrasi PWA
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', function() {
             navigator.serviceWorker.register('sw.js').catch(function(err) {
@@ -707,7 +606,7 @@
         });
     }
 
-    // Fungsi Filter Transaksi (Live Search)
+    // Fungsi Filter Transaksi
     function filterTrx() {
         var keyword = document.getElementById('search-trx').value.toLowerCase();
         var cards = document.querySelectorAll('#list-trx-admin .item-card');
@@ -717,15 +616,13 @@
         });
     }
 
-    // Fungsi Filter Jamaah (Live Search)
+    // Fungsi Filter Jamaah PADA KARTU LIPAT (BARU)
     function filterJamaah() {
         var keyword = document.getElementById('search-jamaah').value.toLowerCase();
-        var rows = document.querySelectorAll('#tabel-jamaah-body tr');
-        rows.forEach(function(row) {
-            if (row.cells.length > 1) { // abaikan baris loading/kosong
-                var text = row.innerText.toLowerCase();
-                row.style.display = text.indexOf(keyword) > -1 ? '' : 'none';
-            }
+        var cards = document.querySelectorAll('#list-jamaah-admin .item-card');
+        cards.forEach(function(card) {
+            var text = card.innerText.toLowerCase();
+            card.style.display = text.indexOf(keyword) > -1 ? '' : 'none';
         });
     }
 
@@ -1955,13 +1852,6 @@
         });
     }
 
-    function normalisasiWaJamaah(wa) {
-        var clean = String(wa || '').replace(/\D/g, '');
-        if (clean.startsWith('0')) clean = '62' + clean.slice(1);
-        if (clean.startsWith('8')) clean = '62' + clean;
-        return clean;
-    }
-
     function labelKategoriJamaah(kategori) {
         var k = String(kategori || 'DATA_MENTAH').toUpperCase();
         var label = {
@@ -1988,6 +1878,7 @@
         return 'background:#9CA3AF;';
     }
 
+    // FUNGSI LOAD JAMAAH BARU MENGGUNAKAN KARTU LIPAT
     function loadDataJamaah(btn = null) {
         if (!ID_MASJID) {
             showToast('ID masjid belum terbaca. Silakan login ulang.');
@@ -1996,16 +1887,13 @@
 
         if (btn) setLoading(btn, true);
 
-        var body = document.getElementById('tabel-jamaah-body');
-        if (body) {
-            body.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:15px;">⏳ Sedang memuat data...</td></tr>';
-        }
+        var el = document.getElementById('list-jamaah-admin');
+        if (el) el.innerHTML = '<div style="text-align:center; padding:15px; font-size:12px; color:#6b7280;">⏳ Sedang memuat data jamaah...</div>';
 
         var url = API_URL
             + '?action=getJamaah'
             + '&id_masjid=' + encodeURIComponent(ID_MASJID)
             + '&token=' + encodeURIComponent(USER_TOKEN || '')
-            
             + '&_t=' + Date.now();
 
         fetch(url)
@@ -2015,16 +1903,16 @@
                 if (!cekSesi(res)) return;
 
                 if (res.status !== 'ok') {
-                    document.getElementById('tabel-jamaah-body').innerHTML =
-                        '<tr><td colspan="6" style="text-align:center; color:red; padding:15px;">Gagal memuat: ' + escapeHtmlJamaah(res.message) + '</td></tr>';
+                    document.getElementById('list-jamaah-admin').innerHTML =
+                        '<div class="kosong" style="color:red;">Gagal memuat: ' + escapeHtmlJamaah(res.message) + '</div>';
                     return;
                 }
 
                 LIST_JAMAAH_ADMIN = res.data || [];
 
                 if (LIST_JAMAAH_ADMIN.length === 0) {
-                    document.getElementById('tabel-jamaah-body').innerHTML =
-                        '<tr><td colspan="6" style="text-align:center; padding:15px;">Belum ada data jamaah tersimpan.</td></tr>';
+                    document.getElementById('list-jamaah-admin').innerHTML =
+                        '<div class="kosong">Belum ada data jamaah tersimpan.</div>';
                     return;
                 }
 
@@ -2036,150 +1924,53 @@
                     var kategori = item.kategori || item.status_kelengkapan || 'DATA_MENTAH';
 
                     return `
-                        <tr>
-                            <td style="font-weight:bold;">${escapeHtmlJamaah(nama)}</td>
-                            <td>${escapeHtmlJamaah(noWa)}</td>
-                            <td>${escapeHtmlJamaah(sapaan)}</td>
-                            <td style="font-size:11px; color:#666;">${escapeHtmlJamaah(sumber)}</td>
-                            <td>
-                                <span class="badge-jamaah" style="${warnaKategoriJamaah(kategori)}">
-                                    ${escapeHtmlJamaah(labelKategoriJamaah(kategori))}
-                                </span>
-                            </td>
-                            <td>
-                                <select onchange="ubahKategoriByIndex(${idx}, this.value)" style="margin-bottom:5px; width:100%;">
-                                    <option value="">Ubah Label</option>
-                                    <option value="DATA_MENTAH">Data Baru</option>
-                                    <option value="RUTIN">Rutin</option>
-                                    <option value="DONATUR">Donatur</option>
-                                    <option value="RELAWAN">Relawan</option>
-                                    <option value="PENERIMA_MANFAAT">Penerima Manfaat</option>
-                                    <option value="TAMU">Tamu</option>
-                                    <option value="JANGAN_WA">Jangan WA</option>
-                                </select>
-                                <button onclick="isiFormEditJamaah(${idx})" style="background:#F59E0B; color:white; border:none; padding:5px 8px; border-radius:5px; cursor:pointer; font-size:11px; margin-right:4px;">Edit</button>
-                                <button onclick="hapusJamaahByIndex(${idx})" style="background:#EF4444; color:white; border:none; padding:5px 8px; border-radius:5px; cursor:pointer; font-size:11px;">Hapus</button>
-                            </td>
-                        </tr>
-                    `;
+                    <div class="item-card" onclick="toggleAction(this)">
+                        <div class="item-card-title">
+                            <span>${escapeHtmlJamaah(sapaan)} ${escapeHtmlJamaah(nama)}</span>
+                        </div>
+                        <div class="item-card-footer">
+                            <span style="font-size:11px; color:#6b7280;">📱 ${escapeHtmlJamaah(noWa)} | 📥 ${escapeHtmlJamaah(sumber)}</span>
+                            <span class="item-badge badge-jamaah" style="${warnaKategoriJamaah(kategori)}">${escapeHtmlJamaah(labelKategoriJamaah(kategori))}</span>
+                        </div>
+                        <div class="action-buttons" style="align-items: center; justify-content: space-between;">
+                            <select onchange="ubahKategoriByIndex(${idx}, this.value)" style="padding:8px; border-radius:6px; border:1px solid var(--border); font-size:11px; flex:1; margin-right:8px;" onclick="event.stopPropagation()">
+                                <option value="">-- Ubah Label Kategori --</option>
+                                <option value="DATA_MENTAH">Data Baru</option>
+                                <option value="RUTIN">Rutin</option>
+                                <option value="DONATUR">Donatur</option>
+                                <option value="RELAWAN">Relawan</option>
+                                <option value="PENERIMA_MANFAAT">Penerima Manfaat</option>
+                                <option value="TAMU">Tamu</option>
+                                <option value="JANGAN_WA">Jangan WA</option>
+                            </select>
+                            <button class="btn-action btn-del" style="flex:none; width:auto; padding:8px 12px;" onclick="event.stopPropagation(); hapusJamaahByIndex(${idx})">🗑️ Hapus</button>
+                        </div>
+                    </div>`;
                 }).join('');
 
-                document.getElementById('tabel-jamaah-body').innerHTML = html;
+                document.getElementById('list-jamaah-admin').innerHTML = html;
             })
             .catch(err => {
                 if (btn) setLoading(btn, false);
-                document.getElementById('tabel-jamaah-body').innerHTML =
-                    '<tr><td colspan="6" style="text-align:center; color:red; padding:15px;">Koneksi bermasalah.</td></tr>';
+                document.getElementById('list-jamaah-admin').innerHTML =
+                    '<div class="kosong" style="color:red;">Koneksi bermasalah.</div>';
             });
-    }
-
-    function simpanJamaahManual(btn) {
-        var mode = document.getElementById('jamaah-mode').value || 'tambah';
-        var nama = document.getElementById('jamaah-nama').value.trim();
-        var sapaan = document.getElementById('jamaah-sapaan').value.trim();
-        var namaAkrab = document.getElementById('jamaah-nama-akrab').value.trim();
-        var noWa = normalisasiWaJamaah(document.getElementById('jamaah-wa').value.trim());
-        var noWaLama = document.getElementById('jamaah-wa-lama').value.trim();
-        var sumber = document.getElementById('jamaah-sumber').value.trim();
-        var kategori = document.getElementById('jamaah-kategori').value.trim();
-
-        if (!nama) {
-            showToast('Nama jamaah wajib diisi');
-            return;
-        }
-
-        if (!noWa || noWa.length < 10) {
-            showToast('Nomor WhatsApp belum benar');
-            return;
-        }
-
-        var payload = {
-            token: USER_TOKEN,
-            action: mode === 'edit' ? 'updateJamaah' : 'addJamaahManual',
-            id_masjid: ID_MASJID,
-            nama: nama,
-            sapaan: sapaan,
-            nama_akrab: namaAkrab,
-            no_wa: noWa,
-            no_wa_baru: noWa,
-            no_wa_lama: noWaLama,
-            sumber_data: sumber,
-            kategori: kategori
-        };
-
-        setLoading(btn, true);
-
-        fetch(API_URL, { method: 'POST', body: JSON.stringify(payload) })
-            .then(res => res.json())
-            .then(res => {
-                if(!cekSesi(res)) { setLoading(btn, false); return; }
-                setLoading(btn, false);
-                if (res.status === 'ok') {
-                    showToast(mode === 'edit' ? '✅ Data jamaah diperbarui' : '✅ Jamaah berhasil ditambahkan');
-                    resetFormJamaah();
-                    loadDataJamaah();
-                } else {
-                    showToast('❌ Gagal: ' + (res.message || 'Tidak diketahui'));
-                }
-            })
-            .catch(err => {
-                setLoading(btn, false);
-                showToast('Koneksi bermasalah');
-            });
-    }
-
-    function isiFormEditJamaah(idx) {
-        var item = LIST_JAMAAH_ADMIN[idx];
-        if (!item) {
-            showToast('Data jamaah tidak ditemukan');
-            return;
-        }
-
-        document.getElementById('jamaah-mode').value = 'edit';
-        document.getElementById('jamaah-wa-lama').value = item.no_wa || '';
-        document.getElementById('jamaah-nama').value = item.nama || item.nama_ktp || '';
-        document.getElementById('jamaah-sapaan').value = item.sapaan || 'Bapak/Ibu';
-        document.getElementById('jamaah-nama-akrab').value = item.nama_akrab || '';
-        document.getElementById('jamaah-wa').value = item.no_wa || '';
-        document.getElementById('jamaah-sumber').value = item.sumber || item.sumber_data || 'Input Manual Admin';
-        document.getElementById('jamaah-kategori').value = item.kategori || item.status_kelengkapan || 'DATA_MENTAH';
-
-        document.getElementById('judul-form-jamaah').textContent = 'Edit Data Jamaah';
-        document.getElementById('btn-simpan-jamaah').textContent = '💾 Simpan Perubahan Jamaah';
-        document.getElementById('btn-reset-jamaah').style.display = 'block';
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    function resetFormJamaah() {
-        document.getElementById('jamaah-mode').value = 'tambah';
-        document.getElementById('jamaah-wa-lama').value = '';
-        document.getElementById('jamaah-nama').value = '';
-        document.getElementById('jamaah-sapaan').value = 'Bapak/Ibu';
-        document.getElementById('jamaah-nama-akrab').value = '';
-        document.getElementById('jamaah-wa').value = '';
-        document.getElementById('jamaah-sumber').value = 'Input Manual Admin';
-        document.getElementById('jamaah-kategori').value = 'DATA_MENTAH';
-
-        document.getElementById('judul-form-jamaah').textContent = 'Tambah Jamaah Manual';
-        document.getElementById('btn-simpan-jamaah').textContent = '💾 Simpan Jamaah';
-        document.getElementById('btn-reset-jamaah').style.display = 'none';
     }
 
     function ubahKategoriByIndex(idx, kategoriBaru) {
         var item = LIST_JAMAAH_ADMIN[idx];
         if (!item || !kategoriBaru) return;
-        ubahKategori(item.no_wa, kategoriBaru);
-    }
-
-    function ubahKategori(noWa, kategoriBaru) {
-        if (!kategoriBaru) return;
-        if (!confirm('Ubah kategori jamaah ini?')) return;
+        
+        if (!confirm('Ubah kategori jamaah ini menjadi ' + labelKategoriJamaah(kategoriBaru) + '?')) {
+            loadDataJamaah(); 
+            return;
+        }
 
         var payload = {
             action: 'updateKategoriJamaah',
             token: USER_TOKEN,
             id_masjid: ID_MASJID,
-            no_wa: noWa,
+            no_wa: item.no_wa,
             kategori: kategoriBaru
         };
 
@@ -2201,17 +1992,14 @@
     function hapusJamaahByIndex(idx) {
         var item = LIST_JAMAAH_ADMIN[idx];
         if (!item) return;
-        hapusJamaah(item.no_wa);
-    }
-
-    function hapusJamaah(noWa) {
+        
         if (!confirm('Yakin ingin menghapus kontak ini dari database masjid?')) return;
 
         var payload = {
             action: 'deleteJamaah',
             token: USER_TOKEN,
             id_masjid: ID_MASJID,
-            no_wa: noWa
+            no_wa: item.no_wa
         };
 
         showToast('⏳ Menghapus kontak...');
