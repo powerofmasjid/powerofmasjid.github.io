@@ -6,8 +6,8 @@
 <title>Superadmin — Power of Masjid</title>
 <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-<!-- TAMBAHAN PWA: Meta tag agar dikenali sebagai aplikasi HP -->
-<link rel="manifest" href="manifest.json">
+<!-- PERUBAHAN PWA: Memanggil manifest khusus Superadmin agar tidak tertukar dengan Admin DKM -->
+<link rel="manifest" href="manifest-superadmin.json">
 <meta name="theme-color" content="#0A2F1C">
 <link rel="apple-touch-icon" href="Logo Power of Masjid.png">
 
@@ -711,10 +711,15 @@ select.form-control option {
             <input type="text" class="form-control" id="reg-pin" placeholder="Klik tombol di samping 👉" readonly style="color:var(--gold); font-weight:bold; letter-spacing: 2px;">
             <button class="btn-copy" type="button" onclick="buatDanSalinPIN()" id="btnSalin" style="width: auto; margin-top: 0; padding: 12px 20px; white-space: nowrap;">Buat & Salin PIN</button>
           </div>
-          <small style="font-size: 11px; color: rgba(255,255,255,0.6); margin-top: 6px; display: block;">Klik tombol untuk mencetak PIN acak, lalu berikan kepada pengurus DKM.</small>
+          <small style="font-size: 11px; color: rgba(255,255,255,0.6); margin-top: 6px; display: block;">Klik tombol untuk mencetak PIN acak.</small>
         </div>
 
         <button class="btn-primary" id="btn-tambah" onclick="tambahMasjidBaru()">SIMPAN MASJID BARU</button>
+        
+        <!-- AREA TAMBAHAN: Muncul setelah masjid berhasil disimpan -->
+        <div id="hasil-registrasi" style="display:none; margin-top:15px; border-color:var(--gold);" class="info-box">
+           <!-- Pesan Serah Terima akan dimunculkan di sini via Javascript -->
+        </div>
       </div>
     </div>
 
@@ -1122,24 +1127,100 @@ function hitungHariSejakDaftar(idMasjid) {
   return Math.floor((Date.now() - createdAtMs) / (1000 * 60 * 60 * 24));
 }
 
-function buatPesanFollowUp(namaMasjid, itemKurang) {
-  const daftarKurang = itemKurang.length ? itemKurang.join(', ') : 'beberapa data awal';
-  return `Assalamu’alaikum Warahmatullahi Wabarakatuh Ustadz Pengurus ${namaMasjid}.
+// ==========================================================
+// KUMPULAN FUNGSI DRAF PESAN WA (SERAH TERIMA, 14 HARI, 30 HARI)
+// ==========================================================
 
-Semoga Ustadz selalu sehat.
+function buatPesanSerahTerima(namaMasjid, email, pin, slug) {
+  const baseUrl = window.location.href.split('/').slice(0, -1).join('/') + '/';
+  const webUrl = `${baseUrl}masjid.html?masjid=${encodeURIComponent(slug)}`;
+  const tvUrl = `${baseUrl}tv.html?masjid=${encodeURIComponent(slug)}`;
+  
+  return `Assalamu’alaikum Warahmatullahi Wabarakatuh
 
-Izin mengingatkan dengan hormat, website dan TV digital masjid yang sudah dibuatkan masih belum terlihat aktif digunakan secara maksimal.
+Segenap Pengurus DKM ${namaMasjid}
 
-Agar website mulai bermanfaat untuk jamaah, bagian yang perlu dilengkapi terlebih dahulu adalah ${daftarKurang}.
+Alhamdulillah, pendaftaran masjid Anda telah kami terima dan sistem Power of Masjid untuk ${namaMasjid} sudah BERHASIL DIAKTIFKAN. 🚀
 
-Jika berkenan, Ustadz cukup kirimkan foto kegiatan, jadwal kajian/kegiatan rutin, dan catatan kas sederhana jika ada. Nanti kami bantu rapikan tahap awalnya.
+Mulai hari ini, masjid Anda telah memiliki fasilitas Website dan Smart Dashboard TV secara 100% GRATIS.
 
-Semoga website ini bisa menjadi sarana kebaikan, informasi, dan transparansi untuk jamaah.
+Berikut adalah akses masuk untuk pengurus:
+🌐 Link Login Admin: http://powerofmasjid.github.io/admin.html
+📧 Email: ${email}
+🔑 PIN Rahasia: ${pin}
+(Mohon simpan data di atas dengan baik. Bisa juga langsung disalin dari dalam Panel Admin).
 
-Terima kasih banyak.
+Link Website : ${webUrl}
+Link Layar TV : ${tvUrl}
 
-Barakallahu fiikum.`;
+📜 SOP & KETENTUAN PENGGUNAAN SISTEM
+
+Agar layanan gratis ini dapat terus beroperasi dengan lancar dan kapasitas server kami digunakan secara optimal untuk kemaslahatan ummat, kami menerapkan penertiban sistem dengan aturan sebagai berikut:
+
+1. Masa Pendampingan & Adaptasi (14 Hari)
+Terhitung sejak akun ini aktif, kami memberikan waktu 2 pekan (14 hari) bagi pengurus untuk mulai mencoba menggunakan sistem (seperti: mengisi Saldo Kas awal, membuat Jadwal Kegiatan, atau mengunggah Foto Galeri). Jika dalam 2 pekan sistem masih dibiarkan kosong, sistem kami akan mengirimkan pesan pengingat (Reminder) secara otomatis.
+
+2. Penonaktifan Sistem (30 Hari Tanpa Aktivitas)
+Apabila setelah 30 hari sejak pendaftaran tidak ada aktivitas penggunaan sama sekali di dalam panel admin, maka akun dan link masjid akan dinonaktifkan sementara. Hal ini terpaksa kami lakukan agar ruang server dapat dialihkan kepada masjid lain yang sedang mengantre.
+
+3. Pengaktifan Kembali (Reaktivasi)
+Jangan khawatir! Apabila di kemudian hari DKM sudah memiliki waktu luang dan siap untuk kembali mengelola sistem, akun dapat diaktifkan ulang kapan saja. Cukup kirimkan permohonan reaktivasi dengan membalas pesan ini.
+
+Silakan langsung dicoba login dan rasakan kemudahan mengelola masjid di era digital. Jika ada kendala teknis atau butuh panduan, jangan ragu untuk membalas pesan ini. Kami siap membantu sampai beres!
+
+Semoga sistem ini membawa keberkahan dan transparansi yang semakin baik untuk jamaah ${namaMasjid}.
+
+Barakallahu fiikum. 🙏🏼
+
+— Tim Power of Masjid 🚀`;
 }
+
+function buatPesanPengarahan14Hari(namaMasjid) {
+  return `Assalamu’alaikum Warahmatullahi Wabarakatuh,
+Ustadz & Segenap Pengurus DKM ${namaMasjid}.
+
+Semoga Ustadz dan seluruh pengurus senantiasa diberikan kesehatan dan kelancaran dalam memakmurkan masjid. 🙏🏼
+
+Mohon izin mengingatkan, masa pengenalan sistem Power of Masjid selama 14 hari untuk *${namaMasjid}* telah berlalu. Namun, berdasarkan pantauan kami, belum ada pembaruan data mandiri di dalam Panel Admin (seperti pengisian Saldo Kas, Jadwal Kegiatan, atau Galeri).
+
+Fasilitas digital ini dirancang agar manfaatnya dapat langsung dirasakan oleh jamaah, terutama dalam hal transparansi kas dan informasi kegiatan. Oleh karena itu, kami sangat mendorong pengurus untuk segera login dan mulai mencoba mengelola data masjid secara aktif.
+
+🌐 Link Login Admin: http://powerofmasjid.github.io/admin.html
+
+Apabila Ustadz atau tim pengurus mengalami kendala teknis, kesulitan login, atau membutuhkan panduan penggunaan sistem, mohon jangan ragu untuk membalas pesan ini. Tim kami siap memandu dan membantu langkah demi langkah.
+
+Mari bersama-sama kita makmurkan masjid melalui pengelolaan digital yang lebih rapi dan transparan.
+
+Barakallahu fiikum.
+— Tim Power of Masjid 🚀`;
+}
+
+function buatPesanPenonaktifan30Hari(namaMasjid) {
+  return `Assalamu’alaikum Warahmatullahi Wabarakatuh,
+Ustadz & Segenap Pengurus DKM ${namaMasjid}.
+
+Semoga Ustadz dan seluruh pengurus senantiasa dalam keadaan sehat dan selalu berada dalam lindungan Allah SWT. 🙏🏼
+
+Mohon izin menginformasikan, berdasarkan pengecekan sistem otomatis kami, kami melihat belum ada aktivitas penggunaan (seperti input kas, jadwal, atau galeri) di Panel Admin ${namaMasjid} selama 30 hari terakhir sejak akun diaktifkan.
+
+Sesuai dengan SOP dan keterbatasan kapasitas server gratis kami, maka dengan berat hati akses Panel Admin dan Website Publik untuk ${namaMasjid} kami Nonaktifkan Sementara per hari ini. 
+
+Hal ini kami lakukan agar ruang server dapat dialokasikan untuk masjid lain yang sedang mengantre dan siap mengelola sistem.
+
+Apakah masih bisa diaktifkan kembali?
+
+Tentu saja sangat bisa, Ustadz! Kami sangat memaklumi kesibukan pengurus DKM. Jika di kemudian hari DKM ${namaMasjid} sudah memiliki waktu dan tenaga operasional yang siap untuk kembali mengelola sistem ini, Ustadz cukup membalas pesan ini (Chat WA) untuk memohon pengaktifan ulang (Reaktivasi).
+
+InsyaAllah tim kami akan segera membuka kembali aksesnya secara gratis seperti semula, tanpa syarat apapun. 😊
+
+Terima kasih banyak atas perhatian dan kerja samanya. Semoga segala urusan kepengurusan DKM ${namaMasjid} selalu dimudahkan oleh Allah SWT.
+
+Barakallahu fiikum
+
+— Tim Power of Masjid`;
+}
+
+// ==========================================================
 
 function copyText(text) {
   text = String(text || '');
@@ -1267,32 +1348,42 @@ function renderMasjidDashboard(list) {
   container.innerHTML = list.map(m => {
     const kriteria = m.kriteria || {};
     const criteriaCount = Number(m.kriteriaCount || 0);
-
-    const itemKurang = [];
-    if (!kriteria.trx) itemKurang.push('kas/transaksi');
-    if (!kriteria.jdw) itemKurang.push('jadwal kegiatan');
-    if (!kriteria.gal) itemKurang.push('galeri/foto kegiatan');
-
     const ageInDays = hitungHariSejakDaftar(m.id);
-    const masaBelajar = 14;
-    const sisaHari = Math.max(0, masaBelajar - ageInDays);
 
     let cardClass = '';
     let badge = '';
     let showFollowUp = false;
     let pesanWA = '';
+    let btnClass = 'btn-warning';
+    let btnLabel = '';
 
+    // LOGIKA UMUR MASJID & DRAF PESAN
     if (criteriaCount >= 3) {
       cardClass = 'card-aktif';
       badge = '<span class="status-badge badge-aktif">Masjid Aktif</span>';
-    } else if (sisaHari > 0) {
-      cardClass = 'card-belajar';
-      badge = `<span class="status-badge badge-belajar">Masa Belajar (${sisaHari} Hari Lagi)</span>`;
     } else {
-      cardClass = 'card-pasif';
-      badge = '<span class="status-badge badge-pasif">Perlu Disapa</span>';
-      showFollowUp = true;
-      pesanWA = buatPesanFollowUp(m.nama, itemKurang);
+      if (ageInDays <= 15) {
+        // Umur 1 - 15 Hari: Muncul tombol Pengarahan 14 Hari
+        cardClass = 'card-belajar';
+        badge = `<span class="status-badge badge-belajar">Masa Belajar (${ageInDays} Hari)</span>`;
+        showFollowUp = true;
+        pesanWA = buatPesanPengarahan14Hari(m.nama);
+        btnClass = 'btn-secondary'; // Warna lebih soft
+        btnLabel = '💬 Salin Pesan Pengarahan (14 Hari)';
+      } else if (ageInDays >= 16 && ageInDays <= 29) {
+        // Umur 16 - 29 Hari: Tombol Sembunyi
+        cardClass = 'card-belajar';
+        badge = `<span class="status-badge badge-belajar">Masa Belajar (${ageInDays} Hari)</span>`;
+        showFollowUp = false; 
+      } else {
+        // Umur 30+ Hari: Muncul tombol Penonaktifan
+        cardClass = 'card-pasif';
+        badge = '<span class="status-badge badge-pasif">Lewat 30 Hari (Nonaktif)</span>';
+        showFollowUp = true;
+        pesanWA = buatPesanPenonaktifan30Hari(m.nama);
+        btnClass = 'btn-warning'; // Warna merah/peringatan
+        btnLabel = '🚨 Salin Pesan Penonaktifan (30 Hari)';
+      }
     }
 
     const baseUrl = window.location.href.split('/').slice(0, -1).join('/') + '/';
@@ -1323,7 +1414,7 @@ function renderMasjidDashboard(list) {
           <button type="button" class="btn-small" onclick="copyText('${tvUrl}')">Salin Link TV</button>
         </div>
 
-        ${showFollowUp ? `<button class="btn-warning" onclick="copyWarningById('${m.id}')">💬 Salin Pesan Pendampingan WA</button>` : ''}
+        ${showFollowUp ? `<button class="${btnClass}" onclick="copyWarningById('${m.id}')">${btnLabel}</button>` : ''}
       </div>
     `;
   }).join('');
@@ -1376,13 +1467,27 @@ async function tambahMasjidBaru() {
 
     if (json.status === 'ok') {
       showToast('Masjid baru berhasil disimpan');
+      
+      // PERUBAHAN: Generate Draf Pesan Serah Terima
+      const pesanSerahTerima = buatPesanSerahTerima(nama, email, pin, slug);
+      
+      const resBox = document.getElementById('hasil-registrasi');
+      resBox.style.display = 'block';
+      resBox.innerHTML = `
+        <div style="font-size:14px; font-weight:700; color:var(--gold); margin-bottom:8px;">Pendaftaran Berhasil! 🎉</div>
+        <div style="font-size:12px; margin-bottom:12px; line-height:1.5;">Pesan WhatsApp serah terima akun untuk DKM telah dirakit oleh sistem. Silakan salin pesan di bawah ini dan kirimkan ke DKM bersangkutan.</div>
+        <button class="btn-copy" style="margin-top:0;" onclick="copyText(document.getElementById('raw-serah-terima').value)">📋 Salin Pesan Serah Terima WA</button>
+        <textarea id="raw-serah-terima" style="display:none;">${pesanSerahTerima}</textarea>
+      `;
+
+      // Bersihkan Form
       document.getElementById('reg-nama').value = '';
       document.getElementById('reg-kelurahan').value = '';
       document.getElementById('reg-kecamatan').value = '';
       document.getElementById('reg-slug').value = '';
       document.getElementById('reg-email').value = '';
-      
       document.getElementById('reg-pin').value = ''; 
+      
       const btnSalin = document.getElementById('btnSalin');
       if(btnSalin) {
         btnSalin.innerHTML = 'Buat & Salin PIN';
@@ -2208,7 +2313,7 @@ function buatDanSalinPIN() {
   btn.style.borderColor = '#10B981';
   
   setTimeout(() => {
-    btn.innerHTML = 'Salin Ulang';
+    btn.innerHTML = 'Buat & Salin PIN';
     btn.style.background = '';
     btn.style.color = '';
     btn.style.borderColor = '';
