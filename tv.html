@@ -131,14 +131,14 @@
   /* =========================================================
      FITUR BARU: QR CORNER & TICKER BERJALAN
      ========================================================= */
-  .qr-corner { position: fixed; bottom: 50px; right: 25px; background: rgba(255,255,255,0.95); padding: 10px; border-radius: 12px; z-index: 999; box-shadow: 0 10px 30px rgba(0,0,0,0.6); text-align: center; border: 3px solid var(--gold); transition: opacity 0.5s; }
+  .qr-corner { position: fixed; bottom: 55px; right: 25px; background: rgba(255,255,255,0.95); padding: 10px; border-radius: 12px; z-index: 999; box-shadow: 0 10px 30px rgba(0,0,0,0.6); text-align: center; border: 3px solid var(--gold); transition: opacity 0.5s; }
   .qr-corner img { width: 85px; height: 85px; display: block; margin: 0 auto; }
   .qr-corner div { font-size: 10px; color: var(--bg-dark); font-weight: 800; margin-top: 5px; line-height: 1.2; letter-spacing: 0.5px; }
 
-  .ticker-wrap { display: flex; width: 100%; height: 38px; background: var(--gold); color: var(--bg-dark); z-index: 1000; flex-shrink: 0; box-shadow: 0 -2px 15px rgba(0,0,0,0.3); }
-  .ticker-label { background: var(--bg-dark); color: var(--gold); padding: 0 25px; display: flex; align-items: center; font-weight: 800; font-size: 14px; z-index: 2; border-right: 3px solid var(--gold); letter-spacing: 1.5px;}
+  .ticker-wrap { display: flex; width: 100%; height: 44px; background: var(--gold); color: var(--bg-dark); z-index: 1000; flex-shrink: 0; box-shadow: 0 -2px 15px rgba(0,0,0,0.3); }
+  .ticker-label { background: var(--bg-dark); color: var(--gold); padding: 0 25px; display: flex; align-items: center; font-weight: 800; font-size: 16px; z-index: 2; border-right: 3px solid var(--gold); letter-spacing: 1.5px;}
   .ticker-content { flex: 1; overflow: hidden; position: relative; display: flex; align-items: center; }
-  .ticker-text { position: absolute; white-space: nowrap; font-weight: 700; font-size: 15px; animation: marquee 30s linear infinite; }
+  .ticker-text { position: absolute; white-space: nowrap; font-weight: 800; font-size: 26px; animation: marquee 30s linear infinite; }
   @keyframes marquee { from { transform: translateX(100vw); } to { transform: translateX(-100%); } }
 
   body.mode-iqomah .qr-corner, body.mode-iqomah .ticker-wrap { display: none !important; }
