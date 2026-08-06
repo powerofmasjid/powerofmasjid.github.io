@@ -451,7 +451,6 @@ body{font-family:var(--font-utama);background:var(--bg);color:var(--text);transi
     <div class="card" id="list-jadwal"><div class="kosong">Memuat...</div></div>
   </div>
 
-  <!-- FITUR BARU: Titip Doa & Hajat -->
   <div class="section">
     <div class="card" style="background: var(--white); padding: 1.5rem; text-align: center; border: 1px solid var(--border);">
       <div style="font-size: 28px; margin-bottom: 8px;">🤲</div>
@@ -461,18 +460,50 @@ body{font-family:var(--font-utama);background:var(--bg);color:var(--text);transi
     </div>
   </div>
 
+  <!-- MODIFIKASI FORM PENDAFTARAN -->
   <div class="section" id="form-notif-section">
     <div class="card" style="background: linear-gradient(135deg, var(--primary), var(--primary-dark)); padding: 1.5rem; text-align: center; border: 1px solid var(--accent);">
       <div style="font-size: 28px; margin-bottom: 8px;">📲</div>
       <h3 style="font-size: 15px; font-weight: 700; color: white; margin-bottom: 6px;">Pengingat Jadwal & Info Masjid</h3>
       <p style="font-size: 12px; color: rgba(255,255,255,0.85); margin-bottom: 15px; line-height: 1.5;">Daftarkan nomor WhatsApp Anda untuk menerima pesan otomatis jadwal kajian dan info penting dari DKM.</p>
-      <div style="text-align: left; margin-bottom: 12px;">
-        <input type="text" id="notif-nama" placeholder="Nama Panggilan (Contoh: Bapak Budi)" style="width: 100%; padding: 12px; border-radius: 10px; border: none; margin-bottom: 8px; font-family: inherit; font-size: 13px; outline: none;">
+      
+      <div style="text-align: left; margin-bottom: 12px; display: flex; flex-direction: column; gap: 8px;">
+        <div style="display: flex; gap: 8px;">
+          <select id="notif-sapaan" style="flex: 1; padding: 12px; border-radius: 10px; border: none; font-family: inherit; font-size: 13px; outline: none; background: white;">
+            <option value="Pak">Pak</option>
+            <option value="Bu">Bu</option>
+            <option value="Kang">Kang</option>
+            <option value="Teh">Teh</option>
+            <option value="Mas">Mas</option>
+            <option value="Mba">Mba</option>
+            <option value="Saudara">Saudara</option>
+            <option value="Saudari">Saudari</option>
+            <option value="Kak">Kak</option>
+          </select>
+          <select id="notif-gelar" style="flex: 1; padding: 12px; border-radius: 10px; border: none; font-family: inherit; font-size: 13px; outline: none; background: white;">
+            <option value="">-- Gelar --</option>
+            <option value="H.">H.</option>
+            <option value="Hj.">Hj.</option>
+            <option value="Ust.">Ust.</option>
+            <option value="Ustadzah">Ustadzah</option>
+            <option value="Kyai">Kyai</option>
+            <option value="Nyai">Nyai</option>
+            <option value="Dr.">Dr.</option>
+          </select>
+        </div>
+        
+        <!-- ANTI BOT HONEYPOT (DISEMBUNYIKAN) -->
+        <input type="text" id="notif-bot-trap" name="website_url" style="display:none;" tabindex="-1" autocomplete="off">
+        
+        <input type="text" id="notif-nama" placeholder="Nama Lengkap (Contoh: Munawir Ahmad)" style="width: 100%; padding: 12px; border-radius: 10px; border: none; font-family: inherit; font-size: 13px; outline: none;">
+        <input type="text" id="notif-akrab" placeholder="Nama Panggilan / Akrab (Contoh: Munawir)" style="width: 100%; padding: 12px; border-radius: 10px; border: none; font-family: inherit; font-size: 13px; outline: none;">
         <input type="tel" id="notif-wa" placeholder="Nomor WhatsApp (Contoh: 0812...)" style="width: 100%; padding: 12px; border-radius: 10px; border: none; font-family: inherit; font-size: 13px; outline: none;">
       </div>
+      
       <button onclick="daftarNotifikasi(this)" style="width: 100%; background: var(--accent); color: var(--primary-dark); font-weight: 800; border: none; padding: 12px; border-radius: 10px; cursor: pointer; font-size: 13px; font-family: inherit; transition: 0.2s;">DAFTAR SEKARANG</button>
     </div>
   </div>
+  <!-- SELESAI MODIFIKASI FORM -->
 
   <div class="section" id="section-galeri" style="display:none">
     <div class="section-head">
@@ -521,7 +552,6 @@ if ('serviceWorker' in navigator) {
   });
 }
 
-// Fungsi Buka Layanan Titip Doa
 function kirimTitipDoa() {
     var nomorWa = window.WA_MASJID;
     if (!nomorWa) {
@@ -918,7 +948,6 @@ async function loadJadwal() {
   }
 }
 
-// FUNGSI BARU: Live Countdown Waktu Sholat di Web
 let liveSholatTimer = null;
 
 async function loadJadwalSholat(lat, lon) {
@@ -948,7 +977,6 @@ async function loadJadwalSholat(lat, lon) {
     return (parseInt(p[0], 10) * 60) + parseInt(p[1], 10);
   }
 
-  // MODIFIKASI: Menambahkan Live Countdown
   function renderJadwal(sholat, labelSumber) {
     if (!card || !grid || !title || !sholat || !sholat.length) return;
 
@@ -985,7 +1013,7 @@ async function loadJadwalSholat(lat, lon) {
 
     draw();
     if(window.liveSholatTimer) clearInterval(window.liveSholatTimer);
-    window.liveSholatTimer = setInterval(draw, 60000); // Otomatis refresh tiap 1 menit
+    window.liveSholatTimer = setInterval(draw, 60000); 
   }
 
   function getKoreksi(key) {
@@ -1187,17 +1215,54 @@ function showToastMsg(m) {
   setTimeout(function(){ t.classList.remove('show'); }, 3000);
 }
 
+// MODIFIKASI FUNGSI DAFTAR (JavaScript)
 function daftarNotifikasi(btn) {
-  var nama = document.getElementById('notif-nama').value.trim();
+  // PENGECEKAN ANTI-BOT (HONEYPOT)
+  var botTrap = document.getElementById('notif-bot-trap');
+  if (botTrap && botTrap.value !== "") {
+    // Pura-pura memproses agar bot berhenti menyerang
+    var ori = btn.innerHTML;
+    btn.innerHTML = "⏳ Mengarahkan ke WA...";
+    btn.disabled = true;
+    setTimeout(function() {
+      btn.innerHTML = ori;
+      btn.disabled = false;
+      document.getElementById('notif-nama').value = '';
+      document.getElementById('notif-akrab').value = '';
+      document.getElementById('notif-wa').value = '';
+    }, 2000);
+    return;
+  }
+
+  var sapaan = document.getElementById('notif-sapaan').value;
+  var gelar = document.getElementById('notif-gelar').value;
+  var namaLengkap = document.getElementById('notif-nama').value.trim();
+  var namaAkrab = document.getElementById('notif-akrab').value.trim();
   var wa = document.getElementById('notif-wa').value.trim();
   
-  if(!nama || !wa) { 
-    showToastMsg("Nama dan WhatsApp wajib diisi!"); 
+  var namaMasjid = document.getElementById('nama-masjid').textContent;
+  
+  if(!namaLengkap || !namaAkrab || !wa) { 
+    showToastMsg("Semua kolom wajib diisi!"); 
     return; 
   }
 
+  // Menggabungkan sapaan dan gelar
+  var sapaanFull = sapaan;
+  if (gelar) {
+      sapaanFull = sapaan + ' ' + gelar;
+  }
+
+  // Nomor WA Pusat Power of Masjid
+  var nomorPusat = "628211043809";
+
+  // Merakit teks pancingan anti-spam ke WA
+  var teksPesan = "Assalamu'alaikum Admin Power of Masjid.\n\nSaya *" + sapaanFull + " " + namaLengkap + "* (Panggilan: " + namaAkrab + ").\nMohon daftarkan nomor saya sebagai jamaah dari *" + namaMasjid + "* agar bisa menerima pengingat jadwal kegiatan.\n\n*(Saya bersedia menyimpan nomor ini dengan nama 'Info Masjid' agar link jadwal/pengumuman nantinya bisa saya klik)*.\n\nTerima kasih.";
+  
+  var linkWa = "https://wa.me/" + nomorPusat + "?text=" + encodeURIComponent(teksPesan);
+
   var oriText = btn.innerHTML;
-  btn.innerHTML = "⏳ Mendaftarkan...";
+  btn.innerHTML = "⏳ Mengarahkan ke WA...";
   btn.disabled = true;
 
   fetch(API_URL, {
@@ -1205,7 +1270,9 @@ function daftarNotifikasi(btn) {
     body: JSON.stringify({
       action: 'addJamaahMandiri',
       id_masjid: ID_MASJID,
-      nama: nama,
+      nama: namaLengkap,
+      sapaan: sapaanFull,
+      nama_akrab: namaAkrab,
       no_wa: wa
     })
   })
@@ -1213,19 +1280,15 @@ function daftarNotifikasi(btn) {
   .then(function(res) {
     btn.innerHTML = oriText;
     btn.disabled = false;
-    
-    if(res.status === 'ok') {
-      showToastMsg("Alhamdulillah, nomor berhasil didaftarkan!");
-      document.getElementById('notif-nama').value = '';
-      document.getElementById('notif-wa').value = '';
-    } else {
-      showToastMsg("Terjadi kesalahan, silakan coba lagi.");
-    }
+    document.getElementById('notif-nama').value = '';
+    document.getElementById('notif-akrab').value = '';
+    document.getElementById('notif-wa').value = '';
+    window.open(linkWa, '_blank');
   })
   .catch(function(e) {
     btn.innerHTML = oriText;
     btn.disabled = false;
-    showToastMsg("Gagal menyambung ke server. Periksa internet Anda.");
+    window.open(linkWa, '_blank');
   });
 }
 
