@@ -337,16 +337,6 @@ button,input{font:inherit}
 .final-cta .btn-primary{background:var(--accent);color:var(--primary-dark);box-shadow:0 12px 32px rgba(201,168,76,.20)}
 .final-cta .btn-primary:hover{background:#d7b658}
 
-/* FOOTER */
-.footer{background:#fff;padding:38px 0 28px;border-top:1px solid var(--border)}
-.footer-grid{display:flex;justify-content:space-between;align-items:center;gap:24px;flex-wrap:wrap}
-.footer-brand{display:flex;align-items:center;gap:10px}
-.footer-brand img{height:38px;width:auto}
-.footer-text{font-size:11.5px;color:var(--muted);line-height:1.6}
-.footer-support{text-align:right;font-size:11.5px;color:var(--muted);line-height:1.6}
-.footer-support strong{color:var(--primary-dark)}
-
-
 /* EKSPEDISI POWER OF MASJID */
 .expedition-section{
   padding:76px 0;
@@ -473,19 +463,26 @@ button,input{font:inherit}
       <a href="#cara-kerja">Cara Kerja</a>
       <a href="#fitur">Fitur</a>
       <a href="#masjid-aktif">Masjid Aktif</a>
+      <!-- TAMBAHAN MENU KAS EKSTRA -->
+      <a href="v-green.html" style="color: #d35400; font-weight: 800;">🔥 Kas Ekstra Masjid</a>
+      
       <a class="nav-accent" href="ekspedisi-power-of-masjid.html">Ekspedisi Power of Masjid</a>
       <a class="nav-cta" href="https://wa.me/628211043809?text=Assalamu'alaikum,%20saya%20pengurus%20masjid.%20Ingin%20dibantu%20menggunakan%20Power%20of%20Masjid." target="_blank" rel="noopener">Daftarkan Masjid</a>
     </div>
   </div>
 </nav>
 
-<!-- Popup Milad: ID dan handler dipertahankan agar fungsi lama tetap bekerja -->
+<!-- Popup Milad -->
 <div class="milad-popup" id="miladPopup" role="dialog" aria-label="Milad 10 Tahun Yayasan Nasi Jum'at">
   <button class="popup-close" type="button" aria-label="Tutup popup" onclick="closeMiladPopup()">×</button>
   <img class="popup-logo" src="logo%20EPOM.png" alt="Ekspedisi Power of Masjid">
   <div class="popup-title">Milad 10 Tahun Yayasan Nasi Jum'at</div>
   <div class="popup-text">Pilih tujuan Anda. Tetap melihat sistem digital untuk masjid, atau masuk ke halaman Ekspedisi Power of Masjid.</div>
+  
   <div class="popup-actions">
+    <!-- TAMBAHAN TOMBOL KAS EKSTRA DI POPUP -->
+    <a class="go-exp" href="v-green.html" style="background: linear-gradient(145deg, #1B6B3A, #0F4228); color: white; border: none; font-size: 13px;">🔥 Peluang Kas Ekstra Rp 5 Juta/Tahun</a>
+    
     <button class="go-site" type="button" onclick="closeMiladPopup()">Sistem Digital untuk DKM</button>
     <a class="go-exp" href="ekspedisi-power-of-masjid.html">Lihat Ekspedisi Power of Masjid</a>
     <button class="close-soft" type="button" onclick="closeMiladPopup()">Tutup</button>
@@ -510,6 +507,10 @@ button,input{font:inherit}
 
       <div class="hero-cta">
         <a href="https://wa.me/628211043809?text=Assalamu'alaikum,%20saya%20pengurus%20masjid.%20Ingin%20dibantu%20menggunakan%20Power%20of%20Masjid." target="_blank" rel="noopener" class="btn btn-primary">💬 Daftarkan Masjid</a>
+        
+        <!-- TAMBAHAN TOMBOL KAS EKSTRA DI HERO SECTION -->
+        <a href="v-green.html" class="btn btn-gold" style="background: #fff8df; border-color: #eadcae; color: #725c17;">🔥 Peluang Kas Rp 5 Jt/Tahun</a>
+
         <a href="masjid.html?masjid=contoh-tanjungbarat" target="_blank" rel="noopener" class="btn btn-outline">👀 Lihat Contoh Website</a>
         <a href="ekspedisi-power-of-masjid.html" class="btn btn-gold">🌙 Ekspedisi Power of Masjid</a>
         <a href="#cara-kerja" class="btn btn-gold">Lihat Cara Kerja ↓</a>
@@ -838,13 +839,21 @@ button,input{font:inherit}
   <div class="container">
     <h2>Bukan sekadar punya website.<br>Mulai kelola masjid lebih rapi.</h2>
     <p>Gunakan Power of Masjid untuk membantu DKM mengelola informasi, transparansi, kegiatan, jamaah, website, dan TV masjid dalam satu ekosistem.</p>
+    
     <div class="final-badges">
       <span>✓ Gratis untuk masjid</span>
       <span>✓ Kami bantu siapkan</span>
       <span>✓ Tidak perlu paham koding</span>
       <span>✓ Bisa dikelola dari HP</span>
     </div>
-    <a href="https://wa.me/628211043809?text=Assalamu'alaikum,%20saya%20pengurus%20masjid.%20Ingin%20dibantu%20menggunakan%20Power%20of%20Masjid." target="_blank" rel="noopener" class="btn btn-primary">💬 Daftarkan Masjid Sekarang</a>
+    
+    <!-- TAMBAHAN TOMBOL KAS EKSTRA DI BAGIAN BAWAH -->
+    <div style="display:flex; justify-content:center; gap:12px; flex-wrap:wrap;">
+        <a href="https://wa.me/628211043809?text=Assalamu'alaikum,%20saya%20pengurus%20masjid.%20Ingin%20dibantu%20menggunakan%20Power%20of%20Masjid." target="_blank" rel="noopener" class="btn btn-primary">💬 Daftarkan Masjid Sekarang</a>
+        
+        <a href="v-green.html" class="btn btn-outline" style="background: rgba(255,255,255,0.08); color: white; border: 1px solid rgba(255,255,255,0.2); padding: 13px 19px; border-radius: 14px; font-weight: 800; font-size: 14px; display: inline-flex; align-items: center; gap: 8px; transition: .2s; text-decoration: none;">🔥 Cek Peluang Kas Rp 5 Juta/Tahun</a>
+    </div>
+
   </div>
 </section>
 
