@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Rezeki Berkah — Power of Masjid</title>
+<title>Rezeki Berkah â€” Power of Masjid</title>
 <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -574,7 +574,7 @@ input::placeholder {
         </div>
 
         <div id="area-loading" class="loading">
-            ⏳ Memuat Program Rezeki Berkah...
+            â³ Memuat Program Rezeki Berkah...
         </div>
 
         <div id="area-error" class="hidden">
@@ -587,7 +587,6 @@ input::placeholder {
             </div>
         </div>
 
-        <!-- AREA SPONSOR (JEDA 5 DETIK) -->
         <div id="area-sponsor" class="hidden">
             <div style="text-align:center;">
                 <div class="badge">DIPERSEMBAHKAN OLEH</div>
@@ -596,7 +595,6 @@ input::placeholder {
             <h1 id="sponsor-nama-tampil">Memuat...</h1>
             <p class="subtitle" id="sponsor-merk-tampil" style="color: var(--gold-light); font-weight: bold;"></p>
 
-            <!-- Ruang untuk Poster/Flyer Sponsor -->
             <div class="kode-box" style="padding: 40px 20px; border-color: rgba(255,255,255,0.2); background: rgba(0,0,0,0.5);">
                 <span style="color: rgba(255,255,255,0.4); font-size: 12px; font-style: italic;">[ Ruang Visual Iklan Sponsor ]</span>
             </div>
@@ -609,7 +607,6 @@ input::placeholder {
                 LANJUT ISI DATA
             </button>
         </div>
-        <!-- AKHIR AREA SPONSOR -->
 
         <div id="area-klaim" class="hidden">
             <div style="text-align:center;">
@@ -662,7 +659,7 @@ input::placeholder {
         </div>
 
         <div id="area-kode" class="hidden">
-            <div class="success-icon">🌿</div>
+            <div class="success-icon">ðŸŒ¿</div>
             <h2>Alhamdulillah</h2>
             <p class="subtitle">
                 Kode Berkah Anda berhasil dibuat.
@@ -720,8 +717,11 @@ input::placeholder {
             </div>
         </div>
 
+        <!-- ============================================== -->
+        <!-- AREA SUKSES DENGAN BUKTI TRANSAKSI -->
+        <!-- ============================================== -->
         <div id="area-sukses" class="hidden">
-            <div class="success-icon">✅</div>
+            <div class="success-icon">âœ…</div>
             <h2>Berhasil Diambil</h2>
             <p class="subtitle">
                 Semoga menjadi rezeki yang bermanfaat dan penuh berkah.
@@ -733,17 +733,37 @@ input::placeholder {
                 <div class="status-pill status-done">Sudah Diambil</div>
             </div>
 
+            <div id="bukti-transaksi" style="background: rgba(16,185,129,0.15); border: 2px solid #10B981; border-radius: 16px; padding: 18px; margin: 15px 0; text-align:left;">
+                <div style="font-size: 11px; color: #A7F3D0; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; text-align:center;">Bukti Pengambilan Berkah</div>
+                <div class="info-row">
+                    <div class="info-label">Status</div>
+                    <div class="info-value" style="color:#A7F3D0;">SUDAH DIAMBIL</div>
+                </div>
+                <div class="info-row">
+                    <div class="info-label">Kode Berkah</div>
+                    <div class="info-value" id="bukti-kode">-</div>
+                </div>
+                <div class="info-row">
+                    <div class="info-label">Titik Ambil</div>
+                    <div class="info-value" id="bukti-merchant">-</div>
+                </div>
+                <div class="info-row">
+                    <div class="info-label">Waktu Transaksi</div>
+                    <div class="info-value" id="bukti-waktu">-</div>
+                </div>
+            </div>
+
+            <div class="note" style="border-color: #10B981;">
+                Simpan layar ini sebagai bukti bahwa manfaat Rezeki Berkah sudah diterima.
+            </div>
+
             <div class="live-time" id="live-time">Memuat waktu...</div>
 
-            <div class="note">
-                Terima kasih sudah menggunakan Rezeki Berkah melalui Power of Masjid.
+            <div class="footer">
+                Terima kasih sudah menggunakan Rezeki Berkah.
             </div>
         </div>
-
-        <div class="footer">
-            Power of Masjid<br>
-            Memakmurkan Masjid, Menguatkan Umat.
-        </div>
+        <!-- ============================================== -->
 
     </div>
 </div>
@@ -777,7 +797,8 @@ input::placeholder {
         <div class="modal-subtitle">Ringkasan persetujuan sebelum mengambil Kode Berkah.</div>
         <ol class="modal-list">
             <li>Nama dan nomor WhatsApp digunakan untuk keperluan program Rezeki Berkah.</li>
-            <li>Data dapat dibagikan kepada Sahabat Berkah sebagai penyelenggara atau pendukung program.</li>
+            <!-- PERBAIKAN TEKS CONSENT DI SINI -->
+            <li>Laporan statistik (total scan/pengambilan) akan diberikan kepada Sahabat Berkah tanpa menyertakan identitas pribadi (Nama & WA Anda dijamin kerahasiaannya).</li>
             <li>Data tidak dijual kepada pihak lain di luar program ini.</li>
             <li>Dengan melanjutkan, jamaah menyetujui ketentuan program Rezeki Berkah.</li>
         </ol>
@@ -916,7 +937,6 @@ async function loadProgramPublic() {
 
         renderProgramInfo();
         
-        // MODIFIKASI: Pindah ke area sponsor dan jalankan hitung mundur
         showArea('area-sponsor'); 
         mulaiHitungMundur();
 
@@ -939,7 +959,7 @@ function renderProgramInfo() {
     const masjid = DATA_PROGRAM.nama_masjid || DATA_PROGRAM.NAMA_MASJID || DATA_PROGRAM.lokasi_scan || DATA_PROGRAM.LOKASI_SCAN || 'Masjid lokasi distribusi';
     const merchant = DATA_PROGRAM.nama_merchant || DATA_PROGRAM.NAMA_MERCHANT || DATA_PROGRAM.nama_warung_toko || DATA_PROGRAM.NAMA_WARUNG_TOKO || 'Titik Ambil Berkah';
     const alamatMerchant = DATA_PROGRAM.alamat_merchant || DATA_PROGRAM.ALAMAT_MERCHANT || DATA_PROGRAM.alamat_cabang || DATA_PROGRAM.ALAMAT_CABANG || '';
-    const sponsorText = merk ? sponsor + ' — ' + merk : sponsor;
+    const sponsorText = merk ? sponsor + ' â€” ' + merk : sponsor;
     const manfaatText = jenis ? jenis + ': ' + deskripsi : deskripsi;
 
     setTextIfExists('info-program', namaProgram);
@@ -954,7 +974,6 @@ function renderProgramInfo() {
     setTextIfExists('hasil-merchant', merchant);
     setTextIfExists('hasil-alamat-merchant', alamatMerchant);
     
-    // MODIFIKASI: Mengirim data nama & merk ke layar Sponsor
     setTextIfExists('sponsor-nama-tampil', sponsor);
     setTextIfExists('sponsor-merk-tampil', merk);
 }
@@ -985,7 +1004,7 @@ function showNotice(message, type, title) {
 
     const kind = type || 'warning';
     modal.className = 'modal-overlay notice-modal ' + kind + ' show';
-    icon.textContent = kind === 'success' ? '✓' : (kind === 'error' ? '×' : '!');
+    icon.textContent = kind === 'success' ? 'âœ“' : (kind === 'error' ? 'Ã—' : '!');
     titleEl.textContent = title || (kind === 'success' ? 'Berhasil' : (kind === 'error' ? 'Gagal' : 'Perhatian'));
     msgEl.textContent = message || 'Terjadi kendala. Silakan coba lagi.';
 }
@@ -1009,7 +1028,6 @@ async function ambilKodeBerkah() {
         return;
     }
 
-    // Validasi panjang nomor WA Indonesia yang wajar (10 - 14 digit)
     if (!wa || wa.length < 10 || wa.length > 14) {
         showNotice('Nomor WhatsApp tidak valid. Harus terdiri dari 10 hingga 14 digit angka.', 'warning');
         return;
@@ -1022,7 +1040,6 @@ async function ambilKodeBerkah() {
 
     const btn = document.getElementById('btn-klaim');
 
-    // Cegah Double-Entry (Spam Submit)
     if (btn.disabled) return; 
 
     btn.disabled = true;
@@ -1119,6 +1136,9 @@ async function konfirmasiAmbilBerkah() {
         });
 
         if (json.status === 'ok') {
+            document.getElementById('bukti-kode').textContent = KODE_BERKAH;
+            document.getElementById('bukti-merchant').textContent = json.nama_merchant || (DATA_PROGRAM && (DATA_PROGRAM.nama_merchant || DATA_PROGRAM.NAMA_MERCHANT)) || 'Titik Ambil Berkah';
+            document.getElementById('bukti-waktu').textContent = formatWaktuTransaksi(json.waktu_redeem || json.waktu_transaksi || new Date().toISOString());
             showArea('area-sukses');
         } else {
             showNotice(json.message || 'Kode Titik Ambil tidak sesuai atau Kode Berkah sudah digunakan.', 'warning');
@@ -1129,6 +1149,23 @@ async function konfirmasiAmbilBerkah() {
 
     btn.disabled = false;
     btn.textContent = 'KONFIRMASI AMBIL BERKAH';
+}
+
+// =======================================================
+// FORMAT BUKTI WAKTU TRANSAKSI
+// =======================================================
+function formatWaktuTransaksi(value) {
+    const waktu = new Date(value);
+    if (isNaN(waktu.getTime())) return String(value || '-');
+    return waktu.toLocaleString('id-ID', {
+        weekday: 'long',
+        day: '2-digit',
+        month: 'long',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
+    });
 }
 
 function updateLiveTime() {
@@ -1147,9 +1184,6 @@ function updateLiveTime() {
     });
 }
 
-// =======================================================
-// MODIFIKASI: FUNGSI HITUNG MUNDUR & PINDAH KE FORM
-// =======================================================
 function mulaiHitungMundur() {
     let waktu = 5;
     let elAngka = document.getElementById('angka-hitung');
@@ -1171,7 +1205,6 @@ function mulaiHitungMundur() {
 function lanjutKeForm() {
     showArea('area-klaim');
 }
-// =======================================================
 
 </script>
 

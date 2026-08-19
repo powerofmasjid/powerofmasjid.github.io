@@ -3,10 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Superadmin — Power of Masjid</title>
+<title>Superadmin â€” Power of Masjid</title>
 <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-<!-- PERUBAHAN PWA: Memanggil manifest khusus Superadmin agar tidak tertukar dengan Admin DKM -->
 <link rel="manifest" href="manifest-superadmin.json">
 <meta name="theme-color" content="#0A2F1C">
 <link rel="apple-touch-icon" href="Logo Power of Masjid.png">
@@ -620,7 +619,7 @@ select.form-control option {
     <h2 style="font-size:18px; margin-bottom:5px;">Otoritas Pusat</h2>
     <p style="font-size:12px; color:rgba(255,255,255,0.6); margin-bottom:20px;">Masukkan PIN Superadmin</p>
     <div class="form-group">
-      <input type="password" class="form-control" id="pin-superadmin" placeholder="••••••" maxlength="8" style="text-align:center; letter-spacing:8px; font-size:18px;">
+      <input type="password" class="form-control" id="pin-superadmin" placeholder="â€¢â€¢â€¢â€¢â€¢â€¢" maxlength="8" style="text-align:center; letter-spacing:8px; font-size:18px;">
     </div>
     <button class="btn-primary" id="btn-login" onclick="prosesLogin()">MASUK SISTEM</button>
   </div>
@@ -675,7 +674,7 @@ select.form-control option {
 
       <div class="card">
         <div class="card-title">Daftar Status Masjid</div>
-        <div id="loading" style="text-align:center; font-size:12px; color:rgba(255,255,255,0.6); padding:10px; background:rgba(0,0,0,0.2); border-radius:8px; margin-bottom:10px;">⏳ Memuat daftar masjid...</div>
+        <div id="loading" style="text-align:center; font-size:12px; color:rgba(255,255,255,0.6); padding:10px; background:rgba(0,0,0,0.2); border-radius:8px; margin-bottom:10px;">â³ Memuat daftar masjid...</div>
         <div id="list-masjid-container" class="scroll-list"></div>
       </div>
     </div>
@@ -708,7 +707,7 @@ select.form-control option {
         <div class="form-group">
           <label>PIN DKM (Otomatis)</label>
           <div style="display: flex; gap: 10px;">
-            <input type="text" class="form-control" id="reg-pin" placeholder="Klik tombol di samping 👉" readonly style="color:var(--gold); font-weight:bold; letter-spacing: 2px;">
+            <input type="text" class="form-control" id="reg-pin" placeholder="Klik tombol di samping ðŸ‘‰" readonly style="color:var(--gold); font-weight:bold; letter-spacing: 2px;">
             <button class="btn-copy" type="button" onclick="buatDanSalinPIN()" id="btnSalin" style="width: auto; margin-top: 0; padding: 12px 20px; white-space: nowrap;">Buat & Salin PIN</button>
           </div>
           <small style="font-size: 11px; color: rgba(255,255,255,0.6); margin-top: 6px; display: block;">Klik tombol untuk mencetak PIN acak.</small>
@@ -716,9 +715,7 @@ select.form-control option {
 
         <button class="btn-primary" id="btn-tambah" onclick="tambahMasjidBaru()">SIMPAN MASJID BARU</button>
         
-        <!-- AREA TAMBAHAN: Muncul setelah masjid berhasil disimpan -->
         <div id="hasil-registrasi" style="display:none; margin-top:15px; border-color:var(--gold);" class="info-box">
-           <!-- Pesan Serah Terima akan dimunculkan di sini via Javascript -->
         </div>
       </div>
     </div>
@@ -819,9 +816,35 @@ select.form-control option {
     <div id="berkah" class="tab-content">
 
       <div class="card">
+        <div class="card-title">Distribusi Air Jamaah</div>
+        <div class="info-box">Catat air yang benar-benar diserahkan ke masjid. Data ini menjadi dasar perbandingan jumlah distribusi, Kode Berkah, dan pengambilan manfaat.</div>
+        <div class="form-group">
+          <label>Program / Campaign</label>
+          <select class="form-control" id="da-campaign"><option value="">-- Pilih Program --</option></select>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Tanggal Distribusi</label><input type="date" class="form-control" id="da-tanggal"></div>
+          <div class="form-group"><label>Jumlah</label><input type="number" min="1" class="form-control" id="da-jumlah" placeholder="Contoh: 1000"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Satuan</label><select class="form-control" id="da-satuan"><option value="BOTOL">Botol</option><option value="DUS">Dus</option><option value="KARTON">Karton</option><option value="PAK">Pak</option></select></div>
+          <div class="form-group"><label>Link Bukti Foto (opsional)</label><input type="url" class="form-control" id="da-bukti" placeholder="https://..."></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Diserahkan Oleh</label><input type="text" class="form-control" id="da-penyerah" placeholder="Nama tim/partner"></div>
+          <div class="form-group"><label>Diterima Oleh</label><input type="text" class="form-control" id="da-penerima" placeholder="Nama pengurus DKM"></div>
+        </div>
+        <div class="form-group"><label>Catatan</label><textarea class="form-control" id="da-catatan" placeholder="Kondisi atau keterangan distribusi"></textarea></div>
+        <button class="btn-primary" id="btn-da" onclick="simpanDistribusiAir()">SIMPAN DISTRIBUSI AIR</button>
+        <div id="rekap-distribusi-air" class="info-box" style="margin-top:15px;">Belum ada data distribusi.</div>
+        <div id="list-distribusi-air" class="scroll-list"></div>
+      </div>
+
+      <div class="card">
         <div class="card-title">Laporan Rezeki Berkah</div>
         <div class="info-box">
-          Data ini bisa dipakai untuk laporan ke sponsor: siapa penerima Kode Berkah, dari masjid mana, program apa, dan di Titik Ambil Berkah mana.
+          <b>Tampilan Internal:</b> Data detail di bawah hanya untuk keperluan audit internal. <br>
+          <b>Laporan Sponsor:</b> Klik tombol "Salin Laporan" untuk menghasilkan laporan statistik agregat (tanpa nama & WA) yang aman dikirim ke Sponsor.
         </div>
         <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:12px;">
           <button class="btn-secondary" style="margin-top:0; flex:1;" onclick="loadLaporanRezekiBerkah()">Muat Ulang Laporan</button>
@@ -985,6 +1008,7 @@ let masterSponsorData = [];
 let masterMerchantData = [];
 let campaignData = [];
 let laporanBerkahData = [];
+let distribusiAirData = [];
 let isLoadingDashboard = false;
 let PESAN_WA_MASJID = {};
 
@@ -1094,7 +1118,6 @@ function normalizeDate(dateValue) {
   });
 }
 
-// PERBAIKAN PRIORITAS 1: Auto-logout jika sesi dari backend kedaluwarsa
 function postData(payload) {
   return fetch(API_URL, {
     method: 'POST',
@@ -1102,7 +1125,6 @@ function postData(payload) {
   })
   .then(res => res.json())
   .then(json => {
-    // Paksa logout jika server menolak akses karena sesi kedaluwarsa
     if (json.status === 'error' && json.message && json.message.includes('Akses Ditolak')) {
         showToast('Sesi login kedaluwarsa. Mengeluarkan akun...');
         setTimeout(() => logout(), 2000);
@@ -1110,6 +1132,24 @@ function postData(payload) {
     }
     return json;
   });
+}
+
+function postDataSuperadmin(payload) {
+  return fetch(API_URL, {
+    method: 'POST',
+    body: JSON.stringify(payload)
+  }).then(function(res) { return res.json(); }).then(function(json) {
+    if (json.status === 'error' && String(json.message || '').includes('Akses Ditolak')) {
+      showToast('Sesi login kedaluwarsa. Silakan masuk kembali.');
+      logout();
+      throw new Error('Sesi kedaluwarsa');
+    }
+    return json;
+  });
+}
+
+function secureReadSuperadmin(action, extra) {
+  return postDataSuperadmin(Object.assign({ action: action, token: getToken() }, extra || {}));
 }
 
 function extractDateFromId(idMasjid) {
@@ -1127,33 +1167,29 @@ function hitungHariSejakDaftar(idMasjid) {
   return Math.floor((Date.now() - createdAtMs) / (1000 * 60 * 60 * 24));
 }
 
-// ==========================================================
-// KUMPULAN FUNGSI DRAF PESAN WA (SERAH TERIMA, 14 HARI, 30 HARI)
-// ==========================================================
-
 function buatPesanSerahTerima(namaMasjid, email, pin, slug) {
   const baseUrl = window.location.href.split('/').slice(0, -1).join('/') + '/';
   const webUrl = `${baseUrl}masjid.html?masjid=${encodeURIComponent(slug)}`;
   const tvUrl = `${baseUrl}tv.html?masjid=${encodeURIComponent(slug)}`;
   
-  return `Assalamu’alaikum Warahmatullahi Wabarakatuh
+  return `Assalamuâ€™alaikum Warahmatullahi Wabarakatuh
 
 Segenap Pengurus DKM ${namaMasjid}
 
-Alhamdulillah, pendaftaran masjid Anda telah kami terima dan sistem Power of Masjid untuk ${namaMasjid} sudah BERHASIL DIAKTIFKAN. 🚀
+Alhamdulillah, pendaftaran masjid Anda telah kami terima dan sistem Power of Masjid untuk ${namaMasjid} sudah BERHASIL DIAKTIFKAN. ðŸš€
 
 Mulai hari ini, masjid Anda telah memiliki fasilitas Website dan Smart Dashboard TV secara 100% GRATIS.
 
 Berikut adalah akses masuk untuk pengurus:
-🌐 Link Login Admin: http://powerofmasjid.github.io/admin.html
-📧 Email: ${email}
-🔑 PIN Rahasia: ${pin}
+ðŸŒ Link Login Admin: http://powerofmasjid.github.io/admin.html
+ðŸ“§ Email: ${email}
+ðŸ”‘ PIN Rahasia: ${pin}
 (Mohon simpan data di atas dengan baik. Bisa juga langsung disalin dari dalam Panel Admin).
 
 Link Website : ${webUrl}
 Link Layar TV : ${tvUrl}
 
-📜 SOP & KETENTUAN PENGGUNAAN SISTEM
+ðŸ“œ SOP & KETENTUAN PENGGUNAAN SISTEM
 
 Agar layanan gratis ini dapat terus beroperasi dengan lancar dan kapasitas server kami digunakan secara optimal untuk kemaslahatan ummat, kami menerapkan penertiban sistem dengan aturan sebagai berikut:
 
@@ -1170,36 +1206,36 @@ Silakan langsung dicoba login dan rasakan kemudahan mengelola masjid di era digi
 
 Semoga sistem ini membawa keberkahan dan transparansi yang semakin baik untuk jamaah ${namaMasjid}.
 
-Barakallahu fiikum. 🙏🏼
+Barakallahu fiikum. ðŸ™ðŸ¼
 
-— Tim Power of Masjid 🚀`;
+â€” Tim Power of Masjid ðŸš€`;
 }
 
 function buatPesanPengarahan14Hari(namaMasjid) {
-  return `Assalamu’alaikum Warahmatullahi Wabarakatuh,
+  return `Assalamuâ€™alaikum Warahmatullahi Wabarakatuh,
 Ustadz & Segenap Pengurus DKM ${namaMasjid}.
 
-Semoga Ustadz dan seluruh pengurus senantiasa diberikan kesehatan dan kelancaran dalam memakmurkan masjid. 🙏🏼
+Semoga Ustadz dan seluruh pengurus senantiasa diberikan kesehatan dan kelancaran dalam memakmurkan masjid. ðŸ™ðŸ¼
 
 Mohon izin mengingatkan, masa pengenalan sistem Power of Masjid selama 14 hari untuk *${namaMasjid}* telah berlalu. Namun, berdasarkan pantauan kami, belum ada pembaruan data mandiri di dalam Panel Admin (seperti pengisian Saldo Kas, Jadwal Kegiatan, atau Galeri).
 
 Fasilitas digital ini dirancang agar manfaatnya dapat langsung dirasakan oleh jamaah, terutama dalam hal transparansi kas dan informasi kegiatan. Oleh karena itu, kami sangat mendorong pengurus untuk segera login dan mulai mencoba mengelola data masjid secara aktif.
 
-🌐 Link Login Admin: http://powerofmasjid.github.io/admin.html
+ðŸŒ Link Login Admin: http://powerofmasjid.github.io/admin.html
 
 Apabila Ustadz atau tim pengurus mengalami kendala teknis, kesulitan login, atau membutuhkan panduan penggunaan sistem, mohon jangan ragu untuk membalas pesan ini. Tim kami siap memandu dan membantu langkah demi langkah.
 
 Mari bersama-sama kita makmurkan masjid melalui pengelolaan digital yang lebih rapi dan transparan.
 
 Barakallahu fiikum.
-— Tim Power of Masjid 🚀`;
+â€” Tim Power of Masjid ðŸš€`;
 }
 
 function buatPesanPenonaktifan30Hari(namaMasjid) {
-  return `Assalamu’alaikum Warahmatullahi Wabarakatuh,
+  return `Assalamuâ€™alaikum Warahmatullahi Wabarakatuh,
 Ustadz & Segenap Pengurus DKM ${namaMasjid}.
 
-Semoga Ustadz dan seluruh pengurus senantiasa dalam keadaan sehat dan selalu berada dalam lindungan Allah SWT. 🙏🏼
+Semoga Ustadz dan seluruh pengurus senantiasa dalam keadaan sehat dan selalu berada dalam lindungan Allah SWT. ðŸ™ðŸ¼
 
 Mohon izin menginformasikan, berdasarkan pengecekan sistem otomatis kami, kami melihat belum ada aktivitas penggunaan (seperti input kas, jadwal, atau galeri) di Panel Admin ${namaMasjid} selama 30 hari terakhir sejak akun diaktifkan.
 
@@ -1211,16 +1247,14 @@ Apakah masih bisa diaktifkan kembali?
 
 Tentu saja sangat bisa, Ustadz! Kami sangat memaklumi kesibukan pengurus DKM. Jika di kemudian hari DKM ${namaMasjid} sudah memiliki waktu dan tenaga operasional yang siap untuk kembali mengelola sistem ini, Ustadz cukup membalas pesan ini (Chat WA) untuk memohon pengaktifan ulang (Reaktivasi).
 
-InsyaAllah tim kami akan segera membuka kembali aksesnya secara gratis seperti semula, tanpa syarat apapun. 😊
+InsyaAllah tim kami akan segera membuka kembali aksesnya secara gratis seperti semula, tanpa syarat apapun. ðŸ˜Š
 
 Terima kasih banyak atas perhatian dan kerja samanya. Semoga segala urusan kepengurusan DKM ${namaMasjid} selalu dimudahkan oleh Allah SWT.
 
 Barakallahu fiikum
 
-— Tim Power of Masjid`;
+â€” Tim Power of Masjid`;
 }
-
-// ==========================================================
 
 function copyText(text) {
   text = String(text || '');
@@ -1275,7 +1309,7 @@ async function prosesLogin() {
   btn.textContent = 'MEMERIKSA...';
 
   try {
-    const res = await fetch(API_URL + '?action=login&email=superadmin&pin=' + encodeURIComponent(pin));
+    const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'login', email: 'superadmin', pin: pin }) });
     const json = await res.json();
 
     if (json.status === 'ok') {
@@ -1303,7 +1337,7 @@ async function loadDashboardData() {
   container.innerHTML = '';
 
   try {
-    const res = await fetch(API_URL + '?action=getSuperadminData&token=' + encodeURIComponent(getToken()) + '&_t=' + Date.now());
+    const res = await secureReadSuperadmin('getSuperadminData');
     const json = await res.json();
 
     if (json.status !== 'ok') {
@@ -1357,32 +1391,28 @@ function renderMasjidDashboard(list) {
     let btnClass = 'btn-warning';
     let btnLabel = '';
 
-    // LOGIKA UMUR MASJID & DRAF PESAN
     if (criteriaCount >= 3) {
       cardClass = 'card-aktif';
       badge = '<span class="status-badge badge-aktif">Masjid Aktif</span>';
     } else {
       if (ageInDays <= 15) {
-        // Umur 1 - 15 Hari: Muncul tombol Pengarahan 14 Hari
         cardClass = 'card-belajar';
         badge = `<span class="status-badge badge-belajar">Masa Belajar (${ageInDays} Hari)</span>`;
         showFollowUp = true;
         pesanWA = buatPesanPengarahan14Hari(m.nama);
-        btnClass = 'btn-secondary'; // Warna lebih soft
-        btnLabel = '💬 Salin Pesan Pengarahan (14 Hari)';
+        btnClass = 'btn-secondary'; 
+        btnLabel = 'ðŸ’¬ Salin Pesan Pengarahan (14 Hari)';
       } else if (ageInDays >= 16 && ageInDays <= 29) {
-        // Umur 16 - 29 Hari: Tombol Sembunyi
         cardClass = 'card-belajar';
         badge = `<span class="status-badge badge-belajar">Masa Belajar (${ageInDays} Hari)</span>`;
         showFollowUp = false; 
       } else {
-        // Umur 30+ Hari: Muncul tombol Penonaktifan
         cardClass = 'card-pasif';
         badge = '<span class="status-badge badge-pasif">Lewat 30 Hari (Nonaktif)</span>';
         showFollowUp = true;
         pesanWA = buatPesanPenonaktifan30Hari(m.nama);
-        btnClass = 'btn-warning'; // Warna merah/peringatan
-        btnLabel = '🚨 Salin Pesan Penonaktifan (30 Hari)';
+        btnClass = 'btn-warning'; 
+        btnLabel = 'ðŸš¨ Salin Pesan Penonaktifan (30 Hari)';
       }
     }
 
@@ -1401,12 +1431,12 @@ function renderMasjidDashboard(list) {
         <p>${escapeHtml(m.email || 'Email admin belum tersedia')}</p>
 
         <div class="check-list">
-          <div>${kriteria.trx ? '✅' : '⬜'} Kas / transaksi</div>
-          <div>${kriteria.jdw ? '✅' : '⬜'} Jadwal kegiatan</div>
-          <div>${kriteria.gal ? '✅' : '⬜'} Galeri kegiatan</div>
-          <div>📅 Usia sistem: ${ageInDays} hari</div>
-          ${m.last_login ? `<div>👤 Login terakhir: ${escapeHtml(m.last_login)}</div>` : ''}
-          ${m.skor_aktif !== undefined && m.skor_aktif !== '' ? `<div>📊 Skor aktif: ${escapeHtml(m.skor_aktif)}</div>` : ''}
+          <div>${kriteria.trx ? 'âœ…' : 'â¬œ'} Kas / transaksi</div>
+          <div>${kriteria.jdw ? 'âœ…' : 'â¬œ'} Jadwal kegiatan</div>
+          <div>${kriteria.gal ? 'âœ…' : 'â¬œ'} Galeri kegiatan</div>
+          <div>ðŸ“… Usia sistem: ${ageInDays} hari</div>
+          ${m.last_login ? `<div>ðŸ‘¤ Login terakhir: ${escapeHtml(m.last_login)}</div>` : ''}
+          ${m.skor_aktif !== undefined && m.skor_aktif !== '' ? `<div>ðŸ“Š Skor aktif: ${escapeHtml(m.skor_aktif)}</div>` : ''}
         </div>
 
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:10px;">
@@ -1468,19 +1498,17 @@ async function tambahMasjidBaru() {
     if (json.status === 'ok') {
       showToast('Masjid baru berhasil disimpan');
       
-      // PERUBAHAN: Generate Draf Pesan Serah Terima
       const pesanSerahTerima = buatPesanSerahTerima(nama, email, pin, slug);
       
       const resBox = document.getElementById('hasil-registrasi');
       resBox.style.display = 'block';
       resBox.innerHTML = `
-        <div style="font-size:14px; font-weight:700; color:var(--gold); margin-bottom:8px;">Pendaftaran Berhasil! 🎉</div>
+        <div style="font-size:14px; font-weight:700; color:var(--gold); margin-bottom:8px;">Pendaftaran Berhasil! ðŸŽ‰</div>
         <div style="font-size:12px; margin-bottom:12px; line-height:1.5;">Pesan WhatsApp serah terima akun untuk DKM telah dirakit oleh sistem. Silakan salin pesan di bawah ini dan kirimkan ke DKM bersangkutan.</div>
-        <button class="btn-copy" style="margin-top:0;" onclick="copyText(document.getElementById('raw-serah-terima').value)">📋 Salin Pesan Serah Terima WA</button>
+        <button class="btn-copy" style="margin-top:0;" onclick="copyText(document.getElementById('raw-serah-terima').value)">ðŸ“‹ Salin Pesan Serah Terima WA</button>
         <textarea id="raw-serah-terima" style="display:none;">${pesanSerahTerima}</textarea>
       `;
 
-      // Bersihkan Form
       document.getElementById('reg-nama').value = '';
       document.getElementById('reg-kelurahan').value = '';
       document.getElementById('reg-kecamatan').value = '';
@@ -1512,7 +1540,7 @@ async function loadIklan() {
   box.innerHTML = '<div style="text-align:center; font-size:12px;">Memuat...</div>';
 
   try {
-    const res = await fetch(API_URL + '?action=getIklanSuperadmin&token=' + encodeURIComponent(getToken()) + '&_t=' + Date.now());
+    const res = await secureReadSuperadmin('getIklanSuperadmin');
     const json = await res.json();
 
     if (json.status !== 'ok') {
@@ -1634,7 +1662,7 @@ async function loadSponsorTV() {
   box.innerHTML = '<div style="text-align:center; font-size:12px;">Memuat...</div>';
 
   try {
-    const res = await fetch(API_URL + '?action=getSponsorTV&token=' + encodeURIComponent(getToken()) + '&_t=' + Date.now());
+    const res = await secureReadSuperadmin('getSponsorTV');
     const json = await res.json();
     const list = json.data || [];
 
@@ -1747,7 +1775,7 @@ async function loadSponsorWeb() {
   box.innerHTML = '<div style="text-align:center; font-size:12px;">Memuat...</div>';
 
   try {
-    const res = await fetch(API_URL + '?action=getSponsorWeb&token=' + encodeURIComponent(getToken()) + '&_t=' + Date.now());
+    const res = await secureReadSuperadmin('getSponsorWeb');
     const json = await res.json();
     const list = json.data || [];
 
@@ -1827,6 +1855,7 @@ async function hapusSponsorWeb(id) {
 }
 
 async function loadRezekiBerkah() {
+  loadDistribusiAir();
   await Promise.all([
     loadMasterSponsor(),
     loadMasterMerchant(),
@@ -1840,7 +1869,7 @@ async function loadMasterSponsor() {
   const box = document.getElementById('list-master-sponsor');
 
   try {
-    const res = await fetch(API_URL + '?action=getMasterSponsor&token=' + encodeURIComponent(getToken()) + '&_t=' + Date.now());
+    const res = await secureReadSuperadmin('getMasterSponsor');
     const json = await res.json();
     masterSponsorData = json.data || [];
 
@@ -1862,7 +1891,7 @@ async function loadMasterSponsor() {
       return `
         <div class="item-card">
           <div class="item-title">${escapeHtml(nama)}</div>
-          <div class="item-gold">${escapeHtml(merk)} ${jenis ? '• ' + escapeHtml(jenis) : ''}</div>
+          <div class="item-gold">${escapeHtml(merk)} ${jenis ? 'â€¢ ' + escapeHtml(jenis) : ''}</div>
           <div class="item-sub">${escapeHtml(deskripsi)}</div>
           ${kontak ? `<div class="item-sub">Kontak: ${escapeHtml(kontak)}</div>` : ''}
         </div>
@@ -1940,7 +1969,7 @@ async function loadMasterMerchant() {
   const box = document.getElementById('list-master-merchant');
 
   try {
-    const res = await fetch(API_URL + '?action=getMasterMerchant&token=' + encodeURIComponent(getToken()) + '&_t=' + Date.now());
+    const res = await secureReadSuperadmin('getMasterMerchant');
     const json = await res.json();
     masterMerchantData = json.data || [];
 
@@ -1962,7 +1991,7 @@ async function loadMasterMerchant() {
       return `
         <div class="item-card">
           <div class="item-title">${escapeHtml(nama)}</div>
-          <div class="item-gold">${escapeHtml(kode)} ${sponsor ? '• ' + escapeHtml(sponsor) : ''}</div>
+          <div class="item-gold">${escapeHtml(kode)} ${sponsor ? 'â€¢ ' + escapeHtml(sponsor) : ''}</div>
           <div class="item-sub">${escapeHtml(alamat)}</div>
           ${wa ? `<div class="item-sub">WA PIC: ${escapeHtml(wa)}</div>` : ''}
         </div>
@@ -2068,9 +2097,10 @@ async function loadCampaignProgram() {
   const box = document.getElementById('list-campaign');
 
   try {
-    const res = await fetch(API_URL + '?action=getCampaignProgram&token=' + encodeURIComponent(getToken()) + '&_t=' + Date.now());
+    const res = await secureReadSuperadmin('getCampaignProgram');
     const json = await res.json();
     campaignData = json.data || [];
+    isiPilihanDistribusiAir();
 
     if (!campaignData.length) {
       box.innerHTML = '<div style="font-size:12px; text-align:center;">Belum ada Program Rezeki Berkah.</div>';
@@ -2092,7 +2122,7 @@ async function loadCampaignProgram() {
       return `
         <div class="item-card">
           <div class="item-title">${escapeHtml(nama)}</div>
-          <div class="item-gold">${escapeHtml(sponsor)} ${merchant ? '• ' + escapeHtml(merchant) : ''}</div>
+          <div class="item-gold">${escapeHtml(sponsor)} ${merchant ? 'â€¢ ' + escapeHtml(merchant) : ''}</div>
           <div class="item-sub">Masjid: ${escapeHtml(masjid || '-')}</div>
           <div class="item-sub">Kuota Berkah: ${escapeHtml(redeem)} / ${escapeHtml(kuota)}</div>
           <div class="item-sub">Masa Program: ${escapeHtml(mulai)} sampai ${escapeHtml(expired)}</div>
@@ -2199,6 +2229,94 @@ async function tambahCampaignProgram() {
   btn.textContent = 'BUAT PROGRAM REZEKI BERKAH';
 }
 
+async function isiPilihanDistribusiAir() {
+  const select = document.getElementById('da-campaign');
+  if (!select) return;
+  const current = select.value;
+  select.innerHTML = '<option value="">-- Pilih Program --</option>' + campaignData.map(c => {
+    const id = c.id_campaign || c.id || '';
+    const nama = c.nama_program || 'Program Rezeki Berkah';
+    const masjid = c.nama_masjid || '';
+    return `<option value="${escapeHtml(id)}">${escapeHtml(nama + (masjid ? ' - ' + masjid : ''))}</option>`;
+  }).join('');
+  if (current) select.value = current;
+}
+async function loadDistribusiAir() {
+  const list = document.getElementById('list-distribusi-air');
+  if (!list) return;
+  isiPilihanDistribusiAir();
+  list.innerHTML = '<div style="text-align:center;font-size:12px;padding:10px;">Memuat distribusi...</div>';
+  try {
+    const res = await secureReadSuperadmin('getDistribusiAir');
+    const json = await res.json();
+    if (json.status !== 'ok') {
+      list.innerHTML = '<div class="info-box">' + escapeHtml(json.message || 'Gagal memuat distribusi') + '</div>';
+      return;
+    }
+    distribusiAirData = json.data || [];
+    renderDistribusiAir();
+  } catch (e) {
+    list.innerHTML = '<div class="info-box">Gagal memuat distribusi air.</div>';
+  }
+}
+function renderDistribusiAir() {
+  const list = document.getElementById('list-distribusi-air');
+  const rekap = document.getElementById('rekap-distribusi-air');
+  if (!distribusiAirData.length) {
+    rekap.textContent = 'Belum ada data distribusi.';
+    list.innerHTML = '';
+    return;
+  }
+  const perSatuan = {};
+  distribusiAirData.forEach(r => {
+    const satuan = String(r.satuan || 'UNIT').toUpperCase();
+    perSatuan[satuan] = (perSatuan[satuan] || 0) + Number(r.jumlah || 0);
+  });
+  rekap.textContent = 'Total tercatat: ' + Object.keys(perSatuan).map(k => perSatuan[k].toLocaleString('id-ID') + ' ' + k).join(' | ');
+  list.innerHTML = distribusiAirData.map(r => `
+    <div class="item-card">
+      <div class="item-title">${escapeHtml(r.nama_program || 'Program Rezeki Berkah')}</div>
+      <div class="item-gold">${Number(r.jumlah || 0).toLocaleString('id-ID')} ${escapeHtml(r.satuan || '')} â€¢ ${escapeHtml(r.nama_masjid || '')}</div>
+      <div class="item-sub">${escapeHtml(normalizeDate(r.tanggal))}<br>Penyerah: ${escapeHtml(r.penyerah || '-')} â€¢ Penerima: ${escapeHtml(r.penerima || '-')}</div>
+      ${r.catatan ? `<div class="item-sub">${escapeHtml(r.catatan)}</div>` : ''}
+      ${r.bukti_url ? `<a class="btn-small" href="${escapeHtml(r.bukti_url)}" target="_blank" rel="noopener" style="margin-top:10px;">Lihat Bukti</a>` : ''}
+      <div class="item-actions"><button class="btn-action btn-del" onclick="hapusDistribusiAir('${escapeHtml(r.id_distribusi)}')">Hapus</button></div>
+    </div>`).join('');
+}
+async function simpanDistribusiAir() {
+  const payload = {
+    action: 'addDistribusiAir', token: getToken(),
+    id_campaign: document.getElementById('da-campaign').value,
+    tanggal: document.getElementById('da-tanggal').value,
+    jumlah: document.getElementById('da-jumlah').value,
+    satuan: document.getElementById('da-satuan').value,
+    penyerah: document.getElementById('da-penyerah').value.trim(),
+    penerima: document.getElementById('da-penerima').value.trim(),
+    bukti_url: document.getElementById('da-bukti').value.trim(),
+    catatan: document.getElementById('da-catatan').value.trim()
+  };
+  const btn = document.getElementById('btn-da');
+  btn.disabled = true; btn.textContent = 'MENYIMPAN...';
+  try {
+    const json = await postData(payload);
+    showToast(json.message || (json.status === 'ok' ? 'Distribusi tersimpan' : 'Gagal menyimpan'));
+    if (json.status === 'ok') {
+      ['da-jumlah','da-penyerah','da-penerima','da-bukti','da-catatan'].forEach(id => document.getElementById(id).value = '');
+      loadDistribusiAir();
+    }
+  } catch(e) { showToast('Gagal menyimpan distribusi'); }
+  btn.disabled = false; btn.textContent = 'SIMPAN DISTRIBUSI AIR';
+}
+async function hapusDistribusiAir(id) {
+  const yakin = await showConfirm('Hapus catatan distribusi air ini?');
+  if (!yakin) return;
+  try {
+    const json = await postData({ action:'deleteDistribusiAir', token:getToken(), id_distribusi:id });
+    showToast(json.message || 'Selesai');
+    if (json.status === 'ok') loadDistribusiAir();
+  } catch(e) { showToast('Gagal menghapus distribusi'); }
+}
+
 async function loadLaporanRezekiBerkah() {
   const tbody = document.getElementById('tabel-laporan-berkah');
   if (!tbody) return;
@@ -2206,7 +2324,7 @@ async function loadLaporanRezekiBerkah() {
   tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;">Memuat laporan...</td></tr>';
 
   try {
-    const res = await fetch(API_URL + '?action=getLaporanRezekiBerkah&token=' + encodeURIComponent(getToken()) + '&_t=' + Date.now());
+    const res = await secureReadSuperadmin('getLaporanRezekiBerkah');
     const json = await res.json();
     laporanBerkahData = json.data || [];
 
@@ -2263,33 +2381,57 @@ function copyLaporanRezekiBerkah() {
   }
 
   const lines = [];
-  lines.push('LAPORAN REZEKI BERKAH');
+  lines.push('ðŸ“Š LAPORAN AGREGAT REZEKI BERKAH');
   lines.push('Power of Masjid');
+  lines.push('================================');
   lines.push('');
 
-  laporanBerkahData.forEach((row, i) => {
-    const nama = row.nama_jamaah || row.NAMA_JAMAAH || '';
-    const wa = row.no_wa || row.NO_WA || row.wa || '';
-    const masjid = row.nama_masjid || row.NAMA_MASJID || row.lokasi_scan || row.LOKASI_SCAN || '';
-    const program = row.nama_program || row.NAMA_PROGRAM || '';
-    const sponsor = row.nama_sponsor || row.NAMA_SPONSOR || row.nama_perusahaan || row.NAMA_PERUSAHAAN || '';
-    const merchant = row.nama_merchant || row.NAMA_MERCHANT || row.nama_warung_toko || row.NAMA_WARUNG_TOKO || '';
+  // Grouping data per Program
+  const rekap = {};
+  laporanBerkahData.forEach(row => {
+    const prog = row.nama_program || row.NAMA_PROGRAM || 'Tanpa Nama Program';
+    const masjid = row.nama_masjid || row.NAMA_MASJID || row.lokasi_scan || row.LOKASI_SCAN || 'Masjid Lain';
+    const merchant = row.nama_merchant || row.NAMA_MERCHANT || row.nama_warung_toko || row.NAMA_WARUNG_TOKO || 'Titik Ambil Lain';
     const status = ubahStatusBerkah(row.status || row.STATUS || '');
-    const waktuBuat = normalizeDate(row.waktu_dibuat || row.WAKTU_DIBUAT || '');
-    const waktuRedeem = normalizeDate(row.waktu_redeem || row.WAKTU_REDEEM || '');
-
-    lines.push(`${i + 1}. ${nama}`);
-    lines.push(`WA: ${wa}`);
-    lines.push(`Masjid: ${masjid}`);
-    lines.push(`Program: ${program}`);
-    lines.push(`Sahabat Berkah: ${sponsor}`);
-    lines.push(`Titik Ambil Berkah: ${merchant}`);
-    lines.push(`Status: ${status}`);
-    lines.push(`Waktu Kode: ${waktuBuat}`);
-    if (waktuRedeem) lines.push(`Waktu Diambil: ${waktuRedeem}`);
-    lines.push('');
+    
+    if (!rekap[prog]) {
+      rekap[prog] = { totalScan: 0, totalRedeem: 0, masjid: {}, merchant: {} };
+    }
+    
+    rekap[prog].totalScan++;
+    if (status === 'Sudah Diambil') {
+      rekap[prog].totalRedeem++;
+    }
+    
+    rekap[prog].masjid[masjid] = (rekap[prog].masjid[masjid] || 0) + 1;
+    rekap[prog].merchant[merchant] = (rekap[prog].merchant[merchant] || 0) + 1;
   });
 
+  for (const prog in rekap) {
+    const data = rekap[prog];
+    const convRate = data.totalScan > 0 ? Math.round((data.totalRedeem / data.totalScan) * 100) : 0;
+    
+    lines.push(`ðŸ“Œ PROGRAM: ${prog}`);
+    lines.push(`Total Scan QR   : ${data.totalScan} Jamaah`);
+    lines.push(`Total Diambil   : ${data.totalRedeem} Jamaah`);
+    lines.push(`Conversion Rate : ${convRate}%`);
+    lines.push('');
+    
+    // Sort Masjid
+    const sortMasjid = Object.entries(data.masjid).sort((a,b) => b[1] - a[1]).slice(0,3);
+    lines.push(`Top 3 Masjid:`);
+    sortMasjid.forEach(m => lines.push(`- ${m[0]} (${m[1]} scan)`));
+    lines.push('');
+    
+    // Sort Merchant
+    const sortMerchant = Object.entries(data.merchant).sort((a,b) => b[1] - a[1]).slice(0,3);
+    lines.push(`Top 3 Titik Ambil Berkah:`);
+    sortMerchant.forEach(m => lines.push(`- ${m[0]} (${m[1]} scan)`));
+    lines.push('--------------------------------');
+    lines.push('');
+  }
+
+  lines.push('Catatan: Laporan ini bersifat agregat tanpa memuat nama & nomor WA jamaah demi menjaga privasi sesuai kebijakan Power of Masjid.');
   copyText(lines.join('\n'));
 }
 
@@ -2320,7 +2462,6 @@ function buatDanSalinPIN() {
   }, 2000);
 }
 
-// TAMBAHAN PWA: Daftarkan Service Worker
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', function() {
     navigator.serviceWorker.register('sw.js').then(function(registration) {
