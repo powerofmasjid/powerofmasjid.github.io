@@ -6,6 +6,8 @@
     <title>Program Kas Ekstra x Power of Masjid</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
         :root {
             --bg-dark: #0A2F1C;
             --primary: #1B6B3A;
@@ -17,13 +19,46 @@
 
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
-            margin: 0;
-            padding: 0;
             background-color: var(--light-bg);
             color: var(--text-dark);
             line-height: 1.6;
+            overflow-x: hidden;
         }
 
+        /* =========================================
+           NAVBAR (Diambil langsung dari Halaman Utama)
+           ========================================= */
+        .navbar { position: sticky; top: 0; z-index: 100; background: rgba(255,255,255,.93); backdrop-filter: blur(16px); border-bottom: 1px solid rgba(15,66,40,.08); box-shadow: 0 7px 26px rgba(0,0,0,.035); }
+        .nav-inner { min-height: 76px; display: flex; align-items: center; justify-content: space-between; gap: 18px; max-width: 1180px; margin: 0 auto; padding: 0 1.5rem; }
+        .brand-wrap { display: flex; align-items: center; gap: 11px; min-width: 0; text-decoration: none; }
+        .brand-logo { height: 43px; width: auto; display: block; object-fit: contain; }
+        .brand-divider { width: 1px; height: 34px; background: #dfe5e1; }
+        .brand-title { font-size: 15px; font-weight: 800; color: #0F4228; white-space: nowrap; }
+        .nav-menu { display: flex; align-items: center; gap: 4px; }
+        .nav-menu a { font-size: 13px; font-weight: 750; color: #345043; padding: 9px 11px; border-radius: 999px; transition: .2s; text-decoration: none; }
+        .nav-menu a:hover { background: #E8F5EE; color: #0F4228; }
+        .nav-menu .nav-accent { background: #FBF3E0; border: 1px solid rgba(201,168,76,.30); color: #7b6015; }
+        .nav-menu .nav-cta { background: #1B6B3A; color: #fff; padding: 10px 15px; margin-left: 5px; box-shadow: 0 8px 20px rgba(27,107,58,.18); }
+        .nav-menu .nav-cta:hover { background: #0F4228; color: #fff; }
+        .nav-toggle { display: none; width: 46px; height: 46px; border: 1px solid #E1E7E3; background: #fff; color: #0F4228; border-radius: 13px; font-size: 24px; font-weight: 800; align-items: center; justify-content: center; cursor: pointer; }
+
+        @media(max-width: 900px) {
+            .nav-menu { display: none; position: absolute; left: 1rem; right: 1rem; top: calc(100% + 6px); background: #fff; border: 1px solid #E1E7E3; border-radius: 16px; box-shadow: 0 20px 60px rgba(15,66,40,.10); padding: 9px; flex-direction: column; align-items: stretch; }
+            .nav-menu.show { display: flex; }
+            .nav-menu a { padding: 12px 13px; border-radius: 10px; }
+            .nav-menu .nav-cta { margin-left: 0; }
+            .nav-toggle { display: flex; }
+            .brand-title { display: none; }
+        }
+        @media(max-width: 620px) {
+            .navbar .brand-logo { height: 36px; }
+            .brand-divider { height: 29px; }
+            .nav-inner { min-height: 66px; }
+        }
+
+        /* =========================================
+           KONTEN V-GREEN UTAMA
+           ========================================= */
         .hero {
             background: linear-gradient(150deg, var(--bg-dark) 0%, var(--primary) 100%);
             color: white;
@@ -31,11 +66,11 @@
             text-align: center;
         }
         .hero h1 {
-            font-size: 36px;
+            font-size: 32px;
             font-weight: 800;
             color: var(--gold);
             margin: 0 0 15px 0;
-            line-height: 1.2;
+            line-height: 1.3;
         }
         .hero h1 span {
             color: #FFFFFF;
@@ -176,23 +211,57 @@
             background: #D4B65C;
         }
 
-        @media (max-width: 600px) {
+        /* =========================================
+           FOOTER (Diambil langsung dari Halaman Utama)
+           ========================================= */
+        .footer { background: #fff; padding: 38px 0 28px; border-top: 1px solid #E1E7E3; margin-top: 40px; }
+        .footer-grid { display: flex; justify-content: space-between; align-items: center; gap: 24px; flex-wrap: wrap; max-width: 1180px; margin: 0 auto; padding: 0 1.5rem; }
+        .footer-brand { display: flex; align-items: center; gap: 10px; }
+        .footer-brand img { height: 38px; width: auto; }
+        .footer-text { font-size: 11.5px; color: #68726C; line-height: 1.6; }
+        .footer-support { text-align: right; font-size: 11.5px; color: #68726C; line-height: 1.6; }
+        .footer-support strong { color: #0F4228; }
+
+        @media (max-width: 620px) {
             .hero { padding: 50px 20px 70px; }
             .hero h1 { font-size: 26px; }
             .hero h2 { font-size: 14px; }
             .container { padding: 25px; margin-top: -30px; border-radius: 15px; }
             .btn-cta { font-size: 15px; padding: 14px 20px; width: 100%; box-sizing: border-box; }
+            .footer-grid { display: grid; justify-items: center; text-align: center; }
+            .footer-support { text-align: center; }
         }
     </style>
 </head>
 <body>
 
+    <!-- NAVBAR (Seragam dengan Halaman Utama) -->
+    <nav class="navbar">
+      <div class="nav-inner">
+        <a href="index.html" class="brand-wrap" aria-label="Power of Masjid">
+          <img class="brand-logo" src="Logo%20Power%20of%20Masjid.png" alt="Power of Masjid">
+          <span class="brand-divider" aria-hidden="true"></span>
+          <img class="brand-logo" src="Logo%20YNJ.png" alt="Yayasan Nasi Jum'at">
+          <span class="brand-title">Power of Masjid</span>
+        </a>
+
+        <button class="nav-toggle" type="button" aria-label="Buka menu" onclick="toggleMenu()">☰</button>
+
+        <div class="nav-menu" id="navMenu">
+          <a href="index.html#cara-kerja">Cara Kerja</a>
+          <a href="index.html#fitur">Fitur</a>
+          <a href="index.html#masjid-aktif">Masjid Aktif</a>
+          <a href="v-green.html" style="color: #d35400; font-weight: 800;">🔥 Kas Ekstra Masjid</a>
+          <a class="nav-accent" href="ekspedisi-power-of-masjid.html">Ekspedisi Power of Masjid</a>
+          <a class="nav-cta" href="https://wa.me/628211043809?text=Assalamu'alaikum,%20saya%20pengurus%20masjid.%20Ingin%20dibantu%20menggunakan%20Power%20of%20Masjid." target="_blank" rel="noopener">Daftarkan Masjid</a>
+        </div>
+      </div>
+    </nav>
+
+    <!-- KONTEN V-GREEN -->
     <div class="hero">
-        <h1>Ubah Sudut Teras Masjid Menjadi<br><span>Suntikan Kas Rp 5 Juta/Tahun!</span></h1>
-        <h2>
-            Program Kemitraan Penyediaan Lahan Stasiun Baterai Motor Listrik (BSS).<br> 
-            <strong style="color: var(--gold);">100% Tanpa Modal, Tanpa Repot, & Listrik Ditanggung Penuh Perusahaan.</strong>
-        </h2>
+        <h1>Program Kemandirian Kas Masjid<br><span>(Kolaborasi POM x V-Green VinFast)</span></h1>
+        <h2>Dapatkan Pasif Income HINGGA Rp 5 Juta/Tahun Bersih (Tanpa Potongan Perantara) untuk Kas Masjid Anda.</h2>
     </div>
 
     <div class="container">
@@ -202,8 +271,8 @@
         <div class="benefit-card">
             <div class="benefit-icon">💰</div>
             <div class="benefit-text">
-                <h4>Infaq Pasif Terjamin</h4>
-                <p>Tambahan kas Rp 5.000.000/tahun bersih, dibayarkan di depan.</p>
+                <h4>Nilai Sewa Maksimal & Transparan</h4>
+                <p>Dapatkan kompensasi sewa hingga Rp 5.000.000,-/tahun per unit BSS. Kami pastikan dana kas masjid turun BERSIH 100% tanpa potongan perantara/agen. (Nilai final menyesuaikan evaluasi lokasi dari pusat).</p>
             </div>
         </div>
         
@@ -211,51 +280,85 @@
             <div class="benefit-icon">⚡</div>
             <div class="benefit-text">
                 <h4>Tanpa Beban Operasional</h4>
-                <p>Mesin BSS (Stasiun Penukaran Baterai Motor Listrik), instalasi kabel, hingga pulsa token listrik bulanan 100% ditanggung oleh perusahaan.</p>
+                <p>Mesin, instalasi, hingga pulsa token listrik bulanan 100% ditanggung oleh perusahaan. Tidak akan membebani kas masjid sepeser pun.</p>
             </div>
         </div>
 
         <div class="benefit-card">
             <div class="benefit-icon">📐</div>
             <div class="benefit-text">
-                <h4>Sangat Hemat Tempat</h4>
-                <p>Hanya membutuhkan sudut teras/halaman berukuran 1 x 1,5 meter.</p>
+                <h4>Hemat Tempat & Potensi Ekspansi</h4>
+                <p>Hanya butuh sudut teras/halaman berukuran 1 x 2 meter per unit. Jika lahan memadai, bisa diekspansi hingga maksimal 3 unit BSS di satu lokasi.</p>
             </div>
         </div>
 
         <div class="tc-box">
-            <div class="section-title" style="font-size: 16px; margin-bottom: 15px; border-bottom: none;">📋 Syarat & Ketentuan</div>
+            <div class="section-title" style="font-size: 16px; margin-bottom: 15px; border-bottom: none;">📋 Syarat & Ketentuan Berlaku</div>
             <ul>
-                <li><strong>Syarat Lokasi:</strong> Teras/halaman masjid harus memiliki akses yang mudah dijangkau publik atau pinggir jalan (tidak berada di dalam gang buntu atau tertutup pagar rapat 24 jam).</li>
-                <li><strong>Area Prioritas:</strong> Saat ini memprioritaskan area Jakarta Selatan & Jabodetabek <span style="color:#DC2626; font-weight:bold;">(Kuota sangat terbatas: 3.000 titik)</span>.</li>
-                <li><strong>Syarat Dokumen (Disiapkan setelah disetujui):</strong> Fotokopi KTP Ketua DKM/Pengurus, fotokopi PBB/Sertifikat Wakaf, dan Surat Kuasa pengurus.</li>
+                <li><strong>Kriteria Lokasi:</strong> Teras/halaman masjid harus mudah diakses publik (pinggir jalan hidup). Tidak bisa di dalam gang buntu atau tertutup pagar 24 jam.</li>
+                <li><strong>Syarat Dokumen (Wajib disiapkan jika lokasi disetujui):</strong>
+                    <ol style="margin-top: 6px; padding-left: 20px; color: var(--text-dark);">
+                        <li>Sertifikat Wakaf atau Sertifikat Tanah (Mohon maaf, hanya PBB tidak bisa diproses).</li>
+                        <li>Surat Susunan Pengurus DKM/TPA (Wajib menggunakan Kop Surat, Tanda Tangan, dan Stempel resmi).</li>
+                        <li>Fotokopi KTP Pengurus/Ketua DKM.</li>
+                    </ol>
+                </li>
+                <li><strong>Estimasi Proses:</strong> Karena antusiasme yang tinggi dan proses importasi mesin, estimasi waktu dari pengajuan, persetujuan (Approved), hingga instalasi memakan waktu di atas 3 bulan.</li>
             </ul>
         </div>
 
         <div class="image-container">
-            <img src="v-greenmasjid.jpg" alt="Foto Mesin BSS di Masjid Cipayung">
-            <div class="image-caption">Bukti nyata pemasangan mesin di sudut teras Masjid area Cipayung</div>
+            <!-- Menampilkan gambar bukti yang sudah ada -->
+            <img src="v-greenmasjid.jpg" alt="Bukti pemasangan mesin V-Green">
+            <div class="image-caption">Bukti nyata pemasangan mesin V-Green di area fasilitas publik (Cipayung)</div>
         </div>
 
         <div class="section-title" style="margin-top: 20px;">Alur Pengajuan</div>
         <ul class="step-list">
-            <li class="step-item">Hubungi tim kami via WhatsApp melalui tombol di bawah.</li>
-            <li class="step-item">Kirimkan foto teras kosong (ukuran 1x1,5m) dan "Share Lokasi" (Google Maps) masjid.</li>
-            <li class="step-item">Kami akan melakukan verifikasi lokasi secara online.</li>
-            <li class="step-item">Jika lolos verifikasi, tim pusat akan menjadwalkan survei pemasangan mesin dan penandatanganan MOU.</li>
+            <li class="step-item">Hubungi tim kami via tombol WhatsApp di bawah.</li>
+            <li class="step-item">Kirimkan foto sudut teras kosong (ukuran 1x2m) dan "Share Lokasi" (Google Maps) masjid Anda.</li>
+            <li class="step-item">Kami akan bantu verifikasi kelayakan lokasi secara online.</li>
         </ul>
 
         <div class="cta-wrapper">
-            <h3 style="color: #DC2626; margin-bottom: 5px;">⚠️ Kuota Jabodetabek Sangat Terbatas!</h3>
-            <p style="font-size: 14px; margin-top: 0; margin-bottom: 20px;">Amankan slot untuk masjid Anda sebelum kuota di area Anda penuh.</p>
-            
-            <a href="https://wa.me/628211043809?text=Assalamualaikum,%20saya%20pengurus%20masjid...%20tertarik%20dengan%20Program%20Kas%20Ekstra%20(BSS)%20di%20website%20POM,%20berikut%20foto%20lokasi%20kami:" target="_blank" class="btn-cta">
-                Cek Syarat & Ajukan Teras Sekarang 🚀
+            <a href="https://wa.me/628211043809?text=Assalamualaikum,%20saya%20pengurus%20masjid...%20tertarik%20dengan%20program%20V-Green%20di%20website%20POM,%20berikut%20foto%20lokasi%20kami:" target="_blank" class="btn-cta">
+                Ajukan Teras Masjid Sekarang
             </a>
-            <p style="font-size: 12px; color: var(--text-muted); margin-top: 15px;">Anda akan diarahkan langsung ke WhatsApp admin pusat Power of Masjid.</p>
         </div>
 
     </div>
 
+    <!-- FOOTER (Seragam dengan Halaman Utama) -->
+    <footer class="footer">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <img src="Logo%20Power%20of%20Masjid.png" alt="Power of Masjid">
+          <div class="footer-text">
+            <strong style="color:var(--primary-dark)">Power of Masjid</strong><br>
+            Yayasan Nasi Jum'at<br>
+            Memakmurkan Masjid, Menguatkan Umat.
+          </div>
+        </div>
+        <div class="footer-support">
+          Didukung oleh ekosistem<br>
+          <strong>BJ Grup</strong> — support system bisnis & teknologi.
+        </div>
+      </div>
+    </footer>
+
+    <script>
+        // Script untuk fungsi Menu Toggle Navbar Mobile
+        function toggleMenu() {
+            document.getElementById('navMenu').classList.toggle('show');
+        }
+        
+        document.addEventListener('click', function(e) {
+            const nav = document.getElementById('navMenu');
+            const btn = document.querySelector('.nav-toggle');
+            if(nav && btn && !nav.contains(e.target) && !btn.contains(e.target)) {
+                nav.classList.remove('show');
+            }
+        });
+    </script>
 </body>
 </html>
