@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Superadmin â€” Power of Masjid</title>
+<title>Superadmin — Power of Masjid</title>
 <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
 <link rel="manifest" href="manifest-superadmin.json">
@@ -619,7 +619,7 @@ select.form-control option {
     <h2 style="font-size:18px; margin-bottom:5px;">Otoritas Pusat</h2>
     <p style="font-size:12px; color:rgba(255,255,255,0.6); margin-bottom:20px;">Masukkan PIN Superadmin</p>
     <div class="form-group">
-      <input type="password" class="form-control" id="pin-superadmin" placeholder="â€¢â€¢â€¢â€¢â€¢â€¢" maxlength="8" style="text-align:center; letter-spacing:8px; font-size:18px;">
+      <input type="password" class="form-control" id="pin-superadmin" placeholder="••••••" maxlength="8" style="text-align:center; letter-spacing:8px; font-size:18px;">
     </div>
     <button class="btn-primary" id="btn-login" onclick="prosesLogin()">MASUK SISTEM</button>
   </div>
@@ -674,7 +674,7 @@ select.form-control option {
 
       <div class="card">
         <div class="card-title">Daftar Status Masjid</div>
-        <div id="loading" style="text-align:center; font-size:12px; color:rgba(255,255,255,0.6); padding:10px; background:rgba(0,0,0,0.2); border-radius:8px; margin-bottom:10px;">â³ Memuat daftar masjid...</div>
+        <div id="loading" style="text-align:center; font-size:12px; color:rgba(255,255,255,0.6); padding:10px; background:rgba(0,0,0,0.2); border-radius:8px; margin-bottom:10px;">⏳ Memuat daftar masjid...</div>
         <div id="list-masjid-container" class="scroll-list"></div>
       </div>
     </div>
@@ -707,7 +707,7 @@ select.form-control option {
         <div class="form-group">
           <label>PIN DKM (Otomatis)</label>
           <div style="display: flex; gap: 10px;">
-            <input type="text" class="form-control" id="reg-pin" placeholder="Klik tombol di samping ðŸ‘‰" readonly style="color:var(--gold); font-weight:bold; letter-spacing: 2px;">
+            <input type="text" class="form-control" id="reg-pin" placeholder="Klik tombol di samping 👉" readonly style="color:var(--gold); font-weight:bold; letter-spacing: 2px;">
             <button class="btn-copy" type="button" onclick="buatDanSalinPIN()" id="btnSalin" style="width: auto; margin-top: 0; padding: 12px 20px; white-space: nowrap;">Buat & Salin PIN</button>
           </div>
           <small style="font-size: 11px; color: rgba(255,255,255,0.6); margin-top: 6px; display: block;">Klik tombol untuk mencetak PIN acak.</small>
@@ -1172,24 +1172,24 @@ function buatPesanSerahTerima(namaMasjid, email, pin, slug) {
   const webUrl = `${baseUrl}masjid.html?masjid=${encodeURIComponent(slug)}`;
   const tvUrl = `${baseUrl}tv.html?masjid=${encodeURIComponent(slug)}`;
   
-  return `Assalamuâ€™alaikum Warahmatullahi Wabarakatuh
+  return `Assalamu'alaikum Warahmatullahi Wabarakatuh
 
 Segenap Pengurus DKM ${namaMasjid}
 
-Alhamdulillah, pendaftaran masjid Anda telah kami terima dan sistem Power of Masjid untuk ${namaMasjid} sudah BERHASIL DIAKTIFKAN. ðŸš€
+Alhamdulillah, pendaftaran masjid Anda telah kami terima dan sistem Power of Masjid untuk ${namaMasjid} sudah BERHASIL DIAKTIFKAN. 🚀
 
 Mulai hari ini, masjid Anda telah memiliki fasilitas Website dan Smart Dashboard TV secara 100% GRATIS.
 
 Berikut adalah akses masuk untuk pengurus:
-ðŸŒ Link Login Admin: http://powerofmasjid.github.io/admin.html
-ðŸ“§ Email: ${email}
-ðŸ”‘ PIN Rahasia: ${pin}
+🌐 Link Login Admin: http://powerofmasjid.github.io/admin.html
+📧 Email: ${email}
+🔑 PIN Rahasia: ${pin}
 (Mohon simpan data di atas dengan baik. Bisa juga langsung disalin dari dalam Panel Admin).
 
 Link Website : ${webUrl}
 Link Layar TV : ${tvUrl}
 
-ðŸ“œ SOP & KETENTUAN PENGGUNAAN SISTEM
+📜 SOP & KETENTUAN PENGGUNAAN SISTEM
 
 Agar layanan gratis ini dapat terus beroperasi dengan lancar dan kapasitas server kami digunakan secara optimal untuk kemaslahatan ummat, kami menerapkan penertiban sistem dengan aturan sebagai berikut:
 
@@ -1206,36 +1206,36 @@ Silakan langsung dicoba login dan rasakan kemudahan mengelola masjid di era digi
 
 Semoga sistem ini membawa keberkahan dan transparansi yang semakin baik untuk jamaah ${namaMasjid}.
 
-Barakallahu fiikum. ðŸ™ðŸ¼
+Barakallahu fiikum. 🙏🏼
 
-â€” Tim Power of Masjid ðŸš€`;
+— Tim Power of Masjid 🚀`;
 }
 
 function buatPesanPengarahan14Hari(namaMasjid) {
-  return `Assalamuâ€™alaikum Warahmatullahi Wabarakatuh,
+  return `Assalamu'alaikum Warahmatullahi Wabarakatuh,
 Ustadz & Segenap Pengurus DKM ${namaMasjid}.
 
-Semoga Ustadz dan seluruh pengurus senantiasa diberikan kesehatan dan kelancaran dalam memakmurkan masjid. ðŸ™ðŸ¼
+Semoga Ustadz dan seluruh pengurus senantiasa diberikan kesehatan dan kelancaran dalam memakmurkan masjid. 🙏🏼
 
 Mohon izin mengingatkan, masa pengenalan sistem Power of Masjid selama 14 hari untuk *${namaMasjid}* telah berlalu. Namun, berdasarkan pantauan kami, belum ada pembaruan data mandiri di dalam Panel Admin (seperti pengisian Saldo Kas, Jadwal Kegiatan, atau Galeri).
 
 Fasilitas digital ini dirancang agar manfaatnya dapat langsung dirasakan oleh jamaah, terutama dalam hal transparansi kas dan informasi kegiatan. Oleh karena itu, kami sangat mendorong pengurus untuk segera login dan mulai mencoba mengelola data masjid secara aktif.
 
-ðŸŒ Link Login Admin: http://powerofmasjid.github.io/admin.html
+🌐 Link Login Admin: http://powerofmasjid.github.io/admin.html
 
 Apabila Ustadz atau tim pengurus mengalami kendala teknis, kesulitan login, atau membutuhkan panduan penggunaan sistem, mohon jangan ragu untuk membalas pesan ini. Tim kami siap memandu dan membantu langkah demi langkah.
 
 Mari bersama-sama kita makmurkan masjid melalui pengelolaan digital yang lebih rapi dan transparan.
 
 Barakallahu fiikum.
-â€” Tim Power of Masjid ðŸš€`;
+— Tim Power of Masjid 🚀`;
 }
 
 function buatPesanPenonaktifan30Hari(namaMasjid) {
-  return `Assalamuâ€™alaikum Warahmatullahi Wabarakatuh,
+  return `Assalamu'alaikum Warahmatullahi Wabarakatuh,
 Ustadz & Segenap Pengurus DKM ${namaMasjid}.
 
-Semoga Ustadz dan seluruh pengurus senantiasa dalam keadaan sehat dan selalu berada dalam lindungan Allah SWT. ðŸ™ðŸ¼
+Semoga Ustadz dan seluruh pengurus senantiasa dalam keadaan sehat dan selalu berada dalam lindungan Allah SWT. 🙏🏼
 
 Mohon izin menginformasikan, berdasarkan pengecekan sistem otomatis kami, kami melihat belum ada aktivitas penggunaan (seperti input kas, jadwal, atau galeri) di Panel Admin ${namaMasjid} selama 30 hari terakhir sejak akun diaktifkan.
 
@@ -1247,13 +1247,13 @@ Apakah masih bisa diaktifkan kembali?
 
 Tentu saja sangat bisa, Ustadz! Kami sangat memaklumi kesibukan pengurus DKM. Jika di kemudian hari DKM ${namaMasjid} sudah memiliki waktu dan tenaga operasional yang siap untuk kembali mengelola sistem ini, Ustadz cukup membalas pesan ini (Chat WA) untuk memohon pengaktifan ulang (Reaktivasi).
 
-InsyaAllah tim kami akan segera membuka kembali aksesnya secara gratis seperti semula, tanpa syarat apapun. ðŸ˜Š
+InsyaAllah tim kami akan segera membuka kembali aksesnya secara gratis seperti semula, tanpa syarat apapun. 😊
 
 Terima kasih banyak atas perhatian dan kerja samanya. Semoga segala urusan kepengurusan DKM ${namaMasjid} selalu dimudahkan oleh Allah SWT.
 
 Barakallahu fiikum
 
-â€” Tim Power of Masjid`;
+— Tim Power of Masjid`;
 }
 
 function copyText(text) {
@@ -1401,7 +1401,7 @@ function renderMasjidDashboard(list) {
         showFollowUp = true;
         pesanWA = buatPesanPengarahan14Hari(m.nama);
         btnClass = 'btn-secondary'; 
-        btnLabel = 'ðŸ’¬ Salin Pesan Pengarahan (14 Hari)';
+        btnLabel = '💬 Salin Pesan Pengarahan (14 Hari)';
       } else if (ageInDays >= 16 && ageInDays <= 29) {
         cardClass = 'card-belajar';
         badge = `<span class="status-badge badge-belajar">Masa Belajar (${ageInDays} Hari)</span>`;
@@ -1412,7 +1412,7 @@ function renderMasjidDashboard(list) {
         showFollowUp = true;
         pesanWA = buatPesanPenonaktifan30Hari(m.nama);
         btnClass = 'btn-warning'; 
-        btnLabel = 'ðŸš¨ Salin Pesan Penonaktifan (30 Hari)';
+        btnLabel = '🚨 Salin Pesan Penonaktifan (30 Hari)';
       }
     }
 
@@ -1431,12 +1431,12 @@ function renderMasjidDashboard(list) {
         <p>${escapeHtml(m.email || 'Email admin belum tersedia')}</p>
 
         <div class="check-list">
-          <div>${kriteria.trx ? 'âœ…' : 'â¬œ'} Kas / transaksi</div>
-          <div>${kriteria.jdw ? 'âœ…' : 'â¬œ'} Jadwal kegiatan</div>
-          <div>${kriteria.gal ? 'âœ…' : 'â¬œ'} Galeri kegiatan</div>
-          <div>ðŸ“… Usia sistem: ${ageInDays} hari</div>
-          ${m.last_login ? `<div>ðŸ‘¤ Login terakhir: ${escapeHtml(m.last_login)}</div>` : ''}
-          ${m.skor_aktif !== undefined && m.skor_aktif !== '' ? `<div>ðŸ“Š Skor aktif: ${escapeHtml(m.skor_aktif)}</div>` : ''}
+          <div>${kriteria.trx ? '✅' : '⬜'} Kas / transaksi</div>
+          <div>${kriteria.jdw ? '✅' : '⬜'} Jadwal kegiatan</div>
+          <div>${kriteria.gal ? '✅' : '⬜'} Galeri kegiatan</div>
+          <div>📅 Usia sistem: ${ageInDays} hari</div>
+          ${m.last_login ? `<div>👤 Login terakhir: ${escapeHtml(m.last_login)}</div>` : ''}
+          ${m.skor_aktif !== undefined && m.skor_aktif !== '' ? `<div>📊 Skor aktif: ${escapeHtml(m.skor_aktif)}</div>` : ''}
         </div>
 
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:10px;">
@@ -1503,9 +1503,9 @@ async function tambahMasjidBaru() {
       const resBox = document.getElementById('hasil-registrasi');
       resBox.style.display = 'block';
       resBox.innerHTML = `
-        <div style="font-size:14px; font-weight:700; color:var(--gold); margin-bottom:8px;">Pendaftaran Berhasil! ðŸŽ‰</div>
+        <div style="font-size:14px; font-weight:700; color:var(--gold); margin-bottom:8px;">Pendaftaran Berhasil! 🎉</div>
         <div style="font-size:12px; margin-bottom:12px; line-height:1.5;">Pesan WhatsApp serah terima akun untuk DKM telah dirakit oleh sistem. Silakan salin pesan di bawah ini dan kirimkan ke DKM bersangkutan.</div>
-        <button class="btn-copy" style="margin-top:0;" onclick="copyText(document.getElementById('raw-serah-terima').value)">ðŸ“‹ Salin Pesan Serah Terima WA</button>
+        <button class="btn-copy" style="margin-top:0;" onclick="copyText(document.getElementById('raw-serah-terima').value)">📋 Salin Pesan Serah Terima WA</button>
         <textarea id="raw-serah-terima" style="display:none;">${pesanSerahTerima}</textarea>
       `;
 
@@ -1891,7 +1891,7 @@ async function loadMasterSponsor() {
       return `
         <div class="item-card">
           <div class="item-title">${escapeHtml(nama)}</div>
-          <div class="item-gold">${escapeHtml(merk)} ${jenis ? 'â€¢ ' + escapeHtml(jenis) : ''}</div>
+          <div class="item-gold">${escapeHtml(merk)} ${jenis ? '• ' + escapeHtml(jenis) : ''}</div>
           <div class="item-sub">${escapeHtml(deskripsi)}</div>
           ${kontak ? `<div class="item-sub">Kontak: ${escapeHtml(kontak)}</div>` : ''}
         </div>
@@ -1991,7 +1991,7 @@ async function loadMasterMerchant() {
       return `
         <div class="item-card">
           <div class="item-title">${escapeHtml(nama)}</div>
-          <div class="item-gold">${escapeHtml(kode)} ${sponsor ? 'â€¢ ' + escapeHtml(sponsor) : ''}</div>
+          <div class="item-gold">${escapeHtml(kode)} ${sponsor ? '• ' + escapeHtml(sponsor) : ''}</div>
           <div class="item-sub">${escapeHtml(alamat)}</div>
           ${wa ? `<div class="item-sub">WA PIC: ${escapeHtml(wa)}</div>` : ''}
         </div>
@@ -2122,7 +2122,7 @@ async function loadCampaignProgram() {
       return `
         <div class="item-card">
           <div class="item-title">${escapeHtml(nama)}</div>
-          <div class="item-gold">${escapeHtml(sponsor)} ${merchant ? 'â€¢ ' + escapeHtml(merchant) : ''}</div>
+          <div class="item-gold">${escapeHtml(sponsor)} ${merchant ? '• ' + escapeHtml(merchant) : ''}</div>
           <div class="item-sub">Masjid: ${escapeHtml(masjid || '-')}</div>
           <div class="item-sub">Kuota Berkah: ${escapeHtml(redeem)} / ${escapeHtml(kuota)}</div>
           <div class="item-sub">Masa Program: ${escapeHtml(mulai)} sampai ${escapeHtml(expired)}</div>
@@ -2276,8 +2276,8 @@ function renderDistribusiAir() {
   list.innerHTML = distribusiAirData.map(r => `
     <div class="item-card">
       <div class="item-title">${escapeHtml(r.nama_program || 'Program Rezeki Berkah')}</div>
-      <div class="item-gold">${Number(r.jumlah || 0).toLocaleString('id-ID')} ${escapeHtml(r.satuan || '')} â€¢ ${escapeHtml(r.nama_masjid || '')}</div>
-      <div class="item-sub">${escapeHtml(normalizeDate(r.tanggal))}<br>Penyerah: ${escapeHtml(r.penyerah || '-')} â€¢ Penerima: ${escapeHtml(r.penerima || '-')}</div>
+      <div class="item-gold">${Number(r.jumlah || 0).toLocaleString('id-ID')} ${escapeHtml(r.satuan || '')} • ${escapeHtml(r.nama_masjid || '')}</div>
+      <div class="item-sub">${escapeHtml(normalizeDate(r.tanggal))}<br>Penyerah: ${escapeHtml(r.penyerah || '-')} • Penerima: ${escapeHtml(r.penerima || '-')}</div>
       ${r.catatan ? `<div class="item-sub">${escapeHtml(r.catatan)}</div>` : ''}
       ${r.bukti_url ? `<a class="btn-small" href="${escapeHtml(r.bukti_url)}" target="_blank" rel="noopener" style="margin-top:10px;">Lihat Bukti</a>` : ''}
       <div class="item-actions"><button class="btn-action btn-del" onclick="hapusDistribusiAir('${escapeHtml(r.id_distribusi)}')">Hapus</button></div>
@@ -2381,7 +2381,7 @@ function copyLaporanRezekiBerkah() {
   }
 
   const lines = [];
-  lines.push('ðŸ“Š LAPORAN AGREGAT REZEKI BERKAH');
+  lines.push('📊 LAPORAN AGREGAT REZEKI BERKAH');
   lines.push('Power of Masjid');
   lines.push('================================');
   lines.push('');
@@ -2411,7 +2411,7 @@ function copyLaporanRezekiBerkah() {
     const data = rekap[prog];
     const convRate = data.totalScan > 0 ? Math.round((data.totalRedeem / data.totalScan) * 100) : 0;
     
-    lines.push(`ðŸ“Œ PROGRAM: ${prog}`);
+    lines.push(`📌 PROGRAM: ${prog}`);
     lines.push(`Total Scan QR   : ${data.totalScan} Jamaah`);
     lines.push(`Total Diambil   : ${data.totalRedeem} Jamaah`);
     lines.push(`Conversion Rate : ${convRate}%`);
@@ -2464,7 +2464,7 @@ function buatDanSalinPIN() {
 
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', function() {
-    navigator.serviceWorker.register('sw.js').then(function(registration) {
+    navigator.serviceWorker.register('sw-superadmin.js').then(function(registration) {
       console.log('ServiceWorker PWA berhasil didaftarkan: ', registration.scope);
     }, function(err) {
       console.log('ServiceWorker PWA gagal didaftarkan: ', err);

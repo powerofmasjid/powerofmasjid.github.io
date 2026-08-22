@@ -538,7 +538,7 @@ var API_URL = 'https://script.google.com/macros/s/AKfycbw4NKtVPvYcEcnf7KJiggwPYX
 
 var ID_MASJID = '';
 var JADWAL_KOREKSI = { imsak:0, subuh:0, syuruq:0, dhuha:0, dzuhur:0, ashar:0, maghrib:0, isya:0 };
-var CACHE_DURATION = 60000; 
+var CACHE_DURATION = 0; // Cache dimatikan agar real-time
 var PENGUMUMAN_INTERVAL = null;
 
 // Registrasi Service Worker PWA
@@ -653,6 +653,10 @@ async function apiFetch(action, params, cacheKey) {
   if (cacheKey) { var cached = cacheGet(cacheKey); if (cached) return cached; }
   var url = API_URL + '?action=' + action;
   if (params) { Object.keys(params).forEach(function(k){ url += '&' + k + '=' + params[k]; }); }
+  
+  // TAMBAHAN: Bypass cache Service Worker & Browser
+  url += '&_t=' + Date.now(); 
+  
   var res = await fetch(url); var json = await res.json();
   if (cacheKey && json.status === 'ok') cacheSet(cacheKey, json);
   return json;

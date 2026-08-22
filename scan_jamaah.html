@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Rezeki Berkah â€” Power of Masjid</title>
+<title>Rezeki Berkah — Power of Masjid</title>
 <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -574,7 +574,7 @@ input::placeholder {
         </div>
 
         <div id="area-loading" class="loading">
-            â³ Memuat Program Rezeki Berkah...
+            ⏳ Memuat Program Rezeki Berkah...
         </div>
 
         <div id="area-error" class="hidden">
@@ -659,7 +659,7 @@ input::placeholder {
         </div>
 
         <div id="area-kode" class="hidden">
-            <div class="success-icon">ðŸŒ¿</div>
+            <div class="success-icon">🌿</div>
             <h2>Alhamdulillah</h2>
             <p class="subtitle">
                 Kode Berkah Anda berhasil dibuat.
@@ -721,7 +721,7 @@ input::placeholder {
         <!-- AREA SUKSES DENGAN BUKTI TRANSAKSI -->
         <!-- ============================================== -->
         <div id="area-sukses" class="hidden">
-            <div class="success-icon">âœ…</div>
+            <div class="success-icon">✅</div>
             <h2>Berhasil Diambil</h2>
             <p class="subtitle">
                 Semoga menjadi rezeki yang bermanfaat dan penuh berkah.
@@ -959,7 +959,7 @@ function renderProgramInfo() {
     const masjid = DATA_PROGRAM.nama_masjid || DATA_PROGRAM.NAMA_MASJID || DATA_PROGRAM.lokasi_scan || DATA_PROGRAM.LOKASI_SCAN || 'Masjid lokasi distribusi';
     const merchant = DATA_PROGRAM.nama_merchant || DATA_PROGRAM.NAMA_MERCHANT || DATA_PROGRAM.nama_warung_toko || DATA_PROGRAM.NAMA_WARUNG_TOKO || 'Titik Ambil Berkah';
     const alamatMerchant = DATA_PROGRAM.alamat_merchant || DATA_PROGRAM.ALAMAT_MERCHANT || DATA_PROGRAM.alamat_cabang || DATA_PROGRAM.ALAMAT_CABANG || '';
-    const sponsorText = merk ? sponsor + ' â€” ' + merk : sponsor;
+    const sponsorText = merk ? sponsor + ' — ' + merk : sponsor;
     const manfaatText = jenis ? jenis + ': ' + deskripsi : deskripsi;
 
     setTextIfExists('info-program', namaProgram);
@@ -1004,7 +1004,7 @@ function showNotice(message, type, title) {
 
     const kind = type || 'warning';
     modal.className = 'modal-overlay notice-modal ' + kind + ' show';
-    icon.textContent = kind === 'success' ? 'âœ“' : (kind === 'error' ? 'Ã—' : '!');
+    icon.textContent = kind === 'success' ? '✓' : (kind === 'error' ? '×' : '!');
     titleEl.textContent = title || (kind === 'success' ? 'Berhasil' : (kind === 'error' ? 'Gagal' : 'Perhatian'));
     msgEl.textContent = message || 'Terjadi kendala. Silakan coba lagi.';
 }
