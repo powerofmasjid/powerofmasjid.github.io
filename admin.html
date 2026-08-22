@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin â€” Power of Masjid</title>
+    <title>Admin — Power of Masjid</title>
     
     <!-- TAMBAHAN PWA: Meta tag agar Admin DKM bisa install di HP -->
     <link rel="manifest" href="manifest.json">
@@ -138,7 +138,7 @@
 
 <div class="modal-overlay" id="delete-modal">
     <div class="modal-card">
-        <div class="modal-icon" id="modal-delete-icon">ðŸ—‘ï¸</div>
+        <div class="modal-icon" id="modal-delete-icon">🗑️</div>
         <div class="modal-title" id="modal-delete-title">Konfirmasi Hapus</div>
         <div class="modal-text" id="modal-delete-text">Apakah Anda yakin ingin menghapus data ini secara permanen? Data yang dihapus tidak dapat dikembalikan.</div>
         <div class="modal-actions">
@@ -150,12 +150,12 @@
 
 <div class="modal-overlay" id="pdf-modal">
     <div class="modal-card">
-        <div class="modal-icon">ðŸ“„</div>
+        <div class="modal-icon">📄</div>
         <div class="modal-title">Laporan PDF Siap!</div>
         <div class="modal-text">Pilih tindakan selanjutnya untuk file laporan Anda. Laporan bisa langsung dikirim ke Grup WA DKM.</div>
         <div style="display:flex; flex-direction:column; gap:10px;">
-            <button class="btn-submit" style="margin-top:0;" onclick="unduhPdf()">ðŸ“¥ Download File ke Perangkat</button>
-            <button class="btn-submit" style="background:#25D366; margin-top:0;" onclick="sharePdfKeWA()">ðŸ“² Kirim File ke WhatsApp</button>
+            <button class="btn-submit" style="margin-top:0;" onclick="unduhPdf()">📥 Download File ke Perangkat</button>
+            <button class="btn-submit" style="background:#25D366; margin-top:0;" onclick="sharePdfKeWA()">📲 Kirim File ke WhatsApp</button>
             <button class="btn-modal btn-modal-cancel" style="margin-top:4px;" onclick="document.getElementById('pdf-modal').classList.remove('show')">Tutup</button>
         </div>
     </div>
@@ -173,20 +173,20 @@
         <button class="btn-logout" onclick="logout()">Keluar</button>
     </div>
     <div class="nav-tabs">
-        <div class="nav-tab active" onclick="gotoTab('transaksi')">ðŸ’° Kas</div>
-        <div class="nav-tab" onclick="gotoTab('amal')">ðŸ¤ Program Amal</div>
-        <div class="nav-tab" onclick="gotoTab('jadwal')">ðŸ“… Jadwal</div>
-        <div class="nav-tab" onclick="gotoTab('pengumuman')">ðŸ“¢ Pengumuman</div>
-        <div class="nav-tab" onclick="gotoTab('galeri')">ðŸ“¸ Galeri</div>
-        <div class="nav-tab" onclick="gotoTab('jamaah')" style="color: #1B6B3A; font-weight: bold; background: #e8f5e9;">ðŸ‘¥ Data Jamaah</div>
-        <div class="nav-tab" onclick="gotoTab('profil')">âš™ï¸ Profil</div>
+        <div class="nav-tab active" onclick="gotoTab('transaksi')">💰 Kas</div>
+        <div class="nav-tab" onclick="gotoTab('amal')">🤝 Program Amal</div>
+        <div class="nav-tab" onclick="gotoTab('jadwal')">📅 Jadwal</div>
+        <div class="nav-tab" onclick="gotoTab('pengumuman')">📢 Pengumuman</div>
+        <div class="nav-tab" onclick="gotoTab('galeri')">📸 Galeri</div>
+        <div class="nav-tab" onclick="gotoTab('jamaah')" style="color: #1B6B3A; font-weight: bold; background: #e8f5e9;">👥 Data Jamaah</div>
+        <div class="nav-tab" onclick="gotoTab('profil')">⚙️ Profil</div>
     </div>
 
     <div class="admin-main">
         
         <div id="onboarding-card" style="display:none; background:white; border:2px solid #FCD34D; border-radius:12px; padding:15px; margin-bottom:1rem; box-shadow:0 4px 10px rgba(0,0,0,0.05);">
             <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
-                <strong style="font-size:14px; color:#92400E;">ðŸš€ Misi Kesiapan Layar TV</strong>
+                <strong style="font-size:14px; color:#92400E;">🚀 Misi Kesiapan Layar TV</strong>
                 <span id="onb-persen" style="font-size:14px; font-weight:bold; color:#D97706;">0%</span>
             </div>
             <div style="font-size:11px; color:#92400E; margin-bottom:10px;">Layar TV Masjid masih sepi. Selesaikan misi di bawah ini agar TV Anda aktif penuh!</div>
@@ -221,10 +221,10 @@
             <div class="form-group" id="form-upload-bukti" style="display:none">
                 <label class="form-label">Upload Bukti Nota</label>
                 <input type="file" accept="image/*" class="form-input" onchange="uploadKeDrive(this, 'trx-bukti', 'st-trx')">
-                <div id="st-trx" class="status-upload">â³ Mohon tunggu! Foto sedang meluncur ke Google Drive...</div>
+                <div id="st-trx" class="status-upload">⏳ Mohon tunggu! Foto sedang meluncur ke Google Drive...</div>
                 <input type="text" class="form-input" id="trx-bukti" readonly placeholder="Otomatis terisi setelah foto siap" style="margin-top:5px; font-size:10px;">
             </div>
-            <button class="btn-submit" onclick="simpanTransaksi(this)" id="btn-trx">ðŸ’¾ Simpan Kas</button>
+            <button class="btn-submit" onclick="simpanTransaksi(this)" id="btn-trx">💾 Simpan Kas</button>
             
             <div class="divider"></div>
             
@@ -239,14 +239,14 @@
                 </select>
                 <input type="number" class="form-input" id="pdf-tahun" value="2026">
             </div>
-            <button class="btn-submit" id="btn-cetak-kas" style="background:#1B6B3A; color:white; margin-top:8px" onclick="generatePDFKas()">ðŸ“„ Cetak Laporan Buku Kas</button>
+            <button class="btn-submit" id="btn-cetak-kas" style="background:#1B6B3A; color:white; margin-top:8px" onclick="generatePDFKas()">📄 Cetak Laporan Buku Kas</button>
             
             <div class="divider"></div>
             
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
                 <div class="section-title" style="margin-bottom: 0;">Daftar Transaksi</div>
             </div>
-            <input type="text" class="form-input" id="search-trx" placeholder="ðŸ” Cari keterangan transaksi..." onkeyup="filterTrx()" style="margin-bottom: 15px;">
+            <input type="text" class="form-input" id="search-trx" placeholder="🔍 Cari keterangan transaksi..." onkeyup="filterTrx()" style="margin-bottom: 15px;">
             
             <div id="list-trx-admin"></div>
         </div>
@@ -282,7 +282,7 @@
                     <div class="form-group"><label class="form-label">Tgl Mulai</label><input type="date" class="form-input" id="amal-mulai"></div>
                     <div class="form-group"><label class="form-label">Tgl Selesai</label><input type="date" class="form-input" id="amal-selesai"></div>
                 </div>
-                <button class="btn-submit" id="btn-save-prog" onclick="simpanProgramAmal(this)">ðŸ“ Buat Program</button>
+                <button class="btn-submit" id="btn-save-prog" onclick="simpanProgramAmal(this)">📝 Buat Program</button>
             </div>
 
             <div class="profil-section">
@@ -293,9 +293,9 @@
                         <option value="">-- Pilih Program --</option>
                     </select>
                     <div class="btn-amal-action" id="wrap-amal-action" style="display:none;">
-                        <button style="background:#f3f4f6; color:#374151; border:1px solid #d1d5db;" onclick="editIndukProgram()">âœï¸ Edit Info</button>
-                        <button style="background:#FEF2F2; color:#DC2626; border:1px solid #FCA5A5;" onclick="hapusIndukProgram()">ðŸ—‘ï¸ Hapus Program</button>
-                        <button id="btn-cetak-pdf" style="background:#1B6B3A; color:white;" onclick="generatePDFProgram()">ðŸ“„ Cetak Laporan</button>
+                        <button style="background:#f3f4f6; color:#374151; border:1px solid #d1d5db;" onclick="editIndukProgram()">✏️ Edit Info</button>
+                        <button style="background:#FEF2F2; color:#DC2626; border:1px solid #FCA5A5;" onclick="hapusIndukProgram()">🗑️ Hapus Program</button>
+                        <button id="btn-cetak-pdf" style="background:#1B6B3A; color:white;" onclick="generatePDFProgram()">📄 Cetak Laporan</button>
                     </div>
                 </div>
 
@@ -334,7 +334,7 @@
                     <div class="form-group" id="wrap-inf-barang" style="display:none"><label class="form-label">Keterangan Barang</label><input type="text" class="form-input" id="inf-catatan" placeholder="Contoh: 10 Sak Semen"></div>
                 </div>
 
-                <button class="btn-submit" id="btn-simpan-data-amal" style="display:none; background:var(--accent); color:#4A3810; margin-top:10px;" onclick="simpanDataAmal(this)">ðŸ’¾ Simpan Data Jamaah</button>
+                <button class="btn-submit" id="btn-simpan-data-amal" style="display:none; background:var(--accent); color:#4A3810; margin-top:10px;" onclick="simpanDataAmal(this)">💾 Simpan Data Jamaah</button>
             </div>
             <div id="list-data-amal"></div>
         </div>
@@ -370,7 +370,7 @@
 
             <div class="form-group"><label class="form-label">Lokasi</label><input type="text" class="form-input" id="jdw-lokasi" placeholder="Contoh: Ruang Utama Masjid"></div>
             <div class="form-group"><label class="form-label">Keterangan</label><textarea class="form-textarea" id="jdw-keterangan" placeholder="Contoh: Terbuka untuk umum, sediakan alat tulis..."></textarea></div>
-            <button class="btn-submit" onclick="simpanJadwal(this)" id="btn-jdw">ðŸ’¾ Simpan Jadwal</button>
+            <button class="btn-submit" onclick="simpanJadwal(this)" id="btn-jdw">💾 Simpan Jadwal</button>
             
             <div class="divider"></div>
             <div class="section-title">Daftar Jadwal</div>
@@ -386,7 +386,7 @@
                 <div class="form-group"><label class="form-label">Mulai Tampil</label><input type="date" class="form-input" id="peng-mulai"></div>
                 <div class="form-group"><label class="form-label">Selesai Tampil</label><input type="date" class="form-input" id="peng-selesai"></div>
             </div>
-            <button class="btn-submit" onclick="simpanPengumuman(this)">ðŸ’¾ Publikasikan Berita</button>
+            <button class="btn-submit" onclick="simpanPengumuman(this)">💾 Publikasikan Berita</button>
             <div class="divider"></div><div id="list-peng-admin"></div>
         </div>
 
@@ -395,18 +395,18 @@
             <div class="form-group">
                 <label class="form-label">Tipe Media</label>
                 <select class="form-select" id="gal-tipe" onchange="toggleGaleriForm()">
-                    <option value="FOTO">ðŸ“· Foto Dokumentasi</option>
-                    <option value="FLYER">ðŸ–¼ï¸ Poster / Flyer</option>
-                    <option value="VIDEO_YOUTUBE">â–¶ï¸ Video YouTube</option>
+                    <option value="FOTO">📷 Foto Dokumentasi</option>
+                    <option value="FLYER">🖼️ Poster / Flyer</option>
+                    <option value="VIDEO_YOUTUBE">▶️ Video YouTube</option>
                 </select>
-                <span class="info-hint" id="hint-galeri">Pilih "Poster / Flyer" agar gambar tampil memenuhi layar TV.<br><b style="color:#d35400;">Batas Maksimal Kuota Media:</b><br>â€¢ Foto: 4 File<br>â€¢ Flyer: 2 File<br>â€¢ Video: 2 File</span>
+                <span class="info-hint" id="hint-galeri">Pilih "Poster / Flyer" agar gambar tampil memenuhi layar TV.<br><b style="color:#d35400;">Batas Maksimal Kuota Media:</b><br>• Foto: 4 File<br>• Flyer: 2 File<br>• Video: 2 File</span>
             </div>
             <div class="form-group"><label class="form-label">Judul Media</label><input type="text" class="form-input" id="gal-judul" placeholder="Contoh: Poster Kajian Ustadz Abdul Somad"></div>
             
             <div class="form-group" id="wrap-upload-gal">
                 <label class="form-label">Pilih Foto / Flyer</label>
                 <input type="file" accept="image/*" class="form-input" onchange="uploadKeDrive(this, 'gal-url', 'stg')">
-                <div id="stg" class="status-upload">â³ Mohon tunggu! Foto sedang meluncur ke Google Drive...</div>
+                <div id="stg" class="status-upload">⏳ Mohon tunggu! Foto sedang meluncur ke Google Drive...</div>
             </div>
             
             <div class="form-group" id="wrap-url-gal"><label class="form-label">URL Media (Otomatis/YouTube)</label><input type="text" class="form-input" id="gal-url" placeholder="Akan terisi otomatis jika upload foto, atau masukkan link YouTube"></div>
@@ -416,7 +416,7 @@
                 <div class="form-group"><label class="form-label">Selesai Tayang</label><input type="date" class="form-input" id="gal-selesai"></div>
             </div>
 
-            <button class="btn-submit" onclick="simpanGaleri(this)">ðŸ’¾ Simpan Galeri</button>
+            <button class="btn-submit" onclick="simpanGaleri(this)">💾 Simpan Galeri</button>
             <div class="divider"></div><div id="list-gal-admin"></div>
         </div>
         
@@ -428,8 +428,8 @@
             </div>
 
             <div class="form-row" style="margin-bottom: 15px;">
-                <button class="btn-submit" style="background:#1B6B3A; color:white; margin-top:0;" onclick="loadDataJamaah(this)">ðŸ”„ Segarkan Data</button>
-                <input type="text" class="form-input" id="search-jamaah" placeholder="ðŸ” Cari nama atau no WA..." onkeyup="filterJamaah()" style="margin-top:0;">
+                <button class="btn-submit" style="background:#1B6B3A; color:white; margin-top:0;" onclick="loadDataJamaah(this)">🔄 Segarkan Data</button>
+                <input type="text" class="form-input" id="search-jamaah" placeholder="🔍 Cari nama atau no WA..." onkeyup="filterJamaah()" style="margin-top:0;">
             </div>
 
             <div id="list-jamaah-admin"></div>
@@ -443,20 +443,20 @@
                 <div class="info-hint" style="margin-bottom: 8px;">Gunakan link ini untuk dibagikan ke seluruh jamaah.</div>
                 <div class="form-row" style="grid-template-columns: 1fr auto; margin-bottom: 15px;">
                     <input type="text" class="form-input" id="link-web" readonly style="background:#f3f4f6; color:#6b7280; font-size:12px; font-weight:500;">
-                    <button class="btn-submit" style="margin-top:0; padding:10px; background:var(--accent); color:#4A3810;" onclick="salinLinkWeb()">ðŸ“„ Salin Link</button>
+                    <button class="btn-submit" style="margin-top:0; padding:10px; background:var(--accent); color:#4A3810;" onclick="salinLinkWeb()">📄 Salin Link</button>
                 </div>
 
                 <div class="form-group">
                     <label class="form-label">Upload Logo Masjid</label>
                     <input type="file" accept="image/*" class="form-input" onchange="uploadKeDrive(this, 'prof-logo', 'sl')">
-                    <div id="sl" class="status-upload">â³ Mohon tunggu! Foto sedang meluncur ke Google Drive...</div>
+                    <div id="sl" class="status-upload">⏳ Mohon tunggu! Foto sedang meluncur ke Google Drive...</div>
                     <input type="text" class="form-input" id="prof-logo" readonly style="margin-top:5px; font-size:10px;">
                 </div>
 
                 <div class="form-group">
                     <label class="form-label">Upload QRIS Masjid</label>
                     <input type="file" accept="image/*" class="form-input" onchange="uploadKeDrive(this, 'prof-qris', 'sq')">
-                    <div id="sq" class="status-upload">â³ Mohon tunggu! Foto sedang meluncur ke Google Drive...</div>
+                    <div id="sq" class="status-upload">⏳ Mohon tunggu! Foto sedang meluncur ke Google Drive...</div>
                     <input type="text" class="form-input" id="prof-qris" readonly style="margin-top:5px; font-size:10px;">
                 </div>
             </div>
@@ -533,7 +533,7 @@
             <div class="profil-section">
                 <h3>Lokasi Maps & Jeda Iqomah</h3>
                 <div class="alert-warning">
-                    ðŸ’¡ <b>Cara Ambil Titik:</b><br>Buka Google Maps, cari lokasi masjid, klik tahan (long press) lokasinya. Salin angka yang muncul.
+                    💡 <b>Cara Ambil Titik:</b><br>Buka Google Maps, cari lokasi masjid, klik tahan (long press) lokasinya. Salin angka yang muncul.
                 </div>
                 <div class="form-row" style="margin-top:10px; margin-bottom: 20px;">
                     <input type="text" class="form-input" id="prof-lat" placeholder="Latitude (Contoh: -6.2345)">
@@ -576,7 +576,7 @@
                 </div>
             </div>
 
-            <button class="btn-submit" onclick="simpanProfil(this)">ðŸ’¾ Simpan Semua Pengaturan Profil</button>
+            <button class="btn-submit" onclick="simpanProfil(this)">💾 Simpan Semua Pengaturan Profil</button>
         </div>
     </div>
 </div>
@@ -666,7 +666,7 @@
         if(!btn) return; 
         if(load) { 
             btn.dataset.ori = btn.innerHTML; 
-            btn.innerHTML = 'â³ Menunggu...'; 
+            btn.innerHTML = '⏳ Menunggu...'; 
             btn.disabled = true; 
         } else { 
             btn.innerHTML = btn.dataset.ori; 
@@ -735,7 +735,7 @@
 
     function konfirmasiHapus(actionStr, idItem, tipeProg='') { 
         targetDelete = { action: actionStr, id: idItem, tipe: tipeProg }; 
-        document.getElementById('modal-delete-icon').innerHTML = 'ðŸ—‘ï¸';
+        document.getElementById('modal-delete-icon').innerHTML = '🗑️';
         document.getElementById('modal-delete-title').innerText = 'Konfirmasi Hapus';
         document.getElementById('modal-delete-text').innerText = 'Apakah Anda yakin ingin menghapus data ini secara permanen? Data yang dihapus tidak dapat dikembalikan.';
         document.getElementById('btn-confirm-delete').className = 'btn-modal btn-modal-confirm';
@@ -856,20 +856,20 @@
     }
 
     function postDataAdmin(payload) {
-    return fetch(API_URL, {
-        method: 'POST',
-        body: JSON.stringify(payload)
-    }).then(function(res) { return res.json(); }).then(function(json) {
-        if (json.status === 'error' && String(json.message || '').includes('Akses Ditolak')) {
-            showToast('Sesi login kedaluwarsa. Silakan masuk kembali.');
-            logout();
-            throw new Error('Sesi kedaluwarsa');
-        }
-        return json;
-    });
-}
+        return fetch(API_URL, {
+            method: 'POST',
+            body: JSON.stringify(payload)
+        }).then(function(res) { return res.json(); }).then(function(json) {
+            if (json.status === 'error' && String(json.message || '').includes('Akses Ditolak')) {
+                showToast('Sesi login kedaluwarsa. Silakan masuk kembali.');
+                logout();
+                throw new Error('Sesi kedaluwarsa');
+            }
+            return json;
+        });
+    }
 
-function prosesLogin() {
+    function prosesLogin() {
         var g = document.getElementById('login-gmail').value.trim();
         var p = document.getElementById('login-pin').value.trim();
         var btn = document.getElementById('btn-login'); 
@@ -878,8 +878,7 @@ function prosesLogin() {
         
         setLoading(btn, true);
         
-        fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'login', email: g, pin: p }) })
-        .then(r => r.json())
+        postDataAdmin({ action: 'login', email: g, pin: p })
         .then(j => {
             setLoading(btn, false); 
             if (j.status === 'ok') { 
@@ -941,10 +940,10 @@ function prosesLogin() {
                 document.getElementById('onb-persen').innerText = score + '%';
                 document.getElementById('onb-bar').style.width = score + '%';
                 document.getElementById('onb-list').innerHTML = `
-                    <div>${c_kas ? 'âœ…' : 'âŒ'} Catat Transaksi Kas Pertama</div>
-                    <div>${c_jdw ? 'âœ…' : 'âŒ'} Buat 1 Jadwal Kegiatan</div>
-                    <div>${c_gal ? 'âœ…' : 'âŒ'} Upload 1 Foto Galeri</div>
-                    <div>${c_tema ? 'âœ…' : 'âŒ'} Atur Tema Warna TV</div>
+                    <div>${c_kas ? '✅' : '❌'} Catat Transaksi Kas Pertama</div>
+                    <div>${c_jdw ? '✅' : '❌'} Buat 1 Jadwal Kegiatan</div>
+                    <div>${c_gal ? '✅' : '❌'} Upload 1 Foto Galeri</div>
+                    <div>${c_tema ? '✅' : '❌'} Atur Tema Warna TV</div>
                 `;
             } else {
                 document.getElementById('onboarding-card').style.display = 'none';
@@ -987,7 +986,7 @@ function prosesLogin() {
                 document.getElementById('trx-id-edit').value = '';
                 document.getElementById('trx-keterangan').value = '';
                 document.getElementById('trx-jumlah').value = '';
-                document.getElementById('btn-trx').innerHTML = 'ðŸ’¾ Simpan Kas';
+                document.getElementById('btn-trx').innerHTML = '💾 Simpan Kas';
                 loadTransaksiAdmin(); 
                 cekOnboarding(); 
             } 
@@ -996,7 +995,6 @@ function prosesLogin() {
 
     function loadTransaksiAdmin() {
         postDataAdmin({ action: 'getTransaksi', id_masjid: ID_MASJID, token: USER_TOKEN })
-        .then(r => r.json())
         .then(j => {
             if(!cekSesi(j)) return;
             var el = document.getElementById('list-trx-admin'); 
@@ -1014,8 +1012,8 @@ function prosesLogin() {
                         <strong>Rp ${Number(t.jumlah).toLocaleString('id-ID')}</strong>
                     </div>
                     <div class="action-buttons">
-                        <button class="btn-action btn-edit" onclick="event.stopPropagation(); editTrx(${idx})">âœï¸ Edit</button>
-                        <button class="btn-action btn-del" onclick="event.stopPropagation(); konfirmasiHapus('deleteTransaksi', '${t.id}')">ðŸ—‘ï¸ Hapus</button>
+                        <button class="btn-action btn-edit" onclick="event.stopPropagation(); editTrx(${idx})">✏️ Edit</button>
+                        <button class="btn-action btn-del" onclick="event.stopPropagation(); konfirmasiHapus('deleteTransaksi', '${t.id}')">🗑️ Hapus</button>
                     </div>
                 </div>
             `).join('');
@@ -1030,7 +1028,7 @@ function prosesLogin() {
         document.getElementById('trx-keterangan').value = t.keterangan; 
         document.getElementById('trx-jumlah').value = t.jumlah; 
         document.getElementById('trx-bukti').value = t.bukti_url || '';
-        document.getElementById('btn-trx').innerHTML = 'ðŸ“ Update Transaksi';
+        document.getElementById('btn-trx').innerHTML = '📝 Update Transaksi';
         toggleBuktiForm(); 
         window.scrollTo({top:0, behavior:'smooth'}); 
     }
@@ -1044,7 +1042,6 @@ function prosesLogin() {
         setLoading(btn, true);
         
         postDataAdmin({ action: 'getTransaksi', id_masjid: ID_MASJID, token: USER_TOKEN })
-        .then(r => r.json())
         .then(j => {
             if(!cekSesi(j)) { setLoading(btn, false); return; }
             setLoading(btn, false); 
@@ -1125,7 +1122,6 @@ function prosesLogin() {
 
     function loadProgramAmalAdmin() { 
         postDataAdmin({ action: 'getProgramAmal', id_masjid: ID_MASJID, token: USER_TOKEN })
-        .then(r => r.json())
         .then(j => { 
             if(!cekSesi(j)) return;
             if(j.status === 'ok') { 
@@ -1134,7 +1130,7 @@ function prosesLogin() {
                 var lastSelected = sel.value;
                 
                 sel.innerHTML = '<option value="">-- Pilih Program Dulu --</option>' + j.data.map(p => {
-                    var labelWaktu = p.status_waktu === 'SELESAI' ? ' ðŸ [SELESAI]' : ' ðŸŸ¢ [AKTIF]';
+                    var labelWaktu = p.status_waktu === 'SELESAI' ? ' 🏁 [SELESAI]' : ' 🟢 [AKTIF]';
                     return `<option value="${p.id}" data-tipe="${p.tipe}">${labelWaktu} [${p.tipe}] ${p.judul}</option>`;
                 }).join(''); 
                 
@@ -1186,7 +1182,7 @@ function prosesLogin() {
                 document.getElementById('amal-wa-panitia').value = '';
                 document.getElementById('amal-harga').value = '';
                 document.getElementById('amal-prog-id-edit').value = '';
-                document.getElementById('btn-save-prog').innerHTML = 'ðŸ“ Buat Program';
+                document.getElementById('btn-save-prog').innerHTML = '📝 Buat Program';
                 loadProgramAmalAdmin(); 
                 cekOnboarding();
             } 
@@ -1219,7 +1215,7 @@ function prosesLogin() {
         if(p.tanggal_mulai) document.getElementById('amal-mulai').value = new Date(p.tanggal_mulai).toISOString().split('T')[0]; 
         if(p.tanggal_selesai) document.getElementById('amal-selesai').value = new Date(p.tanggal_selesai).toISOString().split('T')[0];
         
-        document.getElementById('btn-save-prog').innerHTML = 'ðŸ“ Update Info Program'; 
+        document.getElementById('btn-save-prog').innerHTML = '📝 Update Info Program'; 
         window.scrollTo({top:0, behavior:'smooth'});
     }
 
@@ -1267,13 +1263,13 @@ function prosesLogin() {
         document.getElementById('wrap-amal-action').style.display = 'none';
         
         document.getElementById('amal-jamaah-id-edit').value = '';
-        document.getElementById('btn-simpan-data-amal').innerHTML = 'ðŸ’¾ Simpan Data Jamaah';
+        document.getElementById('btn-simpan-data-amal').innerHTML = '💾 Simpan Data Jamaah';
         document.getElementById('list-data-amal').innerHTML = '';
         
         var btnCetak = document.getElementById('btn-cetak-pdf');
         if(btnCetak) {
             btnCetak.disabled = true;
-            btnCetak.innerHTML = 'â³ Menyiapkan Data...';
+            btnCetak.innerHTML = '⏳ Menyiapkan Data...';
         }
         
         if(!sel.value) return;
@@ -1347,7 +1343,7 @@ function prosesLogin() {
             if(j.status === 'ok') { 
                 showToast('Data Jamaah Tersimpan'); 
                 document.getElementById('amal-jamaah-id-edit').value = '';
-                document.getElementById('btn-simpan-data-amal').innerHTML = 'ðŸ’¾ Simpan Data Jamaah';
+                document.getElementById('btn-simpan-data-amal').innerHTML = '💾 Simpan Data Jamaah';
                 
                 document.getElementById('krb-nama').value = '';
                 document.getElementById('zkt-nama').value = '';
@@ -1369,13 +1365,12 @@ function prosesLogin() {
         var act = tp === 'KURBAN' ? 'getKurban' : (tp === 'ZAKAT' ? 'getZakat' : 'getInfaq');
         
         postDataAdmin({ action: act, id_masjid: ID_MASJID, id_program: id_prog, token: USER_TOKEN })
-        .then(r => r.json())
         .then(j => {
             if(!cekSesi(j)) return;
             var btnCetak = document.getElementById('btn-cetak-pdf');
             if(btnCetak) {
                 btnCetak.disabled = false;
-                btnCetak.innerHTML = 'ðŸ“„ Cetak Laporan';
+                btnCetak.innerHTML = '📄 Cetak Laporan';
             }
             
             if(j.status === 'ok' && j.data.length > 0) { 
@@ -1390,8 +1385,8 @@ function prosesLogin() {
                             <span class="item-badge badge-masuk">${detail}</span>
                         </div>
                         <div class="action-buttons">
-                            <button class="btn-action btn-edit" onclick="event.stopPropagation(); editDataAmal('${x.id}', '${tp}')">âœï¸ Edit</button>
-                            <button class="btn-action btn-del" onclick="event.stopPropagation(); konfirmasiHapus('${tp === 'KURBAN' ? 'deleteKurban' : (tp === 'ZAKAT' ? 'deleteZakat' : 'deleteInfaq')}', '${x.id}', '${tp}')">ðŸ—‘ï¸ Hapus</button>
+                            <button class="btn-action btn-edit" onclick="event.stopPropagation(); editDataAmal('${x.id}', '${tp}')">✏️ Edit</button>
+                            <button class="btn-action btn-del" onclick="event.stopPropagation(); konfirmasiHapus('${tp === 'KURBAN' ? 'deleteKurban' : (tp === 'ZAKAT' ? 'deleteZakat' : 'deleteInfaq')}', '${x.id}', '${tp}')">🗑️ Hapus</button>
                         </div>
                     </div>`;
                 }).join(''); 
@@ -1434,7 +1429,7 @@ function prosesLogin() {
             }
         }
         
-        document.getElementById('btn-simpan-data-amal').innerHTML = 'ðŸ“ Update Data Jamaah'; 
+        document.getElementById('btn-simpan-data-amal').innerHTML = '📝 Update Data Jamaah'; 
         window.scrollTo({top:0, behavior:'smooth'});
     }
 
@@ -1466,7 +1461,7 @@ function prosesLogin() {
                 for (let i = 0; i < sapiKolektif.length; i += 7) {
                     let chunk = sapiKolektif.slice(i, i + 7);
                     doc.setFontSize(10);
-                    doc.text("ðŸ„ SAPI KE-" + kelompok + " (Kolektif)", 14, currentY);
+                    doc.text("🐄 SAPI KE-" + kelompok + " (Kolektif)", 14, currentY);
                     
                     let bodyData = chunk.map((c, idx) => [idx + 1, c.nama, c.telepon || '-']);
                     for (let j = chunk.length; j < 7; j++) { bodyData.push([j + 1, '[ Tersedia / Kosong ]', '-']); }
@@ -1484,7 +1479,7 @@ function prosesLogin() {
 
             if (sapiUtuh.length > 0) {
                 doc.setFontSize(10);
-                doc.text("ðŸ‚ SAPI UTUH (Mandiri / Keluarga)", 14, currentY);
+                doc.text("🐂 SAPI UTUH (Mandiri / Keluarga)", 14, currentY);
                 doc.autoTable({
                     startY: currentY + 3,
                     head: [['No', 'Nama Shohibul (Individu / Keluarga)', 'WA / Telepon']],
@@ -1496,7 +1491,7 @@ function prosesLogin() {
 
             if (kambing.length > 0) {
                 doc.setFontSize(10);
-                doc.text("ðŸ KAMBING / DOMBA (Utuh)", 14, currentY);
+                doc.text("🐐 KAMBING / DOMBA (Utuh)", 14, currentY);
                 doc.autoTable({
                     startY: currentY + 3,
                     head: [['No', 'Nama Shohibul Qurban', 'WA / Telepon']],
@@ -1540,7 +1535,6 @@ function prosesLogin() {
 
     function loadJadwalAdmin() { 
         postDataAdmin({ action: 'getJadwal', id_masjid: ID_MASJID, token: USER_TOKEN })
-        .then(r=>r.json())
         .then(j=>{ 
             if(!cekSesi(j)) return;
             if(j.data && j.data.length > 0) { 
@@ -1549,12 +1543,12 @@ function prosesLogin() {
                 <div class="item-card" onclick="toggleAction(this)">
                     <div class="item-card-title">${x.nama_kegiatan}</div>
                     <div class="item-card-footer">
-                        <span class="item-badge badge-masuk">${x.hari ? x.hari + ' â€¢ ' : ''}${x.jadwal}</span>
+                        <span class="item-badge badge-masuk">${x.hari ? x.hari + ' • ' : ''}${x.jadwal}</span>
                     </div>
                     <div class="action-buttons">
-                        <button class="btn-action btn-blast" onclick="event.stopPropagation(); blastWAJadwal(${idx})">ðŸ“² Kirim Pengingat WA</button>
-                        <button class="btn-action btn-edit" onclick="event.stopPropagation(); editJadwal(${idx})">âœï¸ Edit</button>
-                        <button class="btn-action btn-del" onclick="event.stopPropagation(); konfirmasiHapus('deleteJadwal', '${x.id}')">ðŸ—‘ï¸ Hapus</button>
+                        <button class="btn-action btn-blast" onclick="event.stopPropagation(); blastWAJadwal(${idx})">📲 Kirim Pengingat WA</button>
+                        <button class="btn-action btn-edit" onclick="event.stopPropagation(); editJadwal(${idx})">✏️ Edit</button>
+                        <button class="btn-action btn-del" onclick="event.stopPropagation(); konfirmasiHapus('deleteJadwal', '${x.id}')">🗑️ Hapus</button>
                     </div>
                 </div>`).join(''); 
             } else {
@@ -1599,7 +1593,7 @@ function prosesLogin() {
             document.getElementById('jdw-jadwal').value = '';
             document.getElementById('jdw-lokasi').value = '';
             document.getElementById('jdw-keterangan').value = '';
-            btn.innerHTML = 'ðŸ’¾ Simpan Jadwal';
+            btn.innerHTML = '💾 Simpan Jadwal';
             loadJadwalAdmin(); 
             cekOnboarding(); 
         }); 
@@ -1613,13 +1607,13 @@ function prosesLogin() {
         document.getElementById('jdw-jadwal').value = d.jadwal; 
         document.getElementById('jdw-lokasi').value = d.lokasi; 
         document.getElementById('jdw-keterangan').value = d.keterangan; 
-        document.querySelector('#btn-jdw').innerHTML = 'ðŸ“ Update Jadwal'; 
+        document.querySelector('#btn-jdw').innerHTML = '📝 Update Jadwal'; 
         window.scrollTo({top:0, behavior:'smooth'});
     }
 
     function blastWAJadwal(idx) {
         var d = LIST_JADWAL[idx];
-        document.getElementById('modal-delete-icon').innerHTML = 'ðŸ“²';
+        document.getElementById('modal-delete-icon').innerHTML = '📲';
         document.getElementById('modal-delete-title').innerText = 'Kirim Pengingat WA';
         document.getElementById('modal-delete-text').innerText = `Sistem akan mengirimkan pesan pengingat untuk kegiatan:\n\n"${d.nama_kegiatan}"\n(${d.hari} - ${d.jadwal})\n\nke seluruh nomor kontak jamaah terdaftar.\n\nLanjutkan pengiriman?`;
         
@@ -1629,7 +1623,7 @@ function prosesLogin() {
         
         btnConfirm.onclick = function() {
             batalHapus();
-            showToast("â³ Sedang menyebarkan pesan WA ke jamaah...");
+            showToast("⏳ Sedang menyebarkan pesan WA ke jamaah...");
             
             var payload = {
                 token: USER_TOKEN,
@@ -1648,13 +1642,13 @@ function prosesLogin() {
             .then(res => {
                 if(!cekSesi(res)) return;
                 if(res.status === 'ok') {
-                    showToast('âœ… ' + res.message);
+                    showToast('✅ ' + res.message);
                 } else {
-                    showToast('âŒ Gagal: ' + res.message);
+                    showToast('❌ Gagal: ' + res.message);
                 }
             })
             .catch(err => {
-                showToast('âŒ Gagal terhubung ke server');
+                showToast('❌ Gagal terhubung ke server');
             });
         };
         
@@ -1664,7 +1658,7 @@ function prosesLogin() {
 
     function blastWAPengumuman(idx) {
         var d = LIST_PENGUMUMAN[idx];
-        document.getElementById('modal-delete-icon').innerHTML = 'ðŸ“¢';
+        document.getElementById('modal-delete-icon').innerHTML = '📢';
         document.getElementById('modal-delete-title').innerText = 'Kirim WA Pengumuman';
         document.getElementById('modal-delete-text').innerText = `Sistem akan mengirim pengumuman ini ke seluruh nomor jamaah terdaftar:\n\n"${d.judul}"\n\nLanjutkan pengiriman?`;
         
@@ -1674,7 +1668,7 @@ function prosesLogin() {
         
         btnConfirm.onclick = function() {
             batalHapus();
-            showToast("â³ Sedang mengirim pengumuman WA ke jamaah.");
+            showToast("⏳ Sedang mengirim pengumuman WA ke jamaah.");
             
             var payload = {
                 token: USER_TOKEN,
@@ -1694,13 +1688,13 @@ function prosesLogin() {
             .then(res => {
                 if(!cekSesi(res)) return;
                 if(res.status === 'ok') {
-                    showToast('âœ… ' + res.message);
+                    showToast('✅ ' + res.message);
                 } else {
-                    showToast('âŒ Gagal: ' + res.message);
+                    showToast('❌ Gagal: ' + res.message);
                 }
             })
             .catch(err => {
-                showToast('âŒ Gagal terhubung ke server');
+                showToast('❌ Gagal terhubung ke server');
             });
         };
         
@@ -1709,7 +1703,6 @@ function prosesLogin() {
 
     function loadPengumumanAdmin() { 
         postDataAdmin({ action: 'getPengumuman', id_masjid: ID_MASJID, token: USER_TOKEN })
-        .then(r=>r.json())
         .then(j=>{ 
             if(!cekSesi(j)) return;
             if(j.data) { 
@@ -1719,9 +1712,9 @@ function prosesLogin() {
                     <div class="item-card-title">${x.judul}</div>
                     <div class="item-card-footer" style="font-size:10px; color:#6b7280;">Berakhir: ${new Date(x.tanggal_selesai).toLocaleDateString('id-ID')}</div>
                     <div class="action-buttons">
-                        <button class="btn-action btn-blast" onclick="event.stopPropagation(); blastWAPengumuman(${idx})">ðŸ“² Kirim WA Pengumuman</button>
-                        <button class="btn-action btn-edit" onclick="event.stopPropagation(); editPengumuman(${idx})">âœï¸ Edit</button>
-                        <button class="btn-action btn-del" onclick="event.stopPropagation(); konfirmasiHapus('deletePengumuman', '${x.id}')">ðŸ—‘ï¸ Hapus</button>
+                        <button class="btn-action btn-blast" onclick="event.stopPropagation(); blastWAPengumuman(${idx})">📲 Kirim WA Pengumuman</button>
+                        <button class="btn-action btn-edit" onclick="event.stopPropagation(); editPengumuman(${idx})">✏️ Edit</button>
+                        <button class="btn-action btn-del" onclick="event.stopPropagation(); konfirmasiHapus('deletePengumuman', '${x.id}')">🗑️ Hapus</button>
                     </div>
                 </div>`).join(''); 
             } 
@@ -1738,7 +1731,7 @@ function prosesLogin() {
             isi: document.getElementById('peng-isi').value, 
             tanggal_mulai: document.getElementById('peng-mulai').value, 
             tanggal_selesai: document.getElementById('peng-selesai').value,
-            ikon: 'ðŸ“¢'
+            ikon: '📢'
         }; 
         var idEdit = document.getElementById('peng-id-edit').value; 
         if (idEdit) { 
@@ -1758,7 +1751,7 @@ function prosesLogin() {
             document.getElementById('peng-isi').value = '';
             document.getElementById('peng-mulai').value = '';
             document.getElementById('peng-selesai').value = '';
-            btn.innerHTML = 'ðŸ’¾ Publikasikan Berita';
+            btn.innerHTML = '💾 Publikasikan Berita';
             loadPengumumanAdmin(); 
         }); 
     }
@@ -1770,7 +1763,7 @@ function prosesLogin() {
         document.getElementById('peng-isi').value = d.isi; 
         document.getElementById('peng-mulai').value = new Date(d.tanggal_mulai).toISOString().split('T')[0]; 
         document.getElementById('peng-selesai').value = new Date(d.tanggal_selesai).toISOString().split('T')[0]; 
-        document.querySelector('#tab-pengumuman .btn-submit').innerHTML = 'ðŸ“ Update Berita'; 
+        document.querySelector('#tab-pengumuman .btn-submit').innerHTML = '📝 Update Berita'; 
         window.scrollTo({top:0, behavior:'smooth'});
     }
 
@@ -1782,7 +1775,6 @@ function prosesLogin() {
 
     function loadGaleriAdmin() { 
         postDataAdmin({ action: 'getGaleri', id_masjid: ID_MASJID, token: USER_TOKEN })
-        .then(r=>r.json())
         .then(j=>{ 
             if(!cekSesi(j)) return;
             if(j.data) { 
@@ -1792,7 +1784,7 @@ function prosesLogin() {
                     <div class="item-card-title">${x.judul}</div>
                     <div class="item-card-footer"><span class="item-badge badge-masuk">${x.tipe}</span></div>
                     <div class="action-buttons">
-                        <button class="btn-action btn-del" onclick="event.stopPropagation(); konfirmasiHapus('deleteGaleri', '${x.id}')">ðŸ—‘ï¸ Hapus</button>
+                        <button class="btn-action btn-del" onclick="event.stopPropagation(); konfirmasiHapus('deleteGaleri', '${x.id}')">🗑️ Hapus</button>
                     </div>
                 </div>`).join(''); 
             } 
@@ -1807,15 +1799,15 @@ function prosesLogin() {
         var countVideo = LIST_GALERI.filter(g => g.tipe === 'VIDEO_YOUTUBE').length;
 
         if (tp === 'FOTO' && countFoto >= 4) {
-            showToast('âŒ Kuota Foto Penuh (Maks 4). Hapus foto lama dulu.');
+            showToast('❌ Kuota Foto Penuh (Maks 4). Hapus foto lama dulu.');
             return;
         }
         if (tp === 'FLYER' && countFlyer >= 2) {
-            showToast('âŒ Kuota Flyer Penuh (Maks 2). Hapus flyer lama dulu.');
+            showToast('❌ Kuota Flyer Penuh (Maks 2). Hapus flyer lama dulu.');
             return;
         }
         if (tp === 'VIDEO_YOUTUBE' && countVideo >= 2) {
-            showToast('âŒ Kuota Video Penuh (Maks 2). Hapus video lama dulu.');
+            showToast('❌ Kuota Video Penuh (Maks 2). Hapus video lama dulu.');
             return;
         }
 
@@ -1892,7 +1884,7 @@ function prosesLogin() {
         return 'background:#9CA3AF;';
     }
 
-    // FUNGSI LOAD JAMAAH BARU MENGGUNAKAN KARTU LIPAT
+    // FUNGSI LOAD JAMAAH BARU MENGGUNAKAN KARTU LIPAT (SUDAH DIPERBAIKI DENGAN SISTEM AUTO-LOGOUT)
     function loadDataJamaah(btn = null) {
         if (!ID_MASJID) {
             showToast('ID masjid belum terbaca. Silakan login ulang.');
@@ -1902,16 +1894,9 @@ function prosesLogin() {
         if (btn) setLoading(btn, true);
 
         var el = document.getElementById('list-jamaah-admin');
-        if (el) el.innerHTML = '<div style="text-align:center; padding:15px; font-size:12px; color:#6b7280;">â³ Sedang memuat data jamaah...</div>';
+        if (el) el.innerHTML = '<div style="text-align:center; padding:15px; font-size:12px; color:#6b7280;">⏳ Sedang memuat data jamaah...</div>';
 
-        var url = API_URL
-            + '?action=getJamaah'
-            + '&id_masjid=' + encodeURIComponent(ID_MASJID)
-            + '&token=' + encodeURIComponent(USER_TOKEN || '')
-            + '&_t=' + Date.now();
-
-        fetch(url)
-            .then(res => res.json())
+        postDataAdmin({ action: 'getJamaah', id_masjid: ID_MASJID, token: USER_TOKEN })
             .then(res => {
                 if (btn) setLoading(btn, false);
                 if (!cekSesi(res)) return;
@@ -1943,7 +1928,7 @@ function prosesLogin() {
                             <span>${escapeHtmlJamaah(sapaan)} ${escapeHtmlJamaah(nama)}</span>
                         </div>
                         <div class="item-card-footer">
-                            <span style="font-size:11px; color:#6b7280;">ðŸ“± ${escapeHtmlJamaah(noWa)} | ðŸ“¥ ${escapeHtmlJamaah(sumber)}</span>
+                            <span style="font-size:11px; color:#6b7280;">📱 ${escapeHtmlJamaah(noWa)} | 📥 ${escapeHtmlJamaah(sumber)}</span>
                             <span class="item-badge badge-jamaah" style="${warnaKategoriJamaah(kategori)}">${escapeHtmlJamaah(labelKategoriJamaah(kategori))}</span>
                         </div>
                         <div class="action-buttons" style="align-items: center; justify-content: space-between;">
@@ -1957,7 +1942,7 @@ function prosesLogin() {
                                 <option value="TAMU">Tamu</option>
                                 <option value="JANGAN_WA">Jangan WA</option>
                             </select>
-                            <button class="btn-action btn-del" style="flex:none; width:auto; padding:8px 12px;" onclick="event.stopPropagation(); hapusJamaahByIndex(${idx})">ðŸ—‘ï¸ Hapus</button>
+                            <button class="btn-action btn-del" style="flex:none; width:auto; padding:8px 12px;" onclick="event.stopPropagation(); hapusJamaahByIndex(${idx})">🗑️ Hapus</button>
                         </div>
                     </div>`;
                 }).join('');
@@ -1988,16 +1973,16 @@ function prosesLogin() {
             kategori: kategoriBaru
         };
 
-        showToast('â³ Menyimpan kategori...');
+        showToast('⏳ Menyimpan kategori...');
         fetch(API_URL, { method: 'POST', body: JSON.stringify(payload) })
             .then(res => res.json())
             .then(res => {
                 if(!cekSesi(res)) return;
                 if (res.status === 'ok') {
-                    showToast('âœ… Kategori berhasil diubah');
+                    showToast('✅ Kategori berhasil diubah');
                     loadDataJamaah();
                 } else {
-                    showToast('âŒ Gagal mengubah: ' + (res.message || 'Tidak diketahui'));
+                    showToast('❌ Gagal mengubah: ' + (res.message || 'Tidak diketahui'));
                 }
             })
             .catch(err => showToast('Koneksi bermasalah'));
@@ -2016,16 +2001,16 @@ function prosesLogin() {
             no_wa: item.no_wa
         };
 
-        showToast('â³ Menghapus kontak...');
+        showToast('⏳ Menghapus kontak...');
         fetch(API_URL, { method: 'POST', body: JSON.stringify(payload) })
             .then(res => res.json())
             .then(res => {
                 if(!cekSesi(res)) return;
                 if (res.status === 'ok') {
-                    showToast('âœ… Kontak berhasil dihapus');
+                    showToast('✅ Kontak berhasil dihapus');
                     loadDataJamaah();
                 } else {
-                    showToast('âŒ Gagal menghapus: ' + (res.message || 'Tidak diketahui'));
+                    showToast('❌ Gagal menghapus: ' + (res.message || 'Tidak diketahui'));
                 }
             })
             .catch(err => showToast('Koneksi bermasalah'));
@@ -2038,7 +2023,6 @@ function prosesLogin() {
 
     function loadProfilAdmin() {
         postDataAdmin({ action: 'getMasjid', id_masjid: ID_MASJID, token: USER_TOKEN })
-        .then(r => r.json())
         .then(j => {
             if(!cekSesi(j)) return;
             var d = j.data;
