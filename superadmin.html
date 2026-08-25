@@ -1217,7 +1217,7 @@ Ustadz & Segenap Pengurus DKM ${namaMasjid}.
 
 Semoga Ustadz dan seluruh pengurus senantiasa diberikan kesehatan dan kelancaran dalam memakmurkan masjid. 🙏🏼
 
-Mohon izin mengingatkan, masa pengenalan sistem Power of Masjid selama 14 hari untuk *${namaMasjid}* telah berlalu. Namun, berdasarkan pantauan kami, belum ada pembaruan data mandiri di dalam Panel Admin (seperti pengisian Saldo Kas, Jadwal Kegiatan, atau Galeri).
+Mohon izin mengingatkan, masa pengenalan কামي, masa pengenalan sistem Power of Masjid selama 14 hari untuk *${namaMasjid}* telah berlalu. Namun, berdasarkan pantauan kami, belum ada pembaruan data mandiri di dalam Panel Admin (seperti pengisian Saldo Kas, Jadwal Kegiatan, atau Galeri).
 
 Fasilitas digital ini dirancang agar manfaatnya dapat langsung dirasakan oleh jamaah, terutama dalam hal transparansi kas dan informasi kegiatan. Oleh karena itu, kami sangat mendorong pengurus untuk segera login dan mulai mencoba mengelola data masjid secara aktif.
 
@@ -1337,8 +1337,7 @@ async function loadDashboardData() {
   container.innerHTML = '';
 
   try {
-    const res = await secureReadSuperadmin('getSuperadminData');
-    const json = await res.json();
+    const json = await secureReadSuperadmin('getSuperadminData');
 
     if (json.status !== 'ok') {
       showToast(json.message || 'Gagal memuat dashboard');
@@ -1540,8 +1539,7 @@ async function loadIklan() {
   box.innerHTML = '<div style="text-align:center; font-size:12px;">Memuat...</div>';
 
   try {
-    const res = await secureReadSuperadmin('getIklanSuperadmin');
-    const json = await res.json();
+    const json = await secureReadSuperadmin('getIklanSuperadmin');
 
     if (json.status !== 'ok') {
       box.innerHTML = '<div style="text-align:center; font-size:12px;">Gagal memuat iklan.</div>';
@@ -1662,8 +1660,7 @@ async function loadSponsorTV() {
   box.innerHTML = '<div style="text-align:center; font-size:12px;">Memuat...</div>';
 
   try {
-    const res = await secureReadSuperadmin('getSponsorTV');
-    const json = await res.json();
+    const json = await secureReadSuperadmin('getSponsorTV');
     const list = json.data || [];
 
     if (!list.length) {
@@ -1775,8 +1772,7 @@ async function loadSponsorWeb() {
   box.innerHTML = '<div style="text-align:center; font-size:12px;">Memuat...</div>';
 
   try {
-    const res = await secureReadSuperadmin('getSponsorWeb');
-    const json = await res.json();
+    const json = await secureReadSuperadmin('getSponsorWeb');
     const list = json.data || [];
 
     if (!list.length) {
@@ -1869,8 +1865,7 @@ async function loadMasterSponsor() {
   const box = document.getElementById('list-master-sponsor');
 
   try {
-    const res = await secureReadSuperadmin('getMasterSponsor');
-    const json = await res.json();
+    const json = await secureReadSuperadmin('getMasterSponsor');
     masterSponsorData = json.data || [];
 
     isiPilihanSponsor();
@@ -1969,8 +1964,7 @@ async function loadMasterMerchant() {
   const box = document.getElementById('list-master-merchant');
 
   try {
-    const res = await secureReadSuperadmin('getMasterMerchant');
-    const json = await res.json();
+    const json = await secureReadSuperadmin('getMasterMerchant');
     masterMerchantData = json.data || [];
 
     filterMerchantBySponsor();
@@ -2097,8 +2091,7 @@ async function loadCampaignProgram() {
   const box = document.getElementById('list-campaign');
 
   try {
-    const res = await secureReadSuperadmin('getCampaignProgram');
-    const json = await res.json();
+    const json = await secureReadSuperadmin('getCampaignProgram');
     campaignData = json.data || [];
     isiPilihanDistribusiAir();
 
@@ -2112,6 +2105,7 @@ async function loadCampaignProgram() {
       const nama = c.nama_program || c.nama || c.NAMA_PROGRAM || '-';
       const kuota = c.total_kuota || c.TOTAL_KUOTA || '0';
       const redeem = c.sudah_redeem || c.SUDAH_REDEEM || '0';
+      const targetFisik = c.target_fisik || c.TARGET_FISIK || '0';
       const expired = c.tanggal_kadaluarsa || c.expired || c.TANGGAL_KADALUARSA || '';
       const mulai = c.tanggal_mulai || c.TANGGAL_MULAI || '';
       const link = c.link_qr || c.LINK_QR || '';
@@ -2124,7 +2118,8 @@ async function loadCampaignProgram() {
           <div class="item-title">${escapeHtml(nama)}</div>
           <div class="item-gold">${escapeHtml(sponsor)} ${merchant ? '• ' + escapeHtml(merchant) : ''}</div>
           <div class="item-sub">Masjid: ${escapeHtml(masjid || '-')}</div>
-          <div class="item-sub">Kuota Berkah: ${escapeHtml(redeem)} / ${escapeHtml(kuota)}</div>
+          <div class="item-sub">Distribusi Fisik: ${escapeHtml(targetFisik)} barang</div>
+          <div class="item-sub">Kuota Aplikasi (Redeem/Total): ${escapeHtml(redeem)} / ${escapeHtml(kuota)}</div>
           <div class="item-sub">Masa Program: ${escapeHtml(mulai)} sampai ${escapeHtml(expired)}</div>
           ${link ? `<div class="item-sub" style="word-break:break-all;">QR Link: ${escapeHtml(link)}</div>` : ''}
           <div class="item-actions">
@@ -2166,12 +2161,13 @@ async function tambahCampaignProgram() {
   const idMerchant = document.getElementById('cp-merchant').value.trim();
   const idMasjid = document.getElementById('cp-masjid').value.trim();
   const nama = document.getElementById('cp-nama').value.trim();
+  const targetFisik = document.getElementById('cp-target-fisik').value.trim();
   const kuota = document.getElementById('cp-kuota').value.trim();
   const mulai = document.getElementById('cp-mulai').value;
   const expired = document.getElementById('cp-expired').value;
 
-  if (!idSponsor || !idMerchant || !idMasjid || !nama || !kuota || !mulai || !expired) {
-    return showToast('Lengkapi Program Rezeki Berkah');
+  if (!idSponsor || !idMerchant || !idMasjid || !nama || !targetFisik || !kuota || !mulai || !expired) {
+    return showToast('Lengkapi Program Rezeki Berkah secara keseluruhan');
   }
 
   const btn = document.getElementById('btn-cp');
@@ -2186,6 +2182,7 @@ async function tambahCampaignProgram() {
       id_merchant: idMerchant,
       id_masjid: idMasjid,
       nama_program: nama,
+      target_fisik: targetFisik,
       total_kuota: kuota,
       tanggal_mulai: mulai,
       tanggal_kadaluarsa: expired
@@ -2213,6 +2210,7 @@ async function tambahCampaignProgram() {
       document.getElementById('cp-merchant').value = '';
       document.getElementById('cp-masjid').value = '';
       document.getElementById('cp-nama').value = '';
+      document.getElementById('cp-target-fisik').value = '';
       document.getElementById('cp-kuota').value = '';
       document.getElementById('cp-mulai').value = '';
       document.getElementById('cp-expired').value = '';
@@ -2247,8 +2245,7 @@ async function loadDistribusiAir() {
   isiPilihanDistribusiAir();
   list.innerHTML = '<div style="text-align:center;font-size:12px;padding:10px;">Memuat distribusi...</div>';
   try {
-    const res = await secureReadSuperadmin('getDistribusiAir');
-    const json = await res.json();
+    const json = await secureReadSuperadmin('getDistribusiAir');
     if (json.status !== 'ok') {
       list.innerHTML = '<div class="info-box">' + escapeHtml(json.message || 'Gagal memuat distribusi') + '</div>';
       return;
@@ -2324,8 +2321,7 @@ async function loadLaporanRezekiBerkah() {
   tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;">Memuat laporan...</td></tr>';
 
   try {
-    const res = await secureReadSuperadmin('getLaporanRezekiBerkah');
-    const json = await res.json();
+    const json = await secureReadSuperadmin('getLaporanRezekiBerkah');
     laporanBerkahData = json.data || [];
 
     if (!laporanBerkahData.length) {
@@ -2386,7 +2382,6 @@ function copyLaporanRezekiBerkah() {
   lines.push('================================');
   lines.push('');
 
-  // Grouping data per Program
   const rekap = {};
   laporanBerkahData.forEach(row => {
     const prog = row.nama_program || row.NAMA_PROGRAM || 'Tanpa Nama Program';
@@ -2407,23 +2402,28 @@ function copyLaporanRezekiBerkah() {
     rekap[prog].merchant[merchant] = (rekap[prog].merchant[merchant] || 0) + 1;
   });
 
+  const campMap = {};
+  campaignData.forEach(c => campMap[c.nama_program || c.nama || c.NAMA_PROGRAM] = Number(c.target_fisik || c.TARGET_FISIK || 0));
+
   for (const prog in rekap) {
     const data = rekap[prog];
+    const targetFisik = campMap[prog] || 0;
+    const o2oRate = targetFisik > 0 ? Math.round((data.totalScan / targetFisik) * 100) : 0;
     const convRate = data.totalScan > 0 ? Math.round((data.totalRedeem / data.totalScan) * 100) : 0;
     
     lines.push(`📌 PROGRAM: ${prog}`);
-    lines.push(`Total Scan QR   : ${data.totalScan} Jamaah`);
-    lines.push(`Total Diambil   : ${data.totalRedeem} Jamaah`);
-    lines.push(`Conversion Rate : ${convRate}%`);
+    lines.push(`Total Distribusi Fisik : ${targetFisik} Barang`);
+    lines.push(`Total Scan QR          : ${data.totalScan} Jamaah`);
+    lines.push(`Total Diambil (Redeem) : ${data.totalRedeem} Jamaah`);
+    lines.push(`Konversi O2O (Fisik -> Scan) : ${o2oRate}%`);
+    lines.push(`Konversi Redeem (Scan -> Ambil) : ${convRate}%`);
     lines.push('');
     
-    // Sort Masjid
     const sortMasjid = Object.entries(data.masjid).sort((a,b) => b[1] - a[1]).slice(0,3);
     lines.push(`Top 3 Masjid:`);
     sortMasjid.forEach(m => lines.push(`- ${m[0]} (${m[1]} scan)`));
     lines.push('');
     
-    // Sort Merchant
     const sortMerchant = Object.entries(data.merchant).sort((a,b) => b[1] - a[1]).slice(0,3);
     lines.push(`Top 3 Titik Ambil Berkah:`);
     sortMerchant.forEach(m => lines.push(`- ${m[0]} (${m[1]} scan)`));
