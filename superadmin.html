@@ -277,6 +277,9 @@ textarea.form-control {
   cursor: pointer;
   font-family: inherit;
   margin-top: 10px;
+  text-decoration: none;
+  display: block;
+  box-sizing: border-box;
 }
 
 .btn-primary {
@@ -715,7 +718,7 @@ select.form-control option {
 
         <button class="btn-primary" id="btn-tambah" onclick="tambahMasjidBaru()">SIMPAN MASJID BARU</button>
         
-        <div id="hasil-registrasi" style="display:none; margin-top:15px; border-color:var(--gold);" class="info-box">
+        <div id="hasil-registrasi" style="display:none; margin-top:15px; border-color:var(--success); background:rgba(16, 185, 129, 0.15);" class="info-box">
         </div>
       </div>
     </div>
@@ -962,17 +965,23 @@ select.form-control option {
         </div>
         <div class="form-row">
           <div class="form-group">
-            <label>Total Kuota Berkah</label>
-            <input type="number" class="form-control" id="cp-kuota" placeholder="100">
+            <label>Target Distribusi Fisik (Barang)</label>
+            <input type="number" class="form-control" id="cp-target-fisik" placeholder="Contoh: 1000">
           </div>
+          <div class="form-group">
+            <label>Total Kuota Berkah (Aplikasi)</label>
+            <input type="number" class="form-control" id="cp-kuota" placeholder="Contoh: 800">
+          </div>
+        </div>
+        <div class="form-row">
           <div class="form-group">
             <label>Tanggal Mulai</label>
             <input type="date" class="form-control" id="cp-mulai">
           </div>
-        </div>
-        <div class="form-group">
-          <label>Batas Akhir Program</label>
-          <input type="date" class="form-control" id="cp-expired">
+          <div class="form-group">
+            <label>Batas Akhir Program</label>
+            <input type="date" class="form-control" id="cp-expired">
+          </div>
         </div>
         <button class="btn-primary" id="btn-cp" onclick="tambahCampaignProgram()">BUAT PROGRAM REZEKI BERKAH</button>
         <div id="campaign-result" style="display:none; margin-top:15px;" class="info-box"></div>
@@ -1217,7 +1226,7 @@ Ustadz & Segenap Pengurus DKM ${namaMasjid}.
 
 Semoga Ustadz dan seluruh pengurus senantiasa diberikan kesehatan dan kelancaran dalam memakmurkan masjid. 🙏🏼
 
-Mohon izin mengingatkan, masa pengenalan কামي, masa pengenalan sistem Power of Masjid selama 14 hari untuk *${namaMasjid}* telah berlalu. Namun, berdasarkan pantauan kami, belum ada pembaruan data mandiri di dalam Panel Admin (seperti pengisian Saldo Kas, Jadwal Kegiatan, atau Galeri).
+Mohon izin mengingatkan, masa pengenalan sistem Power of Masjid selama 14 hari untuk *${namaMasjid}* telah berlalu. Namun, berdasarkan pantauan kami, belum ada pembaruan data mandiri di dalam Panel Admin (seperti pengisian Saldo Kas, Jadwal Kegiatan, atau Galeri).
 
 Fasilitas digital ini dirancang agar manfaatnya dapat langsung dirasakan oleh jamaah, terutama dalam hal transparansi kas dan informasi kegiatan. Oleh karena itu, kami sangat mendorong pengurus untuk segera login dan mulai mencoba mengelola data masjid secara aktif.
 
@@ -1498,13 +1507,19 @@ async function tambahMasjidBaru() {
       showToast('Masjid baru berhasil disimpan');
       
       const pesanSerahTerima = buatPesanSerahTerima(nama, email, pin, slug);
+      const encodedPesan = encodeURIComponent(pesanSerahTerima);
       
       const resBox = document.getElementById('hasil-registrasi');
       resBox.style.display = 'block';
+      resBox.style.background = 'rgba(16, 185, 129, 0.15)'; 
+      resBox.style.borderColor = '#10B981';
       resBox.innerHTML = `
-        <div style="font-size:14px; font-weight:700; color:var(--gold); margin-bottom:8px;">Pendaftaran Berhasil! 🎉</div>
-        <div style="font-size:12px; margin-bottom:12px; line-height:1.5;">Pesan WhatsApp serah terima akun untuk DKM telah dirakit oleh sistem. Silakan salin pesan di bawah ini dan kirimkan ke DKM bersangkutan.</div>
-        <button class="btn-copy" style="margin-top:0;" onclick="copyText(document.getElementById('raw-serah-terima').value)">📋 Salin Pesan Serah Terima WA</button>
+        <div style="font-size:16px; font-weight:800; color:#10B981; margin-bottom:8px;">✅ Pendaftaran Berhasil!</div>
+        <div style="font-size:12px; margin-bottom:15px; line-height:1.5; color:#E8F5EE;">Pesan WhatsApp serah terima akun untuk DKM telah dirakit otomatis oleh sistem. Tidak perlu ketik manual lagi.</div>
+        <div style="display:flex; gap:10px;">
+            <button class="btn-copy" style="margin-top:0; flex:1;" onclick="copyText(document.getElementById('raw-serah-terima').value)">📋 Salin Teks Saja</button>
+            <a href="https://wa.me/?text=${encodedPesan}" target="_blank" class="btn-primary" style="margin-top:0; flex:1; text-align:center; text-decoration:none; background:#25D366; color:white; display:flex; align-items:center; justify-content:center;">📲 Kirim via WA</a>
+        </div>
         <textarea id="raw-serah-terima" style="display:none;">${pesanSerahTerima}</textarea>
       `;
 
