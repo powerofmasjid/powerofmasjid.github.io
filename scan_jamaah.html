@@ -797,7 +797,6 @@ input::placeholder {
         <div class="modal-subtitle">Ringkasan persetujuan sebelum mengambil Kode Berkah.</div>
         <ol class="modal-list">
             <li>Nama dan nomor WhatsApp digunakan untuk keperluan program Rezeki Berkah.</li>
-            <!-- PERBAIKAN TEKS CONSENT DI SINI -->
             <li>Laporan statistik (total scan/pengambilan) akan diberikan kepada Sahabat Berkah tanpa menyertakan identitas pribadi (Nama & WA Anda dijamin kerahasiaannya).</li>
             <li>Data tidak dijual kepada pihak lain di luar program ini.</li>
             <li>Dengan melanjutkan, jamaah menyetujui ketentuan program Rezeki Berkah.</li>
@@ -824,7 +823,6 @@ let KODE_BERKAH = '';
 let ID_CAMPAIGN = '';
 let ID_MASJID = '';
 
-
 document.addEventListener('click', function(e) {
     if (e.target.classList && e.target.classList.contains('modal-overlay')) {
         tutupModal();
@@ -842,9 +840,75 @@ window.addEventListener('load', function() {
     document.getElementById('id_campaign').value = ID_CAMPAIGN;
     document.getElementById('id_masjid').value = ID_MASJID;
 
-    loadProgramPublic();
+    // JIKA TIDAK ADA KODE DI MEMORI LOKAL, BARU TAMPILKAN LOADING AWAL
+    if (!cekKodeLokal()) {
+        loadProgramPublic();
+    } else {
+        // Jika sudah ada kode lokal, kita panggil API khusus untuk render info saja secara diam-diam
+        loadInfoProgramDiamDiam();
+    }
+    
     setInterval(updateLiveTime, 1000);
 });
+
+// FUNGSI BARU: CEK KODE DARI MEMORI HP
+function cekKodeLokal() {
+    try {
+        const dataLokal = localStorage.getItem('rezeki_berkah_' + ID_CAMPAIGN);
+        if (dataLokal) {
+            const parsed = JSON.parse(dataLokal);
+            const umurJam = (new Date().getTime() - new Date(parsed.waktu).getTime()) / (1000 * 60 * 60);
+            
+            // Kalau belum lewat 24 jam dan kodenya ada
+            if (umurJam < 24 && parsed.kode) {
+                KODE_BERKAH = parsed.kode;
+                document.getElementById('tampil-kode').textContent = KODE_BERKAH;
+                document.getElementById('tampil-kode-ambil').textContent = KODE_BERKAH;
+                document.getElementById('tampil-kode-sukses').textContent = KODE_BERKAH;
+                
+                // Jika sebelumnya dia sudah berhasil klaim (SUDAH_DIAMBIL)
+                if (parsed.status === 'SUDAH_DIAMBIL') {
+                    document.getElementById('bukti-kode').textContent = KODE_BERKAH;
+                    document.getElementById('bukti-merchant').textContent = parsed.merchant_nama || 'Titik Ambil Berkah';
+                    document.getElementById('bukti-waktu').textContent = formatWaktuTransaksi(parsed.waktu);
+                    showArea('area-sukses');
+                } else {
+                    // Jika baru tahap buat kode (KODE_DIBUAT)
+                    showArea('area-kode');
+                }
+                return true;
+            } else {
+                // Bersihkan kalau sudah basi (lewat 24 jam)
+                localStorage.removeItem('rezeki_berkah_' + ID_CAMPAIGN);
+            }
+        }
+    } catch(e) {}
+    return false;
+}
+
+// FUNGSI BARU: SIMPAN KODE & STATUS KE MEMORI LOKAL
+function simpanKodeLokal(kode, statusPesan = 'KODE_DIBUAT', merchantNama = '') {
+    try {
+        localStorage.setItem('rezeki_berkah_' + ID_CAMPAIGN, JSON.stringify({
+            kode: kode,
+            status: statusPesan,
+            merchant_nama: merchantNama,
+            waktu: new Date().toISOString()
+        }));
+    } catch(e) {}
+}
+
+async function loadInfoProgramDiamDiam() {
+    try {
+        const url = API_URL + '?action=getCampaignPublic&camp=' + encodeURIComponent(ID_CAMPAIGN) + (ID_MASJID ? '&masjid=' + encodeURIComponent(ID_MASJID) : '') + '&_t=' + Date.now();
+        const res = await fetch(url);
+        const json = await res.json();
+        if (json.status === 'ok') {
+            DATA_PROGRAM = json.data || {};
+            renderProgramInfo();
+        }
+    } catch (e) {}
+}
 
 function getParam(name) {
     return new URLSearchParams(window.location.search).get(name);
@@ -936,7 +1000,6 @@ async function loadProgramPublic() {
         }
 
         renderProgramInfo();
-        
         showArea('area-sponsor'); 
         mulaiHitungMundur();
 
@@ -1069,7 +1132,8 @@ async function ambilKodeBerkah() {
                 return;
             }
 
-            simpanKodeLokal(KODE_BERKAH);
+            // SIMPAN KE LOKAL HP JAMAAH
+            simpanKodeLokal(KODE_BERKAH, 'KODE_DIBUAT', '');
 
             document.getElementById('tampil-kode').textContent = KODE_BERKAH;
             document.getElementById('tampil-kode-ambil').textContent = KODE_BERKAH;
@@ -1086,16 +1150,6 @@ async function ambilKodeBerkah() {
     btn.disabled = !document.getElementById('setuju_jamaah').checked;
     btn.textContent = 'AMBIL KODE BERKAH';
 }
-
-function simpanKodeLokal(kode) {
-    try {
-        localStorage.setItem('rezeki_berkah_' + ID_CAMPAIGN, JSON.stringify({
-            kode: kode,
-            waktu: new Date().toISOString()
-        }));
-    } catch(e) {}
-}
-
 
 function tampilkanAreaAmbil() {
     if (!KODE_BERKAH) {
@@ -1136,8 +1190,13 @@ async function konfirmasiAmbilBerkah() {
         });
 
         if (json.status === 'ok') {
+            const namaMerchantValid = json.nama_merchant || (DATA_PROGRAM && (DATA_PROGRAM.nama_merchant || DATA_PROGRAM.NAMA_MERCHANT)) || 'Titik Ambil Berkah';
+            
+            // UPDATE STATUS MEMORI LOKAL JADI SUDAH DIAMBIL
+            simpanKodeLokal(KODE_BERKAH, 'SUDAH_DIAMBIL', namaMerchantValid);
+
             document.getElementById('bukti-kode').textContent = KODE_BERKAH;
-            document.getElementById('bukti-merchant').textContent = json.nama_merchant || (DATA_PROGRAM && (DATA_PROGRAM.nama_merchant || DATA_PROGRAM.NAMA_MERCHANT)) || 'Titik Ambil Berkah';
+            document.getElementById('bukti-merchant').textContent = namaMerchantValid;
             document.getElementById('bukti-waktu').textContent = formatWaktuTransaksi(json.waktu_redeem || json.waktu_transaksi || new Date().toISOString());
             showArea('area-sukses');
         } else {
