@@ -647,6 +647,8 @@ select.form-control option {
     <div class="nav-tab" onclick="bukaTab('iklan', this)">IKLAN GLOBAL</div>
     <div class="nav-tab" onclick="bukaTab('sponsor', this)">SPONSOR TV/WEB</div>
     <div class="nav-tab" onclick="bukaTab('berkah', this)">REZEKI BERKAH</div>
+    <!-- TAB BARU UNTUK KELOLA GALDAN -->
+    <div class="nav-tab" onclick="bukaTab('galdan', this)">KELOLA GALDAN</div>
   </div>
 
   <div class="content">
@@ -990,6 +992,73 @@ select.form-control option {
 
     </div>
 
+    <!-- TAB KELOLA GALDAN (BARU) -->
+    <div id="galdan" class="tab-content">
+      <!-- Card 1: Buat Proyek -->
+      <div class="card">
+        <div class="card-title">1. Buat Proyek Galang Dana</div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Nama Proyek</label>
+            <input type="text" class="form-control" id="gd-nama-proyek" placeholder="Contoh: Pembangunan Tempat Wudhu">
+          </div>
+          <div class="form-group">
+            <label>Target Dana (Rp)</label>
+            <input type="number" class="form-control" id="gd-target-dana" placeholder="10000000">
+          </div>
+        </div>
+        <button class="btn-primary" onclick="simpanProyekGaldan(this)">BUAT PROYEK</button>
+      </div>
+
+      <!-- Card 2: Catat Donasi Masuk -->
+      <div class="card">
+        <div class="card-title">2. Catat Donasi Masuk</div>
+        <div class="form-group">
+          <label>Pilih Proyek</label>
+          <select class="form-control" id="gd-in-proyek"></select>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Nama Asli Donatur</label>
+            <input type="text" class="form-control" id="gd-in-nama" placeholder="Budi Santoso">
+          </div>
+          <div class="form-group">
+            <label>Privasi Tampilan</label>
+            <select class="form-control" id="gd-in-privasi">
+              <option value="TERBUKA">Tampilkan Nama Terbuka</option>
+              <option value="INISIAL">Samarkan (Inisial)</option>
+              <option value="HAMBA_ALLAH">Hamba Allah</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Nominal (Rp)</label>
+          <input type="number" class="form-control" id="gd-in-nominal" placeholder="500000">
+        </div>
+        <button class="btn-primary" style="background:var(--success);" onclick="simpanDonasiMasuk(this)">CATAT DONASI</button>
+      </div>
+
+      <!-- Card 3: Catat Pengeluaran -->
+      <div class="card" style="border-left: 4px solid var(--danger);">
+        <div class="card-title" style="color:var(--danger);">3. Catat Distribusi / Pengeluaran</div>
+        <div class="form-group">
+          <label>Pilih Proyek Terkait</label>
+          <select class="form-control" id="gd-out-proyek"></select>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Keterangan Pekerjaan / Belanja</label>
+            <input type="text" class="form-control" id="gd-out-desc" placeholder="Beli semen 10 sak">
+          </div>
+          <div class="form-group">
+            <label>Nominal Keluar (Rp)</label>
+            <input type="number" class="form-control" id="gd-out-nominal" placeholder="600000">
+          </div>
+        </div>
+        <button class="btn-danger" onclick="simpanPengeluaran(this)">CATAT PENGELUARAN</button>
+      </div>
+    </div>
+
   </div>
 </div>
 
@@ -1096,6 +1165,7 @@ function bukaTab(id, el) {
   if (id === 'iklan') loadIklan();
   if (id === 'sponsor') loadSponsor();
   if (id === 'berkah') loadRezekiBerkah();
+  if (id === 'galdan') loadGaldanDropdown();
 }
 
 function formatRp(num) {
@@ -2254,6 +2324,7 @@ async function isiPilihanDistribusiAir() {
   }).join('');
   if (current) select.value = current;
 }
+
 async function loadDistribusiAir() {
   const list = document.getElementById('list-distribusi-air');
   if (!list) return;
@@ -2271,6 +2342,7 @@ async function loadDistribusiAir() {
     list.innerHTML = '<div class="info-box">Gagal memuat distribusi air.</div>';
   }
 }
+
 function renderDistribusiAir() {
   const list = document.getElementById('list-distribusi-air');
   const rekap = document.getElementById('rekap-distribusi-air');
@@ -2295,6 +2367,7 @@ function renderDistribusiAir() {
       <div class="item-actions"><button class="btn-action btn-del" onclick="hapusDistribusiAir('${escapeHtml(r.id_distribusi)}')">Hapus</button></div>
     </div>`).join('');
 }
+
 async function simpanDistribusiAir() {
   const payload = {
     action: 'addDistribusiAir', token: getToken(),
@@ -2319,6 +2392,7 @@ async function simpanDistribusiAir() {
   } catch(e) { showToast('Gagal menyimpan distribusi'); }
   btn.disabled = false; btn.textContent = 'SIMPAN DISTRIBUSI AIR';
 }
+
 async function hapusDistribusiAir(id) {
   const yakin = await showConfirm('Hapus catatan distribusi air ini?');
   if (!yakin) return;
@@ -2475,6 +2549,121 @@ function buatDanSalinPIN() {
     btn.style.color = '';
     btn.style.borderColor = '';
   }, 2000);
+}
+
+// -----------------------------------------------------
+// KODE TAMBAHAN UNTUK FITUR GALDAN
+// -----------------------------------------------------
+
+async function loadGaldanDropdown() {
+  try {
+    const res = await secureReadSuperadmin('getGaldanData');
+    if (res.status === 'ok') {
+      let opts = '<option value="">-- Pilih Proyek --</option>';
+      if (res.data && res.data.proyek) {
+        res.data.proyek.forEach(p => {
+          opts += `<option value="${p.id_proyek}">${p.nama_proyek}</option>`;
+        });
+      }
+      document.getElementById('gd-in-proyek').innerHTML = opts;
+      document.getElementById('gd-out-proyek').innerHTML = opts;
+    }
+  } catch(e) {
+    showToast('Gagal memuat daftar proyek');
+  }
+}
+
+async function simpanProyekGaldan(btn) {
+  const nama = document.getElementById('gd-nama-proyek').value.trim();
+  const target = document.getElementById('gd-target-dana').value.trim();
+  if (!nama || !target) return showToast('Lengkapi nama dan target dana');
+
+  btn.disabled = true;
+  btn.textContent = 'MENYIMPAN...';
+  try {
+    const json = await postData({
+      token: getToken(),
+      action: 'addProyekGaldan',
+      nama_proyek: nama,
+      target_dana: target
+    });
+    if (json.status === 'ok') {
+      showToast('Proyek berhasil dibuat');
+      document.getElementById('gd-nama-proyek').value = '';
+      document.getElementById('gd-target-dana').value = '';
+      loadGaldanDropdown();
+    } else {
+      showToast(json.message || 'Gagal menyimpan proyek');
+    }
+  } catch(e) {
+    showToast('Gagal menyimpan proyek');
+  }
+  btn.disabled = false;
+  btn.textContent = 'BUAT PROYEK';
+}
+
+async function simpanDonasiMasuk(btn) {
+  const idProyek = document.getElementById('gd-in-proyek').value;
+  const namaAsli = document.getElementById('gd-in-nama').value.trim();
+  const privasi = document.getElementById('gd-in-privasi').value;
+  const nominal = document.getElementById('gd-in-nominal').value.trim();
+
+  if (!idProyek || !namaAsli || !nominal) return showToast('Lengkapi semua data donasi');
+
+  btn.disabled = true;
+  btn.textContent = 'MENYIMPAN...';
+  try {
+    const json = await postData({
+      token: getToken(),
+      action: 'addDonasiMasuk',
+      id_proyek: idProyek,
+      nama_asli: namaAsli,
+      privasi: privasi,
+      nominal: nominal
+    });
+    if (json.status === 'ok') {
+      showToast('Donasi masuk tercatat');
+      document.getElementById('gd-in-nama').value = '';
+      document.getElementById('gd-in-nominal').value = '';
+    } else {
+      showToast(json.message || 'Gagal mencatat donasi');
+    }
+  } catch(e) {
+    showToast('Gagal mencatat donasi');
+  }
+  btn.disabled = false;
+  btn.textContent = 'CATAT DONASI';
+}
+
+async function simpanPengeluaran(btn) {
+  const idProyek = document.getElementById('gd-out-proyek').value;
+  const desc = document.getElementById('gd-out-desc').value.trim();
+  const nominal = document.getElementById('gd-out-nominal').value.trim();
+
+  if (!idProyek || !desc || !nominal) return showToast('Lengkapi semua data pengeluaran');
+
+  btn.disabled = true;
+  btn.textContent = 'MENYIMPAN...';
+  try {
+    const json = await postData({
+      token: getToken(),
+      action: 'addPengeluaranGaldan',
+      id_proyek: idProyek,
+      deskripsi: desc,
+      nominal: nominal
+    });
+    if (json.status === 'ok') {
+      showToast('Pengeluaran tercatat di Ledger');
+      document.getElementById('gd-out-desc').value = '';
+      document.getElementById('gd-out-nominal').value = '';
+    } else {
+      showToast(json.message || 'Gagal mencatat pengeluaran');
+    }
+  } catch(e) {
+    showToast('Gagal mencatat pengeluaran');
+  }
+  btn.disabled = false;
+  btn.textContent = 'CATAT PENGELUARAN';
 }
 
 if ('serviceWorker' in navigator) {
