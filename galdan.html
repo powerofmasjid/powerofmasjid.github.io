@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Open Ledger Galang Dana — Power of Masjid</title>
+  <title>Transparansi Galang Dana — Power of Masjid</title>
   
-  <!-- Tailwind CSS via CDN untuk styling super cepat dan rapi -->
+  <!-- Tailwind CSS via CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   
   <!-- Font Google: Plus Jakarta Sans -->
@@ -14,8 +14,6 @@
   <style>
     body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #F8FAFC; }
     .emerald-gradient { background: linear-gradient(135deg, #0f172a 0%, #064e3b 100%); }
-    
-    /* Scrollbar tersembunyi agar tabel lebih rapi di HP */
     .hide-scrollbar::-webkit-scrollbar { display: none; }
     .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
   </style>
@@ -26,17 +24,26 @@
   <!-- HEADER & DISCLAIMER -->
   <!-- ========================================== -->
   <header class="emerald-gradient text-white pt-14 pb-28 px-6 text-center shadow-lg relative overflow-hidden">
-    <!-- Efek Dekorasi Latar Belakang -->
     <div class="absolute -top-24 -right-24 w-64 h-64 bg-emerald-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20"></div>
     <div class="absolute -bottom-24 -left-24 w-64 h-64 bg-emerald-400 rounded-full mix-blend-multiply filter blur-3xl opacity-20"></div>
     
     <div class="relative z-10">
-      <div class="inline-block bg-white/10 backdrop-blur-sm border border-white/20 px-4 py-1.5 rounded-full text-xs font-bold tracking-widest text-emerald-200 mb-6">
+      <!-- Tombol Kembali ke Beranda -->
+      <div class="absolute left-0 top-0 md:-top-4">
+        <a href="index.html" class="flex items-center gap-2 text-sm font-bold text-emerald-200 hover:text-white transition-colors bg-white/10 px-4 py-2 rounded-full backdrop-blur-md border border-white/10">
+          <span>←</span> Kembali ke Beranda
+        </a>
+      </div>
+
+      <div class="inline-block bg-white/10 backdrop-blur-sm border border-white/20 px-4 py-1.5 rounded-full text-xs font-bold tracking-widest text-emerald-200 mb-6 mt-12 md:mt-0">
         TRANSPARANSI KAS UMAT
       </div>
+      
+      <!-- JUDUL SUDAH DIUBAH AGAR MUDAH DIPAHAMI -->
       <h1 class="text-3xl md:text-5xl font-extrabold mb-5 tracking-tight text-white drop-shadow-md">
-        Open Ledger Galang Dana
+        Transparansi Galang Dana
       </h1>
+      
       <div class="max-w-2xl mx-auto bg-slate-900/40 backdrop-blur-md border border-slate-700/50 rounded-2xl p-5 shadow-xl">
         <p class="text-emerald-100 text-sm md:text-base leading-relaxed font-medium">
           Fokus Penyaluran: <span class="text-yellow-300 font-bold">Peningkatan Utilitas, Kenyamanan, & Digitalisasi Jamaah.</span>
@@ -62,22 +69,18 @@
     <div id="main-content" class="hidden">
       <!-- 1. SUMMARY CARDS -->
       <div class="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-5 mb-10">
-        <!-- Target Keseluruhan -->
         <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 text-center flex flex-col justify-center">
           <div class="text-[10px] md:text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Target Keseluruhan</div>
           <div class="text-lg md:text-2xl font-extrabold text-slate-700" id="sum-target">Rp 0</div>
         </div>
-        <!-- Total Terkumpul -->
         <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 text-center border-b-4 border-emerald-500 flex flex-col justify-center">
           <div class="text-[10px] md:text-xs font-bold text-emerald-600 uppercase tracking-wider mb-1">Total Terkumpul</div>
           <div class="text-lg md:text-2xl font-extrabold text-emerald-600" id="sum-in">Rp 0</div>
         </div>
-        <!-- Total Disalurkan -->
         <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 text-center border-b-4 border-red-500 flex flex-col justify-center">
           <div class="text-[10px] md:text-xs font-bold text-red-500 uppercase tracking-wider mb-1">Telah Disalurkan</div>
           <div class="text-lg md:text-2xl font-extrabold text-red-500" id="sum-out">Rp 0</div>
         </div>
-        <!-- Saldo Tersedia -->
         <div class="bg-slate-900 rounded-2xl shadow-lg border border-slate-800 p-5 text-center relative overflow-hidden flex flex-col justify-center">
           <div class="absolute -right-4 -top-4 text-slate-800 text-6xl opacity-30">💰</div>
           <div class="text-[10px] md:text-xs font-bold text-emerald-400 uppercase tracking-wider mb-1 relative z-10">Saldo Tersedia</div>
@@ -91,16 +94,14 @@
           <span class="w-1.5 h-6 bg-emerald-500 rounded-full"></span> 
           Status Proyek Berjalan
         </h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5" id="project-grid">
-          <!-- Render Project Cards Here via JS -->
-        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5" id="project-grid"></div>
       </div>
 
-      <!-- 3. OPEN LEDGER (RIWAYAT MUTASI) -->
+      <!-- 3. RIWAYAT MUTASI (SUDAH DIUBAH NAMA SUB-JUDULNYA) -->
       <div>
         <h2 class="text-xl md:text-2xl font-extrabold text-slate-800 mb-6 flex items-center gap-3">
           <span class="w-1.5 h-6 bg-slate-800 rounded-full"></span> 
-          Catatan Transaksi Terbuka
+          Riwayat Mutasi (Masuk & Keluar)
         </h2>
         <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
           <div class="overflow-x-auto hide-scrollbar">
@@ -113,9 +114,7 @@
                   <th class="px-5 py-4 font-bold text-right">Mutasi (Rp)</th>
                 </tr>
               </thead>
-              <tbody id="ledger-body" class="text-sm divide-y divide-slate-100">
-                <!-- Render Table Rows Here via JS -->
-              </tbody>
+              <tbody id="ledger-body" class="text-sm divide-y divide-slate-100"></tbody>
             </table>
           </div>
         </div>
@@ -132,13 +131,11 @@
   <!-- JAVASCRIPT LOGIC -->
   <!-- ========================================== -->
   <script>
-    // PASTIKAN LINK INI ADALAH LINK DEPLOYMENT TERBARU DARI GOOGLE APPS SCRIPT
+    // JANGAN LUPA: Pastikan link di bawah ini adalah URL hasil Deploy Bapak yang terbaru
     const API_URL = 'https://script.google.com/macros/s/AKfycbw4NKtVPvYcEcnf7KJiggwPYX4oeHs92mShAMOCN3vMneC2NAmVc84DJo9X6xsCUUoIfQ/exec';
 
-    // Utilitas Format Rupiah
     const formatRp = (num) => 'Rp ' + (Number(num) || 0).toLocaleString('id-ID');
     
-    // Utilitas Format Tanggal (Contoh: 12 Agt 2026, 14:30)
     const formatDate = (isoStr) => {
       const d = new Date(isoStr);
       if (isNaN(d.getTime())) return isoStr;
@@ -147,7 +144,6 @@
       return `${tgl} <span class="text-slate-400 text-[11px] ml-1">${jam}</span>`;
     };
 
-    // Main Fetch Function
     async function fetchGaldanData() {
       try {
         const response = await fetch(API_URL + '?action=getGaldanData&_t=' + Date.now());
@@ -178,7 +174,6 @@
       let sumOut = 0;
       let projectStats = {}; 
 
-      // 1. Inisialisasi Data Proyek
       proyekList.forEach(p => {
         sumTarget += p.target_dana;
         projectStats[p.id_proyek] = { 
@@ -192,9 +187,7 @@
 
       let ledgerHTML = '';
 
-      // 2. Kalkulasi Data Ledger & Render Tabel Mutasi
       mutasiList.forEach(m => {
-        // Hitung totalan per proyek & total keseluruhan
         if (projectStats[m.id_proyek]) {
           if (m.jenis_mutasi === 'MASUK') {
             projectStats[m.id_proyek].masuk += m.nominal;
@@ -205,7 +198,6 @@
           }
         }
 
-        // Tampilan Baris Tabel
         const isMasuk = m.jenis_mutasi === 'MASUK';
         const bgRowClass = isMasuk ? 'hover:bg-emerald-50/50' : 'hover:bg-red-50/50';
         const colorClass = isMasuk ? 'text-emerald-600 bg-emerald-50 border-emerald-200' : 'text-red-600 bg-red-50 border-red-200';
@@ -232,12 +224,10 @@
         `;
       });
 
-      // 3. Render Grid Proyek Aktif
       let gridHTML = '';
       proyekList.forEach(p => {
         const stats = projectStats[p.id_proyek];
-        const terkumpulBersih = stats.masuk - stats.keluar; // Sisa uang riil untuk proyek ini
-        // Progress dihitung dari total uang yang pernah masuk (bukan sisa bersih) agar bar tidak mundur saat ada pengeluaran
+        const terkumpulBersih = stats.masuk - stats.keluar; 
         const persentase = stats.target > 0 ? Math.min(Math.round((stats.masuk / stats.target) * 100), 100) : 0;
         
         const isLengkap = persentase >= 100;
@@ -249,7 +239,6 @@
           <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 flex flex-col justify-between hover:shadow-lg hover:-translate-y-1 transition-all duration-300 relative overflow-hidden group">
             ${badgeLengkap}
             
-            <!-- Hiasan Background Card -->
             <div class="absolute -right-10 -bottom-10 opacity-5 text-8xl group-hover:scale-110 transition-transform duration-500 pointer-events-none">🕌</div>
 
             <div>
@@ -273,7 +262,6 @@
                 </div>
               </div>
               
-              <!-- Info Saldo Mengendap (Masuk - Keluar) -->
               <div class="mt-4 text-[11px] text-slate-500 flex justify-between items-center bg-slate-50 p-2 rounded-lg border border-slate-100">
                 <span>Sisa Saldo Proyek:</span>
                 <span class="font-bold text-slate-700">${formatRp(terkumpulBersih)}</span>
@@ -283,7 +271,6 @@
         `;
       });
 
-      // 4. Injeksi HTML ke DOM
       document.getElementById('sum-target').textContent = formatRp(sumTarget);
       document.getElementById('sum-in').textContent = formatRp(sumIn);
       document.getElementById('sum-out').textContent = formatRp(sumOut);
@@ -292,11 +279,9 @@
       document.getElementById('ledger-body').innerHTML = ledgerHTML || '<tr><td colspan="4" class="text-center py-10 text-slate-400 font-medium">Belum ada catatan mutasi.</td></tr>';
       document.getElementById('project-grid').innerHTML = gridHTML || '<div class="col-span-full text-center text-slate-400 py-10 font-medium border-2 border-dashed border-slate-200 rounded-2xl">Belum ada proyek aktif.</div>';
 
-      // Sembunyikan Loading, Tampilkan Konten
       document.getElementById('loading-indicator').classList.add('hidden');
       document.getElementById('main-content').classList.remove('hidden');
 
-      // Animasi Progress Bar setelah dirender
       setTimeout(() => {
         proyekList.forEach(p => {
           const stats = projectStats[p.id_proyek];
@@ -307,7 +292,6 @@
       }, 100);
     }
 
-    // Jalankan saat halaman dimuat
     window.addEventListener('DOMContentLoaded', fetchGaldanData);
   </script>
 </body>
